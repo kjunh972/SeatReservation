@@ -1,0 +1,61 @@
+<html xmlns="http://wwww.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>강의실 좌석 예약 현황</title>
+    <style>
+        /* CSS 스타일 지정 */
+        body {
+            display: flex; /* 레이아웃 flex 사용 */
+            flex-direction: column; /* 주 축 방향을 열 방향으로 설정 */
+            align-items: center; /* 주 축을 따라 아이템들을 가운데 정렬 */
+        }
+
+        h1 {
+            margin-top: 35px; /* 위 여백 설정 */
+        }
+
+        .alignLR {
+            display: flex; /* 레이아웃 flex 사용 */
+            margin-top: 70px; /* 위 여백 추가 */
+        }
+
+        .grid {
+            display: grid; /* 그리드 레이아웃 사용 */
+            grid-template-columns: repeat(4, 50px); /* 4열로 설정 */
+            grid-template-rows: repeat(6, 50px); /* 6행으로 설정 */
+            grid-gap: 5px; /* 그리드 간격 설정 */
+        }
+
+        .empty {
+            background-color: #98fb98; /* 빈 좌석 배경색 지정 */
+        }
+
+        .reserved {
+            background-color: #ff6347; /* 예약된 좌석 배경색 지정 */
+        }
+    </style>
+</head>
+<body>
+    <!-- 제목 표시 -->
+    <h1 th:text="${classroom.classroomName} + ' 좌석 예약 현황'">강의실 좌석 예약 현황</h1>
+    <!-- 좌석 현황표 위치 -->
+    <div class="alignLR">
+        <!-- 왼쪽 강의실 좌석 생성 -->
+        <div class="grid">
+            <!-- 좌석 표시 -->
+            <div th:each="seatStatus, seatIndex : ${classroom.seatStatusList.subList(0, 24)}"
+                 class="seat" th:class="${seatStatus ? 'reserved' : 'empty'}">
+                <span th:text="${seatIndex.index + 1}"></span> <!-- 좌석 번호 표시 -->
+            </div>
+        </div>
+        <!-- 오른쪽 좌석 생성 -->
+        <div class="grid" style="margin-left: 50px;"> <!-- 왼쪽 오른쪽 사이 간격 -->
+            <!-- 좌석 표시 -->
+            <div th:each="seatStatus, seatIndex : ${classroom.seatStatusList.subList(24, 48)}"
+                 class="seat" th:class="${seatStatus ? 'reserved' : 'empty'}">
+                <span th:text="${seatIndex.index + 25}"></span> <!-- 좌석 번호 표시 -->
+            </div>
+        </div>
+    </div>
+</body>
+</html>
