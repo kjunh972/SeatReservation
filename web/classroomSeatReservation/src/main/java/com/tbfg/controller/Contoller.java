@@ -1,56 +1,51 @@
 package com.tbfg.controller;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.tbfg.dao.ClassroomDAO;
 import com.tbfg.dto.ClassroomDTO;
 
 @Controller
 public class Contoller {
-	@GetMapping("/")
+
+	@GetMapping("/index")
     public String index() {
-        return "index"; // 이 부분이 템플릿의 파일 이름과 일치해야 합니다.
+        return "index";
     }
 
-    @PostMapping("/classroomStatus")
-    public String classroomStatus(ClassroomDTO classroom, String classroomName, Model model) {
-        // ClassroomDTO 객체 생성
-        if (classroomName.equals("5406호")) {
-        	classroom.setClassroomName("5406호");
-            classroom.setSeatCount(48);
-      
-        } else if (classroomName.equals("5407호")) {
-        	classroom.setClassroomName("5407호");
-            classroom.setSeatCount(48);
-        } else if (classroomName.equals("5408호")) {
-        	classroom.setClassroomName("5408호");
-            classroom.setSeatCount(48);
-        } 
+	@Autowired // JdbcTemplate 객체 자동 주입을 위한 어노테이션
+    private JdbcTemplate jdbcTemplate; // JdbcTemplate 객체 선언 및 주입
 
-        // 좌석 예약 상태 설정 (임의의 예시)
-        classroom.reserveSeat(2);
-        classroom.reserveSeat(4);
-        classroom.reserveSeat(6);
-        classroom.reserveSeat(8);
-        classroom.reserveSeat(10);
-        classroom.reserveSeat(12);
-        classroom.reserveSeat(14);
-        classroom.reserveSeat(16);
-        classroom.reserveSeat(18);
-        classroom.reserveSeat(20);
+    @PostMapping("/classroomStatus") 
+    public String classroomStatus(String classroomName, Model model) { 
+        ClassroomDTO classroom = new ClassroomDTO(); // ClassroomDTO 객체 생성
+        ClassroomDAO classroomDAO = new ClassroomDAO(jdbcTemplate); // ClassroomDAO 객체 생성 및 주입
+        classroom.setClassroomName(classroomName); // 강의실 이름 설정
+        classroom.setSeatCount(48); // 강의실 좌석 수 설정
 
-        // 모델에 ClassroomDTO 객체 추가
-        model.addAttribute("classroom", classroom);
+        // 선택한 강의실에 대한 예약된 좌석 조회
+        List<Integer> reservedSeats = classroomDAO.getReservedSeats(classroomName, "kjunh972");
 
-        return "classroomStatus"; // 뷰 이름 리턴
+        // 예약된 좌석 상태 설정
+        for (Integer seat : reservedSeats) { // 모든 예약된 좌석에 대해 반복
+            classroom.reserveSeat(seat); // 해당 좌석을 예약 상태로 설정
+        }
+
+        model.addAttribute("classroom", classroom); // 모델에 ClassroomDTO 객체 추가
+
+        return "classroomStatus";
     }
-
 	
     @GetMapping("/classroomSelect")
     public String classroomSelect() {
-        return "classroomSelect"; // 강의실 선택 페이지를 렌더링
+        return "classroomSelect"; 
     }
 
 }

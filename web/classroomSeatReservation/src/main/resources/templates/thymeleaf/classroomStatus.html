@@ -1,4 +1,4 @@
-<html xmlns="http://wwww.thymeleaf.org">
+<html xmlns="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>강의실 좌석 예약 현황</title>
@@ -27,35 +27,51 @@
         }
 
         .empty {
-            background-color: #98fb98; /* 빈 좌석 배경색 지정 */
+            background-color: #98fb98 !important; /* 빈 좌석 배경색 지정 */
         }
 
         .reserved {
-            background-color: #ff6347; /* 예약된 좌석 배경색 지정 */
+            background-color: #ff6347 !important; /* 예약된 좌석 배경색 지정 */
+        }
+
+        /* 버튼 스타일 */
+        button {
+            width: 50px; /* 버튼 가로 크기 */
+            height: 50px; /* 버튼 세로 크기 */
+            border: none; /* 테두리 없음 */
+            cursor: pointer; /* 커서 모양 */
+            border-radius: 5px; /* 테두리 둥글게 설정 */
         }
     </style>
 </head>
 <body>
     <!-- 제목 표시 -->
-    <h1 th:text="${classroom.classroomName} + ' 좌석 예약 현황'">강의실 좌석 예약 현황</h1>
+    <h1 th:text="${classroom.classroomName} + '호 좌석 예약 현황'">강의실 좌석 예약 현황</h1>
     <!-- 좌석 현황표 위치 -->
     <div class="alignLR">
-        <!-- 왼쪽 강의실 좌석 생성 -->
-        <div class="grid">
-            <!-- 좌석 표시 -->
-            <div th:each="seatStatus, seatIndex : ${classroom.seatStatusList.subList(0, 24)}"
-                 class="seat" th:class="${seatStatus ? 'reserved' : 'empty'}">
-                <span th:text="${seatIndex.index + 1}"></span> <!-- 좌석 번호 표시 -->
-            </div>
-        </div>
-        <!-- 오른쪽 좌석 생성 -->
-        <div class="grid" style="margin-left: 50px;"> <!-- 왼쪽 오른쪽 사이 간격 -->
-            <!-- 좌석 표시 -->
-            <div th:each="seatStatus, seatIndex : ${classroom.seatStatusList.subList(24, 48)}"
-                 class="seat" th:class="${seatStatus ? 'reserved' : 'empty'}">
-                <span th:text="${seatIndex.index + 25}"></span> <!-- 좌석 번호 표시 -->
-            </div>
-        </div>
+       <!-- 왼쪽 강의실 좌석 생성 -->
+		<div class="grid">
+		    <!-- 좌석 표시 -->
+		    <div th:each="seatStatus, seatIndex : ${classroom.seatStatusList.subList(0, 24)}">
+		        <button class="seat" th:text="${seatIndex.index + 1}" th:class="${seatStatus ? 'reserved' : 'empty'}" onclick="toggleReservation(this)"></button>
+		    </div>
+		</div>
+		<!-- 오른쪽 좌석 생성 -->
+		<div class="grid" style="margin-left: 50px;"> <!-- 왼쪽 오른쪽 사이 간격 -->
+		    <!-- 좌석 표시 -->
+		    <div th:each="seatStatus, seatIndex : ${classroom.seatStatusList.subList(24, 48)}">
+		        <button class="seat" th:text="${seatIndex.index + 25}" th:class="${seatStatus ? 'reserved' : 'empty'}" onclick="toggleReservation(this)"></button>
+		    </div>
+		</div>
     </div>
+
+    <script>
+        function toggleReservation(button) {
+            // 클릭된 버튼의 클래스를 토글하여 예약 상태를 변경
+            if (button.classList.contains('empty')) {
+            button.classList.toggle('reserved');
+            }
+        }
+    </script>
 </body>
 </html>
