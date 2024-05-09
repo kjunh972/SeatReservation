@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 public class ClassroomDAO {
-	@Autowired // 자동 주입을 위한 어노테이션
+    @Autowired // JdbcTemplate 객체를 자동으로 주입하기 위한 어노테이션
     private final JdbcTemplate jdbcTemplate; // JdbcTemplate 객체 선언
 
     // 생성자
@@ -16,9 +16,35 @@ public class ClassroomDAO {
 
     // 강의실 이름과 사용자 아이디를 받아 예약된 좌석을 가져오는 메서드
     public List<Integer> getReservedSeats(String classroomName, String userId) { 
-    	// MySql 예약된 자석 쿼리문 생성
+        // MySQL에서 예약된 좌석을 가져오기 위한 쿼리문
         String sql = "SELECT reservSeat FROM Reservation WHERE classroom_name = ? AND user_id = ?";
-        // jdbcTemplate을 사용하여 SQL 쿼리 실행하여 결과 반환
+        // jdbcTemplate을 사용하여 SQL 쿼리를 실행하고 결과를 리스트로 반환
         return jdbcTemplate.queryForList(sql, Integer.class, classroomName, userId);
+    }
+    
+    // 사용자 아이디를 받아 즐겨찾기한 강의실 목록을 가져오는 메서드
+    public List<String> getFavoriteClassrooms(String userId) {
+        // MySQL에서 즐겨찾기한 강의실 목록을 가져오기 위한 쿼리문
+        String sql = "SELECT classroom_num FROM FavoriteClassrooms WHERE user_id = ?";
+        // jdbcTemplate을 사용하여 SQL 쿼리를 실행하고 결과를 리스트로 반환
+        return jdbcTemplate.queryForList(sql, String.class, userId);
+    }
+    
+    // 모든 강의 번호 목록을 가져오는 메서드
+    public List<String> getClassNum() {
+        // MySQL에서 모든 강의 번호를 가져오기 위한 쿼리문
+        String sql = "SELECT DISTINCT LEFT(classroom_name, 1) AS classNum FROM Classrooms";
+        // jdbcTemplate을 사용하여 SQL 쿼리를 실행하고 결과를 리스트로 반환
+        return jdbcTemplate.queryForList(sql, String.class);
+    }
+    
+    // 건물 번호를 받아 해당하는 강의실 목록을 가져오는 메서드
+    public List<String> getClassrooms(String classNum) {
+        // 해당 건물 번호로 시작하는 강의실을 가져오기 위한 검색 패턴 생성
+        String prefix = classNum + "%";
+        // MySQL에서 해당 건물 번호로 시작하는 강의실 목록을 가져오기 위한 쿼리문
+        String sql = "SELECT classroom_name FROM Classrooms WHERE classroom_name LIKE ?";
+        // jdbcTemplate을 사용하여 SQL 쿼리를 실행하고 결과를 리스트로 반환
+        return jdbcTemplate.queryForList(sql, String.class, prefix);
     }
 }

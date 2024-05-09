@@ -2,18 +2,8 @@
 <head>
     <meta charset="UTF-8">
     <title>강의실 좌석 예약 현황</title>
+    <link rel="stylesheet" href="/css/classroomStyle.css" />
     <style>
-        /* CSS 스타일 지정 */
-        body {
-            display: flex; /* 레이아웃 flex 사용 */
-            flex-direction: column; /* 주 축 방향을 열 방향으로 설정 */
-            align-items: center; /* 주 축을 따라 아이템들을 가운데 정렬 */
-        }
-
-        h1 {
-            margin-top: 35px; /* 위 여백 설정 */
-        }
-
         .alignLR {
             display: flex; /* 레이아웃 flex 사용 */
             margin-top: 70px; /* 위 여백 추가 */
@@ -34,17 +24,18 @@
             background-color: #ff6347 !important; /* 예약된 좌석 배경색 지정 */
         }
 
-        /* 버튼 스타일 */
         button {
-            width: 50px; /* 버튼 가로 크기 */
-            height: 50px; /* 버튼 세로 크기 */
-            border: none; /* 테두리 없음 */
-            cursor: pointer; /* 커서 모양 */
-            border-radius: 5px; /* 테두리 둥글게 설정 */
-        }
+		    width: 50px; /* 버튼 가로 크기 */
+		    height: 50px; /* 버튼 세로 크기 */
+		    color: black; /* 글자색 검은색으로 변경 */
+		    display: flex; /* 내부 요소를 가운데 정렬하기 위해 flex 사용 */
+		    justify-content: center; /* 수평 가운데 정렬 */
+		    align-items: center; /* 수직 가운데 정렬 */
+		}
     </style>
 </head>
 <body>
+	<header th:replace="/menu.html"></header> <!-- menu.html을 thymeleaf를 통해 헤더에 삽입 -->
     <!-- 제목 표시 -->
     <h1 th:text="${classroom.classroomName} + '호 좌석 예약 현황'">강의실 좌석 예약 현황</h1>
     <!-- 좌석 현황표 위치 -->
@@ -57,7 +48,7 @@
 		    </div>
 		</div>
 		<!-- 오른쪽 좌석 생성 -->
-		<div class="grid" style="margin-left: 50px;"> <!-- 왼쪽 오른쪽 사이 간격 -->
+		<div class="grid" style="margin-left: 52px;"> <!-- 왼쪽 오른쪽 사이 간격 -->
 		    <!-- 좌석 표시 -->
 		    <div th:each="seatStatus, seatIndex : ${classroom.seatStatusList.subList(24, 48)}">
 		        <button class="seat" th:text="${seatIndex.index + 25}" th:class="${seatStatus ? 'reserved' : 'empty'}" onclick="toggleReservation(this)"></button>

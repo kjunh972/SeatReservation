@@ -1,0 +1,33 @@
+<html xmlns="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>즐겨찾기한 강의실</title>
+    <link rel="stylesheet" href="/css/classroomStyle.css" />
+    <link rel="stylesheet" href="/css/headerStyle.html" />
+    <style>
+		form {
+			margin-top: -17px; 
+			text-align: center;
+		}
+	</style>
+</head>
+<body>
+	<header th:replace="/menu.html"></header> <!-- menu.html을 thymeleaf를 통해 헤더에 삽입 -->
+    <h1>즐겨찾기한 강의실</h1>
+    <span>
+        <form th:action="@{/classroomStatus}" method="post">
+            <!-- 즐겨찾기한 강의실 버튼 생성 -->
+            <div th:each="classroom : ${classroomButtons}">
+                <!-- 버튼 클릭 시 선택한 강의실의 이름과 함께 classroomStatus 페이지로 이동하는 버튼 -->
+                <button type="submit" name="classroomName" th:value="${classroom}" 
+                th:text="${classroom} + '호'"></button>
+                
+            </div>
+        </form>
+        <form th:action="@{/classSelect}" method="post">
+		    <!-- Plus 버튼을 누르면 classSelect 페이지로 이동하는 버튼 -->
+		    <button type="submit" name="plus" value="plus">+</button>
+		</form>
+    </span>
+</body>
+</html>
