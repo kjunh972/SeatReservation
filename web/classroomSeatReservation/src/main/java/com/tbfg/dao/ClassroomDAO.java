@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class ClassroomDAO {
     @Autowired // JdbcTemplate 객체를 자동으로 주입하기 위한 어노테이션
     private final JdbcTemplate jdbcTemplate; // JdbcTemplate 객체 선언

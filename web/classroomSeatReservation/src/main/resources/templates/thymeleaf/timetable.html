@@ -1,0 +1,141 @@
+<html xmlns="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>시간표</title>
+    <!-- CSS 파일 링크 -->
+    <link rel="stylesheet" href="/css/classroomStyle.css" />
+    <link rel="stylesheet" href="/css/timeTableStyle.css" />
+</head>
+<body>
+    <!-- 메뉴 헤더를 포함합니다. -->
+    <header th:replace="/menu.html"></header>
+    <h1>시간표</h1>
+    <!-- 시간표 컨테이너 -->
+    <div class="container">
+        <!-- 시간표 테이블 -->
+        <table>
+            <thead>
+                <!-- 요일 헤더 -->
+                <tr>
+                    <th></th>
+                    <!-- 요일별 반복 -->
+                    <th th:each="day : ${days}" th:text="${day}"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- 시간별 반복 -->
+                <tr th:each="hour : ${hours}">
+                    <!-- 시간 표시 -->
+                    <td th:text="${hour}"></td>
+                    <!-- 요일별 시간표 -->
+                    <td th:each="day : ${days}">
+                        <!-- 사용자 시간표 반복 -->
+                        <span th:each="timeTable : ${userTimeTable}"
+                              th:if="${timeTable.day == day 
+                                    and timeTable.startHour le hour
+                                    and timeTable.endHour gt hour}">
+                            <!-- 시간표 정보 표시 -->
+                            <span th:text="${timeTable.subject + ' (' + timeTable.classroomName + ')'}"></span><br>
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- 시간표 수정 모달 -->
+    <input type="checkbox" id="modal-checkbox" class="modal-checkbox" />
+    <div class="modal-container">
+        <div class="modal-content">
+            <!-- 모달 닫기 버튼 -->
+            <label for="modal-checkbox" class="close">&times;</label>
+            <!-- 모달 제목 -->
+            <h2>시간표 수정</h2>
+            <!-- 시간표 수정 폼 -->
+            <form action="/saveTimetable" method="POST" style="width: 100%;">
+                <!-- 강의명 입력 -->
+                <div class="input-container">
+                    <label for="subject">강의명:</label>
+                    <input type="text" id="subject" name="subject" style="width: calc(100% - 120px);">
+                </div>
+                <!-- 강의실 입력 -->
+                <div class="input-container">
+                    <label for="classroomName">강의실:</label>
+                    <input type="text" id="classroomName" name="classroomName" style="width: calc(100% - 120px);">
+                </div>
+                <!-- 요일 선택 -->
+                <div class="input-container">
+                    <label for="day">요일:</label>
+                    <select id="day" name="day" style="width: calc(100% - 120px);">
+                        <option value="월요일">월요일</option>
+                        <option value="화요일">화요일</option>
+                        <option value="수요일">수요일</option>
+                        <option value="목요일">목요일</option>
+                        <option value="금요일">금요일</option>
+                    </select>
+                </div>
+                <!-- 시작 시간 선택 -->
+                <div class="input-container">
+                    <label for="startHour">시작 시간:</label>
+                    <select id="startHour" name="startHour" style="width: calc(100% - 120px);">
+                        <option value="9">9시</option>
+                        <option value="10">10시</option>
+                        <option value="11">11시</option>
+                        <option value="12">12시</option>
+                        <option value="1">1시</option>
+                        <option value="2">2시</option>
+                        <option value="3">3시</option>
+                        <option value="4">4시</option>
+                    </select>
+                </div>
+                <!-- 종료 시간 선택 -->
+                <div class="input-container">
+                    <label for="endHour">종료 시간:</label>
+                    <select id="endHour" name="endHour" style="width: calc(100% - 120px);">
+                        <option value="9">9시</option>
+                        <option value="10">10시</option>
+                        <option value="11">11시</option>
+                        <option value="12">12시</option>
+                        <option value="1">1시</option>
+                        <option value="2">2시</option>
+                        <option value="3">3시</option>
+                        <option value="4">4시</option>
+                    </select>
+                </div>
+                <!-- 저장 버튼 -->
+                <div style="margin-top: 10px;">
+                    <input type="submit" value="저장" style="width: 100%;">
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- 시간표 삭제 모달 -->
+    <input type="checkbox" id="delete-modal-checkbox" class="modal-checkbox" />
+    <div class="modal-container">
+        <div class="modal-content">
+            <!-- 모달 닫기 버튼 -->
+            <label for="delete-modal-checkbox" class="close">&times;</label>
+            <!-- 모달 제목 -->
+            <h2 style="margin-top:-25px;">시간표 삭제</h2>
+            <!-- 시간표 삭제 폼 -->
+            <form action="/deleteTimetable" method="POST" style="width: 100%;">
+                <!-- 삭제할 강의명 입력 -->
+                <div class="input-container">
+                    <label for="delete_subject">삭제할 강의명:</label>
+                    <input type="text" id="delete_subject" name="delete_subject" style="width: calc(100% - 120px);">
+                </div>
+                <!-- 삭제 버튼 -->
+                <div style="margin-top: 15px;">
+                    <input type="submit" value="삭제" style="width: 100%;">
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- 시간표 수정 및 삭제 버튼 -->
+    <div class="button-container">
+        <!-- 시간표 수정 버튼 -->
+        <label for="modal-checkbox" class="open-modal-button">시간표 수정</label>
+        <!-- 시간표 삭제 버튼 -->
+        <label for="delete-modal-checkbox" class="delete-modal-button">시간표 삭제</label>
+    </div>
+</body>
+</html>
