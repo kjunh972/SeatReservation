@@ -7,6 +7,7 @@ public class TimeTableDTO {
     private Integer endHour;
     private String subject;
     private String classroomName;
+    private Integer warning;
     
 	public String getUserId() {
 		return userId;
@@ -44,5 +45,12 @@ public class TimeTableDTO {
 	public void setClassroomName(String classroomName) {
 		this.classroomName = classroomName;
 	}
+	public Integer getWarning() {
+		return warning;
+	}
+	public void setWarning(Integer warning) {
+		this.warning = warning;
+	}
+    
     
 }

@@ -9,6 +9,10 @@
 <body>
     <!-- 메뉴 헤더를 포함합니다. -->
     <header th:replace="/menu.html"></header>
+    <h3>
+    <!-- 에러 -->
+    <div th:if="${error}" class="error" th:text="${error}"></div>
+    </h3>
     <h1>시간표</h1>
     <!-- 시간표 컨테이너 -->
     <div class="container">
@@ -51,7 +55,7 @@
             <!-- 모달 제목 -->
             <h2>시간표 수정</h2>
             <!-- 시간표 수정 폼 -->
-            <form action="/saveTimetable" method="POST" style="width: 100%;">
+            <form action="/timetable" method="POST" style="width: 100%;">
                 <!-- 강의명 입력 -->
                 <div class="input-container">
                     <label for="subject">강의명:</label>
@@ -130,6 +134,7 @@
             </form>
         </div>
     </div>
+
     <!-- 시간표 수정 및 삭제 버튼 -->
     <div class="button-container">
         <!-- 시간표 수정 버튼 -->

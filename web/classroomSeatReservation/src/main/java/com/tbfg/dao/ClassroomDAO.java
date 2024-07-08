@@ -32,6 +32,19 @@ public class ClassroomDAO {
         return jdbcTemplate.queryForList(sql, String.class, userId);
     }
     
+    // 사용자 아이디를 받아 timetable의 강의실 정보를 favoriteClassrooms에 추가하는 메서드
+    public void getTimetableClassrooms(String userId) {
+        // MySQL에서 즐겨찾기할 강의실 목록을 가져와 favoriteClassrooms에 추가하는 쿼리문
+        String sql = "INSERT INTO favoriteClassrooms (user_id, classroom_num) "
+                   + "SELECT DISTINCT ?, classroomName AS classroom_num "
+                   + "FROM stutimetable WHERE user_id = ? AND (user_id, classroomName) "
+                   + "NOT IN (SELECT user_id, classroom_num FROM favoriteClassrooms)";
+
+        // jdbcTemplate을 사용하여 SQL 쿼리를 실행
+        jdbcTemplate.update(sql, userId, userId);
+    }
+
+
     // 모든 강의 번호 목록을 가져오는 메서드
     public List<String> getClassNum() {
         // MySQL에서 모든 강의 번호를 가져오기 위한 쿼리문

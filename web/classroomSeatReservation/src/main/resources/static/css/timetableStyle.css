@@ -68,6 +68,7 @@ h2 {
     color: black; /* 호버 또는 포커스 시 글자 색상을 변경합니다. */
 }
 
+/* 모달 체크박스 */
 .modal-checkbox {
     display: none; /* 체크박스를 숨깁니다. */
 }
@@ -133,4 +134,12 @@ h2 {
 /* 제출 버튼 호버 스타일 */
 .modal-content form input[type="submit"]:hover {
     background-color: #45a049; /* 호버 시 배경색을 변경합니다. */
+}
+
+/* 에러 */
+.error {
+	color: red;
+	text-align: center;
+	margin-top: 10px;
+	margin-bottom: -30px;
 }
