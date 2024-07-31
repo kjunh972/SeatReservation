@@ -1,0 +1,55 @@
+.container {
+    background-color: #e8f5e9; /* 배경 색상 */
+    border-radius: 0.5rem; /* 모서리 둥글기 */
+    padding: 1.5rem; /* 내부 여백 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
+    max-width: 600px; /* 최대 너비 설정 */
+    margin: 0 auto; /* 중앙 정렬 */
+}
+
+.selectHours {
+    width: 100%;
+    margin-bottom: 5px;
+    border-radius: 0.25rem; /* 모서리 둥글기 */
+    border: 2px solid #4caf50; /* 버튼 테두리 색상 */
+    font-weight: bold;
+    padding: 0.5rem; /* 내부 여백 */
+}
+
+.selectHours:hover {
+    background-color: #4caf50; /* Hover 효과 색상 */
+    color: white;
+}
+
+.selectHours.selected {
+    background-color: #388e3c; /* 선택된 버튼 색상 */
+    color: white;
+}
+
+.submit {
+    background-color: #4caf50; /* 버튼 색상 */
+    border-color: #4caf50;
+    border-radius: 0.25rem; /* 모서리 둥글기 */
+    padding: 0.75rem 1rem; /* 내부 여백 */
+}
+
+.submit:hover {
+    background-color: #388e3c; /* Hover 효과 색상 */
+    border-color: #388e3c;
+}
+
+.header {
+    margin-bottom: 1.5rem;
+}
+
+h1 {
+    color: #2e7d32; /* 제목 색상 */
+    font-size: 1.5rem; /* 제목 크기 */
+    font-weight: bold; /* 제목 폰트 두께 */
+}
+
+h3 {
+    color: #388e3c; /* 부제목 색상 */
+    font-size: 1.125rem; /* 부제목 크기 */
+    font-weight: bold; /* 부제목 폰트 두께 */
+}

@@ -5,15 +5,17 @@
     <link rel="stylesheet" href="/css/classroomStyle.css" />
     <style>
 	button {
-    width: 100px; /* 버튼 가로 크기 조절 */
-    height: 100px; /* 버튼 세로 크기 */
-    margin-right: 10px; /* 버튼 간격 조절 */
-}
+	    width: 100px; /* 버튼 가로 크기 조절 */
+	    height: 100px; /* 버튼 세로 크기 */
+	    margin-right: 10px; /* 버튼 간격 조절 */
+	}
 
 	</style>
 </head>
 <body>
-	<header th:replace="/menu.html"></header> <!-- menu.html을 thymeleaf를 통해 헤더에 삽입 -->
+	<!-- menu.html을 thymeleaf를 통해 헤더에 삽입 -->
+	<header th:replace="~{/menu.html}"></header> 
+	
     <h1>강의실 관 선택</h1>
     <!-- 건물 번호 버튼 표시 -->
     <div th:each="classNum : ${classNum}">

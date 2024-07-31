@@ -1,68 +1,124 @@
+<!DOCTYPE html>
 <html xmlns="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>강의실 좌석 예약 현황</title>
     <link rel="stylesheet" href="/css/classroomStyle.css" />
-    <style>
-        .alignLR {
-            display: flex; /* 레이아웃 flex 사용 */
-            margin-top: 70px; /* 위 여백 추가 */
-        }
-
-        .grid {
-            display: grid; /* 그리드 레이아웃 사용 */
-            grid-template-columns: repeat(4, 50px); /* 4열로 설정 */
-            grid-template-rows: repeat(6, 50px); /* 6행으로 설정 */
-            grid-gap: 5px; /* 그리드 간격 설정 */
-        }
-
-        .empty {
-            background-color: #98fb98 !important; /* 빈 좌석 배경색 지정 */
-        }
-
-        .reserved {
-            background-color: #ff6347 !important; /* 예약된 좌석 배경색 지정 */
-        }
-
-        button {
-		    width: 50px; /* 버튼 가로 크기 */
-		    height: 50px; /* 버튼 세로 크기 */
-		    color: black; /* 글자색 검은색으로 변경 */
-		    display: flex; /* 내부 요소를 가운데 정렬하기 위해 flex 사용 */
-		    justify-content: center; /* 수평 가운데 정렬 */
-		    align-items: center; /* 수직 가운데 정렬 */
-		}
-    </style>
+    <link rel="stylesheet" href="/css/classroomStatusStyle.css" />
 </head>
 <body>
-	<header th:replace="/menu.html"></header> <!-- menu.html을 thymeleaf를 통해 헤더에 삽입 -->
+	<header th:replace="~{/menu.html}"></header> 
+	
     <!-- 제목 표시 -->
     <h1 th:text="${classroom.classroomName} + '호 좌석 예약 현황'">강의실 좌석 예약 현황</h1>
     <!-- 좌석 현황표 위치 -->
     <div class="alignLR">
-       <!-- 왼쪽 강의실 좌석 생성 -->
-		<div class="grid">
-		    <!-- 좌석 표시 -->
-		    <div th:each="seatStatus, seatIndex : ${classroom.seatStatusList.subList(0, 24)}">
-		        <button class="seat" th:text="${seatIndex.index + 1}" th:class="${seatStatus ? 'reserved' : 'empty'}" onclick="toggleReservation(this)"></button>
-		    </div>
-		</div>
-		<!-- 오른쪽 좌석 생성 -->
-		<div class="grid" style="margin-left: 52px;"> <!-- 왼쪽 오른쪽 사이 간격 -->
-		    <!-- 좌석 표시 -->
-		    <div th:each="seatStatus, seatIndex : ${classroom.seatStatusList.subList(24, 48)}">
-		        <button class="seat" th:text="${seatIndex.index + 25}" th:class="${seatStatus ? 'reserved' : 'empty'}" onclick="toggleReservation(this)"></button>
-		    </div>
-		</div>
+        <!-- 왼쪽 강의실 좌석 생성 -->
+        <div class="grid">
+            <!-- 좌석 표시 -->
+            <div th:each="seatStatus, seatIndex : ${classroom.seatStatusList.subList(0, 24)}">
+                <button class="seat" th:text="${seatIndex.index + 1}"
+                    th:class="${seatStatus ? 'reserved' : 'empty'}"
+                    th:data-seat="${seatIndex.index + 1}"
+                    th:data-classroom="${classroom.classroomName}"
+                    onclick="openModal(this)">
+                </button>
+            </div>
+        </div>
+        <!-- 오른쪽 좌석 생성 -->
+        <div class="grid" style="margin-left: 52px;"> <!-- 왼쪽 오른쪽 사이 간격 -->
+            <!-- 좌석 표시 -->
+            <div th:each="seatStatus, seatIndex : ${classroom.seatStatusList.subList(24, 48)}">
+                <button class="seat" th:text="${seatIndex.index + 25}"
+                    th:class="${seatStatus ? 'reserved' : 'empty'}"
+                    th:data-seat="${seatIndex.index + 25}"
+                    th:data-classroom="${classroom.classroomName}"
+                    onclick="openModal(this)">
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 모달 HTML -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <p id="modalMessage">좌석을 예약하시겠습니까?</p>
+            <button id="confirmButton">예</button>
+            <button id="cancelButton">아니오</button>
+        </div>
     </div>
 
     <script>
-        function toggleReservation(button) {
-            // 클릭된 버튼의 클래스를 토글하여 예약 상태를 변경
-            if (button.classList.contains('empty')) {
-            button.classList.toggle('reserved');
-            }
+    let selectedSeat;
+    let selectedClassroom;
+
+    function openModal(button) {
+        // 클릭한 버튼의 데이터를 가져옴
+        selectedSeat = button.getAttribute('data-seat');
+        selectedClassroom = button.getAttribute('data-classroom');
+
+        // 예약된 좌석인지 확인
+        if (button.classList.contains('reserved')) {
+            alert('예약된 좌석입니다.');
+            return;
         }
-    </script>
+
+        // 모달 메시지 업데이트
+        const modalMessage = document.getElementById('modalMessage');
+        modalMessage.textContent = `${selectedClassroom}호 ${selectedSeat}번 좌석을 예약하시겠습니까?`;
+
+        // 모달을 열기
+        document.getElementById('myModal').style.display = 'block';
+    }
+
+    function closeModal() {
+        // 모달을 닫기
+        document.getElementById('myModal').style.display = 'none';
+    }
+
+    document.getElementById('confirmButton').addEventListener('click', () => {
+        // 확인 버튼 클릭 시 폼을 생성하여 서버에 POST 요청 보내기
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '/reserveSeat'; // 폼이 전송될 URL
+
+        // 데이터 추가
+        const classroomNameInput = document.createElement('input');
+        classroomNameInput.type = 'hidden';
+        classroomNameInput.name = 'classroomName';
+        classroomNameInput.value = selectedClassroom;
+        form.appendChild(classroomNameInput);
+
+        const seatNumberInput = document.createElement('input');
+        seatNumberInput.type = 'hidden';
+        seatNumberInput.name = 'seatNumber';
+        seatNumberInput.value = selectedSeat;
+        form.appendChild(seatNumberInput);
+
+        document.body.appendChild(form);
+        form.submit();x
+    });
+
+    document.getElementById('cancelButton').addEventListener('click', () => {
+        // 취소 버튼 클릭 시 모달을 닫기
+        closeModal();
+    });
+
+    // 모달 바깥 클릭 시 모달 닫기
+    window.onclick = function(event) {
+        if (event.target === document.getElementById('myModal')) {
+            closeModal();
+        }
+    }
+
+    // 버튼 내부 텍스트 클릭 시에도 이벤트 전파
+    document.querySelectorAll('.seat').forEach(button => {
+        button.addEventListener('click', event => {
+            openModal(button);
+        });
+    });
+</script>
+
 </body>
 </html>

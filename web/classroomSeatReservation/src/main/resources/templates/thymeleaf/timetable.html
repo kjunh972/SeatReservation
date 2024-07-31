@@ -7,8 +7,8 @@
     <link rel="stylesheet" href="/css/timeTableStyle.css" />
 </head>
 <body>
-    <!-- 메뉴 헤더를 포함합니다. -->
-    <header th:replace="/menu.html"></header>
+	<header th:replace="~{/menu.html}"></header> 
+	
     <h3>
     <!-- 에러 -->
     <div th:if="${error}" class="error" th:text="${error}"></div>

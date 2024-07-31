@@ -5,7 +5,8 @@
     <link rel="stylesheet" href="/css/classroomStyle.css" />
 </head>
 <body>
-	<header th:replace="/menu.html"></header> <!-- menu.html을 thymeleaf를 통해 헤더에 삽입 -->
+	<header th:replace="~{/menu.html}"></header> 
+	
     <h1 th:text="${classNum} + '호관 강의실 선택'">강의실 선택</h1>
     <!-- 해당 건물의 강의실 버튼 표시 -->
     <div th:each="classroom : ${classrooms}">
