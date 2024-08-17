@@ -2,6 +2,7 @@ package com.tbfg.controller;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -22,6 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tbfg.dao.ClassroomDAO;
 import com.tbfg.dao.UserDAO;
 import com.tbfg.dto.ClassroomDTO;
+import com.tbfg.dto.ReserveList;
 import com.tbfg.dto.TimeTableDTO;
 
 @Controller
@@ -113,6 +115,22 @@ public class Contoller {
         
         return "reserveSeat";
     }
+    
+    // 강의실 좌석 예약 확인 리스트 메서드
+    @GetMapping("/reserveList")
+    public String reserveList(Model model) {
+        // ClassroomDAO 인스턴스를 생성하여 데이터베이스 작업을 처리
+        ClassroomDAO classroomDAO = new ClassroomDAO(jdbcTemplate);
+
+        // 모든 예약 정보를 강의실별로 그룹화하여 가져옴
+        Map<String, List<ReserveList>> reserveList = classroomDAO.getReserveList();
+
+        // 강의실별로 그룹화된 예약 정보를 모델에 추가하여 뷰에서 사용 가능하도록 설정
+        model.addAttribute("reserveList", reserveList);
+
+        return "reserveList";
+    }
+
 
 
     // 선택한 강의 번호에 해당하는 강의실 목록을 조회하는 메서드

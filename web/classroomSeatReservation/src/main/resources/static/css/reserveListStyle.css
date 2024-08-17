@@ -1,0 +1,41 @@
+/* 메인 제목 스타일 설정 */
+h1 {
+    margin-top: 7rem; /* 위쪽에 여백 추가 */
+    text-align: center; /* 제목 가운데 정렬 */
+    font-size: 1.6rem; /* 폰트 크기를 설정 */
+}
+
+/* 테이블 스타일 설정 */
+table {
+    width: 100%; /* 테이블 너비 설정 */
+    margin-top: 1.3rem; /* 테이블 아래에 여백 추가 */
+    background-color: #fff; /* 테이블 배경색을 흰색으로 설정 */
+    border-radius: 0.5rem; /* 테이블 모서리를 둥글게 설정 */
+    box-shadow: 0 0.1rem 0.2rem rgba(0, 0, 0, 0.1); /* 테이블에 그림자 추가 */
+}
+
+/* 테이블 셀 스타일 설정 */
+th, td {
+    padding: 0.8rem; /* 셀 내부에 여백 추가 */
+    text-align: center; /* 셀 내의 텍스트를 가운데 정렬 */
+    border-bottom: 0.1rem solid #ddd; /* 셀 하단에 회색 경계선 추가 */
+    font-size: 1rem; /* 폰트 크기를 설정 */
+}
+
+/* 테이블 헤더 스타일 설정 */
+th {
+    background-color: #4CAF50; /* 헤더 셀 배경색을 초록색으로 설정 */
+    color: white; /* 텍스트 색상을 흰색으로 설정 */
+    font-weight: bold; /* 텍스트를 굵게 설정 */
+    font-size: 1.2rem; /* 폰트 크기를 설정 */
+}
+
+/* 테이블 행 마우스 호버 시 스타일 */
+tr:hover {
+    background-color: #f1f1f1; /* 행에 마우스를 올릴 때 배경색을 연한 회색으로 변경 */
+}
+
+/* 마지막 행의 하단 경계선 제거 */
+tr:last-child td {
+    border-bottom: none; /* 마지막 행의 셀 하단에 경계선 제거 */
+}

@@ -1,0 +1,34 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>예약 확인 페이지</title>
+    <link rel="stylesheet" href="/css/reserveSeatStyle.css" />
+</head>
+<body>
+    <h1>예약 확인 페이지</h1>
+    <table>
+		<tr th:each="entry : ${reserveList}">
+         	<td colspan="4">
+             	<table>
+                 	<thead>
+                     	<tr>	
+							<th>강의실 이름</th>
+                         	<th>예약 번호</th>
+                         	<th>사용자 ID</th>
+                         	<th>좌석 번호</th>
+                         	<th>예약 시간대</th>
+                     	</tr>
+                 	</thead>
+                 	<tbody>
+                     	<tr th:each="reservation : ${entry.value}">
+							<td th:text="${reservation.classroomName}"></td>
+                         	<td th:text="${reservation.reservNum}"></td>
+                         	<td th:text="${reservation.userId}"></td>
+                         	<td th:text="${reservation.reservSeat}"></td>
+                         	<td th:text="${reservation.reservHourString}"></td> <!-- 시간대를 문자열로 묶은 필드 -->
+                     	</tr>
+             	</table>
+         	</td>
+        </tr>
+    </table>
+</body>
+</html>

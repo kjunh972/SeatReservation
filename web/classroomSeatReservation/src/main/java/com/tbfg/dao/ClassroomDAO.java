@@ -1,11 +1,15 @@
 package com.tbfg.dao;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import com.tbfg.dto.ReserveList;
 
 @Repository
 public class ClassroomDAO {
@@ -57,6 +61,55 @@ public class ClassroomDAO {
         
         // 변환된 hoursParam을 사용하여 SQL 쿼리를 실행하고, 결과를 List<Integer>로 반환
         return jdbcTemplate.queryForList(sql, Integer.class, classroomName, hoursParam);
+    }
+
+    // 모든 강의실의 예약 정보를 가져오는 메서드
+    public List<ReserveList> reserveList() {
+        // 모든 강의실과 예약 정보를 가져오는 SQL 쿼리
+        String sql = "SELECT r.reservNum, r.user_id, r.classroom_name, r.reservSeat, rh.reservHour "
+                + "FROM Reservation r "
+                + "JOIN ReservationHour rh ON r.reservNum = rh.reservNum";
+
+        // 쿼리를 실행하고 결과를 ReserveList 객체의 리스트로 반환
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+            ReserveList reserveList = new ReserveList();
+            reserveList.setReservNum(rs.getInt("reservNum"));
+            reserveList.setUserId(rs.getString("user_id"));
+            reserveList.setClassroomName(rs.getString("classroom_name"));
+            reserveList.setReservSeat(rs.getInt("reservSeat"));
+            reserveList.setReservHour(rs.getInt("reservHour"));
+            return reserveList;
+        });
+    }
+    
+    // 강의실별로 예약 정보를 그룹화하고 예약 번호별로 시간대 묶기
+    public Map<String, List<ReserveList>> getReserveList() {
+        // 모든 예약 정보를 가져옴
+        List<ReserveList> reserveList = reserveList();
+
+        // 예약 번호별로 그룹화된 예약 정보를 저장할 맵
+        Map<Integer, ReserveList> groupedByReservNum = new LinkedHashMap<>();
+
+        // 각 예약 정보에 대해 반복
+        for (ReserveList reserve : reserveList) {
+            int reservNum = reserve.getReservNum();  // 현재 예약의 예약 번호를 가져옴
+
+            // 동일한 예약 번호가 이미 맵에 존재하는지 확인
+            if (groupedByReservNum.containsKey(reservNum)) {
+                // 동일한 예약 번호가 이미 존재하면, 기존 예약 정보에 현재 시간대를 추가
+                ReserveList existingReservation = groupedByReservNum.get(reservNum);
+                String hoursString = existingReservation.getReservHourString() + "," + reserve.getReservHour();
+                existingReservation.setReservHourString(hoursString);  // 시간대를 문자열로 합침
+            } else {
+                // 동일한 예약 번호가 없으면, 현재 예약을 맵에 추가
+                reserve.setReservHourString(String.valueOf(reserve.getReservHour()));  // 초기 시간대 설정
+                groupedByReservNum.put(reservNum, reserve);
+            }
+        }
+
+        // 예약 번호별로 그룹화된 예약 정보를 강의실 이름별로 다시 그룹화하여 반환
+        return groupedByReservNum.values().stream()
+                .collect(Collectors.groupingBy(ReserveList::getClassroomName));
     }
 
     
