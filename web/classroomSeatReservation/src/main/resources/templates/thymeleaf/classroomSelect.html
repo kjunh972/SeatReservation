@@ -11,7 +11,7 @@
     <!-- 해당 건물의 강의실 버튼 표시 -->
     <div th:each="classroom : ${classrooms}">
         <!-- 각 버튼을 누르면 classroomStatus 페이지로 이동하고 해당 강의실의 이름을 전달 -->
-        <form action="/classroomStatus" method="post">
+        <form action="/timeSelect" method="post">
             <input type="hidden" name="classroomName" th:value="${classroom}" />
             <button type="submit" th:text="${classroom}"></button>
         </form>

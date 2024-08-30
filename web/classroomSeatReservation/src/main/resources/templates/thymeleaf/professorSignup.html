@@ -1,0 +1,156 @@
+<html xmlns="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>강의실 자리 예약 프로그램 교수 회원가입</title>
+    <link rel="stylesheet" href="/css/classroomStyle.css" />
+    <style>
+        .autocomplete-list {
+            position: absolute;
+            background-color: #f1f1f1;
+            border: 1px solid #ccc;
+            max-height: 150px;
+            overflow-y: auto;
+            z-index: 999;
+            width: 100%;
+        }
+        .error-message {
+            color: red;
+            font-size: 0.9em;
+        }
+    </style>
+    <script>
+        let isIdChecked = false;
+
+        function filterSchools() {
+            var input, filter, select, option, i;
+            input = document.getElementById('schoolInput');
+            filter = input.value.toUpperCase();
+            select = document.getElementById('schoolList');
+            option = select.getElementsByTagName('option');
+            
+            for (i = 0; i < option.length; i++) {
+                txtValue = option[i].text;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    option[i].style.display = "";
+                } else {
+                    option[i].style.display = "none";
+                }
+            }
+            select.style.display = "block";
+        }
+
+        function fillSchool(value) {
+            document.getElementById('schoolInput').value = value;
+            document.getElementById('schoolList').style.display = "none";
+        }
+
+        function validateForm() {
+            var selectedSchool = document.getElementById('schoolInput').value;
+            var allowedSchools = ['대학교1', '대학교2', '대학교3'];
+            var password = document.getElementById('pass').value;
+            var confirmPassword = document.getElementById('confirmPass').value;
+
+            if (!allowedSchools.includes(selectedSchool)) {
+                alert('등록되지 않은 학교입니다. 등록된 학교에서만 회원가입이 가능합니다.');
+                return false;
+            }
+
+            if (!isValidPassword(password)) {
+                alert('비밀번호는 최소 8자이며, 하나 이상의 문자 및 숫자를 포함해야 합니다.');
+                return false;
+            }
+
+            if (password !== confirmPassword) {
+                alert('비밀번호가 일치하지 않습니다.');
+                return false;
+            }
+
+            return true;
+        }
+
+        function isValidPassword(password) {
+            var re = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+            return re.test(password);
+        }
+
+        function checkId() {
+            var id = document.getElementById('id').value;
+            if (id === "") {
+                alert("아이디를 입력하세요.");
+                return;
+            }
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "/checkProfessorId?id=" + id, true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var isExists = xhr.responseText === 'true';
+                    var idErrorSpan = document.getElementById('idError');
+                    if (isExists) {
+                        idErrorSpan.textContent = "이미 사용 중인 아이디입니다.";
+                        isIdChecked = false;
+                    } else {
+                        idErrorSpan.textContent = "사용 가능한 아이디입니다.";
+                        isIdChecked = true;
+                    }
+                }
+            };
+            xhr.send();
+        }
+
+        function handleFormSubmit(event) {
+            if (!isIdChecked) {
+                alert('아이디 중복확인을 해주세요.');
+                event.preventDefault();
+                return;
+            }
+
+            if (!validateForm()) {
+                event.preventDefault();
+                return;
+            }
+
+            alert('회원가입이 완료되었습니다.');
+        }
+    </script>
+</head>
+<body>
+    <h2>강의실 자리 예약 프로그램 교수 회원가입</h2>
+    <form id="professorSignupForm" action="/professorSignUpCheck" method="post" onsubmit="handleFormSubmit(event)">
+        <div>
+            <label for="id">사용자 아이디:</label>
+            <input type="text" id="id" name="id" required>
+            <button type="button" onclick="checkId()">아이디 중복확인</button>
+            <span class="error-message" id="idError" th:text="${idError}"></span>
+        </div>
+        <div>
+            <label for="pass">비밀번호:</label>
+            <input type="password" id="password" name="password" required>
+            <span class="error-message">비밀번호는 최소 8자이며, 하나 이상의 문자 및 숫자를 포함해야 합니다.</span>
+        </div>
+        <div>
+            <label for="confirmPass">비밀번호 확인:</label>
+            <input type="password" id="confirmPass" name="confirmPass" required>
+        </div>
+        <div>
+            <label for="schoolInput">학교:</label>
+            <input type="text" id="schoolInput" name="school" onkeyup="filterSchools()" onclick="filterSchools()" placeholder="학교 검색" required>
+            <div id="schoolList" class="autocomplete-list" style="display: none;">
+                <option value="">학교 선택</option>
+                <option value="대학교1" onclick="fillSchool('대학교1')">대학교1</option>
+                <option value="대학교2" onclick="fillSchool('대학교2')">대학교2</option>
+                <option value="대학교3" onclick="fillSchool('대학교3')">대학교3</option>
+            </div>
+        </div>
+        <div>
+            <label for="major">전공:</label>
+            <input type="text" id="major" name="major" required>
+        </div>
+        <div>
+            <label for="name">이름:</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+        <button type="submit">가입완료하기</button>
+    </form>
+</body>
+</html>

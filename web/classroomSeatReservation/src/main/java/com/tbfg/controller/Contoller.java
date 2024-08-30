@@ -21,10 +21,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tbfg.dao.ClassroomDAO;
-import com.tbfg.dao.UserDAO;
+import com.tbfg.dao.TimetableDAO;
 import com.tbfg.dto.ClassroomDTO;
+import com.tbfg.dto.ProfessorDTO;
 import com.tbfg.dto.ReserveList;
 import com.tbfg.dto.TimeTableDTO;
+import com.tbfg.dto.UserDTO;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class Contoller {
@@ -32,7 +36,25 @@ public class Contoller {
     private TimeTableDTO timetableDTO = new TimeTableDTO();
     
     @Autowired
+    // JdbcTemplate 인스턴스를 자동으로 주입
     private JdbcTemplate jdbcTemplate; 
+
+    // 세션에서 사용자 ID를 가져오는 메서드
+    public String GetId(HttpSession session) { 
+        Object loggedInUser = session.getAttribute("loggedInUser"); // 세션에서 사용자 객체 가져오기
+        String userID = null;
+
+        if (loggedInUser instanceof UserDTO) { // UserDTO 객체인지 확인
+            UserDTO userDTO = (UserDTO) loggedInUser; // UserDTO로 캐스팅
+            userID = userDTO.getId(); // 사용자 ID 가져오기
+        } else if (loggedInUser instanceof ProfessorDTO) { // ProfessorDTO 객체인지 확인
+            ProfessorDTO proDTO = (ProfessorDTO) loggedInUser; // ProfessorDTO로 캐스팅
+            userID = proDTO.getId(); // 교수 ID 가져오기
+        }
+
+        return userID; // 사용자 ID 반환
+    }
+
 
     // 메인페이지 메서드
     @GetMapping("/index")
@@ -40,19 +62,26 @@ public class Contoller {
         return "index";
     }
     
-    // 강의실 즐겨찾기 메서드
+    // 사용자가 즐겨찾기한 강의실 목록을 보여주는 메서드
     @GetMapping("/classroomLike")
-    public String classroomLike(Model model) {
-    	ClassroomDAO classroomDAO = new ClassroomDAO(jdbcTemplate);
-    	
-        // 사용자가 즐겨찾기한 강의실 버튼 목록 가져오기
-        classroomDAO.getTimetableClassrooms("kjunh972");
-        List<String> favoriteClassrooms = classroomDAO.getFavoriteClassrooms("kjunh972");
-        
-        // 모델에 즐겨찾기한 강의실 버튼 목록 추가
-        model.addAttribute("classroomButtons", favoriteClassrooms);
+    public String classroomLike(HttpSession session, Model model) {
 
-        return "classroomLike";
+        if (GetId(session) != null) { // 세션에 사용자 ID가 있는지 확인
+            ClassroomDAO classroomDAO = new ClassroomDAO(jdbcTemplate);
+            
+            // 사용자의 시간표 강의실 목록 가져오기
+            classroomDAO.getTimetableClassrooms(GetId(session)); 
+            // 즐겨찾기 강의실 목록 가져오기
+            List<String> favoriteClassrooms = classroomDAO.getFavoriteClassrooms(GetId(session)); 
+            // 모델에 즐겨찾기 강의실 추가
+            model.addAttribute("classroomButtons", favoriteClassrooms); 
+        } else {
+        	// 에러 메시지 추가
+            model.addAttribute("error", "세션이 만료되었습니다. 다시 로그인 해주세요"); 
+            return "redirect:/login"; 
+        }
+
+        return "classroomLike"; 
     }
 
     // 강의실 좌석 예약 메서드 
@@ -88,7 +117,7 @@ public class Contoller {
 
     // 강의실 좌석 예약 메서드
     @PostMapping("/reserveSeat")  
-    public String reserveSeat(String classroomName, Integer seatNumber,
+    public String reserveSeat(String classroomName, Integer seatNumber, HttpSession session,
                               Model model) throws JsonProcessingException {
 
         // JDBC 템플릿을 사용하여 ClassroomDAO 객체를 생성
@@ -100,18 +129,19 @@ public class Contoller {
         classroomDTO.setRandomNum(randomNum);
         
         // DAO를 사용하여 좌석을 예약하고, 해당 좌석에 랜덤 번호를 설정
-        classroomDAO.reserveSeat("kjunh972", classroomName, seatNumber, randomNum);
+        classroomDAO.reserveSeat(GetId(session), classroomName, seatNumber, randomNum);
         // 사용자가 선택한 시간대에 대해 예약된 시간 정보를 ReservationHour 테이블에 추가
         for (Integer hour : classroomDTO.getSelectHours()) {
             classroomDAO.addReservationHour(randomNum, hour);
         }
         
-        String hours = classroomDTO.getSelectHours().stream().map(String::valueOf).collect(Collectors.joining("시, "));
+        // 선택한 시간대 문자열로 변환
+        String hours = classroomDTO.getSelectHours().stream().map(String::valueOf).collect(Collectors.joining("시, ")); 
 
-        model.addAttribute("seatNumber", seatNumber);
-        model.addAttribute("selectHours", hours);
-        model.addAttribute("randomNum", randomNum);
-        model.addAttribute("classroom", classroomDTO);
+        model.addAttribute("seatNumber", seatNumber); // 좌석 번호 모델에 추가
+        model.addAttribute("selectHours", hours); // 선택한 시간대 모델에 추가
+        model.addAttribute("randomNum", randomNum); // 랜덤 번호 모델에 추가
+        model.addAttribute("classroom", classroomDTO); // 강의실 정보 모델에 추가
         
         return "reserveSeat";
     }
@@ -175,12 +205,11 @@ public class Contoller {
     }
     
     @GetMapping("/timetable")
-    public String timetable(Model model, @ModelAttribute("warning") String warning) {
-    	UserDAO userDAO = new UserDAO(jdbcTemplate);
-    	String userId = "kjunh972"; // 사용자 ID
-
+    public String timetable(HttpSession session, Model model, @ModelAttribute("warning") String warning) {
+    	TimetableDAO timetableDAO = new TimetableDAO(jdbcTemplate);
+    	
         // 사용자의 모든 시간표를 가져옴.
-        List<TimeTableDTO> userTimeTable = userDAO.getTimetable(userId);
+        List<TimeTableDTO> userTimeTable = timetableDAO.getTimetable(GetId(session));
 
         // 요일과 시간 목록을 생성하여 모델에 추가
         List<String> days = Arrays.asList("월요일", "화요일", "수요일", "목요일", "금요일");
@@ -198,25 +227,29 @@ public class Contoller {
     
     @PostMapping("/timetable")
     public String postTimetable(String subject, String classroomName, String day, Integer startHour,
-            Integer endHour, Model model) {
-        UserDAO userDAO = new UserDAO(jdbcTemplate);
-        String userId = "kjunh972"; // 사용자 ID
+            Integer endHour, Model model, HttpSession session) {
+        TimetableDAO userDAO = new TimetableDAO(jdbcTemplate);
         
         try {
             if (startHour != null && endHour != null && startHour >= endHour) { // 시작시간이 종료시간보다 크면
                 model.addAttribute("error", ":: Warning - 시작 시간이 종료 시간보다 클 수 없습니다. ::");
             } else {
-
-            // 시간표 추가
-            timetableDTO.setUserId(userId);
-            timetableDTO.setSubject(subject);
-            timetableDTO.setClassroomName(classroomName);
-            timetableDTO.setDay(day);
-            timetableDTO.setStartHour(startHour);
-            timetableDTO.setEndHour(endHour);
-
-            // `setTimetable` 메서드 호출
-            userDAO.setTimetable(timetableDTO);
+            	if (subject=="" || classroomName=="" || day=="") // 시간표를 입력할때 칸 하나라도 공백있을떄.
+            	{
+            		model.addAttribute("error", ":: Warning - 시간표에 있는 내용을 다 입력해주세요. ::");
+                    System.out.println("오류 : 시간표 내용 공백");
+            	} else {
+		            // 시간표 추가
+		            timetableDTO.setUserId(GetId(session));
+		            timetableDTO.setSubject(subject);
+		            timetableDTO.setClassroomName(classroomName);
+		            timetableDTO.setDay(day);
+		            timetableDTO.setStartHour(startHour);
+		            timetableDTO.setEndHour(endHour);
+		
+		            // `setTimetable` 메서드 호출
+		            userDAO.setTimetable(timetableDTO);
+            	}
             }
 
         } catch (DataIntegrityViolationException e) {
@@ -234,7 +267,7 @@ public class Contoller {
         }
 
         // 사용자의 모든 시간표를 가져옵니다.
-        List<TimeTableDTO> userTimeTable = userDAO.getTimetable(userId);
+        List<TimeTableDTO> userTimeTable = userDAO.getTimetable(GetId(session));
 
         // 요일과 시간 목록을 생성하여 모델에 추가합니다.
         List<String> days = Arrays.asList("월요일", "화요일", "수요일", "목요일", "금요일");
@@ -253,15 +286,14 @@ public class Contoller {
   
     // 시간표를 삭제하는 메서드
     @PostMapping("/deleteTimetable")
-    public String deleteTimeTable(String delete_subject, Model model) {
-    	UserDAO userDAO = new UserDAO(jdbcTemplate);
-        String userId = "kjunh972"; // 사용자 ID
+    public String deleteTimeTable(String delete_subject, Model model, HttpSession session) {
+    	TimetableDAO userDAO = new TimetableDAO(jdbcTemplate);
 
         // 시간표 삭제
-        userDAO.deleteTimeTable(userId, delete_subject);
+        userDAO.deleteTimeTable(GetId(session), delete_subject);
 
         // 시간표가 삭제된 후 다시 시간표를 가져와 모델에 추가
-        List<TimeTableDTO> userTimeTable = userDAO.getTimetable(userId);
+        List<TimeTableDTO> userTimeTable = userDAO.getTimetable(GetId(session));
         model.addAttribute("userTimeTable", userTimeTable);
 
         // 바로 timetable로 이동
