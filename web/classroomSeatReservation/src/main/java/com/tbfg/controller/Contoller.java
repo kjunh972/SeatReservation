@@ -55,7 +55,6 @@ public class Contoller {
         return userID; // 사용자 ID 반환
     }
 
-
     // 메인페이지 메서드
     @GetMapping("/index")
     public String index() {
@@ -65,31 +64,35 @@ public class Contoller {
     // 사용자가 즐겨찾기한 강의실 목록을 보여주는 메서드
     @GetMapping("/classroomLike")
     public String classroomLike(HttpSession session, Model model) {
-
-        if (GetId(session) != null) { // 세션에 사용자 ID가 있는지 확인
-            ClassroomDAO classroomDAO = new ClassroomDAO(jdbcTemplate);
-            
-            // 사용자의 시간표 강의실 목록 가져오기
-            classroomDAO.getTimetableClassrooms(GetId(session)); 
-            // 즐겨찾기 강의실 목록 가져오기
-            List<String> favoriteClassrooms = classroomDAO.getFavoriteClassrooms(GetId(session)); 
-            // 모델에 즐겨찾기 강의실 추가
-            model.addAttribute("classroomButtons", favoriteClassrooms); 
-        } else {
-        	// 에러 메시지 추가
-            model.addAttribute("error", "세션이 만료되었습니다. 다시 로그인 해주세요"); 
-            return "redirect:/login"; 
-        }
+    	
+    	if (GetId(session) == null) { // 세션에 사용자 ID가 있는지 확인
+   		 model.addAttribute("error", "세션이 만료되었습니다. 다시 로그인 해주세요.");
+            return "login"; // 로그인 페이지로 리다이렉트
+    	}
+    	
+    	ClassroomDAO classroomDAO = new ClassroomDAO(jdbcTemplate);
+        
+        // 사용자의 시간표 강의실 목록 가져오기
+        classroomDAO.getTimetableClassrooms(GetId(session)); 
+        // 즐겨찾기 강의실 목록 가져오기
+        List<String> favoriteClassrooms = classroomDAO.getFavoriteClassrooms(GetId(session)); 
+        // 모델에 즐겨찾기 강의실 추가
+        model.addAttribute("classroomButtons", favoriteClassrooms); 
 
         return "classroomLike"; 
     }
 
     // 강의실 좌석 예약 메서드 
     @PostMapping("/classroomStatus") 
-    public String classroomStatus(String classroomName,
+    public String classroomStatus(String classroomName, HttpSession session,
                                   @RequestParam("selectHours") String selectHoursJson,
                                   Model model) throws JsonProcessingException {
 
+    	if (GetId(session) == null) { // 세션에 사용자 ID가 있는지 확인
+   		 model.addAttribute("error", "세션이 만료되었습니다. 다시 로그인 해주세요.");
+            return "login"; // 로그인 페이지로 리다이렉트
+    	}
+    	
         // JDBC 템플릿을 사용하여 ClassroomDAO 객체를 생성
         ClassroomDAO classroomDAO = new ClassroomDAO(jdbcTemplate);
         // classroomDTO 객체에 사용자가 입력한 강의실 이름을 설정
@@ -146,26 +149,133 @@ public class Contoller {
         return "reserveSeat";
     }
     
-    // 강의실 좌석 예약 확인 리스트 메서드
     @GetMapping("/reserveList")
-    public String reserveList(Model model) {
+    public String reserveList(HttpSession session, Model model) {
+        // 세션에서 사용자 ID 가져오기
+        String userId = GetId(session);
+
+        if (userId == null) {
+            model.addAttribute("error", "세션이 만료되었습니다. 다시 로그인 해주세요.");
+            return "login"; // 로그인 페이지로 리다이렉트
+        }
+
         // ClassroomDAO 인스턴스를 생성하여 데이터베이스 작업을 처리
         ClassroomDAO classroomDAO = new ClassroomDAO(jdbcTemplate);
 
-        // 모든 예약 정보를 강의실별로 그룹화하여 가져옴
-        Map<String, List<ReserveList>> reserveList = classroomDAO.getReserveList();
+        // 로그인한 사용자의 예약 목록을 가져옴
+        Map<String, List<ReserveList>> reserveList = classroomDAO.getReserveList(userId);
+        System.out.println("reserveList : " + reserveList);
+        
+        if (reserveList.isEmpty()) {
+            model.addAttribute("empty", "예약된 내용이 없습니다.");
+        } else {
+            // 강의실별로 그룹화된 예약 정보를 모델에 추가하여 뷰에서 사용 가능하도록 설정
+            model.addAttribute("reserveList", reserveList);
+        }
 
-        // 강의실별로 그룹화된 예약 정보를 모델에 추가하여 뷰에서 사용 가능하도록 설정
-        model.addAttribute("reserveList", reserveList);
+        return "reserveList"; // reserveList.html 페이지 반환
+    }
 
+    // 예약 취소 메서드
+    @PostMapping("/cancelReservation")
+    public String cancelReservation(
+            @RequestParam("reservNum") int reservNum, // 요청 파라미터로 전달된 예약 번호
+            HttpSession session, // HTTP 세션 객체
+            Model model) { // 스프링 MVC 모델 객체
+
+        // 세션에서 사용자 ID를 가져오는 메서드
+        String userId = GetId(session);
+
+        // 사용자 ID가 null인 경우, 즉 세션이 만료된 경우
+        if (userId == null) {
+            model.addAttribute("error", "세션이 만료되었습니다. 다시 로그인 해주세요.");
+            return "login"; // 로그인 페이지로 리다이렉트
+        }
+
+        // DAO 객체 생성
+        ClassroomDAO classroomDAO = new ClassroomDAO(jdbcTemplate);
+
+        // 예약 취소 메서드 호출
+        boolean success = classroomDAO.cancelReservation(reservNum, userId);
+
+        if (success) {
+            // 예약 취소 성공 시
+            model.addAttribute("success", "예약이 취소되었습니다.");
+        } else {
+            // 예약 취소 실패 시
+            model.addAttribute("error", "예약 취소에 실패하였습니다.");
+        }
+
+        // 로그인한 사용자의 예약 목록을 가져옴
+        Map<String, List<ReserveList>> reserveList = classroomDAO.getReserveList(userId);
+        System.out.println("reserveList : " + reserveList);
+
+        if (reserveList.isEmpty()) {
+            model.addAttribute("empty", "예약된 내용이 없습니다.");
+        } else {
+            // 강의실별로 그룹화된 예약 정보를 모델에 추가하여 뷰에서 사용 가능하도록 설정
+            model.addAttribute("reserveList", reserveList);
+        }
+
+        // 예약 목록 페이지로 리다이렉트
         return "reserveList";
     }
 
+    // 예약 시간 변경 메서드
+    @PostMapping("/updateReservation")
+    public String updateReservation(
+            @RequestParam("reservNum") int reservNum, // 요청 파라미터로 전달된 예약 번호
+            @RequestParam("newHour") String newHour, // 요청 파라미터로 전달된 새로운 시간대 (쉼표로 구분된 문자열)
+            HttpSession session, // HTTP 세션 객체
+            Model model) { // 스프링 MVC 모델 객체
 
+        // 세션에서 사용자 ID를 가져오는 메서드
+        String userId = GetId(session);
+
+        // 사용자 ID가 null인 경우, 즉 세션이 만료된 경우
+        if (userId == null) {
+            model.addAttribute("error", "세션이 만료되었습니다. 다시 로그인 해주세요.");
+            return "login"; // 로그인 페이지로 리다이렉트
+        }
+
+        // DAO 객체 생성
+        ClassroomDAO classroomDAO = new ClassroomDAO(jdbcTemplate);
+
+        // 예약 시간 변경 메서드 호출
+        boolean success = classroomDAO.updateReservation(reservNum, newHour, userId);
+
+        if (success) {
+            // 예약 시간 변경 성공 시
+            model.addAttribute("success", "예약 시간이 변경되었습니다.");
+        } else {
+            // 예약 시간 변경 실패 시
+            model.addAttribute("error", "예약 시간 변경에 실패하였습니다.");
+        }
+
+        // 로그인한 사용자의 예약 목록을 가져옴
+        Map<String, List<ReserveList>> reserveList = classroomDAO.getReserveList(userId);
+        System.out.println("reserveList : " + reserveList);
+
+        if (reserveList.isEmpty()) {
+            model.addAttribute("empty", "예약된 내용이 없습니다.");
+        } else {
+            // 강의실별로 그룹화된 예약 정보를 모델에 추가하여 뷰에서 사용 가능하도록 설정
+            model.addAttribute("reserveList", reserveList);
+        }
+
+        // 예약 목록 페이지로 리다이렉트
+        return "reserveList";
+    }
 
     // 선택한 강의 번호에 해당하는 강의실 목록을 조회하는 메서드
     @PostMapping("/classroomSelect")
-    public String classroomSelect(String classNum, Model model) {
+    public String classroomSelect(String classNum, HttpSession session, Model model) {
+    	
+    	if (GetId(session) == null) { // 세션에 사용자 ID가 있는지 확인
+   		 model.addAttribute("error", "세션이 만료되었습니다. 다시 로그인 해주세요.");
+            return "login"; // 로그인 페이지로 리다이렉트
+    	}
+    	
     	ClassroomDAO classroomDAO = new ClassroomDAO(jdbcTemplate);
     	
         // 선택한 강의 번호에 해당하는 강의실 목록 조회
@@ -180,7 +290,12 @@ public class Contoller {
 
     // 모든 강의 번호 목록을 조회하는 메서드
     @PostMapping("/classSelect")
-    public String getClassSelect(String classNumber, Model model) {
+    public String getClassSelect(String classNumber, HttpSession session, Model model) {
+    	if (GetId(session) == null) { // 세션에 사용자 ID가 있는지 확인
+   		 model.addAttribute("error", "세션이 만료되었습니다. 다시 로그인 해주세요.");
+            return "login"; // 로그인 페이지로 리다이렉트
+    	}
+    	
     	ClassroomDAO classroomDAO = new ClassroomDAO(jdbcTemplate);
     	
         // 모든 강의 번호 목록 조회
@@ -194,7 +309,12 @@ public class Contoller {
     
     // 시간 선택하는 페이지를 보여주는 메서드
     @PostMapping("/timeSelect")
-    public String timeSelect(String classroomName, Model model) {
+    public String timeSelect(String classroomName, HttpSession session, Model model) {
+    	if (GetId(session) == null) { // 세션에 사용자 ID가 있는지 확인
+   		 model.addAttribute("error", "세션이 만료되었습니다. 다시 로그인 해주세요.");
+            return "login"; // 로그인 페이지로 리다이렉트
+    	}
+    	
     	List<Integer> hours = Arrays.asList(9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8); // 9시부터 8시까지의 시간
     	classroomDTO.setClassroomName(classroomName); // 강의실 번호 설정
     	
@@ -206,6 +326,11 @@ public class Contoller {
     
     @GetMapping("/timetable")
     public String timetable(HttpSession session, Model model, @ModelAttribute("warning") String warning) {
+    	if (GetId(session) == null) { // 세션에 사용자 ID가 있는지 확인
+   		 model.addAttribute("error", "세션이 만료되었습니다. 다시 로그인 해주세요.");
+            return "login"; // 로그인 페이지로 리다이렉트
+    	}
+    	
     	TimetableDAO timetableDAO = new TimetableDAO(jdbcTemplate);
     	
         // 사용자의 모든 시간표를 가져옴.

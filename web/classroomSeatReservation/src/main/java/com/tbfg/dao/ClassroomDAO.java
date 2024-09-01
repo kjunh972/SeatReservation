@@ -83,7 +83,7 @@ public class ClassroomDAO {
     }
     
     // 강의실별로 예약 정보를 그룹화하고 예약 번호별로 시간대 묶기
-    public Map<String, List<ReserveList>> getReserveList() {
+    public Map<String, List<ReserveList>> getReserveList(String userId) {
         // 모든 예약 정보를 가져옴
         List<ReserveList> reserveList = reserveList();
 
@@ -92,18 +92,21 @@ public class ClassroomDAO {
 
         // 각 예약 정보에 대해 반복
         for (ReserveList reserve : reserveList) {
-            int reservNum = reserve.getReservNum();  // 현재 예약의 예약 번호를 가져옴
+            // 현재 예약이 로그인한 사용자와 일치하는지 확인
+            if (reserve.getUserId().equals(userId)) {
+                int reservNum = reserve.getReservNum();  // 현재 예약의 예약 번호를 가져옴
 
-            // 동일한 예약 번호가 이미 맵에 존재하는지 확인
-            if (groupedByReservNum.containsKey(reservNum)) {
-                // 동일한 예약 번호가 이미 존재하면, 기존 예약 정보에 현재 시간대를 추가
-                ReserveList existingReservation = groupedByReservNum.get(reservNum);
-                String hoursString = existingReservation.getReservHourString() + "," + reserve.getReservHour();
-                existingReservation.setReservHourString(hoursString);  // 시간대를 문자열로 합침
-            } else {
-                // 동일한 예약 번호가 없으면, 현재 예약을 맵에 추가
-                reserve.setReservHourString(String.valueOf(reserve.getReservHour()));  // 초기 시간대 설정
-                groupedByReservNum.put(reservNum, reserve);
+                // 동일한 예약 번호가 이미 맵에 존재하는지 확인
+                if (groupedByReservNum.containsKey(reservNum)) {
+                    // 동일한 예약 번호가 이미 존재하면, 기존 예약 정보에 현재 시간대를 추가
+                    ReserveList existingReservation = groupedByReservNum.get(reservNum);
+                    String hoursString = existingReservation.getReservHourString() + "," + reserve.getReservHour();
+                    existingReservation.setReservHourString(hoursString);  // 시간대를 문자열로 합침
+                } else {
+                    // 동일한 예약 번호가 없으면, 현재 예약을 맵에 추가
+                    reserve.setReservHourString(String.valueOf(reserve.getReservHour()));  // 초기 시간대 설정
+                    groupedByReservNum.put(reservNum, reserve);
+                }
             }
         }
 
@@ -111,7 +114,49 @@ public class ClassroomDAO {
         return groupedByReservNum.values().stream()
                 .collect(Collectors.groupingBy(ReserveList::getClassroomName));
     }
+    
+    // 예약 취소 메서드
+    public boolean cancelReservation(int reservNum, String userId) {
+        // 예약 삭제를 위한 SQL 쿼리
+        String deleteReservationSql = "DELETE FROM Reservation WHERE reservNum = ? AND user_id = ?";
+        // 예약 시간 삭제를 위한 SQL 쿼리
+        String deleteReservationHourSql = "DELETE FROM ReservationHour WHERE reservNum = ?";
 
+        // Reservation 테이블에서 예약 삭제 시도
+        int reservationSql = jdbcTemplate.update(deleteReservationSql, reservNum, userId);
+
+        if (reservationSql > 0) {
+            // 예약이 성공적으로 삭제된 경우, ReservationHour 테이블에서 해당 예약 번호에 관련된 모든 시간 삭제
+            int reservationHourSql = jdbcTemplate.update(deleteReservationHourSql, reservNum);
+            // 시간 삭제 작업이 성공적으로 수행되었는지 확인
+            return reservationHourSql >= 0; // 예약 시간 삭제 여부를 확인
+        }
+
+        // 예약 삭제가 실패한 경우
+        return false;
+    }
+    
+    // 예약 시간 변경 메소드
+    public boolean updateReservation(int reservNum, String newHour, String userId) {
+        // 예약 시간 업데이트 전에 기존 예약 시간 삭제를 위한 SQL 쿼리
+        // 예약이 존재하고 사용자 ID가 일치하는 경우에만 예약 시간 삭제
+        String deleteSql = "DELETE FROM ReservationHour WHERE reservNum = ? AND EXISTS (SELECT 1 FROM Reservation WHERE reservNum = ? AND user_id = ?)";
+        jdbcTemplate.update(deleteSql, reservNum, reservNum, userId);
+        
+        // 새로운 시간대 문자열을 쉼표로 분리하여 배열로 변환
+        String[] hours = newHour.split(",");
+        // 새로운 예약 시간을 삽입하기 위한 SQL 쿼리
+        String insertSql = "INSERT INTO ReservationHour (reservNum, reservHour) VALUES (?, ?)";
+
+        int insertHourSql = 0;
+        // 새로운 시간대 배열을 순회하며 각각의 시간대에 대해 예약 시간 삽입
+        for (String hour : hours) {
+        	insertHourSql += jdbcTemplate.update(insertSql, reservNum, Integer.parseInt(hour));
+        }
+
+        // 모든 새로운 예약 시간대가 성공적으로 삽입되었는지 확인
+        return insertHourSql == hours.length;
+    }
     
     // 사용자 아이디를 받아 즐겨찾기한 강의실 목록을 가져오는 메서드
     public List<String> getFavoriteClassrooms(String userId) {
