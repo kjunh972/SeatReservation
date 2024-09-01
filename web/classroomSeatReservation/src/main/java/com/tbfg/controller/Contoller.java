@@ -149,11 +149,13 @@ public class Contoller {
         return "reserveSeat";
     }
     
+ // 예약 목록을 조회하는 메서드
     @GetMapping("/reserveList")
     public String reserveList(HttpSession session, Model model) {
         // 세션에서 사용자 ID 가져오기
         String userId = GetId(session);
 
+        // 세션이 만료되었거나 사용자 ID가 없는 경우
         if (userId == null) {
             model.addAttribute("error", "세션이 만료되었습니다. 다시 로그인 해주세요.");
             return "login"; // 로그인 페이지로 리다이렉트
@@ -166,6 +168,7 @@ public class Contoller {
         Map<String, List<ReserveList>> reserveList = classroomDAO.getReserveList(userId);
         System.out.println("reserveList : " + reserveList);
         
+        // 예약 목록이 비어있는 경우
         if (reserveList.isEmpty()) {
             model.addAttribute("empty", "예약된 내용이 없습니다.");
         } else {
@@ -173,26 +176,25 @@ public class Contoller {
             model.addAttribute("reserveList", reserveList);
         }
 
-        return "reserveList"; // reserveList.html 페이지 반환
+        return "reserveList";
     }
 
-    // 예약 취소 메서드
+    // 예약 취소를 처리하는 메서드
     @PostMapping("/cancelReservation")
     public String cancelReservation(
             @RequestParam("reservNum") int reservNum, // 요청 파라미터로 전달된 예약 번호
             HttpSession session, // HTTP 세션 객체
-            Model model) { // 스프링 MVC 모델 객체
+            Model model) { 
 
         // 세션에서 사용자 ID를 가져오는 메서드
         String userId = GetId(session);
 
-        // 사용자 ID가 null인 경우, 즉 세션이 만료된 경우
+        // 세션이 만료되었거나 사용자 ID가 없는 경우
         if (userId == null) {
             model.addAttribute("error", "세션이 만료되었습니다. 다시 로그인 해주세요.");
             return "login"; // 로그인 페이지로 리다이렉트
         }
 
-        // DAO 객체 생성
         ClassroomDAO classroomDAO = new ClassroomDAO(jdbcTemplate);
 
         // 예약 취소 메서드 호출
@@ -210,6 +212,7 @@ public class Contoller {
         Map<String, List<ReserveList>> reserveList = classroomDAO.getReserveList(userId);
         System.out.println("reserveList : " + reserveList);
 
+        // 예약 목록이 비어있는 경우
         if (reserveList.isEmpty()) {
             model.addAttribute("empty", "예약된 내용이 없습니다.");
         } else {
@@ -217,28 +220,26 @@ public class Contoller {
             model.addAttribute("reserveList", reserveList);
         }
 
-        // 예약 목록 페이지로 리다이렉트
         return "reserveList";
     }
 
-    // 예약 시간 변경 메서드
+    // 예약 시간을 변경하는 메서드
     @PostMapping("/updateReservation")
     public String updateReservation(
             @RequestParam("reservNum") int reservNum, // 요청 파라미터로 전달된 예약 번호
             @RequestParam("newHour") String newHour, // 요청 파라미터로 전달된 새로운 시간대 (쉼표로 구분된 문자열)
             HttpSession session, // HTTP 세션 객체
-            Model model) { // 스프링 MVC 모델 객체
+            Model model) { 
 
         // 세션에서 사용자 ID를 가져오는 메서드
         String userId = GetId(session);
 
-        // 사용자 ID가 null인 경우, 즉 세션이 만료된 경우
+        // 세션이 만료되었거나 사용자 ID가 없는 경우
         if (userId == null) {
             model.addAttribute("error", "세션이 만료되었습니다. 다시 로그인 해주세요.");
             return "login"; // 로그인 페이지로 리다이렉트
         }
 
-        // DAO 객체 생성
         ClassroomDAO classroomDAO = new ClassroomDAO(jdbcTemplate);
 
         // 예약 시간 변경 메서드 호출
@@ -256,6 +257,7 @@ public class Contoller {
         Map<String, List<ReserveList>> reserveList = classroomDAO.getReserveList(userId);
         System.out.println("reserveList : " + reserveList);
 
+        // 예약 목록이 비어있는 경우
         if (reserveList.isEmpty()) {
             model.addAttribute("empty", "예약된 내용이 없습니다.");
         } else {
@@ -263,7 +265,6 @@ public class Contoller {
             model.addAttribute("reserveList", reserveList);
         }
 
-        // 예약 목록 페이지로 리다이렉트
         return "reserveList";
     }
 
