@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html xmlns="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -47,7 +48,7 @@
         function validateForm() {
             var selectedSchool = document.getElementById('schoolInput').value;
             var allowedSchools = ['대학교1', '대학교2', '대학교3'];
-            var password = document.getElementById('pass').value;
+            var password = document.getElementById('password').value;
             var confirmPassword = document.getElementById('confirmPass').value;
 
             if (!allowedSchools.includes(selectedSchool)) {
@@ -121,10 +122,10 @@
             <label for="id">사용자 아이디:</label>
             <input type="text" id="id" name="id" required>
             <button type="button" onclick="checkId()">아이디 중복확인</button>
-            <span class="error-message" id="idError" th:text="${idError}"></span>
+            <span class="error-message" id="idError"></span>
         </div>
         <div>
-            <label for="pass">비밀번호:</label>
+            <label for="password">비밀번호:</label>
             <input type="password" id="password" name="password" required>
             <span class="error-message">비밀번호는 최소 8자이며, 하나 이상의 문자 및 숫자를 포함해야 합니다.</span>
         </div>

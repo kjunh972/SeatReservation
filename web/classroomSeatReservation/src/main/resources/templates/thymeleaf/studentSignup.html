@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html xmlns="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -19,10 +20,8 @@
         }
     </style>
     <script>
-        // 아이디 중복 확인 결과를 저장하는 변수
         let isIdChecked = false;
 
-        // 학교 검색 필드 필터링 함수
         function filterSchools() {
             var input, filter, select, option, i;
             input = document.getElementById('schoolInput');
@@ -41,32 +40,27 @@
             select.style.display = "block";
         }
 
-        // 선택된 학교를 입력 필드에 채우는 함수
         function fillSchool(value) {
             document.getElementById('schoolInput').value = value;
             document.getElementById('schoolList').style.display = "none";
         }
 
-        // 폼 유효성 검사 함수
         function validateForm() {
             var selectedSchool = document.getElementById('schoolInput').value;
             var allowedSchools = ['대학교1', '대학교2', '대학교3'];
             var password = document.getElementById('pass').value;
             var confirmPassword = document.getElementById('confirmPass').value;
 
-            // 등록된 학교가 아닌 경우 경고 메시지
             if (!allowedSchools.includes(selectedSchool)) {
                 alert('등록되지 않은 학교입니다. 등록된 학교에서만 회원가입이 가능합니다.');
                 return false;
             }
 
-            // 비밀번호 유효성 검사
             if (!isValidPassword(password)) {
                 alert('비밀번호는 최소 8자이며, 하나 이상의 문자 및 숫자를 포함해야 합니다.');
                 return false;
             }
 
-            // 비밀번호 확인 일치 여부 확인
             if (password !== confirmPassword) {
                 alert('비밀번호가 일치하지 않습니다.');
                 return false;
@@ -75,13 +69,11 @@
             return true;
         }
 
-        // 비밀번호 유효성을 검사하는 함수
         function isValidPassword(password) {
             var re = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
             return re.test(password);
         }
 
-        // 아이디 중복 확인을 수행하는 함수
         function checkId() {
             var id = document.getElementById('id').value;
             if (id === "") {
@@ -107,22 +99,18 @@
             xhr.send();
         }
 
-        // 폼 제출 시 호출되는 함수
         function handleFormSubmit(event) {
-            // 아이디 중복 확인이 완료되지 않았을 경우 경고 메시지
             if (!isIdChecked) {
                 alert('아이디 중복확인을 해주세요.');
                 event.preventDefault();
                 return;
             }
 
-            // 폼 유효성 검사 함수 호출
             if (!validateForm()) {
                 event.preventDefault();
                 return;
             }
 
-            // 모든 유효성 검사 통과 후 회원가입 완료 알림창
             alert('회원가입이 완료되었습니다.');
         }
     </script>
@@ -139,7 +127,6 @@
         <div>
             <label for="pass">비밀번호:</label>
             <input type="password" id="pass" name="pass" required>
-            <!-- 비밀번호 유효성 메시지 -->
             <span class="error-message">비밀번호는 최소 8자이며, 하나 이상의 문자 및 숫자를 포함해야 합니다.</span>
         </div>
         <div>

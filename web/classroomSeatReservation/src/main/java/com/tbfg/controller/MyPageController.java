@@ -129,7 +129,7 @@ public class MyPageController {
                 model.addAttribute("successMessage", "교수 계정이 성공적으로 삭제되었습니다.");
                 
                 // 회원가입 직책 선택 페이지로 리다이렉트
-                return "selectPosition";
+                return "login";
             }
         } else {
             // ID를 통해 학생 정보를 데이터베이스에서 가져옴
@@ -151,7 +151,7 @@ public class MyPageController {
                 model.addAttribute("successMessage", "학생 계정이 성공적으로 삭제되었습니다.");
                 
                 // 회원가입 직책 선택 페이지로 리다이렉트
-                return "selectPosition";
+                return "login";
             }
         }
         

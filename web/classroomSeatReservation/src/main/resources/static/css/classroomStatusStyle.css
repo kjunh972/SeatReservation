@@ -18,6 +18,11 @@ background-color: #98fb98 !important; /* 빈 좌석 배경색 지정 */
 background-color: #ff6347 !important; /* 예약된 좌석 배경색 지정 */
 }
 
+.banned {
+background-color: gray;
+cursor: not-allowed;
+}
+
 button {
 width: 50px; /* 버튼 가로 크기 */
 height: 50px; /* 버튼 세로 크기 */

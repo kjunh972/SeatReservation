@@ -6,37 +6,38 @@
     <link rel="stylesheet" href="/css/classroomStatusStyle.css" />
 </head>
 <body>
-	<header th:replace="~{/menu.html}"></header> 
-	
+    <header th:replace="~{/menu.html}"></header>
+
     <!-- 제목 표시 -->
-    <h1 th:text="${classroom.classroomName} + '호 좌석 예약 현황'">강의실 좌석 예약 현황</h1>
-    <!-- 좌석 현황표 위치 -->
+    <h1 th:if="${classroom}" th:text="${classroom.classroomName} + '호 좌석 예약 현황'">강의실 좌석 예약 현황</h1>
+    
+   <!-- 좌석 현황표 위치 -->
     <div class="alignLR">
-        <!-- 왼쪽 강의실 좌석 생성 -->
-        <div class="grid">
-            <!-- 좌석 표시 -->
+        <div class="grid" th:if="${classroom}">
             <div th:each="seatStatus, seatIndex : ${classroom.seatStatusList.subList(0, 24)}">
                 <button class="seat" th:text="${seatIndex.index + 1}"
-                    th:class="${seatStatus ? 'reserved' : 'empty'}"
+                    th:class="${seatStatus ? 'reserved' : (banSeatDTO.isBanned(seatIndex.index + 1) ? 'banned' : 'empty')}"
                     th:data-seat="${seatIndex.index + 1}"
                     th:data-classroom="${classroom.classroomName}"
-                    onclick="openModal(this)">
+                    th:data-banned="${banSeatDTO.isBanned(seatIndex.index + 1)}"
+                    onclick="openModal(this)"> 
                 </button>
             </div>
         </div>
-        <!-- 오른쪽 좌석 생성 -->
-        <div class="grid" style="margin-left: 52px;"> <!-- 왼쪽 오른쪽 사이 간격 -->
-            <!-- 좌석 표시 -->
+
+        <div class="grid" style="margin-left: 52px;" th:if="${classroom}">
             <div th:each="seatStatus, seatIndex : ${classroom.seatStatusList.subList(24, 48)}">
                 <button class="seat" th:text="${seatIndex.index + 25}"
-                    th:class="${seatStatus ? 'reserved' : 'empty'}"
+                    th:class="${seatStatus ? 'reserved' : (banSeatDTO.isBanned(seatIndex.index + 25) ? 'banned' : 'empty')}"
                     th:data-seat="${seatIndex.index + 25}"
                     th:data-classroom="${classroom.classroomName}"
-                    onclick="openModal(this)">
+                    th:data-banned="${banSeatDTO.isBanned(seatIndex.index + 25)}"
+                   	onclick="openModal(this)"> 
                 </button>
             </div>
         </div>
     </div>
+
 
     <!-- 모달 HTML -->
     <div id="myModal" class="modal">
@@ -48,50 +49,57 @@
         </div>
     </div>
 
-    <script>
-	    let selectedSeat, selectedClassroom;
-	
-	    function openModal(button) {
-	        if (button.classList.contains('reserved')) {
-	            alert('예약된 좌석입니다.');
-	            return;
-	        }
-	
-	        selectedSeat = button.dataset.seat;
-	        selectedClassroom = button.dataset.classroom;
-	
-	        document.getElementById('modalMessage').textContent = `${selectedClassroom}호 ${selectedSeat}번 좌석을 예약하시겠습니까?`;
-	        document.getElementById('myModal').style.display = 'block';
-	    }
-	
-	    function closeModal() {
-	        document.getElementById('myModal').style.display = 'none';
-	    }
-	
-	    document.getElementById('confirmButton').onclick = () => {
-	        const form = document.createElement('form');
-	        form.method = 'POST';
-	        form.action = '/reserveSeat';
-	
-	        form.innerHTML = `
-	            <input type="hidden" name="classroomName" value="${selectedClassroom}">
-	            <input type="hidden" name="seatNumber" value="${selectedSeat}"> `;
-	
-	        document.body.appendChild(form);
-	        form.submit();
-	    };
-	
-	    document.getElementById('cancelButton').onclick = closeModal;
-	
-	    window.onclick = event => {
-	        if (event.target === document.getElementById('myModal')) closeModal();
-	    };
-	
-	    document.querySelectorAll('.seat').forEach(button => {
-	        button.onclick = () => openModal(button);
-	    });
-	</script>
+    <script th:inline="javascript">
+        let selectedSeat, selectedClassroom;
 
+        function openModal(button) {
+            if (button.classList.contains('reserved')) {
+                alert('예약된 좌석입니다.');
+                return;
+            }
 
+            selectedSeat = button.dataset.seat;
+            selectedClassroom = button.dataset.classroom;
+            
+            var message = null;
+            var userPosition = /*[[${userPosition}]]*/ 'default'; // Thymeleaf에서 사용자 직책 정보 전달
+            if (userPosition === "student") {
+                message = `${selectedClassroom}호 ${selectedSeat}번 좌석을 예약하시겠습니까?`;
+            } else {
+                message = `${selectedClassroom}호 ${selectedSeat}번 좌석의 예약을 금지 하시겠습니까?`;
+            }
+
+            document.getElementById('modalMessage').textContent = message;
+            document.getElementById('myModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('myModal').style.display = 'none';
+        }
+
+        document.getElementById('confirmButton').onclick = () => {
+            var userPosition = /*[[${userPosition}]]*/ 'default'; // Thymeleaf에서 사용자 직책 정보 전달
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = userPosition === "student" ? '/reserveSeat' : '/banSeat';
+
+            form.innerHTML = `
+                <input type="hidden" name="classroomName" value="${selectedClassroom}">
+                <input type="hidden" name="seatNumber" value="${selectedSeat}">`;
+
+            document.body.appendChild(form);
+            form.submit();
+        };
+
+        document.getElementById('cancelButton').onclick = closeModal;
+
+        window.onclick = event => {
+            if (event.target === document.getElementById('myModal')) closeModal();
+        };
+
+        document.querySelectorAll('.seat').forEach(button => {
+            button.onclick = () => openModal(button);
+        });
+    </script>
 </body>
 </html>

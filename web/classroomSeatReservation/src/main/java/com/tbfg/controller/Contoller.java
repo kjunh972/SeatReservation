@@ -19,9 +19,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tbfg.dao.ClassroomDAO;
 import com.tbfg.dao.TimetableDAO;
+import com.tbfg.dto.BanSeatDTO;
 import com.tbfg.dto.ClassroomDTO;
 import com.tbfg.dto.ProfessorDTO;
 import com.tbfg.dto.ReserveList;
@@ -34,6 +36,7 @@ import jakarta.servlet.http.HttpSession;
 public class Contoller {
 	private ClassroomDTO classroomDTO = new ClassroomDTO();
     private TimeTableDTO timetableDTO = new TimeTableDTO();
+    private BanSeatDTO banSeatDTO = new BanSeatDTO();
     
     @Autowired
     // JdbcTemplate 인스턴스를 자동으로 주입
@@ -53,6 +56,21 @@ public class Contoller {
         }
 
         return userID; // 사용자 ID 반환
+    }
+    
+    public String GetPosition(HttpSession session) { 
+        Object loggedInUser = session.getAttribute("loggedInUser"); // 세션에서 사용자 객체 가져오기
+        String userPosition = null;
+
+        if (loggedInUser instanceof UserDTO) { // UserDTO 객체인지 확인
+            UserDTO userDTO = (UserDTO) loggedInUser; // UserDTO로 캐스팅
+            userPosition = userDTO.getPosition(); // 사용자 ID 가져오기
+        } else if (loggedInUser instanceof ProfessorDTO) { // ProfessorDTO 객체인지 확인
+            ProfessorDTO proDTO = (ProfessorDTO) loggedInUser; // ProfessorDTO로 캐스팅
+            userPosition = proDTO.getPosition(); // 교수 ID 가져오기
+        }
+
+        return userPosition; // 사용자 ID 반환
     }
 
     // 메인페이지 메서드
@@ -82,17 +100,16 @@ public class Contoller {
         return "classroomLike"; 
     }
 
-    // 강의실 좌석 예약 메서드 
-    @PostMapping("/classroomStatus") 
+    @PostMapping("/classroomStatus")
     public String classroomStatus(String classroomName, HttpSession session,
                                   @RequestParam("selectHours") String selectHoursJson,
                                   Model model) throws JsonProcessingException {
 
-    	if (GetId(session) == null) { // 세션에 사용자 ID가 있는지 확인
-   		 model.addAttribute("error", "세션이 만료되었습니다. 다시 로그인 해주세요.");
+        if (GetId(session) == null) { // 세션에 사용자 ID가 있는지 확인
+            model.addAttribute("error", "세션이 만료되었습니다. 다시 로그인 해주세요.");
             return "login"; // 로그인 페이지로 리다이렉트
-    	}
-    	
+        }
+        
         // JDBC 템플릿을 사용하여 ClassroomDAO 객체를 생성
         ClassroomDAO classroomDAO = new ClassroomDAO(jdbcTemplate);
         // classroomDTO 객체에 사용자가 입력한 강의실 이름을 설정
@@ -108,13 +125,20 @@ public class Contoller {
 
         // DAO를 통해 선택한 시간대에 이미 예약된 좌석들을 조회
         List<Integer> reservedSeats = classroomDAO.getReservedSeats(classroomName, selectHours);
+        
         // 예약된 좌석을 classroomDTO에 반영하여 예약 상태를 업데이트
         for (Integer seat : reservedSeats) {
             classroomDTO.reserveSeat(seat);
         }
-
-        model.addAttribute("classroom", classroomDTO);
         
+        List<Integer> bannedSeats = classroomDAO.getBannedSeats(classroomName, selectHours);
+        banSeatDTO.setBannedSeats(bannedSeats);
+
+        String userPosition = GetPosition(session);
+        model.addAttribute("classroom", classroomDTO);
+        model.addAttribute("banSeatDTO", banSeatDTO); // 모델에 BanSeatDTO 추가
+        model.addAttribute("userPosition", userPosition);
+
         return "classroomStatus";
     }
 
@@ -122,7 +146,11 @@ public class Contoller {
     @PostMapping("/reserveSeat")  
     public String reserveSeat(String classroomName, Integer seatNumber, HttpSession session,
                               Model model) throws JsonProcessingException {
-
+    	if (GetId(session) == null) { // 세션에 사용자 ID가 있는지 확인
+            model.addAttribute("error", "세션이 만료되었습니다. 다시 로그인 해주세요.");
+            return "login"; // 로그인 페이지로 리다이렉트
+        }
+    	
         // JDBC 템플릿을 사용하여 ClassroomDAO 객체를 생성
         ClassroomDAO classroomDAO = new ClassroomDAO(jdbcTemplate);
 
@@ -149,7 +177,59 @@ public class Contoller {
         return "reserveSeat";
     }
     
- // 예약 목록을 조회하는 메서드
+    @PostMapping("banSeat")
+    public String banSeat(String classroomName, Integer seatNumber, HttpSession session, 
+    		Model model) throws JsonMappingException, JsonProcessingException {
+        // 세션에서 사용자 ID를 가져옴
+        String userId = GetId(session);
+
+        // 사용자 ID가 없으면 로그인 페이지로 리다이렉트
+        if (userId == null) {
+            model.addAttribute("error", "세션이 만료되었습니다. 다시 로그인 해주세요.");
+            return "login";
+        }
+        
+        System.out.println("classroomDTO.getClassroomName() : "+classroomDTO.getClassroomName());
+
+        banSeatDTO.setUserId(userId);
+        banSeatDTO.setClassroomName(classroomDTO.getClassroomName());
+        banSeatDTO.setBanSeat(seatNumber);
+
+        // 금지된 좌석 정보를 저장할 DAO 객체 생성
+        ClassroomDAO classroomDAO = new ClassroomDAO(jdbcTemplate);
+
+        // BanSeat 추가 후 자동 생성된 banNum을 가져오기
+        int banNum = classroomDAO.insertBanSeat(banSeatDTO);
+
+        // BanSeatHour 테이블에 시간대 정보 추가
+        for (Integer hour : classroomDTO.getSelectHours()) {
+            classroomDAO.insertBanSeatHour(banNum, hour);
+        }
+
+        // 금지 좌석 정보 갱신 후 강의실 상태 페이지로 리다이렉트
+        model.addAttribute("success", "좌석이 성공적으로 금지되었습니다.");
+        
+        // DAO를 통해 선택한 시간대에 이미 예약된 좌석들을 조회
+        List<Integer> reservedSeats = classroomDAO.getReservedSeats(classroomName, classroomDTO.getSelectHours());
+        
+        // 예약된 좌석을 classroomDTO에 반영하여 예약 상태를 업데이트
+        for (Integer seat : reservedSeats) {
+            classroomDTO.reserveSeat(seat);
+        }
+        
+        List<Integer> bannedSeats = classroomDAO.getBannedSeats(classroomName, classroomDTO.getSelectHours());
+        banSeatDTO.setBannedSeats(bannedSeats);
+
+        String userPosition = GetPosition(session);
+        model.addAttribute("classroom", classroomDTO);
+        model.addAttribute("banSeatDTO", banSeatDTO); // 모델에 BanSeatDTO 추가
+        model.addAttribute("userPosition", userPosition);
+
+        return "classroomStatus";
+    }
+
+    
+    // 예약 목록을 조회하는 메서드
     @GetMapping("/reserveList")
     public String reserveList(HttpSession session, Model model) {
         // 세션에서 사용자 ID 가져오기

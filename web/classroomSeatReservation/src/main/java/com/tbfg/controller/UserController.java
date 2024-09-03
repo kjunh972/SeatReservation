@@ -1,5 +1,7 @@
 package com.tbfg.controller;
 
+import java.util.regex.Pattern;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
@@ -31,6 +33,11 @@ public class UserController {
     private ProfessorDAO proDAO = new ProfessorDAO(jdbcTemplate);  // ProfessorDAO 객체 생성 및 주입
     private ProfessorDTO proDTO = new ProfessorDTO();  // ProfessorDTO 객체 생성
     
+    public boolean isValidPassword(String password) {
+        String regex = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$";
+        return Pattern.matches(regex, password);
+    }
+    
     // 로그인 페이지를 보여주는 메서드
     @GetMapping("/login")
     public String showLoginPage() {
@@ -44,54 +51,56 @@ public class UserController {
         return "redirect:/login"; // 로그인 페이지로 리다이렉트
     }
     
-    // 회원가입 처리를 위한 메서드
     @PostMapping("/signupCheck")
     public String signupUser(@RequestParam String id,
-            				 @RequestParam String pass,
-            				 @RequestParam String school,
-            				 @RequestParam String major,				
-            				 @RequestParam String name,
-            				 @RequestParam Integer age,
-            				 @RequestParam Integer grade,
-            			 	 @RequestParam String classNumber,
-            			 	 @RequestParam String studentId,
-            			 	 Model model) {
+                             @RequestParam String pass,
+                             @RequestParam String school,
+                             @RequestParam String major,
+                             @RequestParam String name,
+                             @RequestParam Integer age,
+                             @RequestParam Integer grade,
+                             @RequestParam String classNumber,
+                             @RequestParam String studentId,
+                             Model model) {
 
-        // 회원가입 처리
-        if (school != null && major != null && name != null && age != null && grade != null && classNumber != null && studentId != null) {
-            String[] allowedSchools = {"대학교1", "대학교2", "대학교3"};
-            boolean isValidSchool = false;
-
-            // 학교 유효성 검사
-            for (String allowedSchool : allowedSchools) {
-                if (allowedSchool.equals(school)) {
-                    isValidSchool = true;
-                    break;
-                }
-            }
-
-            if (!isValidSchool) {
-                model.addAttribute("errorMessage", "등록되지 않은 학교입니다. 등록된 학교에서만 회원가입이 가능합니다.");
-                return "studentSignup";  // 회원가입 페이지로 다시 이동
-            }
-
-            // 새로운 사용자 정보 설정 및 저장
-            userDTO.setId(id);
-            userDTO.setPass(pass);
-            userDTO.setSchool(school);
-            userDTO.setMajor(major);
-            userDTO.setName(name);
-            userDTO.setAge(age);
-            userDTO.setGrade(grade);
-            userDTO.setClassNumber(classNumber);
-            userDTO.setStudentId(studentId);
-            userDTO.setPosition("student");
-
-            userDAO.saveUser(userDTO);  // 사용자 정보를 데이터베이스에 저장
-
-            return "redirect:/login";  // 회원가입 후 로그인 페이지로 리다이렉트
+        // 비밀번호 유효성 검사
+        if (!isValidPassword(pass)) {
+            model.addAttribute("errorMessage", "비밀번호는 최소 8자이며, 하나 이상의 문자 및 숫자를 포함해야 합니다.");
+            return "studentSignup";  // 회원가입 페이지로 다시 이동
         }
-        return "/login";  // 필수 정보가 누락된 경우 로그인 페이지로 리다이렉트
+
+        // 학교 유효성 검사
+        String[] allowedSchools = {"대학교1", "대학교2", "대학교3"};
+        boolean isValidSchool = false;
+
+        for (String allowedSchool : allowedSchools) {
+            if (allowedSchool.equals(school)) {
+                isValidSchool = true;
+                break;
+            }
+        }
+
+        if (!isValidSchool) {
+            model.addAttribute("errorMessage", "등록되지 않은 학교입니다. 등록된 학교에서만 회원가입이 가능합니다.");
+            return "studentSignup";  // 회원가입 페이지로 다시 이동
+        }
+
+        // 새로운 사용자 정보 설정 및 저장
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(id);
+        userDTO.setPass(pass);
+        userDTO.setSchool(school);
+        userDTO.setMajor(major);
+        userDTO.setName(name);
+        userDTO.setAge(age);
+        userDTO.setGrade(grade);
+        userDTO.setClassNumber(classNumber);
+        userDTO.setStudentId(studentId);
+        userDTO.setPosition("student");
+
+        userDAO.saveUser(userDTO);  // 사용자 정보를 데이터베이스에 저장
+
+        return "redirect:/login";  // 회원가입 후 로그인 페이지로 리다이렉트
     }
     
     // 로그인 처리를 위한 메서드

@@ -1,5 +1,8 @@
 package com.tbfg.dao;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,8 +10,12 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import com.tbfg.dto.BanSeatDTO;
 import com.tbfg.dto.ReserveList;
 
 @Repository
@@ -178,7 +185,6 @@ public class ClassroomDAO {
         jdbcTemplate.update(sql, userId, userId);
     }
 
-
     // 모든 강의 번호 목록을 가져오는 메서드
     public List<String> getClassNum() {
         // MySQL에서 모든 강의 번호를 가져오기 위한 쿼리문
@@ -196,4 +202,54 @@ public class ClassroomDAO {
         // jdbcTemplate을 사용하여 SQL 쿼리를 실행하고 결과를 리스트로 반환
         return jdbcTemplate.queryForList(sql, String.class, prefix);
     }
+    
+ // 강의실 좌석 금지 정보를 데이터베이스에 삽입하는 메서드
+    public int insertBanSeat(BanSeatDTO banSeat) {
+        // 삽입할 SQL 쿼리
+        String sql = "INSERT INTO BanSeat (user_id, classroom_name, banSeat) VALUES (?, ?, ?)";
+        // 자동 생성된 키(banNum)를 저장하기 위한 KeyHolder 객체 생성
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        // jdbcTemplate을 사용하여 쿼리 실행
+        jdbcTemplate.update(connection -> {
+            // PreparedStatement 생성 및 파라미터 설정
+            PreparedStatement ps = connection.prepareStatement(sql, new String[] {"banNum"});
+            ps.setString(1, banSeat.getUserId());         // 첫 번째 파라미터: 사용자 ID
+            ps.setString(2, banSeat.getClassroomName());  // 두 번째 파라미터: 강의실 이름
+            ps.setInt(3, banSeat.getBanSeat());           // 세 번째 파라미터: 금지된 좌석 번호
+            return ps; // PreparedStatement 반환
+        }, keyHolder);
+
+        // 생성된 banNum 반환
+        return keyHolder.getKey().intValue();
+    }
+
+    // 특정 banNum에 대해 금지된 시간을 데이터베이스에 삽입하는 메서드
+    public void insertBanSeatHour(int banNum, int banHour) {
+        // 삽입할 SQL 쿼리
+        String sql = "INSERT INTO BanSeatHour (banNum, banHour) VALUES (?, ?)";
+        // jdbcTemplate을 사용하여 쿼리 실행
+        jdbcTemplate.update(sql, banNum, banHour); // banNum과 banHour를 파라미터로 사용
+    }
+
+    // 특정 강의실과 시간대에 금지된 좌석 목록을 조회하는 메서드
+    @SuppressWarnings("deprecation")
+    public List<Integer> getBannedSeats(String classroomName, List<Integer> selectHours) {
+        // SQL 쿼리 작성
+        String sql = "SELECT DISTINCT b.banSeat " +
+                     "FROM banSeat b " +
+                     "JOIN banSeatHour h ON b.banNum = h.banNum " +
+                     "WHERE b.classroom_name = ? " +
+                     "AND h.banHour IN (" + String.join(",", selectHours.stream().map(String::valueOf).toArray(String[]::new)) + ")";
+
+        // 쿼리 실행 및 결과 매핑
+        return jdbcTemplate.query(sql, new Object[]{classroomName}, new RowMapper<Integer>() {
+            @Override
+            public Integer mapRow(ResultSet rs, int rowNum) throws SQLException {
+                // 쿼리 결과로부터 banSeat 컬럼 값을 Integer로 반환
+                return rs.getInt("banSeat");
+            }
+        });
+    }
+
 }
