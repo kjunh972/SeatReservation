@@ -4,6 +4,33 @@
     margin-bottom: 50px; /* 시간표와 버튼 사이의 여백을 설정합니다. */
 }
 
+/* 클릭 가능한 셀을 스타일링하는 CSS */
+.clickable {
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: border 0.2s;
+}
+
+.clickable:hover {
+    border: 1px solid #000; /* 마우스를 올렸을 때 테두리 강조 */
+}
+
+.selected {
+    outline: 2px solid #000; /* 선택된 셀은 테두리로 강조 */
+}
+
+/* 과목별 배경색 지정 */
+.subject-0 { background-color: #ffcccc; } /* 연한 빨간색 */
+.subject-1 { background-color: #ccffcc; } /* 연한 초록색 */
+.subject-2 { background-color: #ccccff; } /* 연한 파란색 */
+.subject-3 { background-color: #ffcc99; } /* 연한 주황색 */
+.subject-4 { background-color: #ffff99; } /* 연한 노란색 */
+.subject-5 { background-color: #99ccff; } /* 연한 하늘색 */
+.subject-6 { background-color: #ff99ff; } /* 연한 핑크색 */
+.subject-7 { background-color: #ccff99; } /* 연한 연두색 */
+.subject-8 { background-color: #ff9966; } /* 연한 코랄색 */
+.subject-9 { background-color: #66ccff; } /* 연한 청록색 */
+
 /* 테이블 스타일 */
 table {
     border-collapse: collapse; /* 테이블 테두리를 합칩니다. */
@@ -102,7 +129,7 @@ h2 {
 /* 입력 컨테이너 스타일 */
 .modal-content form .input-container {
     display: flex; /* Flexbox를 사용하여 내부 요소를 수평으로 정렬합니다. */
-	align-items: center; /* 세로 중앙 정렬합니다. */
+    align-items: center; /* 세로 중앙 정렬합니다. */
 }
 
 /* 입력 레이블 스타일 */
@@ -138,8 +165,8 @@ h2 {
 
 /* 에러 */
 .error {
-	color: red;
-	text-align: center;
-	margin-top: 10px;
-	margin-bottom: -30px;
+    color: red;
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: -30px;
 }

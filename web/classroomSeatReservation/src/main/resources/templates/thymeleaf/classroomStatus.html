@@ -52,26 +52,32 @@
     <script th:inline="javascript">
         let selectedSeat, selectedClassroom;
 
-        function openModal(button) {
-            if (button.classList.contains('reserved')) {
-                alert('예약된 좌석입니다.');
-                return;
-            }
+		function openModal(button) {
+		    if (button.classList.contains('reserved')) {
+		        alert('예약된 좌석입니다.');
+		        return;
+		    }
 
-            selectedSeat = button.dataset.seat;
-            selectedClassroom = button.dataset.classroom;
-            
-            var message = null;
-            var userPosition = /*[[${userPosition}]]*/ 'default'; // Thymeleaf에서 사용자 직책 정보 전달
-            if (userPosition === "student") {
-                message = `${selectedClassroom}호 ${selectedSeat}번 좌석을 예약하시겠습니까?`;
-            } else {
-                message = `${selectedClassroom}호 ${selectedSeat}번 좌석의 예약을 금지 하시겠습니까?`;
-            }
+		    if (button.classList.contains('banned')) {
+		        alert('예약이 금지된 좌석입니다.');
+		        return;
+		    }
 
-            document.getElementById('modalMessage').textContent = message;
-            document.getElementById('myModal').style.display = 'block';
-        }
+		    selectedSeat = button.dataset.seat;
+		    selectedClassroom = button.dataset.classroom;
+		    
+		    var message = null;
+		    var userPosition = /*[[${userPosition}]]*/ 'default'; // Thymeleaf에서 사용자 직책 정보 전달
+		    if (userPosition === "student") {
+		        message = `${selectedClassroom}호 ${selectedSeat}번 좌석을 예약하시겠습니까?`;
+		    } else {
+		        message = `${selectedClassroom}호 ${selectedSeat}번 좌석의 예약을 금지 하시겠습니까?`;
+		    }
+
+		    document.getElementById('modalMessage').textContent = message;
+		    document.getElementById('myModal').style.display = 'block';
+		}
+
 
         function closeModal() {
             document.getElementById('myModal').style.display = 'none';

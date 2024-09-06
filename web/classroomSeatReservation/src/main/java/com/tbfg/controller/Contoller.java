@@ -101,19 +101,22 @@ public class Contoller {
     }
 
     @PostMapping("/classroomStatus")
-    public String classroomStatus(String classroomName, HttpSession session,
+    public String classroomStatus(@RequestParam("classroomName") String classroomName,
                                   @RequestParam("selectHours") String selectHoursJson,
-                                  Model model) throws JsonProcessingException {
+                                  @RequestParam("day") String day,
+                                  @RequestParam("subject") String subject,
+                                  @RequestParam("hour") String hour,
+                                  HttpSession session, Model model) throws JsonProcessingException {
 
         if (GetId(session) == null) { // 세션에 사용자 ID가 있는지 확인
             model.addAttribute("error", "세션이 만료되었습니다. 다시 로그인 해주세요.");
             return "login"; // 로그인 페이지로 리다이렉트
         }
-        
+
         // JDBC 템플릿을 사용하여 ClassroomDAO 객체를 생성
         ClassroomDAO classroomDAO = new ClassroomDAO(jdbcTemplate);
         // classroomDTO 객체에 사용자가 입력한 강의실 이름을 설정
-        classroomDTO.setClassroomName(classroomName);     
+        classroomDTO.setClassroomName(classroomName);
         // 강의실의 좌석 수를 48로 설정
         classroomDTO.setSeatCount(48);
 
@@ -123,6 +126,12 @@ public class Contoller {
         // 변환된 시간대를 classroomDTO 객체에 설정
         classroomDTO.setSelectHours(selectHours);
 
+        System.out.println("classroomName : "+classroomName);
+        System.out.println("selectHours : "+selectHours);
+        System.out.println("subject : "+subject);
+        System.out.println("day : "+day);
+        System.out.println("hour : "+hour);
+
         // DAO를 통해 선택한 시간대에 이미 예약된 좌석들을 조회
         List<Integer> reservedSeats = classroomDAO.getReservedSeats(classroomName, selectHours);
         
@@ -130,7 +139,7 @@ public class Contoller {
         for (Integer seat : reservedSeats) {
             classroomDTO.reserveSeat(seat);
         }
-        
+
         List<Integer> bannedSeats = classroomDAO.getBannedSeats(classroomName, selectHours);
         banSeatDTO.setBannedSeats(bannedSeats);
 
@@ -141,6 +150,7 @@ public class Contoller {
 
         return "classroomStatus";
     }
+
 
     // 강의실 좌석 예약 메서드
     @PostMapping("/reserveSeat")  
