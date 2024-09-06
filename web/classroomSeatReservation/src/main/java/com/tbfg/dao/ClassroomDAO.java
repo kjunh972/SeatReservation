@@ -176,10 +176,10 @@ public class ClassroomDAO {
     // 사용자 아이디를 받아 timetable의 강의실 정보를 favoriteClassrooms에 추가하는 메서드
     public void getTimetableClassrooms(String userId) {
         // MySQL에서 즐겨찾기할 강의실 목록을 가져와 favoriteClassrooms에 추가하는 쿼리문
-        String sql = "INSERT INTO favoriteClassrooms (user_id, classroom_num) "
+        String sql = "INSERT INTO FavoriteClassrooms (user_id, classroom_num) "
                    + "SELECT DISTINCT ?, classroomName "
-                   + "FROM stutimetable WHERE user_id = ? AND (user_id, classroomName) "
-                   + "NOT IN (SELECT user_id, classroom_num FROM favoriteClassrooms)";
+                   + "FROM StuTimetable WHERE user_id = ? AND (user_id, classroomName) "
+                   + "NOT IN (SELECT user_id, classroom_num FROM FavoriteClassrooms)";
 
         // jdbcTemplate을 사용하여 SQL 쿼리를 실행
         jdbcTemplate.update(sql, userId, userId);
@@ -237,8 +237,8 @@ public class ClassroomDAO {
     public List<Integer> getBannedSeats(String classroomName, List<Integer> selectHours) {
         // SQL 쿼리 작성
         String sql = "SELECT DISTINCT b.banSeat " +
-                     "FROM banSeat b " +
-                     "JOIN banSeatHour h ON b.banNum = h.banNum " +
+                     "FROM BanSeat b " +
+                     "JOIN BanSeatHour h ON b.banNum = h.banNum " +
                      "WHERE b.classroom_name = ? " +
                      "AND h.banHour IN (" + String.join(",", selectHours.stream().map(String::valueOf).toArray(String[]::new)) + ")";
 

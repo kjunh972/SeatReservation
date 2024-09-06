@@ -54,7 +54,7 @@ public class UserDAO {
         }
 
         // 사용자 정보를 데이터베이스에 삽입
-        String sql = "INSERT INTO yuhan (id, pass, school, major, name, age, grade, class, studentId, position) " +
+        String sql = "INSERT INTO Yuhan (id, pass, school, major, name, age, grade, class, studentId, position) " +
                      "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         jdbcTemplate.update(sql, user.getId(), user.getPass(), user.getSchool(), user.getMajor(),
                 user.getName(), user.getAge(), user.getGrade(), user.getClassNumber(), user.getStudentId(),
@@ -63,33 +63,33 @@ public class UserDAO {
 
     // 특정 ID가 사용자 테이블에 존재하는지 확인하는 메서드
     public boolean isUserExists(String id) {
-        String sql = "SELECT COUNT(*) FROM yuhan WHERE id = ?";
+        String sql = "SELECT COUNT(*) FROM Yuhan WHERE id = ?";
         Integer count = jdbcTemplate.queryForObject(sql, Integer.class, id);  // ID의 존재 여부를 카운트
         return count != null && count > 0;  // 카운트가 0보다 크면 true 반환
     }
 
     // 특정 ID를 가진 사용자 정보를 조회하는 메서드
     public UserDTO getUserById(String id) {
-        String sql = "SELECT * FROM yuhan WHERE id = ?";
+        String sql = "SELECT * FROM Yuhan WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, userRowMapper, id);  // 사용자 정보 조회 및 반환
     }
 
     // 사용자 비밀번호를 확인하는 메서드
     public boolean checkPassword(String id, String password) {
-        String sql = "SELECT pass FROM yuhan WHERE id = ?";
+        String sql = "SELECT pass FROM Yuhan WHERE id = ?";
         String oldPassword = jdbcTemplate.queryForObject(sql, String.class, id);  // ID로 비밀번호 조회
         return oldPassword != null && oldPassword.equals(password);  // 비밀번호가 일치하는지 확인
     }
 
     // 사용자 정보를 업데이트하는 메서드
     public void updateUser(UserDTO user) {
-        String sql = "UPDATE yuhan SET name = ?, studentId = ?, pass = ?, major = ?, grade = ?, class = ? WHERE id = ?";
+        String sql = "UPDATE Yuhan SET name = ?, studentId = ?, pass = ?, major = ?, grade = ?, class = ? WHERE id = ?";
         jdbcTemplate.update(sql, user.getName(), user.getStudentId(), user.getPass(), user.getMajor(), user.getGrade(), user.getClassNumber(), user.getId());  // 사용자 정보 업데이트
     }
 
     // 사용자 정보를 삭제하는 메서드
     public void deleteUser(String id) {
-        String sql = "DELETE FROM yuhan WHERE id = ?";
+        String sql = "DELETE FROM Yuhan WHERE id = ?";
         jdbcTemplate.update(sql, id);  // 해당 ID의 사용자 정보를 데이터베이스에서 삭제
     }
 }
