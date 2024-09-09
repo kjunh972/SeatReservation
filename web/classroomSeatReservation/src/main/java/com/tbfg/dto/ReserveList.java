@@ -5,7 +5,8 @@ public class ReserveList {
     private String userId;
     private String classroomName;
     private int reservSeat;
-    private int reservHour;
+    private String day;
+	private int reservHour;
     private String reservHourString; // 시간대를 문자열로 묶은 필드
 
     // Getters and setters
@@ -40,6 +41,14 @@ public class ReserveList {
     public void setReservSeat(int reservSeat) {
         this.reservSeat = reservSeat;
     }
+    
+    public String getDay() {
+		return day;
+	}
+
+	public void setDay(String day) {
+		this.day = day;
+	}
 
     public int getReservHour() {
         return reservHour;

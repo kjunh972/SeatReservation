@@ -8,7 +8,9 @@ public class ClassroomDTO {
     private String classroomName;
     // 좌석 수를 저장하는 변수
     private int seatCount;
-    // 각 좌석의 예약 상태를 저장하는 리스트 (true = 예약됨, false = 예약되지 않음)
+    // 요일을 저장하는 변수
+    private String day;
+	// 각 좌석의 예약 상태를 저장하는 리스트 (true = 예약됨, false = 예약되지 않음)
     private List<Boolean> seatStatusList = new ArrayList<>();
     // 선택한 시간대 목록을 저장하는 리스트
     private List<Integer> selectHours = new ArrayList<>();
@@ -34,6 +36,16 @@ public class ClassroomDTO {
     public int getSeatCount() {
         return seatCount;
     }
+    
+    // 요일을 반환하는 메서드
+    public String getDay() {
+		return day;
+	}
+    
+    // 요일을 설정하는 메소드
+	public void setDay(String day) {
+		this.day = day;
+	}
 
     // 좌석 수를 설정하고, 좌석 상태 리스트를 초기화하는 메서드
     public void setSeatCount(int seatCount) {

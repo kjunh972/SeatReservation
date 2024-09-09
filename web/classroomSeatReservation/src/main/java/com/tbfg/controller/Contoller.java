@@ -105,7 +105,6 @@ public class Contoller {
                                   @RequestParam("selectHours") String selectHoursJson,
                                   @RequestParam("day") String day,
                                   @RequestParam("subject") String subject,
-                                  @RequestParam("hour") String hour,
                                   HttpSession session, Model model) throws JsonProcessingException {
 
         if (GetId(session) == null) { // 세션에 사용자 ID가 있는지 확인
@@ -125,12 +124,8 @@ public class Contoller {
         List<Integer> selectHours = objectMapper.readValue(selectHoursJson, new TypeReference<List<Integer>>() {});
         // 변환된 시간대를 classroomDTO 객체에 설정
         classroomDTO.setSelectHours(selectHours);
-
-        System.out.println("classroomName : "+classroomName);
-        System.out.println("selectHours : "+selectHours);
-        System.out.println("subject : "+subject);
-        System.out.println("day : "+day);
-        System.out.println("hour : "+hour);
+        
+        classroomDTO.setDay(day);
 
         // DAO를 통해 선택한 시간대에 이미 예약된 좌석들을 조회
         List<Integer> reservedSeats = classroomDAO.getReservedSeats(classroomName, selectHours);
@@ -154,7 +149,7 @@ public class Contoller {
 
     // 강의실 좌석 예약 메서드
     @PostMapping("/reserveSeat")  
-    public String reserveSeat(String classroomName, Integer seatNumber, HttpSession session,
+    public String reserveSeat(String classroomName, Integer seatNumber, String day, HttpSession session,
                               Model model) throws JsonProcessingException {
     	if (GetId(session) == null) { // 세션에 사용자 ID가 있는지 확인
             model.addAttribute("error", "세션이 만료되었습니다. 다시 로그인 해주세요.");
@@ -170,7 +165,7 @@ public class Contoller {
         classroomDTO.setRandomNum(randomNum);
         
         // DAO를 사용하여 좌석을 예약하고, 해당 좌석에 랜덤 번호를 설정
-        classroomDAO.reserveSeat(GetId(session), classroomName, seatNumber, randomNum);
+        classroomDAO.reserveSeat(GetId(session), classroomName, seatNumber, classroomDTO.getDay(), randomNum);
         // 사용자가 선택한 시간대에 대해 예약된 시간 정보를 ReservationHour 테이블에 추가
         for (Integer hour : classroomDTO.getSelectHours()) {
             classroomDAO.addReservationHour(randomNum, hour);
@@ -256,7 +251,6 @@ public class Contoller {
 
         // 로그인한 사용자의 예약 목록을 가져옴
         Map<String, List<ReserveList>> reserveList = classroomDAO.getReserveList(userId);
-        System.out.println("reserveList : " + reserveList);
         
         // 예약 목록이 비어있는 경우
         if (reserveList.isEmpty()) {
@@ -406,7 +400,7 @@ public class Contoller {
             return "login"; // 로그인 페이지로 리다이렉트
     	}
     	
-    	List<Integer> hours = Arrays.asList(9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8); // 9시부터 8시까지의 시간
+    	List<Integer> hours = Arrays.asList(9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20); // 9시부터 20시까지의 시간
     	classroomDTO.setClassroomName(classroomName); // 강의실 번호 설정
     	
     	// 모델에 ClassroomDTO 객체 추가
@@ -429,7 +423,7 @@ public class Contoller {
 
         // 요일과 시간 목록을 생성하여 모델에 추가
         List<String> days = Arrays.asList("월요일", "화요일", "수요일", "목요일", "금요일");
-        List<Integer> hours = Arrays.asList(9, 10, 11, 12, 1, 2, 3, 4);
+        List<Integer> hours = Arrays.asList(9, 10, 11, 12, 13, 14, 15, 16);
 
         // 모델에 사용자의 시간표 정보를 추가합니다.
         model.addAttribute("userTimeTable", userTimeTable);
@@ -487,7 +481,7 @@ public class Contoller {
 
         // 요일과 시간 목록을 생성하여 모델에 추가합니다.
         List<String> days = Arrays.asList("월요일", "화요일", "수요일", "목요일", "금요일");
-        List<Integer> hours = Arrays.asList(9, 10, 11, 12, 1, 2, 3, 4);
+        List<Integer> hours = Arrays.asList(9, 10, 11, 12, 13, 14, 15, 16);
 
         // 모델에 사용자의 시간표 정보를 추가합니다.
         model.addAttribute("userTimeTable", userTimeTable);

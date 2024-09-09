@@ -169,6 +169,7 @@
                             <th>예약 번호</th>
                             <th>사용자 ID</th>
                             <th>좌석 번호</th>
+                            <th>요일</th>
                             <th>예약 시간대</th>
                             <th>취소</th>
                             <th>변경</th>
@@ -181,6 +182,7 @@
                             <td th:text="${reservation.reservNum}"></td>
                             <td th:text="${reservation.userId}"></td>
                             <td th:text="${reservation.reservSeat}"></td>
+                            <td th:text="${reservation.day}"></td>
                             <!-- 예약 시간대 표시 부분에 클래스 추가 -->
                             <td class="reservation-time" th:text="${reservation.reservHourString}"></td>
                             <td>

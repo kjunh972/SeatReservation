@@ -13,6 +13,7 @@
             <tr>
 				<th>강의실</th>
                 <th>좌석 번호</th>
+                <th>요일</th>
                 <th>시간대</th>
                 <th>랜덤 번호</th>
             </tr>
@@ -21,6 +22,7 @@
             <tr>
 				<td th:text="${classroom.classroomName} + '호'"></td>
                 <td th:text="${seatNumber} + '번 좌석'"></td>
+                <td th:text="${classroom.day}"></td>
                 <td th:text="${selectHours} + '시'"></td>
                 <td th:text="${randomNum} + '번'"></td>
             </tr>

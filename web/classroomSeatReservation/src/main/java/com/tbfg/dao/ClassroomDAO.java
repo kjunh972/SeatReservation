@@ -29,12 +29,12 @@ public class ClassroomDAO {
     }
     
     // 좌석 예약을 추가하는 메서드
-    public int reserveSeat(String userId, String classroomName, Integer seatNumber, Integer randomNumber) {
+    public int reserveSeat(String userId, String classroomName, Integer seatNumber, String day, Integer randomNumber) {
         // Reservation 테이블에 예약 정보 (사용자 ID, 강의실 이름, 좌석 번호, 랜덤 번호)를 삽입하는 SQL 쿼리
-        String sql = "INSERT INTO Reservation (user_id, classroom_name, reservSeat, reservNum) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO Reservation (user_id, classroom_name, reservSeat, day, reservNum) VALUES (?, ?, ?, ?, ?)";
         
         // jdbcTemplate을 사용해 SQL 쿼리를 실행하고, 영향받은 행의 수를 반환
-        return jdbcTemplate.update(sql, userId, classroomName, seatNumber, randomNumber);
+        return jdbcTemplate.update(sql, userId, classroomName, seatNumber, day, randomNumber);
     }
 
     // 예약 번호와 시간대를 ReservationHour 테이블에 추가하는 메서드
@@ -73,7 +73,7 @@ public class ClassroomDAO {
     // 모든 강의실의 예약 정보를 가져오는 메서드
     public List<ReserveList> reserveList() {
         // 모든 강의실과 예약 정보를 가져오는 SQL 쿼리
-        String sql = "SELECT r.reservNum, r.user_id, r.classroom_name, r.reservSeat, rh.reservHour "
+        String sql = "SELECT r.reservNum, r.user_id, r.classroom_name, r.reservSeat, r.day, rh.reservHour "
                 + "FROM Reservation r "
                 + "JOIN ReservationHour rh ON r.reservNum = rh.reservNum";
 
@@ -84,6 +84,7 @@ public class ClassroomDAO {
             reserveList.setUserId(rs.getString("user_id"));
             reserveList.setClassroomName(rs.getString("classroom_name"));
             reserveList.setReservSeat(rs.getInt("reservSeat"));
+            reserveList.setDay(rs.getString("day"));
             reserveList.setReservHour(rs.getInt("reservHour"));
             return reserveList;
         });
