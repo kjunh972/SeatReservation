@@ -252,5 +252,10 @@ public class ClassroomDAO {
             }
         });
     }
-
+    
+    // 강의실 이름 목록을 데이터베이스에서 가져오는 메서드
+    public List<String> getAllClassrooms() {
+        String sql = "SELECT classroom_name FROM Classrooms";
+        return jdbcTemplate.queryForList(sql, String.class);
+    }
 }

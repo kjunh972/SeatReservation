@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>강의실 생성</title>
+    <link rel="stylesheet" href="/css/classroomStyle.css"/>
+    <style>
+        .autocomplete-list {
+            position: absolute;
+            background-color: #f1f1f1;
+            border: 0.0625rem solid #ccc;
+            max-height: 9.375rem;
+            overflow-y: auto;
+            z-index: 999;
+            width: 100%;
+        }
+
+        .seat-layout-preview {
+            border: 0.0625rem solid #000;
+            width: 15rem;
+            height: auto; /* 높이를 auto로 설정하여 이미지 크기에 맞추도록 조정 */
+            display: flex;
+            flex-direction: column; /* 플렉스 방향을 세로로 설정 */
+            align-items: center; /* 수평 중앙 정렬 */
+            justify-content: center; /* 세로 중앙 정렬 */
+            margin: 0.625rem;
+            text-align: center;
+            padding: 0.625rem; /* 내부 여백 추가 */
+            background-color: white; /* 배경색 추가로 깔끔하게 보이도록 설정 */
+        }
+
+        .seat-selection {
+            width: 100%;
+            display: flex;
+            flex-direction: row; /* 가로 정렬 */
+            align-items: flex-start; /* 상단 정렬 */
+            justify-content: center;
+            flex-wrap: wrap; /* 아이템이 가로로 넘치면 줄바꿈 */
+            gap: 1rem; /* 각 아이템 사이의 간격 */
+            margin-bottom: 1.25rem;
+        }
+
+        .seat-info {
+            margin-top: 1.25rem;
+            text-align: center;
+        }
+
+        /* 라디오 버튼과 텍스트를 세로로 정렬 */
+        .seat-option {
+            display: flex;
+            flex-direction: column; /* 세로 정렬 */
+            align-items: center; /* 가운데 정렬 */
+            margin-bottom: 1rem;
+        }
+
+        /* 커스텀 좌석 입력 필드 스타일 */
+        .custom-seats input {
+            width: 3rem; /* 입력 필드 너비 조정 */
+        }
+    </style>
+</head>
+<body>
+<header th:replace="~{/menu.html}"></header>
+<h1>강의실 생성</h1>
+
+<form method="post" th:action="@{/classroomSet/create}" onsubmit="return validateForm()">
+    <div class="container">
+        <div class="seat-selection">
+            <div th:each="layout : ${predefinedLayouts}" class="seat-option">
+                <label>
+                    <input type="radio" name="seatTemplate" th:value="${layout}" class="predefined-seat">
+                    <span th:text="${layout}"></span>
+                </label>
+                <div class="seat-layout-preview">
+                    <img th:src="${'/images/' + (layout == '왼쪽 : 4X5, 오른쪽 : 4X5' ? '4X5.png' : 
+                                                  (layout == '왼쪽 : 4X6, 오른쪽 : 4X6' ? '4X6.png' : 
+                                                  (layout == '왼쪽 : 4X7, 오른쪽 : 4X7' ? '4X7.png' : 'default.png')))}" 
+                         alt="Seat Layout Image" style="width: 100%; height: auto;">
+                </div>
+            </div>
+
+            <div class="seat-option">
+                <label>
+                    <input type="radio" name="seatTemplate" value="커스텀" id="customSeatRadio">
+                    커스텀
+                </label>
+                <div class="custom-seats">
+                    <br><label>왼쪽 가로: <input type="number" name="leftSeatRows" min="1" max="10" disabled></label><br>
+                    <label>왼쪽 세로: <input type="number" name="leftSeatColumns" min="1" max="10" disabled></label><br><br>
+                    <label>오른쪽 가로: <input type="number" name="rightSeatRows" min="1" max="10" disabled></label><br>
+                    <label>오른쪽 세로: <input type="number" name="rightSeatColumns" min="1" max="10" disabled></label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="seat-info">
+        <h3>선택된 좌석 스타일</h3>
+        <p><span id="selectedSeatTemplate" class="selected-template">□X□</span></p>
+    </div>
+    
+    <div class="seat-info">
+        <label>
+            <input type="text" name="classroomNumber" placeholder="생성할 강의실 이름 입력">
+        </label>
+    </div>
+
+    <div class="seat-info">
+        <button type="submit">생성하기</button>
+    </div>
+</form>
+
+<script>
+    document.querySelectorAll('input[type="radio"]').forEach(input => {
+        input.addEventListener('change', event => {
+            updateSelection();
+        });
+    });
+
+    document.querySelectorAll('input[type="number"]').forEach(input => {
+        input.addEventListener('input', event => {
+            updateSelection();
+        });
+    });
+
+    function updateSelection() {
+        const selectedSeat = document.querySelector('input[name="seatTemplate"]:checked');
+        const seatTemplateText = selectedSeat && selectedSeat.value === '커스텀'
+            ? getCustomDimensions()
+            : (selectedSeat ? selectedSeat.value : '□X□');
+        document.getElementById('selectedSeatTemplate').textContent = seatTemplateText;
+        handleCustomInputs(selectedSeat);
+    }
+
+    function handleCustomInputs(selected) {
+        const leftRowsInput = document.querySelector('input[name="leftSeatRows"]');
+        const leftColumnsInput = document.querySelector('input[name="leftSeatColumns"]');
+        const rightRowsInput = document.querySelector('input[name="rightSeatRows"]');
+        const rightColumnsInput = document.querySelector('input[name="rightSeatColumns"]');
+
+        if (selected && selected.value === '커스텀') {
+            leftRowsInput.disabled = false;
+            leftColumnsInput.disabled = false;
+            rightRowsInput.disabled = false;
+            rightColumnsInput.disabled = false;
+        } else {
+            leftRowsInput.disabled = true;
+            leftColumnsInput.disabled = true;
+            rightRowsInput.disabled = true;
+            rightColumnsInput.disabled = true;
+        }
+    }
+
+    function getCustomDimensions() {
+        const leftRows = document.querySelector('input[name="leftSeatRows"]').value || '0';
+        const leftColumns = document.querySelector('input[name="leftSeatColumns"]').value || '0';
+        const rightRows = document.querySelector('input[name="rightSeatRows"]').value || '0';
+        const rightColumns = document.querySelector('input[name="rightSeatColumns"]').value || '0';
+
+        return `왼쪽: ${leftRows}x${leftColumns}, 오른쪽: ${rightRows}x${rightColumns}`;
+    }
+
+    function validateForm() {
+        const selectedSeat = document.querySelector('input[name="seatTemplate"]:checked');
+        const classroomNumber = document.querySelector('input[name="classroomNumber"]').value.trim();
+
+        // 좌석 템플릿 선택 여부 확인
+        if (!selectedSeat) {
+            alert("좌석 템플릿을 선택해 주세요.");
+            return false;
+        }
+
+        // 커스텀 좌석 템플릿 선택 시 입력 필드 확인
+        if (selectedSeat.value === '커스텀') {
+            const leftRows = document.querySelector('input[name="leftSeatRows"]').value;
+            const leftColumns = document.querySelector('input[name="leftSeatColumns"]').value;
+            const rightRows = document.querySelector('input[name="rightSeatRows"]').value;
+            const rightColumns = document.querySelector('input[name="rightSeatColumns"]').value;
+
+            if (!leftRows || !leftColumns || !rightRows || !rightColumns) {
+                alert("모든 커스텀 입력 필드를 채워 주세요.");
+                return false;
+            }
+        }
+
+        // 강의실 이름 입력 여부 확인
+        if (!classroomNumber) {
+            alert("강의실 이름을 입력해 주세요.");
+            return false;
+        }
+
+        return true;
+    }
+</script>
+</body>
+</html>

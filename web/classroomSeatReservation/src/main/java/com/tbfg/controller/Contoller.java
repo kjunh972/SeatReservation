@@ -1,5 +1,6 @@
 package com.tbfg.controller;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +35,7 @@ import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class Contoller {
+  
 	private ClassroomDTO classroomDTO = new ClassroomDTO();
     private TimeTableDTO timetableDTO = new TimeTableDTO();
     private BanSeatDTO banSeatDTO = new BanSeatDTO();
@@ -41,6 +43,8 @@ public class Contoller {
     @Autowired
     // JdbcTemplate 인스턴스를 자동으로 주입
     private JdbcTemplate jdbcTemplate; 
+    @Autowired
+    private ClassroomDAO classroomDAO = new ClassroomDAO(jdbcTemplate);
 
     // 세션에서 사용자 ID를 가져오는 메서드
     public String GetId(HttpSession session) { 
@@ -409,6 +413,30 @@ public class Contoller {
         return "timeSelect";
     }
     
+    @GetMapping("/admin")
+    public String showAdminPage(Model model) {
+        // DAO를 통해 강의실 이름 목록을 가져옴
+        List<String> classrooms = classroomDAO.getAllClassrooms();
+
+        // 강의실을 호관 별로 나눔
+        List<String> group5 = new ArrayList<>();
+        List<String> group7 = new ArrayList<>();
+
+        for (String classroom : classrooms) {
+            if (classroom.startsWith("5")) {
+                group5.add(classroom); // 5호관 강의실
+            } else if (classroom.startsWith("7")) {
+                group7.add(classroom); // 7호관 강의실
+            }
+        }
+
+        // 모델에 데이터를 추가하여 뷰에 전달
+        model.addAttribute("group5", group5);
+        model.addAttribute("group7", group7);
+
+        return "admin"; // admin.html 템플릿을 반환
+    }
+    
     @GetMapping("/timetable")
     public String timetable(HttpSession session, Model model, @ModelAttribute("warning") String warning) {
     	if (GetId(session) == null) { // 세션에 사용자 ID가 있는지 확인
@@ -457,7 +485,7 @@ public class Contoller {
 		            timetableDTO.setStartHour(startHour);
 		            timetableDTO.setEndHour(endHour);
 		
-		            // `setTimetable` 메서드 호출
+		            // setTimetable 메서드 호출
 		            userDAO.setTimetable(timetableDTO);
             	}
             }

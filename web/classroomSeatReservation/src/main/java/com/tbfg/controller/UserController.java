@@ -103,6 +103,21 @@ public class UserController {
         return "redirect:/login";  // 회원가입 후 로그인 페이지로 리다이렉트
     }
     
+    public String GetPosition(HttpSession session) { 
+        Object loggedInUser = session.getAttribute("loggedInUser"); // 세션에서 사용자 객체 가져오기
+        String userPosition = null;
+
+        if (loggedInUser instanceof UserDTO) { // UserDTO 객체인지 확인
+            UserDTO userDTO = (UserDTO) loggedInUser; // UserDTO로 캐스팅
+            userPosition = userDTO.getPosition(); // 사용자 ID 가져오기
+        } else if (loggedInUser instanceof ProfessorDTO) { // ProfessorDTO 객체인지 확인
+            ProfessorDTO proDTO = (ProfessorDTO) loggedInUser; // ProfessorDTO로 캐스팅
+            userPosition = proDTO.getPosition(); // 교수 ID 가져오기
+        }
+
+        return userPosition; // 사용자 ID 반환
+    }
+    
     // 로그인 처리를 위한 메서드
     @PostMapping("/login")
     public String login(@RequestParam("id") String id, 
@@ -127,7 +142,12 @@ public class UserController {
                 model.addAttribute("userDTO", proDTO);
         	}
         	
-            return "redirect:/classroomLike";  // 로그인 성공 시 리다이렉트
+        	// 직책에 따라 페이지 리다이렉트
+            if ("admin".equals(GetPosition(session))) {
+                return "redirect:/admin";  // 관리자 페이지로 리다이렉트
+            } else {
+                return "redirect:/classroomLike";  // 나머지는 classroomLike 페이지로 리다이렉트
+            }
         }
 
         // 로그인 실패 시 에러 메시지 추가

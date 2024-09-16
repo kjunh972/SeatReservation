@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>생성한 강의실 확인</title>
+    <link rel="stylesheet" href="/css/classroomStyle.css"/>
+</head>
+<body>
+<header th:replace="~{/menu.html}"></header>
+<h1>생성한 강의실 확인</h1>
+
+<!-- 좌석 배치 정보 표시 -->
+<div>
+    <p>강의실 이름: <span th:text="${classroomNumber}"></span></p>
+    <p>선택한 좌석 스타일: <span th:text="${seatTemplate}"></span></p>
+</div>
+
+<!-- 다시 선택 화면으로 돌아가는 링크 -->
+<a href="/classroomSet">다시 선택하기</a>
+<!-- '생성하기' 버튼 폼 -->
+<form method="get" th:action="@{/버튼 클릭 후 이동할 페이지 링크}" style="display: inline;"> <!-- 버튼 클릭 시 이동할 페이지 설정 -->
+    <button type="submit">생성하기</button> <!-- 폼 제출 버튼 -->
+</form>
+</body>
+</html>
