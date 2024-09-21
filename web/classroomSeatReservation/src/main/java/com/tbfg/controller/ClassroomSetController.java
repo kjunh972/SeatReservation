@@ -1,52 +1,166 @@
 package com.tbfg.controller;
 
+import com.tbfg.dto.ClassroomDTO;
+import com.tbfg.dao.ClassroomDAO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Controller
 public class ClassroomSetController {
+
+    @Autowired
+    private ClassroomDAO classroomDAO;
 
     @GetMapping("/classroomSet")
     public String seatLayout(Model model) {
         model.addAttribute("predefinedLayouts", getPredefinedLayouts());
         return "classroomSet"; // 'classroomSet.html'이라는 이름의 뷰를 반환합니다.
     }
-    
-    @PostMapping("/classroomSet/create")
-    public String createLayout(
-            @RequestParam(required = false) String seatTemplate, // 좌석 템플릿의 이름을 요청에서 가져옵니다.
-            @RequestParam(required = false) Integer leftSeatRows, // 왼쪽 템플릿의 행 수를 요청에서 가져옵니다.
-            @RequestParam(required = false) Integer leftSeatColumns, // 왼쪽 템플릿의 열 수를 요청에서 가져옵니다.
-            @RequestParam(required = false) Integer rightSeatRows, // 오른쪽 템플릿의 행 수를 요청에서 가져옵니다.
-            @RequestParam(required = false) Integer rightSeatColumns, // 오른쪽 템플릿의 열 수를 요청에서 가져옵니다.
-            @RequestParam(required = false) String classroomNumber, // 강의실 이름을 요청에서 가져옵니다.
+
+    @PostMapping("/resultLayout")
+    public String resultLayout(
+            @RequestParam(required = false) String seatTemplate,
+            @RequestParam(required = false) Integer leftSeatRows,
+            @RequestParam(required = false) Integer leftSeatColumns,
+            @RequestParam(required = false) Integer rightSeatRows,
+            @RequestParam(required = false) Integer rightSeatColumns,
+            @RequestParam(required = false) String classroomNumber,
             Model model) {
 
-        // 좌석 템플릿을 가져옵니다. 커스텀 템플릿의 경우 빈 값일 수 있으므로 "커스텀"으로 설정합니다.
-        seatTemplate = (seatTemplate != null && !seatTemplate.isEmpty()) ? seatTemplate : "커스텀";
-
-        String seatTemplateText;
+        // 좌석 템플릿을 가져옵니다. 커스텀 템플릿의 경우 사용자가 입력한 값을 기반으로 템플릿을 생성
         if ("커스텀".equals(seatTemplate)) {
-            seatTemplateText = String.format("왼쪽: %dx%d, 오른쪽: %dx%d",
-                leftSeatRows != null ? leftSeatRows : 0,
-                leftSeatColumns != null ? leftSeatColumns : 0,
-                rightSeatRows != null ? rightSeatRows : 0,
-                rightSeatColumns != null ? rightSeatColumns : 0
-            );
+            if (leftSeatRows == null || leftSeatColumns == null || rightSeatRows == null || rightSeatColumns == null) {
+                model.addAttribute("error", "커스텀 좌석 값을 모두 입력해주세요.");
+                return "classroomSet";
+            }
+            // 입력받은 좌석 값을 기반으로 템플릿 생성
+            seatTemplate = String.format("왼쪽 : %dX%d, 오른쪽 : %dX%d", leftSeatRows, leftSeatColumns, rightSeatRows, rightSeatColumns);
         } else {
-            seatTemplateText = seatTemplate;
+            // 미리 정의된 템플릿은 그대로 사용
+            seatTemplate = (seatTemplate != null && !seatTemplate.isEmpty()) ? seatTemplate : "커스텀";
         }
 
-        model.addAttribute("seatTemplate", seatTemplateText);
-        model.addAttribute("classroomNumber", classroomNumber != null ? classroomNumber : "");
+        Integer leftCol = null;
+        Integer leftRow = null;
+        Integer rightCol = null;
+        Integer rightRow = null;
 
-        return "resultLayout"; // 결과 페이지로 리다이렉트합니다.
+        // 미리 정의된 템플릿의 경우 좌석 정보를 파싱
+        if (!"커스텀".equals(seatTemplate)) {
+            Pattern pattern = Pattern.compile("왼쪽 : (\\d+)X(\\d+), 오른쪽 : (\\d+)X(\\d+)");
+            Matcher matcher = pattern.matcher(seatTemplate);
+
+            if (matcher.find()) {
+            	leftCol = Integer.parseInt(matcher.group(1));
+                leftRow = Integer.parseInt(matcher.group(2));
+                rightCol = Integer.parseInt(matcher.group(3));
+                rightRow = Integer.parseInt(matcher.group(4));              
+            }
+        } else {
+            // 커스텀 값 저장
+        	leftCol = leftSeatColumns;
+            leftRow = leftSeatRows;
+            rightCol = rightSeatColumns;
+            rightRow = rightSeatRows;
+        }
+
+        model.addAttribute("seatTemplate", seatTemplate);  // 최종 좌석 템플릿을 뷰로 전달
+        model.addAttribute("classroomNumber", classroomNumber != null ? classroomNumber : "");
+        model.addAttribute("leftCol", leftCol);
+        model.addAttribute("leftRow", leftRow);  
+        model.addAttribute("rightCol", rightCol);
+        model.addAttribute("rightRow", rightRow);
+
+        // 강의실 이름 중복 체크
+        if (classroomNumber != null && !classroomNumber.isEmpty()) {
+            boolean exists = classroomDAO.existByClassroomName(classroomNumber);
+            if (exists) {
+                model.addAttribute("error", "이미 존재하는 강의실 이름입니다.");
+                model.addAttribute("predefinedLayouts", getPredefinedLayouts());
+                return "classroomSet";
+            }
+        }
+
+        return "resultLayout"; // 결과 페이지로 이동
+    }
+
+    @PostMapping("/saveClassroom")
+    public String saveClassroom(
+            @RequestParam String seatTemplate,
+            @RequestParam String classroomNumber,
+            @RequestParam(required = false) Integer leftSeatRows,
+            @RequestParam(required = false) Integer leftSeatColumns,
+            @RequestParam(required = false) Integer rightSeatRows,
+            @RequestParam(required = false) Integer rightSeatColumns,
+            Model model) {
+
+    	Integer leftCol = null;
+        Integer leftRow = null;
+        Integer rightCol = null;
+        Integer rightRow = null;
+
+        // 좌석 정보 처리
+        if ("커스텀".equals(seatTemplate)) {
+        	leftCol = leftSeatColumns;
+            leftRow = leftSeatRows;
+            rightCol = rightSeatColumns;
+            rightRow = rightSeatRows;
+        } else {
+            Pattern pattern = Pattern.compile("왼쪽 : (\\d+)X(\\d+), 오른쪽 : (\\d+)X(\\d+)");
+            Matcher matcher = pattern.matcher(seatTemplate);
+
+            if (matcher.find()) {
+            	leftCol = Integer.parseInt(matcher.group(1));
+                leftRow = Integer.parseInt(matcher.group(2));
+                rightCol = Integer.parseInt(matcher.group(3));
+                rightRow = Integer.parseInt(matcher.group(4));  
+            }
+        }
+
+        // ClassroomDTO에 데이터 저장
+        ClassroomDTO classroom = new ClassroomDTO();
+        classroom.setClassroomName(classroomNumber);
+        classroom.setLeftCol(leftCol != null ? leftCol : 0);
+        classroom.setLeftRow(leftRow != null ? leftRow : 0);   
+        classroom.setRightCol(rightCol != null ? rightCol : 0);
+        classroom.setRightRow(rightRow != null ? rightRow : 0);
+
+        // DB에 강의실 저장
+        classroomDAO.save(classroom);
+
+        // 저장 후 classroomResult로 리다이렉트
+        return "redirect:/classroomResult?classroomNumber=" + classroomNumber; // 저장 후 결과 페이지로 리다이렉트
+    }
+
+    // 강의실 중복 확인 API
+    @PostMapping("/checkClassroomExists")
+    @ResponseBody
+    public boolean checkClassroomExists(@RequestParam String classroomNumber) {
+        return classroomDAO.existByClassroomName(classroomNumber);
+    }
+
+    // 강의실 결과 페이지를 위한 메서드
+    @GetMapping("/classroomResult")
+    public String classroomResult(@RequestParam(required = false) String classroomNumber, Model model) {
+        if (classroomNumber != null && !classroomNumber.isEmpty()) {
+            ClassroomDTO classroom = classroomDAO.getClassroomInfo(classroomNumber);
+            if (classroom != null) {
+                model.addAttribute("classroom", classroom);
+            } else {
+                model.addAttribute("error", "강의실을 찾을 수 없습니다.");
+            }
+        }
+        return "classroomResult"; // 'classroomResult.html' 뷰를 반환합니다.
     }
 
     private List<String> getPredefinedLayouts() {

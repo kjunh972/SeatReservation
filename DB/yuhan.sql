@@ -82,6 +82,7 @@ CREATE TABLE BanSeat (
   user_id VARCHAR(20) NOT NULL, -- 사용자 ID
   classroom_name VARCHAR(20) NOT NULL, -- 강의실 이름
   banSeat INT NOT NULL, -- 금지한 좌석 번호
+  day VARCHAR(20) NOT NULL, -- 요일
   PRIMARY KEY (banNum), -- 기본 키 설정
   FOREIGN KEY (user_id) REFERENCES proYuhan(id), -- 사용자 ID 외래 키
   FOREIGN KEY (classroom_name) REFERENCES Classrooms(classroom_name) -- 강의실 이름 외래 키
@@ -115,10 +116,9 @@ INSERT INTO `proYuhan` VALUES
 ('admin','admin','Yuhan','admin','computer','admin');
 
 -- 강의실 이름 삽입
-INSERT INTO Classrooms (classroom_name) VALUES 
-('5401'), ('5402'), ('5403'), ('5404'), ('5405'), ('5406'), ('5407'), ('5408'), ('5409'), ('5410'), ('5411'),
-('7201'), ('7202'), ('7203'), ('7204'), ('7205'), ('7206'), ('7207'), ('7208'), ('7209'), ('7210');
-
+INSERT INTO Classrooms (classroom_name,leftRow,leftCol,rightRow,rightCol) VALUES 
+('5405',4,5,4,4), ('5406',4,6,4,6), ('5407',4,6,4,6), ('5408',4,6,4,6), ('5409',4,5,4,4),
+('7202',4,7,2,7), ('7203',4,5,4,5), ('7204',4,5,4,5), ('7205',4,5,4,5), ('7206',4,5,4,5), ('7207',4,4,4,4), ('7208',4,4,4,4), ('7209',4,4,4,4), ('7210',3,6,4,5), ('7211',4,4,3,4);
 
 -- 학생 시간표 삽입
 INSERT INTO StuTimetable (user_id, day, start_hour, end_hour, subject, classroomName) VALUES

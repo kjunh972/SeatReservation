@@ -1,26 +1,44 @@
-.alignLR {
-display: flex; /* 레이아웃 flex 사용 */
-margin-top: 70px; /* 위 여백 추가 */
+.seat-layout {
+    display: flex;
+    flex-direction: row; /* 좌석을 좌우로 나열 */
+    justify-content: space-between; /* 좌석 간의 간격 설정 */
+    gap: 6rem; /* 왼쪽과 오른쪽 좌석 사이의 간격 */
+}
+
+.left-seats, .right-seats {
+    display: flex;
+    flex-direction: column; /* 좌석을 세로로 나열 */
+}
+
+.seat-row {
+    display: flex;
+    gap: 1rem; /* 좌석 간의 간격 */
+    margin-bottom: 1rem; /* 좌석 행 사이의 아래 여백 */
+}
+
+.grid-container {
+    display: flex;
+    justify-content: center; /* 전체 좌석 구역을 가운데 정렬 */
+    padding: 1.2rem;
 }
 
 .grid {
-display: grid; /* 그리드 레이아웃 사용 */
-grid-template-columns: repeat(4, 50px); /* 4열로 설정 */
-grid-template-rows: repeat(6, 50px); /* 6행으로 설정 */
-grid-gap: 5px; /* 그리드 간격 설정 */
+    display: flex;
+    justify-content: space-between; /* 왼쪽과 오른쪽 구역 사이의 간격 설정 */
+    gap: 4rem; /* 구역 간의 간격 설정 */
 }
 
-.empty {
-background-color: #98fb98 !important; /* 빈 좌석 배경색 지정 */
+.seat.empty {
+    background-color: #98fb98 !important; /* 빈 좌석 배경색 지정 */
 }
 
-.reserved {
-background-color: #ff6347 !important; /* 예약된 좌석 배경색 지정 */
+.seat.reserved {
+    background-color: #ff6347 !important; /* 예약된 좌석 배경색 지정 */
 }
 
-.banned {
-background-color: gray;
-cursor: not-allowed;
+.seat.banned {
+    background-color: gray;
+    cursor: not-allowed;
 }
 
 button {

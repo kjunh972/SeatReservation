@@ -1,10 +1,17 @@
 package com.tbfg.dao;
 
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+
+import com.tbfg.dto.BanSeatList;
 import com.tbfg.dto.ProfessorDTO;
 
 @Repository
@@ -75,4 +82,58 @@ public class ProfessorDAO {
         String sql = "DELETE FROM proYuhan WHERE id = ?";
         jdbcTemplate.update(sql, id);  // 해당 ID의 교수 정보를 데이터베이스에서 삭제
     }
+    
+    // 모든 금지된 좌석 정보를 가져오는 메서드
+    public List<BanSeatList> banSeatList() {
+        // 모든 금지된 좌석과 시간대를 가져오는 SQL 쿼리
+        String sql = "SELECT bs.banNum, bs.user_id, bs.classroom_name, bs.banSeat, bs.day, bsh.banHour "
+                   + "FROM BanSeat bs "
+                   + "JOIN BanSeatHour bsh ON bs.banNum = bsh.banNum";
+
+        // 쿼리를 실행하고 결과를 BanSeatList 객체의 리스트로 반환
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+            BanSeatList banSeatList = new BanSeatList();
+            banSeatList.setBanNum(rs.getInt("banNum"));
+            banSeatList.setUserId(rs.getString("user_id"));
+            banSeatList.setClassroomName(rs.getString("classroom_name"));
+            banSeatList.setBanSeat(rs.getInt("banSeat"));
+            banSeatList.setDay(rs.getString("day"));
+            banSeatList.setBanHour(rs.getInt("banHour"));
+            return banSeatList;
+        });
+    }
+
+    // 강의실별로 금지된 좌석 정보를 그룹화하고 금지 번호별로 시간대 묶기
+    public Map<String, List<BanSeatList>> getBanSeatList(String userId) {
+        // 모든 금지된 좌석 정보를 가져옴
+        List<BanSeatList> banSeatList = banSeatList();
+
+        // 금지 번호별로 그룹화된 좌석 정보를 저장할 맵
+        Map<Integer, BanSeatList> groupedByBanNum = new LinkedHashMap<>();
+
+        // 각 금지 좌석 정보에 대해 반복
+        for (BanSeatList banSeat : banSeatList) {
+            // 현재 금지된 좌석이 로그인한 사용자와 일치하는지 확인
+            if (banSeat.getUserId().equals(userId)) {
+                int banNum = banSeat.getBanNum();  // 현재 금지된 좌석의 금지 번호를 가져옴
+
+                // 동일한 금지 번호가 이미 맵에 존재하는지 확인
+                if (groupedByBanNum.containsKey(banNum)) {
+                    // 동일한 금지 번호가 이미 존재하면, 기존 좌석 정보에 현재 시간대를 추가
+                    BanSeatList existingBanSeat = groupedByBanNum.get(banNum);
+                    String hoursString = existingBanSeat.getBanHourString() + "," + banSeat.getBanHour();
+                    existingBanSeat.setBanHourString(hoursString);  // 시간대를 문자열로 합침
+                } else {
+                    // 동일한 금지 번호가 없으면, 현재 금지된 좌석을 맵에 추가
+                    banSeat.setBanHourString(String.valueOf(banSeat.getBanHour()));  // 초기 시간대 설정
+                    groupedByBanNum.put(banNum, banSeat);
+                }
+            }
+        }
+
+        // 금지 번호별로 그룹화된 좌석 정보를 강의실 이름별로 다시 그룹화하여 반환
+        return groupedByBanNum.values().stream()
+                .collect(Collectors.groupingBy(BanSeatList::getClassroomName));
+    }
+
 }

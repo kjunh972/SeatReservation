@@ -26,7 +26,15 @@
     </style>
 </head>
 <body>
-	<header th:replace="~{/menu.html}"></header> 
+	<header th:if="${userPosition == 'student'}">
+    	<header th:replace="~{/menu.html}"></header> <!-- 메뉴 포함 -->
+	</header>
+	<header th:if="${userPosition == 'admin'}">
+	    <header th:replace="~{/menu_admin.html}"></header> <!-- 메뉴 포함 -->
+	</header>
+	<header th:if="${userPosition == 'professor'}">
+	    <header th:replace="~{/menu_admin.html}"></header> <!-- 메뉴 포함 -->
+	</header>
 	
     <h2>마이페이지</h2>
     <div>

@@ -11,11 +11,14 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.tbfg.dto.BanSeatDTO;
+import com.tbfg.dto.ClassroomDTO;
 import com.tbfg.dto.ReserveList;
 
 @Repository
@@ -31,6 +34,7 @@ public class ClassroomDAO {
     // 좌석 예약을 추가하는 메서드
     public int reserveSeat(String userId, String classroomName, Integer seatNumber, String day, Integer randomNumber) {
         // Reservation 테이블에 예약 정보 (사용자 ID, 강의실 이름, 좌석 번호, 랜덤 번호)를 삽입하는 SQL 쿼리
+    System.out.println("day"+day);
         String sql = "INSERT INTO Reservation (user_id, classroom_name, reservSeat, day, reservNum) VALUES (?, ?, ?, ?, ?)";
         
         // jdbcTemplate을 사용해 SQL 쿼리를 실행하고, 영향받은 행의 수를 반환
@@ -207,7 +211,7 @@ public class ClassroomDAO {
  // 강의실 좌석 금지 정보를 데이터베이스에 삽입하는 메서드
     public int insertBanSeat(BanSeatDTO banSeat) {
         // 삽입할 SQL 쿼리
-        String sql = "INSERT INTO BanSeat (user_id, classroom_name, banSeat) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO BanSeat (user_id, classroom_name, banSeat, day) VALUES (?, ?, ?, ?)";
         // 자동 생성된 키(banNum)를 저장하기 위한 KeyHolder 객체 생성
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -218,6 +222,7 @@ public class ClassroomDAO {
             ps.setString(1, banSeat.getUserId());         // 첫 번째 파라미터: 사용자 ID
             ps.setString(2, banSeat.getClassroomName());  // 두 번째 파라미터: 강의실 이름
             ps.setInt(3, banSeat.getBanSeat());           // 세 번째 파라미터: 금지된 좌석 번호
+            ps.setString(4, banSeat.getDay());  		  // 네 번째 파라미터: 요일
             return ps; // PreparedStatement 반환
         }, keyHolder);
 
@@ -258,4 +263,64 @@ public class ClassroomDAO {
         String sql = "SELECT classroom_name FROM Classrooms";
         return jdbcTemplate.queryForList(sql, String.class);
     }
+ 
+    public boolean checkSeat(String userId, String classroomName, List<Integer> selectHours, String day) {
+        // SQL 쿼리를 작성하여 Reservation과 ReservationHour 테이블을 조인하여 중복 예약 여부 확인
+        String sql = "SELECT COUNT(*) FROM Reservation r " +
+                     "JOIN ReservationHour rh ON r.reservNum = rh.reservNum " +
+                     "WHERE r.user_id = :userId AND r.classroom_name = :classroomName AND r.day = :day " +
+                     "AND rh.reservHour IN (:selectHours)";
+        
+        // MapSqlParameterSource를 사용하여 IN 절에 selectHours 리스트를 전달
+        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        parameters.addValue("userId", userId);
+        parameters.addValue("classroomName", classroomName);
+        parameters.addValue("day", day);
+        parameters.addValue("selectHours", selectHours);
+
+        // NamedParameterJdbcTemplate을 사용하여 IN 절에 리스트 값을 바인딩
+        NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
+        int count = namedParameterJdbcTemplate.queryForObject(sql, parameters, Integer.class);
+
+        return count > 0;  // 중복 예약이 있으면 true 반환
+    }
+    
+    public boolean existByClassroomName(String classroomName) {
+        String sql = "SELECT COUNT(*) FROM Classrooms WHERE classroom_name = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, classroomName);
+        return count != null && count > 0;
+    }
+    
+    public void save(ClassroomDTO classroom) {
+        String sql = "INSERT INTO Classrooms (classroom_name, leftCol, leftRow, rightCol, rightRow) VALUES (?, ?, ?, ?, ?)";
+        jdbcTemplate.update(sql, 
+            classroom.getClassroomName(), 
+            classroom.getLeftCol(), 
+            classroom.getLeftRow(),
+            classroom.getRightCol(),
+            classroom.getRightRow()
+        );
+    }
+
+    
+    public ClassroomDTO getClassroomInfo(String classroomName) {
+        String sql = "SELECT * FROM Classrooms WHERE classroom_name = ?";
+
+        @SuppressWarnings("deprecation")
+		List<ClassroomDTO> results = jdbcTemplate.query(sql, new Object[]{classroomName}, (rs, rowNum) -> {
+            ClassroomDTO classroom = new ClassroomDTO();
+            classroom.setClassroomName(rs.getString("classroom_name"));
+            classroom.setLeftCol(rs.getInt("leftRow"));  // Row와 Col 위치 반대로
+            classroom.setLeftRow(rs.getInt("leftCol"));
+            classroom.setRightCol(rs.getInt("rightRow"));
+            classroom.setRightRow(rs.getInt("rightCol"));
+            return classroom;
+        });
+
+        if (results.isEmpty()) {
+            return null;
+        } 
+        return results.get(0);
+    }
+
 }
