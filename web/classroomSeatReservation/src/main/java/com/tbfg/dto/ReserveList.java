@@ -4,7 +4,8 @@ public class ReserveList {
 	private int reservNum;
     private String userId;
     private String classroomName;
-    private int reservSeat;
+    private String subject;
+	private int reservSeat;
     private String day;
 	private int reservHour;
     private String reservHourString; // 시간대를 문자열로 묶은 필드
@@ -33,6 +34,14 @@ public class ReserveList {
     public void setClassroomName(String classroomName) {
         this.classroomName = classroomName;
     }
+    
+    public String getSubject() {
+		return subject;
+	}
+
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
 
     public int getReservSeat() {
         return reservSeat;

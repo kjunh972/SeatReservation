@@ -164,6 +164,7 @@
                     <thead>
                         <!-- 테이블 헤더 -->
                         <tr>
+							<th>과목명</th>
                             <th>강의실 이름</th>
                             <th>예약 번호</th>
                             <th>사용자 ID</th>
@@ -177,6 +178,7 @@
                     <tbody class="centerContent">
                         <!-- 각 예약 항목에 대해 반복 -->
                         <tr th:each="reservation : ${entry.value}">
+							<td th:text="${reservation.subject}"></td>
                             <td th:text="${reservation.classroomName}"></td>
                             <td th:text="${reservation.reservNum}"></td>
                             <td th:text="${reservation.userId}"></td>

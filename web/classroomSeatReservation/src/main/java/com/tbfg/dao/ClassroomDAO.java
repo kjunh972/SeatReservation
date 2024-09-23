@@ -32,13 +32,12 @@ public class ClassroomDAO {
     }
     
     // 좌석 예약을 추가하는 메서드
-    public int reserveSeat(String userId, String classroomName, Integer seatNumber, String day, Integer randomNumber) {
+    public int reserveSeat(String userId, String classroomName, String subject, Integer seatNumber, String day, Integer randomNumber) {
         // Reservation 테이블에 예약 정보 (사용자 ID, 강의실 이름, 좌석 번호, 랜덤 번호)를 삽입하는 SQL 쿼리
-    System.out.println("day"+day);
-        String sql = "INSERT INTO Reservation (user_id, classroom_name, reservSeat, day, reservNum) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Reservation (user_id, classroom_name, subject, reservSeat, day, reservNum) VALUES (?, ?, ?, ?, ?, ?)";
         
         // jdbcTemplate을 사용해 SQL 쿼리를 실행하고, 영향받은 행의 수를 반환
-        return jdbcTemplate.update(sql, userId, classroomName, seatNumber, day, randomNumber);
+        return jdbcTemplate.update(sql, userId, classroomName, subject, seatNumber, day, randomNumber);
     }
 
     // 예약 번호와 시간대를 ReservationHour 테이블에 추가하는 메서드
@@ -50,34 +49,34 @@ public class ClassroomDAO {
         jdbcTemplate.update(sql, reservNum, hour);
     }
 
-    // 특정 강의실과 시간대에 예약된 좌석을 가져오는 메서드
-    public List<Integer> getReservedSeats(String classroomName, List<Integer> hours) {
-        // 만약 hours 리스트가 null이거나 비어있다면, 빈 리스트를 반환 (쿼리를 실행하지 않음)
+    // 특정 강의실, 시간대, 요일, 과목명에 따라 예약된 좌석을 가져오는 메서드
+    public List<Integer> getReservedSeats(String classroomName, List<Integer> hours, String day, String subjectName) {
         if (hours == null || hours.isEmpty()) {
-            System.out.println("빈 리스트 반환");
             return List.of(); // 빈 리스트 반환
         }
         
-        // 예약된 좌석을 가져오는 SQL 쿼리 (Reservation과 ReservationHour 테이블을 조인)
+        // 예약된 좌석을 가져오는 SQL 쿼리
         String sql = "SELECT r.reservSeat "
                    + "FROM Reservation r "
                    + "JOIN ReservationHour rh ON r.reservNum = rh.reservNum "
-                   + "WHERE r.classroom_name = ?"  // 강의실 이름에 대해 필터링
-                   + "AND rh.reservHour IN (?)";  // 시간대 필터링 (in 절 사용)
+                   + "WHERE r.classroom_name = ? "  // 강의실 이름 필터링
+                   + "AND rh.reservHour IN (?) "   // 시간대 필터링
+                   + "AND r.day = ? "        // 요일 필터링
+                   + "AND r.subject = ?";      // 과목명 필터링
         
-        // List<Integer> (hours 리스트)를 쿼리에 사용하기 위해 쉼표로 구분된 문자열로 변환
+        // 시간대를 쉼표로 구분된 문자열로 변환
         String hoursParam = hours.stream()
-                                 .map(String::valueOf)  // 각 정수를 문자열로 변환
-                                 .collect(Collectors.joining(",")); // 쉼표로 연결하여 단일 문자열로 만듦
+                                 .map(String::valueOf)
+                                 .collect(Collectors.joining(","));
         
-        // 변환된 hoursParam을 사용하여 SQL 쿼리를 실행하고, 결과를 List<Integer>로 반환
-        return jdbcTemplate.queryForList(sql, Integer.class, classroomName, hoursParam);
+        // 쿼리 실행하고 결과 반환
+        return jdbcTemplate.queryForList(sql, Integer.class, classroomName, hoursParam, day, subjectName);
     }
 
     // 모든 강의실의 예약 정보를 가져오는 메서드
     public List<ReserveList> reserveList() {
         // 모든 강의실과 예약 정보를 가져오는 SQL 쿼리
-        String sql = "SELECT r.reservNum, r.user_id, r.classroom_name, r.reservSeat, r.day, rh.reservHour "
+        String sql = "SELECT r.reservNum, r.user_id, r.classroom_name, r.subject, r.reservSeat, r.day, rh.reservHour "
                 + "FROM Reservation r "
                 + "JOIN ReservationHour rh ON r.reservNum = rh.reservNum";
 
@@ -87,6 +86,7 @@ public class ClassroomDAO {
             reserveList.setReservNum(rs.getInt("reservNum"));
             reserveList.setUserId(rs.getString("user_id"));
             reserveList.setClassroomName(rs.getString("classroom_name"));
+            reserveList.setSubject(rs.getString("subject"));
             reserveList.setReservSeat(rs.getInt("reservSeat"));
             reserveList.setDay(rs.getString("day"));
             reserveList.setReservHour(rs.getInt("reservHour"));

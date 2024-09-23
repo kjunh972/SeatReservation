@@ -62,6 +62,7 @@ CREATE TABLE Reservation (
   reservNum INT NOT NULL, -- 예약 번호 (기본 키)
   user_id VARCHAR(20) NOT NULL, -- 사용자 ID
   classroom_name VARCHAR(20) NOT NULL, -- 강의실 이름
+  subject VARCHAR(30), -- 과목
   reservSeat INT NOT NULL, -- 예약된 좌석 번호
   day VARCHAR(20) NOT NULL, -- 요일
   PRIMARY KEY (reservNum), -- 기본 키 설정
@@ -81,6 +82,7 @@ CREATE TABLE BanSeat (
   banNum INT NOT NULL AUTO_INCREMENT, -- 금지한 번호 (기본 키)
   user_id VARCHAR(20) NOT NULL, -- 사용자 ID
   classroom_name VARCHAR(20) NOT NULL, -- 강의실 이름
+  subject VARCHAR(30), -- 과목
   banSeat INT NOT NULL, -- 금지한 좌석 번호
   day VARCHAR(20) NOT NULL, -- 요일
   PRIMARY KEY (banNum), -- 기본 키 설정

@@ -8,6 +8,9 @@ public class ClassroomDTO {
     // 강의실 이름을 저장하는 변수
     private String classroomName;
     
+    // 과목명
+    private String subject;
+    
     // 좌석 수를 저장하는 변수
     private int seatCount;
     
@@ -38,6 +41,14 @@ public class ClassroomDTO {
     public void setClassroomName(String classroomName) {
         this.classroomName = classroomName;
     }
+    
+    public String getSubject() {
+		return subject;
+	}
+
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
 
     // 좌석 상태 리스트를 반환하는 메서드
     public List<Boolean> getSeatStatusList() {

@@ -110,6 +110,7 @@ public class Contoller {
     public String classroomStatus(@RequestParam("classroomName") String classroomName,
                                   @RequestParam("selectHours") String selectHoursJson,
                                   @RequestParam("day") String day,
+                                  @RequestParam("subject") String subject,
                                   HttpSession session, Model model) throws JsonProcessingException {
 
         String userId = GetId(session);
@@ -120,18 +121,22 @@ public class Contoller {
 
         ClassroomDAO classroomDAO = new ClassroomDAO(jdbcTemplate);
         classroomDTO = classroomDAO.getClassroomInfo(classroomName);
+        classroomDTO.setSeatCount(classroomDTO.getLeftCol()+classroomDTO.getLeftRow()+classroomDTO.getRightCol()+classroomDTO.getRightRow());
+        
         
         // 시간대 정보 처리
         ObjectMapper objectMapper = new ObjectMapper();
         List<Integer> selectHours = objectMapper.readValue(selectHoursJson, new TypeReference<List<Integer>>() {});
         classroomDTO.setSelectHours(selectHours);
         classroomDTO.setDay(day);
+        classroomDTO.setSubject(subject);
 
+        System.out.println("timetableDTO.getSubject() : "+timetableDTO.getSubject());
+        System.out.println("timetableDTO.getDay() : "+timetableDTO.getDay());
         // 이미 예약된 좌석 목록 처리
-        List<Integer> reservedSeats = classroomDAO.getReservedSeats(classroomName, selectHours);
+        List<Integer> reservedSeats = classroomDAO.getReservedSeats(classroomName, selectHours, day, timetableDTO.getSubject());
         classroomDTO.setReservedSeats(reservedSeats); 
         model.addAttribute("reservedSeats",reservedSeats);
-        System.out.println("reservedSeats : "+reservedSeats);
         
         // 예약된 좌석을 classroomDTO에 반영하여 예약 상태를 업데이트
         for (Integer seat : reservedSeats) {
@@ -158,7 +163,7 @@ public class Contoller {
     
     // 강의실 좌석 예약 메서드
     @PostMapping("/reserveSeat")  
-    public String reserveSeat(String classroomName, Integer seatNumber, String day, HttpSession session,
+    public String reserveSeat(String classroomName, Integer seatNumber, String day, String subject, HttpSession session,
                               Model model) throws JsonProcessingException {
     	if (GetId(session) == null) { // 세션에 사용자 ID가 있는지 확인
             model.addAttribute("error", "세션이 만료되었습니다. 다시 로그인 해주세요.");
@@ -174,7 +179,7 @@ public class Contoller {
         classroomDTO.setRandomNum(randomNum);
         
         // DAO를 사용하여 좌석을 예약하고, 해당 좌석에 랜덤 번호를 설정
-        classroomDAO.reserveSeat(GetId(session), classroomName, seatNumber, day, randomNum);
+        classroomDAO.reserveSeat(GetId(session), classroomName, subject, seatNumber, day, randomNum);
         // 사용자가 선택한 시간대에 대해 예약된 시간 정보를 ReservationHour 테이블에 추가
         for (Integer hour : classroomDTO.getSelectHours()) {
             classroomDAO.addReservationHour(randomNum, hour);
@@ -222,8 +227,11 @@ public class Contoller {
         // 금지 좌석 정보 갱신 후 강의실 상태 페이지로 리다이렉트
         model.addAttribute("success", "좌석이 성공적으로 금지되었습니다.");
         
+        System.out.println("timetableDTO.getSubject() : "+timetableDTO.getSubject());
+        System.out.println("timetableDTO.getDay() : "+timetableDTO.getDay());
+        System.out.println("tclassroomDTO.getSelectHours() : "+classroomDTO.getSelectHours());
         // DAO를 통해 선택한 시간대에 이미 예약된 좌석들을 조회
-        List<Integer> reservedSeats = classroomDAO.getReservedSeats(classroomName, classroomDTO.getSelectHours());
+        List<Integer> reservedSeats = classroomDAO.getReservedSeats(classroomName, classroomDTO.getSelectHours(), timetableDTO.getDay(), timetableDTO.getSubject());
         
         // 예약된 좌석을 classroomDTO에 반영하여 예약 상태를 업데이트
         for (Integer seat : reservedSeats) {
