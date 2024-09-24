@@ -75,6 +75,7 @@
                 <table>
                     <thead>
                         <tr>
+							<th>과목명</th>
                             <th>강의실 이름</th>
                             <th>좌석 번호</th>
                             <th>요일</th>
@@ -84,6 +85,7 @@
                     </thead>
                     <tbody class="centerContent">
                         <tr th:each="banSeat : ${entry.value}">
+							<td th:text="${banSeat.subject}"></td>
                             <td th:text="${banSeat.classroomName}"></td>
                             <td th:text="${banSeat.banSeat}"></td>
                             <td th:text="${banSeat.day}"></td>

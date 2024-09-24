@@ -86,7 +86,7 @@ public class ProfessorDAO {
     // 모든 금지된 좌석 정보를 가져오는 메서드
     public List<BanSeatList> banSeatList() {
         // 모든 금지된 좌석과 시간대를 가져오는 SQL 쿼리
-        String sql = "SELECT bs.banNum, bs.user_id, bs.classroom_name, bs.banSeat, bs.day, bsh.banHour "
+        String sql = "SELECT bs.banNum, bs.user_id, bs.classroom_name, bs.subject, bs.banSeat, bs.day, bsh.banHour "
                    + "FROM BanSeat bs "
                    + "JOIN BanSeatHour bsh ON bs.banNum = bsh.banNum";
 
@@ -96,6 +96,7 @@ public class ProfessorDAO {
             banSeatList.setBanNum(rs.getInt("banNum"));
             banSeatList.setUserId(rs.getString("user_id"));
             banSeatList.setClassroomName(rs.getString("classroom_name"));
+            banSeatList.setSubject(rs.getString("subject"));
             banSeatList.setBanSeat(rs.getInt("banSeat"));
             banSeatList.setDay(rs.getString("day"));
             banSeatList.setBanHour(rs.getInt("banHour"));

@@ -50,7 +50,7 @@ public class ClassroomDAO {
     }
 
     // 특정 강의실, 시간대, 요일, 과목명에 따라 예약된 좌석을 가져오는 메서드
-    public List<Integer> getReservedSeats(String classroomName, List<Integer> hours, String day, String subjectName) {
+    public List<Integer> getReservedSeats(String classroomName, List<Integer> hours, String day, String subject) {
         if (hours == null || hours.isEmpty()) {
             return List.of(); // 빈 리스트 반환
         }
@@ -70,8 +70,9 @@ public class ClassroomDAO {
                                  .collect(Collectors.joining(","));
         
         // 쿼리 실행하고 결과 반환
-        return jdbcTemplate.queryForList(sql, Integer.class, classroomName, hoursParam, day, subjectName);
+        return jdbcTemplate.queryForList(sql, Integer.class, classroomName, hoursParam, day, subject);
     }
+
 
     // 모든 강의실의 예약 정보를 가져오는 메서드
     public List<ReserveList> reserveList() {
@@ -208,10 +209,10 @@ public class ClassroomDAO {
         return jdbcTemplate.queryForList(sql, String.class, prefix);
     }
     
- // 강의실 좌석 금지 정보를 데이터베이스에 삽입하는 메서드
+    // 강의실 좌석 금지 정보를 데이터베이스에 삽입하는 메서드
     public int insertBanSeat(BanSeatDTO banSeat) {
         // 삽입할 SQL 쿼리
-        String sql = "INSERT INTO BanSeat (user_id, classroom_name, banSeat, day) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO BanSeat (user_id, classroom_name, subject, banSeat, day) VALUES (?, ?, ?, ?, ?)";
         // 자동 생성된 키(banNum)를 저장하기 위한 KeyHolder 객체 생성
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -221,8 +222,9 @@ public class ClassroomDAO {
             PreparedStatement ps = connection.prepareStatement(sql, new String[] {"banNum"});
             ps.setString(1, banSeat.getUserId());         // 첫 번째 파라미터: 사용자 ID
             ps.setString(2, banSeat.getClassroomName());  // 두 번째 파라미터: 강의실 이름
-            ps.setInt(3, banSeat.getBanSeat());           // 세 번째 파라미터: 금지된 좌석 번호
-            ps.setString(4, banSeat.getDay());  		  // 네 번째 파라미터: 요일
+            ps.setString(3, banSeat.getSubject());  	  // 세 번째 파라미터: 강의실 이름
+            ps.setInt(4, banSeat.getBanSeat());           // 네 번째 파라미터: 금지된 좌석 번호
+            ps.setString(5, banSeat.getDay());  		  // 다섯 번째 파라미터: 요일
             return ps; // PreparedStatement 반환
         }, keyHolder);
 
@@ -238,18 +240,19 @@ public class ClassroomDAO {
         jdbcTemplate.update(sql, banNum, banHour); // banNum과 banHour를 파라미터로 사용
     }
 
-    // 특정 강의실과 시간대에 금지된 좌석 목록을 조회하는 메서드
     @SuppressWarnings("deprecation")
-    public List<Integer> getBannedSeats(String classroomName, List<Integer> selectHours) {
+    public List<Integer> getBannedSeats(String classroomName, List<Integer> selectHours, String subject, String day) {
         // SQL 쿼리 작성
         String sql = "SELECT DISTINCT b.banSeat " +
                      "FROM BanSeat b " +
                      "JOIN BanSeatHour h ON b.banNum = h.banNum " +
                      "WHERE b.classroom_name = ? " +
-                     "AND h.banHour IN (" + String.join(",", selectHours.stream().map(String::valueOf).toArray(String[]::new)) + ")";
+                     "AND h.banHour IN (" + String.join(",", selectHours.stream().map(String::valueOf).toArray(String[]::new)) + ") " +
+                     "AND b.subject = ? " +  
+                     "AND b.day = ?";
 
         // 쿼리 실행 및 결과 매핑
-        return jdbcTemplate.query(sql, new Object[]{classroomName}, new RowMapper<Integer>() {
+        return jdbcTemplate.query(sql, new Object[]{classroomName, subject, day}, new RowMapper<Integer>() {
             @Override
             public Integer mapRow(ResultSet rs, int rowNum) throws SQLException {
                 // 쿼리 결과로부터 banSeat 컬럼 값을 Integer로 반환
@@ -321,6 +324,24 @@ public class ClassroomDAO {
             return null;
         } 
         return results.get(0);
+    }
+    
+    @SuppressWarnings("deprecation")
+	public List<ReserveList> getReserveListByClassroom(String userId, String classroomName) {
+        String sql = "SELECT r.reservNum, r.user_id, r.classroom_name, r.reservSeat, rh.reservHour "
+                   + "FROM Reservation r "
+                   + "JOIN ReservationHour rh ON r.reservNum = rh.reservNum "
+                   + "WHERE r.user_id = ? AND r.classroom_name = ?";
+        
+        return jdbcTemplate.query(sql, new Object[]{userId, classroomName}, (rs, rowNum) -> {
+            ReserveList reserveList = new ReserveList();
+            reserveList.setReservNum(rs.getInt("reservNum"));
+            reserveList.setUserId(rs.getString("user_id"));
+            reserveList.setClassroomName(rs.getString("classroom_name"));
+            reserveList.setReservSeat(rs.getInt("reservSeat"));
+            reserveList.setReservHour(rs.getInt("reservHour"));
+            return reserveList;
+        });
     }
 
 }

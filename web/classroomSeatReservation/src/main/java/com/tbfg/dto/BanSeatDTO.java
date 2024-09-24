@@ -6,7 +6,8 @@ public class BanSeatDTO {
 	private int banNum;
     private String userId;
     private String classroomName;
-    private int banSeat;
+    private String subject;
+	private int banSeat;
     private String day;
     private List<Integer> bannedSeats; // 금지된 좌석 리스트 추가
     
@@ -44,6 +45,14 @@ public class BanSeatDTO {
 	
 	public void setClassroomName(String classroomName) {
 		this.classroomName = classroomName;
+	}
+	
+	public String getSubject() {
+		return subject;
+	}
+
+	public void setSubject(String subject) {
+		this.subject = subject;
 	}
 	
 	public int getBanSeat() {

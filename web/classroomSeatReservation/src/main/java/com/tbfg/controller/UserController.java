@@ -40,8 +40,16 @@ public class UserController {
     
     // 로그인 페이지를 보여주는 메서드
     @GetMapping("/login")
-    public String showLoginPage() {
-        return "login";  // login.html 반환
+    public String showLoginPage(HttpSession session) {//세션에서 로그인한 사용자 정보 확인
+    	Contoller ct = new Contoller();
+    	if (session.getAttribute("loggedInUser") != null) { //로그인 된 상태라면 index 페이지로 리다이렉트
+    		if (ct.GetPosition(session).equals("student")) { // 학생 계정일 때
+    			return "redirect:/index.html";
+    		} else { // 교수나 관리자 계정일 떄
+    			return "redirect:/admin";
+    		}
+    	}
+        return "login";  // 로그인 되지 않은 상태에서는 login.html 로 이
     }
     
     // 로그아웃 처리를 위한 메서드

@@ -8,7 +8,15 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
-    <header th:replace="~{/menu.html}"></header>
+    <header th:if="${userPosition == 'student'}">
+    	<header th:replace="~{/menu.html}"></header> <!-- 메뉴 포함 -->
+	</header>
+	<header th:if="${userPosition == 'admin'}">
+	    <header th:replace="~{/menu_admin.html}"></header> <!-- 메뉴 포함 -->
+	</header>
+	<header th:if="${userPosition == 'professor'}">
+	    <header th:replace="~{/menu_admin.html}"></header> <!-- 메뉴 포함 -->
+	</header>
 
     <h1 th:if="${classroom}" th:text="${classroom.classroomName} + '호 좌석 예약 현황'">강의실 좌석 예약 현황</h1>
 
@@ -54,7 +62,7 @@
 	
 		if (seatStatusList != null)
 		{
-			console.log(seatStatusList); // 데이터 확인
+			console.log("seatStatusList : ",seatStatusList); // 데이터 확인
 		    // 예약된 좌석 상태 업데이트
 		    seatStatusList.forEach(seat => {
 		        seatArray[seat - 1] = true; // 예약 상태 설정
@@ -63,6 +71,7 @@
 		
 		if (bannedSeatsList != null)
 		{
+			console.log("bannedSeatsList : ",bannedSeatsList); // 데이터 확인
 		    // 금지된 좌석 상태 업데이트
 		    bannedSeatsList.forEach(seat => {
 		        seatArray[seat - 1] = 'banned'; // 금지 상태 설정
@@ -130,18 +139,21 @@
 	        if (button.classList.contains('banned')) {
 	            Swal.fire('금지된 좌석입니다.', '', 'warning');
 	            return;
-	        }	        
-	        if (seatStatusList.length > 0) {
-			    Swal.fire({
-			        title: '이미 다른 좌석을 예약하셨습니다.',
-			        icon: 'warning',
-			        confirmButtonText: '확인'
-			    }).then((result) => {
-			        if (result.isConfirmed) {
-			            window.location.href = '/reserveList'; // 예약 리스트 페이지 URL로 변경
-			        }
-			    });
-			    return;
+	        }
+	        if (userPosition === "student")
+	        {      
+		        if (seatStatusList.length > 0) {
+				    Swal.fire({
+				        title: '이미 다른 좌석을 예약하셨습니다.',
+				        icon: 'warning',
+				        confirmButtonText: '확인'
+				    }).then((result) => {
+				        if (result.isConfirmed) {
+				            window.location.href = '/reserveList'; // 예약 리스트 페이지 URL로 변경
+				        }
+				    });
+				    return;
+				}
 			}
 	
 	        selectedSeat = button.dataset.seat;

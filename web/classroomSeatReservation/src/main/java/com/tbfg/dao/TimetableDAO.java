@@ -64,4 +64,11 @@ public class TimetableDAO {
         // 사용자 ID와 삭제할 과목명을 조건으로 하는 쿼리를 실행하여 해당 과목을 삭제
         jdbcTemplate.update(sql, userId, subject);
     }
+    
+    // 강의 목록을 가져오는 메서드 정의
+    @SuppressWarnings("deprecation")
+	public List<String> getSubjectsByClassroom(String classroomName, String userId) {
+        String sql = "SELECT subject FROM stutimetable WHERE classroomName = ? AND user_id = ?";
+        return jdbcTemplate.queryForList(sql, new Object[]{classroomName, userId}, String.class);
+    }
 }

@@ -11,6 +11,7 @@
     <table>
         <thead>
             <tr>
+				<th>과목</th>
 				<th>강의실</th>
                 <th>좌석 번호</th>
                 <th>요일</th>
@@ -20,6 +21,7 @@
         </thead>
         <tbody>
             <tr>
+				<td th:text="${classroom.subject}"></td>
 				<td th:text="${classroom.classroomName} + '호'"></td>
                 <td th:text="${seatNumber} + '번 좌석'"></td>
                 <td th:text="${classroom.day}"></td>

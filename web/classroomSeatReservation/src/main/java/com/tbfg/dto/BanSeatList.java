@@ -4,6 +4,7 @@ public class BanSeatList {
     private int banNum;
     private String userId;
     private String classroomName;
+    private String Subject;
     private int banSeat;
     private String day;
     private int banHour;
@@ -33,6 +34,14 @@ public class BanSeatList {
     public void setClassroomName(String classroomName) {
         this.classroomName = classroomName;
     }
+    
+    public String getSubject() {
+		return Subject;
+	}
+
+	public void setSubject(String subject) {
+		Subject = subject;
+	}
 
     public int getBanSeat() {
         return banSeat;

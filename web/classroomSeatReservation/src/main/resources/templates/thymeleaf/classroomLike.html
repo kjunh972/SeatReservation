@@ -16,7 +16,7 @@
 	
     <h1>즐겨찾기한 강의실</h1>
     <span>
-        <form th:action="@{/timeSelect}" method="post">
+        <form th:action="@{/classroomInfo}" method="post">
             <!-- 즐겨찾기한 강의실 버튼 생성 -->
             <div th:each="classroom : ${classroomButtons}">
                 <!-- 버튼 클릭 시 선택한 강의실의 이름과 함께 classroomStatus 페이지로 이동하는 버튼 -->
