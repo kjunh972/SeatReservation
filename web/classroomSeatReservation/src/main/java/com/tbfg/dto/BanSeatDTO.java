@@ -9,7 +9,8 @@ public class BanSeatDTO {
     private String subject;
 	private int banSeat;
     private String day;
-    private List<Integer> bannedSeats; // 금지된 좌석 리스트 추가
+    private int seatNumber;
+	private List<Integer> bannedSeats; // 금지된 좌석 리스트 추가
     
     public boolean isBanned(Integer seatNumber) {
         return bannedSeats != null && bannedSeats.contains(seatNumber);
@@ -69,5 +70,13 @@ public class BanSeatDTO {
 
 	public void setDay(String day) {
 		this.day = day;
+	}
+	
+	public int getSeatNumber() {
+		return seatNumber;
+	}
+
+	public void setSeatNumber(int seatNumber) {
+		this.seatNumber = seatNumber;
 	}
 }

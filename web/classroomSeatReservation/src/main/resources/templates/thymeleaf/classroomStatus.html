@@ -1,346 +1,378 @@
 <!DOCTYPE html>
 <html xmlns="http://www.thymeleaf.org">
+
 <head>
-    <meta charset="UTF-8">
-    <title>강의실 좌석 예약 현황</title>
-    <link rel="stylesheet" href="/css/classroomStyle.css" />
-    <link rel="stylesheet" href="/css/classroomStatusStyle.css" />
-    <link rel="stylesheet" href="/css/reserveSeatStyle.css" />
-    <link rel="stylesheet" href="/css/timeTableStyle.css" />
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<meta charset="UTF-8">
+	<title>강의실 좌석 예약 현황</title>
+	<link rel="stylesheet" href="/css/classroomStyle.css" />
+	<link rel="stylesheet" href="/css/classroomStatusStyle.css" />
+	<link rel="stylesheet" href="/css/reserveSeatStyle.css" />
+	<link rel="stylesheet" href="/css/timeTableStyle.css" />
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
+
 <body>
-    <header th:if="${userPosition == 'student'}">
-    	<header th:replace="~{/menu.html}"></header> <!-- 메뉴 포함 -->
+	<header th:if="${userPosition == 'student'}">
+		<header th:replace="~{/menu.html}"></header> <!-- 메뉴 포함 -->
 	</header>
 	<header th:if="${userPosition == 'admin'}">
-	    <header th:replace="~{/menu_admin.html}"></header> <!-- 메뉴 포함 -->
+		<header th:replace="~{/menu_admin.html}"></header> <!-- 메뉴 포함 -->
 	</header>
 	<header th:if="${userPosition == 'professor'}">
-	    <header th:replace="~{/menu_admin.html}"></header> <!-- 메뉴 포함 -->
+		<header th:replace="~{/menu_admin.html}"></header> <!-- 메뉴 포함 -->
 	</header>
-	
-    <!-- 좌석 예약 현황 모달 -->
-    <div id="seatModal" class="seatModal" th:if="${classroom}">
-        <div class="modal-content">
-            <span class="close" id="closeSeatModal">&times;</span>
-            <h1 th:if="${classroom}" th:text="${classroom.classroomName} + '호 좌석 예약 현황'">강의실 좌석 예약 현황</h1>
-            <div class="grid-container">
-                <div class="grid">
-                    <div class="seat-layout">
-                        <div class="left-seats"></div>
-                        <div class="right-seats"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- 모달 -->
-    <div id="myModal" class="modal">
-        <div class="modal-content">
-            <span class="close" id="closeModal">&times;</span>
-            <p id="modalMessage">좌석을 예약하시겠습니까?</p>
-            <button id="confirmButton">예</button>
-            <button id="cancelButton">아니오</button>
-        </div>
-    </div>
-    
-    <!-- GET 방식일 때만 예약된 좌석 정보 표시 -->
-    <div th:if="${requestMethod == 'GET'}">
-        <h1>예약된 좌석</h1>
-        <script>
-			let classrooNull = /*[[${classroom.classroomNull}]]*/ 0; // 요청 메서드 가져오기
-			classrooNull = 0;
-			console.log("classrooNull"+classrooNull)
-		</script>
-        <table>
-            <thead>
-                <tr>
-                    <th>과목</th>
-                    <th>강의실</th>
-                    <th>좌석 번호</th>
-                    <th>요일</th>
-                    <th>시간대</th>
-                    <th>예약 번호</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td th:text="${classroom.subject}"></td>
-                    <td th:text="${classroom.classroomName} + '호'"></td>
-                    <td th:text="${classroom.seatNumber} + '번 좌석'"></td>
-                    <td th:text="${classroom.day}"></td>
-                    <td th:text="${selectHours} + '시'"></td>
-                    <td th:text="${classroom.randomNum} + '번'"></td>
-                </tr>
-            </tbody>
-        </table>
-        <!-- 버튼을 가운데 정렬하고 가로로 배치 -->
-		<div style="display: flex; justify-content: center; margin-top: 20px;">
-		    <button type="button" onclick="location.href='/reserveList'" 
-		            style="width: 200px; height: 50px; font-size: 16px; margin-right: 10px;">
-		        전체 예약 내용 보기
-		    </button>
-		    <button type="button" onclick="location.href='/timetable'" 
-		            style="width: 200px; height: 50px; font-size: 16px;">
-		        돌아가기
-		    </button>
+	<!-- 좌석 예약 현황 모달 -->
+	<div id="seatModal" class="seatModal" th:if="${classroom}">
+		<div class="modal-content">
+			<span class="close" id="closeSeatModal">&times;</span>
+			<h1 th:if="${classroom}" th:text="${classroom.classroomName} + '호 좌석 예약 현황'">강의실 좌석 예약 현황</h1>
+			<div class="grid-container">
+				<div class="grid">
+					<div class="seat-layout">
+						<div class="left-seats"></div>
+						<div class="right-seats"></div>
+					</div>
+				</div>
+			</div>
 		</div>
-    </div>
-    
-    <!-- post 방식으로 접근했을때 시간표 보여주기 -->
-    <div th:if="${requestMethod == 'POST'}">
-	    <h1>시간표</h1>
-	    <!-- 시간표 컨테이너 -->
-	    <div class="container">
-	        <!-- 시간표 테이블 -->
-	        <table>
-	            <thead>
-	                <!-- 요일 헤더 -->
-	                <tr>
-	                    <th></th>
-	                    <!-- 요일별 반복 -->
-	                    <th th:each="day : ${days}" th:text="${day}"></th>
-	                </tr>
-	            </thead>
-	            <tbody>
-	                <!-- 시간별 반복 -->
-	                <tr th:each="hour : ${hours}">
-	                    <!-- 시간 표시 -->
-	                    <td th:text="${hour}"></td>
-	                    <!-- 요일별 시간표 -->
-	                    <td th:each="day : ${days}" class="clickable" data-day="${day}" data-hour="${hour}">
-	                        <div th:each="timeTable, stat : ${userTimeTable}"
-	                              th:if="${timeTable.day == day and timeTable.startHour le hour and timeTable.endHour gt hour}"
-	                              th:classappend="'subject-' + ${stat.index % 10}"
-	                              th:attr="data-subject=${timeTable.subject}, data-classroom=${timeTable.classroomName}, 
-	                                      data-day=${timeTable.day}, data-hour=${hour}">
-	                            <!-- 시간표 정보 표시 -->
-	                            <span th:text="${timeTable.subject + ' (' + timeTable.classroomName + ')'}"></span><br>
-	                        </div>
-	                    </td>
-	                </tr>
-	            </tbody>
-	        </table>
-	    </div>
-    </div>
+	</div>
 
-    <script th:inline="javascript">
-	    let selectedSeat, selectedClassroom;
-	    var userPosition = /*[[${userPosition}]]*/ 'default'; // Thymeleaf에서 사용자 직책 정보 전달
-	    const requestMethod = /*[[${requestMethod}]]*/ 'GET'; // 요청 메서드 가져오기
-	    classrooNull = /*[[${classroom.classroomNull}]]*/ 1; // 요청 메서드 가져오기
-		if (requestMethod === 'POST') {
-			console.log("classrooNull3331 : " + classrooNull);
-		    if (requestMethod === 'GET') {
-				console.log("classrooNull333 : " + classrooNull);
-		        closeSeatModal(); // 모달 닫기 함수 호출
-		    }
-	    }
-	    
-	    if (classrooNull == 1) {
-				console.log("classrooNull111 : " + classrooNull);
-		        
+	<!-- 모달 -->
+	<div id="myModal" class="modal">
+		<div class="modal-content">
+			<span class="close" id="closeModal">&times;</span>
+			<p id="modalMessage">좌석을 예약하시겠습니까?</p>
+			<button id="confirmButton">예</button>
+			<button id="cancelButton">아니오</button>
+		</div>
+	</div>
+
+	<!-- GET 방식일 때만 예약된 좌석 정보 표시 -->
+	<div th:if="${requestMethod == 'GET'}">
+		<div th:if="${userPosition == 'student'}">
+			<h1>예약된 좌석</h1>
+			<table>
+				<thead>
+					<tr>
+						<th>과목</th>
+						<th>강의실</th>
+						<th>좌석 번호</th>
+						<th>요일</th>
+						<th>시간대</th>
+						<th>예약 번호</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td th:text="${classroom.subject}"></td>
+						<td th:text="${classroom.classroomName} + '호'"></td>
+						<td th:text="${classroom.seatNumber} + '번 좌석'"></td>
+						<td th:text="${classroom.day}"></td>
+						<td th:text="${selectHours} + '시'"></td>
+						<td th:text="${classroom.randomNum} + '번'"></td>
+					</tr>
+				</tbody>
+			</table>
+			<!-- 버튼을 가운데 정렬하고 가로로 배치 -->
+			<div style="display: flex; justify-content: center; margin-top: 20px;">
+				<button type="button" onclick="location.href='/reserveList'"
+					style="width: 200px; height: 50px; font-size: 16px; margin-right: 10px;">
+					전체 예약 내용 보기
+				</button>
+				<button type="button" onclick="location.href='/timetable'"
+					style="width: 200px; height: 50px; font-size: 16px;">
+					돌아가기
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- GET 방식일 때만 예약된 좌석 정보 표시 -->
+	<div th:if="${requestMethod == 'GET'}">
+		<div th:if="${userPosition == 'admin'}">
+			<h1>금지된 좌석</h1>
+			<table>
+				<thead>
+					<tr>
+						<th>과목</th>
+						<th>강의실</th>
+						<th>좌석 번호</th>
+						<th>요일</th>
+						<th>시간대</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td th:text="${banSeatDTO.subject}"></td>
+						<td th:text="${banSeatDTO.classroomName} + '호'"></td>
+						<td th:text="${banSeatDTO.seatNumber} + '번 좌석'"></td>
+						<td th:text="${banSeatDTO.day}"></td>
+						<td th:text="${selectHours} + '시'"></td>
+					</tr>
+				</tbody>
+			</table>
+			<!-- 버튼을 가운데 정렬하고 가로로 배치 -->
+			<div style="display: flex; justify-content: center; margin-top: 20px;">
+				<button type="button" onclick="location.href='/banSeatList'"
+					style="width: 200px; height: 50px; font-size: 16px; margin-right: 10px;">
+					전체 예약 내용 보기
+				</button>
+				<button type="button" onclick="location.href='/timetable'"
+					style="width: 200px; height: 50px; font-size: 16px;">
+					돌아가기
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- post 방식으로 접근했을때 시간표 보여주기 -->
+	<div th:if="${requestMethod == 'POST'}">
+		<h1>시간표</h1>
+		<!-- 시간표 컨테이너 -->
+		<div class="container">
+			<!-- 시간표 테이블 -->
+			<table>
+				<thead>
+					<!-- 요일 헤더 -->
+					<tr>
+						<th></th>
+						<!-- 요일별 반복 -->
+						<th th:each="day : ${days}" th:text="${day}"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<!-- 시간별 반복 -->
+					<tr th:each="hour : ${hours}">
+						<!-- 시간 표시 -->
+						<td th:text="${hour}"></td>
+						<!-- 요일별 시간표 -->
+						<td th:each="day : ${days}" class="clickable" data-day="${day}" data-hour="${hour}">
+							<div th:each="timeTable, stat : ${userTimeTable}"
+								th:if="${timeTable.day == day and timeTable.startHour le hour and timeTable.endHour gt hour}"
+								th:classappend="'subject-' + ${stat.index % 10}" th:attr="data-subject=${timeTable.subject}, data-classroom=${timeTable.classroomName}, 
+	                                      data-day=${timeTable.day}, data-hour=${hour}">
+								<!-- 시간표 정보 표시 -->
+								<span th:text="${timeTable.subject + ' (' + timeTable.classroomName + ')'}"></span><br>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<script th:inline="javascript">
+		let selectedSeat, selectedClassroom;
+		var userPosition = /*[[${userPosition}]]*/ 'default'; // Thymeleaf에서 사용자 직책 정보 전달
+		const requestMethod = /*[[${requestMethod}]]*/ 'GET'; // 요청 메서드 가져오기
+		let classrooNull = /*[[${classroom.classroomNull}]]*/ 0; // 요청 메서드 가져오기
+
+		// 뒤로 가기 하면 모달 닫고 timetable 페이지로 넘어가게
+		if (classrooNull == 0) {
+			closeSeatModal(); // 모달 닫기 함수 호출
 		}
-	    
-	    console.log("classrooNull212 : " + classrooNull);
-	    if (classrooNull == 0) {
-				console.log("classrooNull222 : " + classrooNull);
-		        closeSeatModal(); // 모달 닫기 함수 호출
-		        window.location.href = "/timetable"; // timetable으로 이동
-		}
-	    
-	    
-	    
-	    document.addEventListener('DOMContentLoaded', () => {
-	        const leftSeats = document.querySelector('.left-seats');
-	        const rightSeats = document.querySelector('.right-seats');
-	        let seatNumber = 1;
-	
-	        // 좌석 상태를 Thymeleaf로부터 가져옴
-	        const seatStatusList = /*[[${reservedSeats}]]*/ []; // 예약된 좌석 번호 배열
-	        const bannedSeatsList = /*[[${banSeatDTO.bannedSeats}]]*/ []; // 금지된 좌석 번호 배열    
-	
-	        // 좌석 상태 리스트 생성
-	        const totalSeats = /*[[${classroom.seatCount}]]*/ 0; 
-	        const seatArray = Array(totalSeats).fill(false); // 기본적으로 모든 좌석은 비어있음
-	
-	        if (seatStatusList != null) {
-	            console.log("seatStatusList : ", seatStatusList); // 데이터 확인
-	            // 예약된 좌석 상태 업데이트
-	            seatStatusList.forEach(seat => {
-	                seatArray[seat - 1] = true; // 예약 상태 설정
-	            });
-	        }
-	        
-	        if (bannedSeatsList != null) {
-	            console.log("bannedSeatsList : ", bannedSeatsList); // 데이터 확인
-	            // 금지된 좌석 상태 업데이트
-	            bannedSeatsList.forEach(seat => {
-	                seatArray[seat - 1] = 'banned'; // 금지 상태 설정
-	            });
-	        }
-	        
-	      	const goBackHome = () => {
-		        window.location.href = '/'; // 홈으로 리다이렉션
-		    };
-		    // 현재 페이지 상태를 pushState로 추가
-		    window.history.pushState(null, "", window.location.pathname);
-		    // popstate 이벤트 리스너 추가 (뒤로가기 버튼 감지)
-		    window.addEventListener("popstate", goBackHome);
-		    // 페이지를 떠날 때 이벤트 리스너 제거
-		    window.addEventListener('beforeunload', () => {
-		        window.removeEventListener("popstate", goBackHome);
-		    });
-	        
-	        // 좌석 버튼 생성 함수
-	        function createSeatButton(number, classroomName) {
-	            const seatStatus = seatArray[number - 1]; // 좌석 상태 확인
-	            let seat = document.createElement('button');
-	            if (seatStatus === true) {
-	                seat.classList.add('seat', 'reserved'); // 예약된 좌석
-	            } else if (seatStatus === 'banned') {
-	                seat.classList.add('seat', 'banned'); // 금지된 좌석
-	                seat.disabled = true; // 클릭 비활성화
-	            } else {
-	                seat.classList.add('seat', 'empty'); // 빈 좌석
-	            }
-	            seat.textContent = number;
-	            seat.dataset.seat = number;
-	            seat.dataset.classroom = classroomName;
-	            seat.onclick = () => openModal(seat);
-	            return seat;
-	        }
-	
-	        // 좌석 배치를 생성하는 함수
-	        function createSeatLayout(leftRows, leftCols, rightRows, rightCols, classroomName) {
-	            for (let i = 0; i < Math.max(leftRows, rightRows); i++) {
-	                let leftRow = document.createElement('div');
-	                leftRow.classList.add('seat-row');
-	                let rightRow = document.createElement('div');
-	                rightRow.classList.add('seat-row');
-	
-	                for (let j = 0; j < leftCols; j++) {
-	                    if (i < leftRows) {
-	                        leftRow.appendChild(createSeatButton(seatNumber++, classroomName));
-	                    }
-	                }
-	
-	                for (let j = 0; j < rightCols; j++) {
-	                    if (i < rightRows) {
-	                        rightRow.appendChild(createSeatButton(seatNumber++, classroomName));
-	                    }
-	                }
-	
-	                leftSeats.appendChild(leftRow);
-	                rightSeats.appendChild(rightRow);
-	            }
-	        }
-	
-	        const leftRows = /*[[${classroom.leftRow}]]*/ 2;
-	        const leftCols = /*[[${classroom.leftCol}]]*/ 3;
-	        const rightRows = /*[[${classroom.rightRow}]]*/ 2;
-	        const rightCols = /*[[${classroom.rightCol}]]*/ 3;
-	        const classroomName = /*[[${classroom.classroomName}]]*/ 'undefined';
-	
-	        createSeatLayout(leftRows, leftCols, rightRows, rightCols, classroomName);
-	        
-	        // 모달 닫기 함수
-	        function closeModal() {
-	            document.getElementById('myModal').style.display = 'none';
-	        }
-	
-	        // 좌석 모달 닫기 함수
-	        function closeSeatModal() {
-	            document.getElementById('seatModal').style.display = 'none';  
-	            if (classrooNull == 1) { // true인 경우
-			        console.log("classrooNull : " + classrooNull);
-			        window.location.href = "/timetable"; // timetable으로 이동
-	    		} 
-	        }
-	        
-	        // 좌석 모달 열기 함수
-		    function openSeatModal() {
-		        if (document.referrer.includes('/timetable')) {
-		            document.getElementById('seatModal').style.display = 'block';
-		            console.log("document.referrer.includes('/timetable')")
-		        }
-		    }
-	        
-	        // 좌석 클릭 시 모달 열기
-	        function openModal(button) {
-	            if (button.classList.contains('reserved')) {
-	                Swal.fire('예약된 좌석입니다.', '', 'warning');
-	                return;
-	            }
-	            if (button.classList.contains('banned')) {
-	                Swal.fire('금지된 좌석입니다.', '', 'warning');
-	                return;
-	            }
-	            if (userPosition === "student") {      
-	                if (seatStatusList.length > 0) {
-	                    Swal.fire({
-	                        title: '이미 다른 좌석을 예약하셨습니다.',
-	                        icon: 'warning',
-	                        confirmButtonText: '확인'
-	                    }).then((result) => {
-	                        if (result.isConfirmed) {
-	                            window.location.href = '/reserveList'; // 예약 리스트 페이지 URL로 변경
-	                        }
-	                    });
-	                    return;
-	                }
-	            }
-	
-	            selectedSeat = button.dataset.seat;
-	            selectedClassroom = button.dataset.classroom;
-	
-	            let message = userPosition === "student"
-	                ? `${selectedClassroom}호 ${selectedSeat}번 좌석을 예약하시겠습니까?`
-	                : `${selectedClassroom}호 ${selectedSeat}번 좌석을 금지하시겠습니까?`;
-	
-	            document.getElementById('modalMessage').textContent = message;
-	            document.getElementById('myModal').style.display = 'block';
-	        }
-	
-	        // 예약 또는 금지 처리
-	        document.getElementById('confirmButton').onclick = () => {
-	            const form = document.createElement('form');
-	            form.method = 'POST';
-	            form.action = userPosition === "student" ? '/reserveSeat' : '/banSeat';
-	
-	            const classroomName = /*[[${classroom.classroomName}]]*/ 'default';
-	            const day = /*[[${classroom.day}]]*/ 'default';
-	
-	            form.innerHTML = `
+
+
+		document.addEventListener('DOMContentLoaded', () => {
+			const leftSeats = document.querySelector('.left-seats');
+			const rightSeats = document.querySelector('.right-seats');
+			let seatNumber = 1;
+
+			// 좌석 상태를 Thymeleaf로부터 가져옴
+			const seatStatusList = /*[[${reservedSeats}]]*/[]; // 예약된 좌석 번호 배열
+			const bannedSeatsList = /*[[${banSeatDTO.bannedSeats}]]*/[]; // 금지된 좌석 번호 배열    
+
+			// 좌석 상태 리스트 생성
+			const totalSeats = /*[[${classroom.seatCount}]]*/ 0;
+			const seatArray = Array(totalSeats).fill(false); // 기본적으로 모든 좌석은 비어있음
+
+			if (seatStatusList != null) {
+				console.log("seatStatusList : ", seatStatusList); // 데이터 확인
+				// 예약된 좌석 상태 업데이트
+				seatStatusList.forEach(seat => {
+					seatArray[seat - 1] = true; // 예약 상태 설정
+				});
+			}
+
+			if (bannedSeatsList != null) {
+				console.log("bannedSeatsList : ", bannedSeatsList); // 데이터 확인
+				// 금지된 좌석 상태 업데이트
+				bannedSeatsList.forEach(seat => {
+					seatArray[seat - 1] = 'banned'; // 금지 상태 설정
+				});
+			}
+
+			/*
+			if (requestMethod === 'GET') {
+				closeSeatModal(); // 모달 닫기 함수 호출
+			}
+			*/
+
+			if (classrooNull == 1) {
+				openSeatModal();
+
+			}
+
+			const goBackHome = () => {
+				window.location.href = '/'; // 홈으로 리다이렉션
+			};
+			// 현재 페이지 상태를 pushState로 추가
+			window.history.pushState(null, "", window.location.pathname);
+			// popstate 이벤트 리스너 추가 (뒤로가기 버튼 감지)
+			window.addEventListener("popstate", goBackHome);
+			// 페이지를 떠날 때 이벤트 리스너 제거
+			window.addEventListener('beforeunload', () => {
+				window.removeEventListener("popstate", goBackHome);
+			});
+
+			// 좌석 버튼 생성 함수
+			function createSeatButton(number, classroomName) {
+				const seatStatus = seatArray[number - 1]; // 좌석 상태 확인
+				let seat = document.createElement('button');
+				if (seatStatus === true) {
+					seat.classList.add('seat', 'reserved'); // 예약된 좌석
+				} else if (seatStatus === 'banned') {
+					seat.classList.add('seat', 'banned'); // 금지된 좌석
+					seat.disabled = true; // 클릭 비활성화
+				} else {
+					seat.classList.add('seat', 'empty'); // 빈 좌석
+				}
+				seat.textContent = number;
+				seat.dataset.seat = number;
+				seat.dataset.classroom = classroomName;
+				seat.onclick = () => openModal(seat);
+				return seat;
+			}
+
+			// 좌석 배치를 생성하는 함수
+			function createSeatLayout(leftRows, leftCols, rightRows, rightCols, classroomName) {
+				for (let i = 0; i < Math.max(leftRows, rightRows); i++) {
+					let leftRow = document.createElement('div');
+					leftRow.classList.add('seat-row');
+					let rightRow = document.createElement('div');
+					rightRow.classList.add('seat-row');
+
+					for (let j = 0; j < leftCols; j++) {
+						if (i < leftRows) {
+							leftRow.appendChild(createSeatButton(seatNumber++, classroomName));
+						}
+					}
+
+					for (let j = 0; j < rightCols; j++) {
+						if (i < rightRows) {
+							rightRow.appendChild(createSeatButton(seatNumber++, classroomName));
+						}
+					}
+
+					leftSeats.appendChild(leftRow);
+					rightSeats.appendChild(rightRow);
+				}
+			}
+
+			const leftRows = /*[[${classroom.leftRow}]]*/ 2;
+			const leftCols = /*[[${classroom.leftCol}]]*/ 3;
+			const rightRows = /*[[${classroom.rightRow}]]*/ 2;
+			const rightCols = /*[[${classroom.rightCol}]]*/ 3;
+			const classroomName = /*[[${classroom.classroomName}]]*/ 'undefined';
+
+			createSeatLayout(leftRows, leftCols, rightRows, rightCols, classroomName);
+
+			// 모달 닫기 함수
+			function closeModal() {
+				document.getElementById('myModal').style.display = 'none';
+			}
+
+			// 좌석 모달 닫기 함수
+			function closeSeatModal() {
+				document.getElementById('seatModal').style.display = 'none';
+				if (classrooNull == 1) { // true인 경우
+					console.log("classrooNull : " + classrooNull);
+					window.location.href = "/timetable"; // timetable으로 이동
+				}
+			}
+
+			// 좌석 모달 열기 함수
+			function openSeatModal() {
+				if (document.referrer.includes('/timetable')) {
+					document.getElementById('seatModal').style.display = 'block';
+					console.log("openSeatModal : document.referrer.includes('/timetable')")
+				}
+			}
+
+			// 좌석 클릭 시 모달 열기
+			function openModal(button) {
+				if (button.classList.contains('reserved')) {
+					Swal.fire('예약된 좌석입니다.', '', 'warning');
+					return;
+				}
+				if (button.classList.contains('banned')) {
+					Swal.fire('금지된 좌석입니다.', '', 'warning');
+					return;
+				}
+				if (userPosition === "student") {
+					if (seatStatusList.length > 0) {
+						Swal.fire({
+							title: '이미 다른 좌석을 예약하셨습니다.',
+							icon: 'warning',
+							confirmButtonText: '확인'
+						}).then((result) => {
+							if (result.isConfirmed) {
+								window.location.href = '/reserveList'; // 예약 리스트 페이지 URL로 변경
+							}
+						});
+						return;
+					}
+				}
+
+				selectedSeat = button.dataset.seat;
+				selectedClassroom = button.dataset.classroom;
+
+				let message = userPosition === "student"
+					? `${selectedClassroom}호 ${selectedSeat}번 좌석을 예약하시겠습니까?`
+					: `${selectedClassroom}호 ${selectedSeat}번 좌석을 금지하시겠습니까?`;
+
+				document.getElementById('modalMessage').textContent = message;
+				document.getElementById('myModal').style.display = 'block';
+			}
+
+			// 예약 또는 금지 처리
+			document.getElementById('confirmButton').onclick = () => {
+				const form = document.createElement('form');
+				form.method = 'POST';
+				form.action = userPosition === "student" ? '/reserveSeat' : '/banSeat';
+
+				const classroomName = /*[[${classroom.classroomName}]]*/ 'default';
+				const day = /*[[${classroom.day}]]*/ 'default';
+
+				form.innerHTML = `
 	                <input type="hidden" name="classroomName" value="${classroomName}">
 	                <input type="hidden" name="seatNumber" value="${selectedSeat}">
 	                <input type="hidden" name="day" value="${day}">`;
-	
-	            document.body.appendChild(form);
-	            form.submit();
-	            closeModal();
-	            document.getElementById('seatModal').style.display = 'none';  
-	        };
-	
-	        // 아니오 버튼 클릭 시 모달 닫기
-	        document.getElementById('cancelButton').onclick = closeModal;
-	
-	        // 모달 바깥 클릭 시 모달 닫기
-	        window.onclick = event => {
-	            if (event.target === document.getElementById('myModal')) closeModal();
-	            if (event.target === document.getElementById('seatModal')) closeSeatModal();
-	        }
-	
-	        // 좌석 현황 모달 열기
-	        openSeatModal();
-	
-	        // closeModal과 closeSeatModal 이벤트 바인딩
-	        document.getElementById('closeModal').onclick = closeModal;
-	        document.getElementById('closeSeatModal').onclick = closeSeatModal;
-	    });
-	</script>
 
+				document.body.appendChild(form);
+				form.submit();
+				closeModal();
+				// 좌석 예약 확인 버튼 눌렀을때 예 버튼누르면 좌석 모달 닫기
+				document.getElementById('seatModal').style.display = 'none';
+			};
+
+			// 아니오 버튼 클릭 시 모달 닫기
+			document.getElementById('cancelButton').onclick = closeModal;
+
+			// 모달 바깥 클릭 시 모달 닫기
+			window.onclick = event => {
+				if (event.target === document.getElementById('myModal')) closeModal();
+				if (event.target === document.getElementById('seatModal')) closeSeatModal();
+			}
+
+			// 좌석 현황 모달 열기
+			openSeatModal();
+
+			// closeModal과 closeSeatModal 이벤트 바인딩
+			document.getElementById('closeModal').onclick = closeModal;
+			document.getElementById('closeSeatModal').onclick = closeSeatModal;
+		});
+	</script>
 </body>
 </html>
