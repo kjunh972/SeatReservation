@@ -1,0 +1,85 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>예약 시간 선택</title>
+    <link rel="stylesheet" href="/css/timeSelectStyle.css" />
+</head>
+<body>
+	<header th:replace="~{/menu.html}"></header> 
+	
+    <div class="container">
+        <div class="header">
+            <h1 th:text="${classroom.classroomName} + '호 예약 시간 선택'">강의실 예약 시간 선택</h1>
+        </div>
+        <form id="reservationForm" action="/classroomStatus" method="post">
+            <input type="hidden" name="classroomName" th:value="${classroom.classroomName}" />
+            <input type="hidden" name="selectHours" id="selectHours" />
+
+            <div class="row">
+                <div class="col">
+                    <h3>선택 가능한 시간</h3>
+                    <div id="btnHours" class="btnHours">
+                        <button type="button" class="selectHours" data-hour="9">9시</button>
+                        <button type="button" class="selectHours" data-hour="10">10시</button>
+                        <button type="button" class="selectHours" data-hour="11">11시</button>
+                        <button type="button" class="selectHours" data-hour="12">12시</button>
+                        <button type="button" class="selectHours" data-hour="13">1시</button>
+                        <button type="button" class="selectHours" data-hour="14">2시</button>
+                        <button type="button" class="selectHours" data-hour="15">3시</button>
+                        <button type="button" class="selectHours" data-hour="16">4시</button>
+                        <button type="button" class="selectHours" data-hour="17">5시</button>
+                        <button type="button" class="selectHours" data-hour="18">6시</button>
+                        <button type="button" class="selectHours" data-hour="19">7시</button>
+                        <button type="button" class="selectHours" data-hour="20">8시</button>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="submit">예약하기</button>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+       $(document).ready(function() {
+	    var selectHours = [];
+	    var startHour = null;
+	
+	    $('.selectHours').click(function() {
+	        var hour = $(this).data('hour'); // 클릭된 버튼의 시간을 가져옴
+	        var $btn = $(this); // 클릭된 버튼을 참조
+	
+	        if ($btn.hasClass('selected')) {
+	            // 이미 선택된 버튼인 경우 (선택 해제)
+	            $btn.removeClass('selected');
+	            selectHours = selectHours.filter(h => h !== hour); // 선택된 시간 배열에서 해당 시간 제거
+	            startHour = null; // 단일 선택 시 초기화
+	        } else {
+	            // 선택되지 않은 버튼인 경우 (선택)
+	            $btn.addClass('selected');
+	            if (startHour === null) {
+	                // 처음 선택한 시간
+	                startHour = hour;
+	                selectHours.push(hour);
+	            } else {
+	                // 연속된 범위 선택
+	                var minHour = Math.min(startHour, hour);
+	                var maxHour = Math.max(startHour, hour);
+	                selectHours = [];
+	                for (var h = minHour; h <= maxHour; h++) {
+	                    $('.selectHours[data-hour="' + h + '"]').addClass('selected');
+	                    selectHours.push(h);
+	                }
+	                startHour = null;
+	            }
+	        }
+	
+	        // 선택된 시간을 오름차순으로 정렬
+	        selectHours.sort((a, b) => a - b);
+	
+	        // 선택된 시간들을 `selectHours` 필드에 JSON 배열 형식으로 설정
+	        $('#selectHours').val(JSON.stringify(selectHours));
+	    });
+	});
+
+    </script>
+</body>
+</html>

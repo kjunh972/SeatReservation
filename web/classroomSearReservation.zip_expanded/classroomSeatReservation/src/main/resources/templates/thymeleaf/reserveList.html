@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- 페이지 제목 설정 -->
+    <title>예약 확인 페이지</title>
+    
+    <!-- 외부 CSS 파일 링크 -->
+    <link rel="stylesheet" href="/css/reserveListStyle.css" />
+    <!-- SweetAlert2 라이브러리 추가 (알림창 표시용) -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <script>
+        // 예약 취소 확인 창을 띄우는 함수
+        function cancelHour(button) {
+            // 버튼의 데이터 속성에서 예약 정보 추출
+            var reservNum = button.getAttribute("data-reservNum");
+            var classroomName = button.getAttribute("data-classroomName");
+            var reservSeat = button.getAttribute("data-reservSeat");
+
+            // 확인 메시지 생성
+            var confirmMessage = "예약번호 : " + reservNum + ", 강의실 : " + classroomName + "호, 좌석 : " + reservSeat + "번<br>자리 예약을 정말 취소하시겠습니까?";
+
+            // SweetAlert2를 사용하여 확인 메시지 표시
+            Swal.fire({
+                title: '예약 취소 확인',
+                html: confirmMessage, // 줄바꿈을 위해 html 옵션 사용
+                icon: 'warning',
+                showCancelButton: true, // 취소 버튼 표시
+                confirmButtonText: '네, 취소합니다', // 확인 버튼 텍스트
+                cancelButtonText: '아니요, 유지합니다', // 취소 버튼 텍스트
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    button.form.submit(); // 확인 시 폼 제출
+                }
+            });
+        }
+
+        // 예약 시간대 변경 시 확인 메시지 함수
+        function changeHour(form) {
+            // 폼에서 예약 정보 추출
+            var reservNum = form.reservNum.value;
+            var classroomName = form.classroomName.value;
+            var reservSeat = form.reservSeat.value;
+            var startHour = parseInt(form.startHour.value);
+            var endHour = parseInt(form.endHour.value);
+
+            // 시작 시간이 종료 시간보다 클 경우 에러 메시지 표시
+            if (startHour >= endHour) {
+                Swal.fire({
+                    icon: 'error',
+                    title: '시간 설정 오류',
+                    text: '시작 시간이 종료 시간보다 클 수 없습니다',
+                });
+                return false; // 폼 제출 방지
+            }
+
+            // 선택된 시간대 배열 생성
+            var reservHours = [];
+            for (var hour = startHour; hour <= endHour; hour++) {
+                reservHours.push(hour);
+            }
+
+            // 예약 시간 문자열 생성
+            var reservHourString = formatHours(reservHours);
+            var confirmMessage = "예약번호 : " + reservNum + ", 강의실 : " + classroomName + "호, 좌석 : " + reservSeat + "번<br>예약시간 : " + reservHourString + "로<br>정말 예약시간을 변경하시겠습니까?";
+
+            // SweetAlert2를 사용하여 확인 메시지 표시
+            Swal.fire({
+                title: '예약 시간 변경 확인',
+                html: confirmMessage, // 줄바꿈을 위해 html 옵션 사용
+                icon: 'warning',
+                showCancelButton: true, // 취소 버튼 표시
+                confirmButtonText: '네, 변경합니다', // 확인 버튼 텍스트
+                cancelButtonText: '아니요, 취소합니다', // 취소 버튼 텍스트
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // 선택된 시간대를 히든 필드에 저장하고 폼 제출
+                    form.newHour.value = reservHours.join(",");
+                    form.submit(); // 확인 시 폼 제출
+                }
+            });
+
+            return false; // 기본 폼 제출 방지
+        }
+
+        // 페이지 로드 시 실행되는 함수
+        window.onload = function() {
+            // 성공 메시지가 있으면 SweetAlert2로 알림
+            var successElement = document.querySelector(".success");
+            var errorElement = document.querySelector(".error");
+
+            if (successElement) {
+                Swal.fire({
+                    icon: 'success',
+                    title: '완료',
+                    text: successElement.textContent
+                });
+            }
+
+            // 오류 메시지가 있으면 SweetAlert2로 알림
+            if (errorElement) {
+                Swal.fire({
+                    icon: 'error',
+                    title: '오류',
+                    text: errorElement.textContent
+                });
+            }
+
+            // 예약 시간 형식을 12시간제로 변환
+            formatReservationHours();
+        }
+
+        // 24시간제를 12시간제로 변환하는 함수
+        function change12Hour(hour) {
+            if (hour === 0) {
+                return "12시"; // 0시는 12시로 변환
+            } else if (hour > 12) {
+                return (hour - 12) + "시"; // 12시 이후는 12를 빼고 변환
+            } else {
+                return hour + "시"; // 12시 이전은 그대로 변환
+            }
+        }
+
+        // 시간 배열을 포맷팅하는 함수
+        function formatHours(hours) {
+            return hours.map(function(hour) {
+                return change12Hour(parseInt(hour)); // 각 시간을 12시간제로 변환
+            }).join(","); // 시간 배열을 문자열로 변환
+        }
+
+        // 예약 시간 텍스트를 12시간제로 변환
+        function formatReservationHours() {
+            var timeElements = document.querySelectorAll(".reservation-time");
+            timeElements.forEach(function(element) {
+                var timeText = element.textContent.trim();
+                var hours = timeText.split(",").map(function(hour) {
+                    return change12Hour(parseInt(hour)); // 각 시간을 12시간제로 변환
+                });
+                element.textContent = hours.join(","); // 변환된 시간 문자열로 업데이트
+            });
+        }
+
+    </script>
+</head>
+<body>
+    <!-- 상단 메뉴 포함 -->
+    <header th:replace="~{/menu.html}"></header> 
+    
+    <!-- 페이지 제목 -->
+    <h1>예약 확인 페이지</h1>
+    
+    <!-- 오류 또는 성공 메시지 표시 -->
+    <div th:if="${empty}" class="empty" th:text="${empty}"></div>
+    <div th:if="${error}" class="error" th:text="${error}" style="display:none;"></div>
+    <div th:if="${success}" class="success" th:text="${success}" style="display:none;"></div>
+    
+    <!-- 예약 리스트 테이블 -->
+    <table>
+        <!-- 각 예약 리스트 항목에 대해 반복 -->
+        <tr th:each="entry : ${reserveList}">
+            <td colspan="5">
+                <!-- 예약 항목 테이블 -->
+                <table>
+                    <thead>
+                        <!-- 테이블 헤더 -->
+                        <tr>
+							<th>과목명</th>
+                            <th>강의실 이름</th>
+                            <th>예약 번호</th>
+                            <th>사용자 ID</th>
+                            <th>좌석 번호</th>
+                            <th>요일</th>
+                            <th>예약 시간대</th>
+                            <th>취소</th>
+                            <th>변경</th>
+                        </tr>
+                    </thead>
+                    <tbody class="centerContent">
+                        <!-- 각 예약 항목에 대해 반복 -->
+                        <tr th:each="reservation : ${entry.value}">
+							<td th:text="${reservation.subject}"></td>
+                            <td th:text="${reservation.classroomName}"></td>
+                            <td th:text="${reservation.reservNum}"></td>
+                            <td th:text="${reservation.userId}"></td>
+                            <td th:text="${reservation.reservSeat}"></td>
+                            <td th:text="${reservation.day}"></td>
+                            <!-- 예약 시간대 표시 부분에 클래스 추가 -->
+                            <td class="reservation-time" th:text="${reservation.reservHourString}"></td>
+                            <td>
+                                <!-- 예약 취소 폼 -->
+                                <form th:action="@{/cancelReservation}" method="post">
+                                    <input type="hidden" name="reservNum" th:value="${reservation.reservNum}" />
+                                    <!-- 취소 버튼 -->
+                                    <button type="button" 
+                                            th:data-reservNum="${reservation.reservNum}"
+                                            th:data-classroomName="${reservation.classroomName}"
+                                            th:data-reservSeat="${reservation.reservSeat}"
+                                            class="cancel"
+                                            onclick="cancelHour(this)">취소</button>
+                                </form>
+                            </td>
+                            <td>
+                                <!-- 예약 시간 변경 폼 -->
+                                <form th:action="@{/updateReservation}" method="post" onsubmit="return changeHour(this);">
+                                    <input type="hidden" name="reservNum" th:value="${reservation.reservNum}" />
+                                    <input type="hidden" name="classroomName" th:value="${reservation.classroomName}" />
+                                    <input type="hidden" name="reservSeat" th:value="${reservation.reservSeat}" />
+                                    
+                                    <!-- 시간 선택을 위한 컨테이너 -->
+                                    <div class="input-container">
+                                        <!-- 시작 시간 선택 -->
+                                        <div class="input-container">
+                                            <label for="startHour">시작 시간:</label>
+                                            <select id="startHour" name="startHour">
+                                                <option value="9">9시</option>
+                                                <option value="10">10시</option>
+                                                <option value="11">11시</option>
+                                                <option value="12">12시</option>
+                                                <option value="13">1시</option>
+                                                <option value="14">2시</option>
+                                                <option value="15">3시</option>
+                                                <option value="16">4시</option>
+                                                <option value="17">5시</option>
+                                                <option value="18">6시</option>
+                                                <option value="19">7시</option>
+                                                <option value="20">8시</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <!-- 종료 시간 선택 -->
+                                        <div class="input-container">
+                                            <label for="endHour">종료 시간:</label>
+                                            <select id="endHour" name="endHour">
+                                                <option value="10">10시</option>
+                                                <option value="11">11시</option>
+                                                <option value="12">12시</option>
+                                                <option value="13">1시</option>
+                                                <option value="14">2시</option>
+                                                <option value="15">3시</option>
+                                                <option value="16">4시</option>
+                                                <option value="17">5시</option>
+                                                <option value="18">6시</option>
+                                                <option value="19">7시</option>
+                                                <option value="20">8시</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                
+                                    <!-- 선택된 시간대를 저장할 히든 필드 -->
+                                    <input type="hidden" id="newHour" name="newHour" />
+                                
+                                    <!-- 변경 버튼 -->
+                                    <button type="submit" class="update">변경</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

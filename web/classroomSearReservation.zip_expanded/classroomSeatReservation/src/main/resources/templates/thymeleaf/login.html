@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>로그인</title>
+    <link rel="stylesheet" href="/css/classroomStyle.css" />
+    <style>
+        /* 추가된 CSS 스타일 */
+        .autocomplete-list {
+            position: absolute;
+            background-color: #f1f1f1;
+            border: 1px solid #ccc;
+            max-height: 150px;
+            overflow-y: auto;
+            z-index: 999;
+            width: 100%;
+        }
+
+        /* 버튼 정렬을 위한 스타일 */
+        .button-group {
+            margin-top: 10px;
+        }
+
+        .button-group button {
+            margin-right: 10px;
+        }
+        
+        /* 에러 */
+		.error {
+			color: red;
+			text-align: center;
+			margin-top: 20px;
+			margin-bottom: 30px;
+		}
+    </style>
+</head>
+<body>
+    <h2>로그인</h2>
+    
+    <div th:if="${error}" class="error" th:text="${error}"></div>
+    
+    <form action="/login" method="post">
+        <div>
+            <label for="id">아이디 :</label>
+            <input type="text" id="id" name="id" required>
+        </div>
+        <div>
+            <label for="password">비밀번호 :</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+
+        <div class="button-group">
+            <button type="submit">로그인</button>
+            <button type="button" onclick="window.location.href='/selectPosition'">회원가입</button>
+        </div>
+    </form>
+</body>
+</html>

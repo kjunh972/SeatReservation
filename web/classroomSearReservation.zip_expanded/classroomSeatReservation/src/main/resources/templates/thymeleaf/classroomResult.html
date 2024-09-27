@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html xmlns="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>강의실 좌석 예약 현황</title>
+    <link rel="stylesheet" href="/css/classroomStyle.css" />
+    <link rel="stylesheet" href="/css/classroomStatusStyle.css" />
+    <!-- SweetAlert2 라이브러리 추가 (알림창 표시용) -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <header th:replace="~{/menu.html}"></header>
+
+    <!-- 제목 표시 -->
+    <h1 th:if="${classroom}" th:text="${classroom.classroomName} + '호 좌석 예약 현황'">강의실 좌석 예약 현황</h1>
+    
+    <div th:if="${classroom}"> <!-- 강의실 객체가 존재할 때만 표시 -->
+        <div class="grid-container"> <!-- 그리드 컨테이너 -->
+            <div class="grid"> <!-- 그리드 -->
+                <div class="seat-layout">
+                    <div class="left-seats"></div>
+                    <div class="right-seats"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 모달 HTML -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <p id="modalMessage">좌석을 예약하시겠습니까?</p>
+            <button id="confirmButton">예</button>
+            <button id="cancelButton">아니오</button>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        const leftSeats = document.querySelector('.left-seats');
+        const rightSeats = document.querySelector('.right-seats');
+        let seatNumber = 1;
+        
+        // 좌석을 버튼 형태로 추가하는 함수
+        function createSeatButton(number, classroomName) {
+            let seat = document.createElement('button');
+            seat.classList.add('seat');
+            seat.textContent = number;
+
+            // data-seat와 data-classroom 속성 추가
+            seat.dataset.seat = number;
+            seat.dataset.classroom = classroomName;
+
+            seat.onclick = () => openModal(seat);
+            return seat;
+        }
+
+        // 좌석 배치를 구성하는 함수 (왼쪽과 오른쪽 좌석을 각각 배치)
+        function createSeatLayout(leftRows, leftCols, rightRows, rightCols, classroomName) {
+            const totalRows = Math.max(leftRows, rightRows); // 왼쪽과 오른쪽 중 최대 행 개수를 기준으로
+
+            for (let i = 0; i < totalRows; i++) {
+                let leftRow = document.createElement('div');
+                leftRow.classList.add('seat-row');
+
+                let rightRow = document.createElement('div');
+                rightRow.classList.add('seat-row');
+
+                // 왼쪽 좌석 배치
+                for (let j = 0; j < leftCols; j++) {
+                    if (i < leftRows) {
+                        let seat = createSeatButton(seatNumber++, classroomName);
+                        leftRow.appendChild(seat);
+                    }
+                }
+
+                // 오른쪽 좌석 배치
+                for (let j = 0; j < rightCols; j++) {
+                    if (i < rightRows) {
+                        let seat = createSeatButton(seatNumber++, classroomName);
+                        rightRow.appendChild(seat);
+                    }
+                }
+
+                leftSeats.appendChild(leftRow);
+                rightSeats.appendChild(rightRow);
+            }
+        }
+
+        // ClassroomDTO에서 강의실 이름을 가져와서 좌석 배치 생성 시 전달
+        const leftRows = /*[[${classroom.leftRow}]]*/ 2;
+        const leftCols = /*[[${classroom.leftCol}]]*/ 3;
+        const rightRows = /*[[${classroom.rightRow}]]*/ 2;
+        const rightCols = /*[[${classroom.rightCol}]]*/ 3;
+        const classroomName = /*[[${classroom.classroomName}]]*/ 'undefined'; // 강의실 이름
+        
+        createSeatLayout(leftRows, leftCols, rightRows, rightCols, classroomName);
+
+        // 좌석 상태를 즉시 반영하기 위한 함수
+        function openModal(button) {
+            // 예약된 좌석인지 확인
+            if (button.classList.contains('reserved')) {
+                Swal.fire({
+                    title: '경고',
+                    text: '예약된 좌석입니다.',
+                    icon: 'warning',
+                    confirmButtonText: '확인'
+                });
+                return;
+            }
+
+            // 금지된 좌석인지 확인
+            if (button.classList.contains('banned')) {
+                Swal.fire({
+                    title: '경고',
+                    text: '예약이 금지된 좌석입니다.',
+                    icon: 'warning',
+                    confirmButtonText: '확인'
+                });
+                return;
+            }
+
+            // 이미 같은 시간에 예약한 좌석이 있는지 확인
+            var alreadyReserved = /*[[${alreadyReserved}]]*/ false;
+            if (alreadyReserved) {
+                Swal.fire({
+                    title: '알림',
+                    text: '이미 같은 시간에 해당 강의실에서 좌석을 예약하셨습니다. 예약 확인 페이지로 이동하시겠습니까?',
+                    icon: 'info',
+                    showCancelButton: true,
+                    confirmButtonText: '예',
+                    cancelButtonText: '아니오'
+                }).then(result => {
+                    if (result.isConfirmed) {
+                        window.location.href = '/reserveList'; // 예약 확인 페이지로 이동
+                    }
+                });
+                return;
+            }
+
+            selectedSeat = button.dataset.seat;
+            selectedClassroom = button.dataset.classroom;
+
+            var userPosition = /*[[${userPosition}]]*/ 'default';
+            var message = userPosition === "student" 
+                ? `${selectedClassroom}호 ${selectedSeat}번 좌석을 예약하시겠습니까?` 
+                : `${selectedClassroom}호 ${selectedSeat}번 좌석의 예약을 금지하시겠습니까?`;
+
+            document.getElementById('modalMessage').textContent = message;
+            document.getElementById('myModal').style.display = 'block';
+        }
+
+        document.getElementById('confirmButton').onclick = () => {
+            var userPosition = /*[[${userPosition}]]*/ 'default';
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = userPosition === "student" ? '/reserveSeat' : '/banSeat';
+
+            form.innerHTML = 
+                `<input type="hidden" name="classroomName" value="${selectedClassroom}">
+                <input type="hidden" name="seatNumber" value="${selectedSeat}">`;
+
+            document.body.appendChild(form);
+
+            // 좌석 상태 업데이트 (폼 제출 전에 즉시 업데이트)
+            const selectedSeatButton = document.querySelector(`button[data-seat='${selectedSeat}']`);
+            
+            if (selectedSeatButton) {
+                if (userPosition === "student") {
+                    // 학생인 경우 좌석을 예약한 것으로 상태 변경
+                    selectedSeatButton.classList.remove('empty');
+                    selectedSeatButton.classList.add('reserved');
+                } else {
+                    // 관리자인 경우 좌석을 금지한 것으로 상태 변경
+                    selectedSeatButton.classList.add('banned');
+                }
+            }
+
+            // 폼 제출
+            form.submit();
+        };
+
+        document.getElementById('cancelButton').onclick = closeModal;
+
+        function closeModal() {
+            document.getElementById('myModal').style.display = 'none';
+        }
+
+        window.onclick = event => {
+            if (event.target === document.getElementById('myModal')) closeModal();
+        }
+
+        document.querySelectorAll('.seat').forEach(button => {
+            button.onclick = () => openModal(button);
+        });
+    </script>
+</body>
+</html>

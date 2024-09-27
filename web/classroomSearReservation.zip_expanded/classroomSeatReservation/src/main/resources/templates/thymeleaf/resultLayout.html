@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>강의실 생성 확인</title>
+    <link rel="stylesheet" href="/css/classroomStyle.css"/>
+</head>
+<body>
+<header th:replace="~{/menu.html}"></header>
+<h1>강의실 생성 확인</h1>
+
+<div>
+    <p>강의실 이름: <span th:text="${classroomNumber}"></span></p>
+    <p>선택된 좌석 스타일: <span th:text="${seatTemplate}"></span></p>
+    <!-- 오류 메시지 표시 -->
+    <div th:if="${error}">
+        <p th:text="${error}" style="color: red;"></p>
+    </div>
+    
+    <a href="/classroomSet">다시 선택하기</a>
+
+    <form id="classroomForm" method="post" th:action="@{/saveClassroom}">
+        <input type="hidden" name="seatTemplate" th:value="${seatTemplate}">
+        <input type="hidden" name="classroomNumber" th:value="${classroomNumber}">
+        <!-- 커스텀 좌석 데이터도 필요하다면 추가로 hidden 필드를 사용할 수 있습니다 -->
+        <input type="hidden" name="leftSeatRows" th:value="${leftSeatRows}">
+        <input type="hidden" name="leftSeatColumns" th:value="${leftSeatColumns}">
+        <input type="hidden" name="rightSeatRows" th:value="${rightSeatRows}">
+        <input type="hidden" name="rightSeatColumns" th:value="${rightSeatColumns}">
+        <button type="button" onclick="checkAndSubmit()">저장</button>
+    </form>
+</div>
+
+<script>
+	function checkAndSubmit() {
+	    const classroomNumber = document.querySelector('input[name="classroomNumber"]').value;
+
+		// 강의실 이름 중복 확인 AJAX 요청
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "/checkClassroomExists");
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                const exists = xhr.responseText === 'true';
+                if (exists) {
+                    alert("이미 존재하는 강의실 이름입니다.");
+                    return false;
+                }
+                document.querySelector('form').submit(); // 중복이 없는 경우 폼 제출
+            } else {
+                alert("서버 오류. 나중에 다시 시도해 주세요.");
+                return false;
+            }
+        };
+        xhr.send("classroomNumber=" + encodeURIComponent(classroomNumber));
+
+        return false; // AJAX로 폼 제출을 막습니다.
+    }
+
+</script>
+</body>
+</html>

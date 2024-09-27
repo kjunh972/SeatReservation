@@ -122,11 +122,8 @@ public class Contoller {
         }
 
     	if (classroomDTO.getClassroomNull() == 1) {
-    		System.out.println("classroomDTO.getClassroomNull(1)3 : "+classroomDTO.getClassroomNull());
     		return "redirect:/timetable";
     	}
-    	classroomDTO.setClassroomNull(0);
-    	System.out.println("classroomDTO.getClassroomNull(1)4 : "+classroomDTO.getClassroomNull());
     	
     	// 선택한 시간대 문자열로 변환
         String hours = classroomDTO.getSelectHours().stream().map(String::valueOf).collect(Collectors.joining("시, "));
@@ -185,11 +182,6 @@ public class Contoller {
         banSeatDTO.setBannedSeats(bannedSeats);
 
         classroomDTO.setClassroomNull(1);
-        System.out.println("classroomDTO.getClassroomNull(1)1 : "+classroomDTO.getClassroomNull());
-        if (classroomDTO.getClassroomNull() == 0) {
-    		System.out.println("classroomDTO.getClassroomNull(1)5 : "+classroomDTO.getClassroomNull());
-    		return "redirect:/timetable";
-    	}
         
         TimetableDAO timetableDAO = new TimetableDAO(jdbcTemplate);
     	
@@ -245,7 +237,6 @@ public class Contoller {
         String hours = classroomDTO.getSelectHours().stream().map(String::valueOf).collect(Collectors.joining("시, ")); 
         
         classroomDTO.setClassroomNull(0);
-        System.out.println("classroomDTO.getClassroomNull(1)2 : "+classroomDTO.getClassroomNull());
         classroomDTO.setSeatNumber(seatNumber);
 
         model.addAttribute("seatNumber", seatNumber); // 좌석 번호 모델에 추가
@@ -595,9 +586,7 @@ public class Contoller {
         List<String> days = Arrays.asList("월요일", "화요일", "수요일", "목요일", "금요일");
         List<Integer> hours = Arrays.asList(9, 10, 11, 12, 13, 14, 15, 16);
         
-        System.out.println("classroomDTO.getClassroomNull(2); : "+classroomDTO.getClassroomNull());
         classroomDTO.setClassroomNull(1);
-        System.out.println("classroomDTO.getClassroomNull(1); : "+classroomDTO.getClassroomNull());
 
         String userPosition = GetPosition(session);
         model.addAttribute("userPosition", userPosition);

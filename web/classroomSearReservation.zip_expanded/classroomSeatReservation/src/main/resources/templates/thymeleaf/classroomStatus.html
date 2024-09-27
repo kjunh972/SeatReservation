@@ -49,11 +49,6 @@
     <!-- GET 방식일 때만 예약된 좌석 정보 표시 -->
     <div th:if="${requestMethod == 'GET'}">
         <h1>예약된 좌석</h1>
-        <script>
-			let classrooNull = /*[[${classroom.classroomNull}]]*/ 0; // 요청 메서드 가져오기
-			classrooNull = 0;
-			console.log("classrooNull"+classrooNull)
-		</script>
         <table>
             <thead>
                 <tr>
@@ -76,20 +71,8 @@
                 </tr>
             </tbody>
         </table>
-        <!-- 버튼을 가운데 정렬하고 가로로 배치 -->
-		<div style="display: flex; justify-content: center; margin-top: 20px;">
-		    <button type="button" onclick="location.href='/reserveList'" 
-		            style="width: 200px; height: 50px; font-size: 16px; margin-right: 10px;">
-		        전체 예약 내용 보기
-		    </button>
-		    <button type="button" onclick="location.href='/timetable'" 
-		            style="width: 200px; height: 50px; font-size: 16px;">
-		        돌아가기
-		    </button>
-		</div>
     </div>
     
-    <!-- post 방식으로 접근했을때 시간표 보여주기 -->
     <div th:if="${requestMethod == 'POST'}">
 	    <h1>시간표</h1>
 	    <!-- 시간표 컨테이너 -->
@@ -130,26 +113,13 @@
 	    let selectedSeat, selectedClassroom;
 	    var userPosition = /*[[${userPosition}]]*/ 'default'; // Thymeleaf에서 사용자 직책 정보 전달
 	    const requestMethod = /*[[${requestMethod}]]*/ 'GET'; // 요청 메서드 가져오기
-	    classrooNull = /*[[${classroom.classroomNull}]]*/ 1; // 요청 메서드 가져오기
-		if (requestMethod === 'POST') {
-			console.log("classrooNull3331 : " + classrooNull);
-		    if (requestMethod === 'GET') {
-				console.log("classrooNull333 : " + classrooNull);
-		        closeSeatModal(); // 모달 닫기 함수 호출
-		    }
+	    const classrooNull = /*[[${classroom.classroomNull}]]*/ 1; // 요청 메서드 가져오기
+	
+	    if (requestMethod === 'GET') {
+	        closeSeatModal(); // 모달 닫기 함수 호출
 	    }
 	    
-	    if (classrooNull == 1) {
-				console.log("classrooNull111 : " + classrooNull);
-		        
-		}
-	    
 	    console.log("classrooNull212 : " + classrooNull);
-	    if (classrooNull == 0) {
-				console.log("classrooNull222 : " + classrooNull);
-		        closeSeatModal(); // 모달 닫기 함수 호출
-		        window.location.href = "/timetable"; // timetable으로 이동
-		}
 	    
 	    
 	    
@@ -181,18 +151,6 @@
 	                seatArray[seat - 1] = 'banned'; // 금지 상태 설정
 	            });
 	        }
-	        
-	      	const goBackHome = () => {
-		        window.location.href = '/'; // 홈으로 리다이렉션
-		    };
-		    // 현재 페이지 상태를 pushState로 추가
-		    window.history.pushState(null, "", window.location.pathname);
-		    // popstate 이벤트 리스너 추가 (뒤로가기 버튼 감지)
-		    window.addEventListener("popstate", goBackHome);
-		    // 페이지를 떠날 때 이벤트 리스너 제거
-		    window.addEventListener('beforeunload', () => {
-		        window.removeEventListener("popstate", goBackHome);
-		    });
 	        
 	        // 좌석 버튼 생성 함수
 	        function createSeatButton(number, classroomName) {
@@ -256,17 +214,9 @@
 	            document.getElementById('seatModal').style.display = 'none';  
 	            if (classrooNull == 1) { // true인 경우
 			        console.log("classrooNull : " + classrooNull);
-			        window.location.href = "/timetable"; // timetable으로 이동
+			        window.location.href = "/timetable"; // timetab으로 이동
 	    		} 
 	        }
-	        
-	        // 좌석 모달 열기 함수
-		    function openSeatModal() {
-		        if (document.referrer.includes('/timetable')) {
-		            document.getElementById('seatModal').style.display = 'block';
-		            console.log("document.referrer.includes('/timetable')")
-		        }
-		    }
 	        
 	        // 좌석 클릭 시 모달 열기
 	        function openModal(button) {
@@ -321,7 +271,6 @@
 	            document.body.appendChild(form);
 	            form.submit();
 	            closeModal();
-	            document.getElementById('seatModal').style.display = 'none';  
 	        };
 	
 	        // 아니오 버튼 클릭 시 모달 닫기
@@ -334,7 +283,7 @@
 	        }
 	
 	        // 좌석 현황 모달 열기
-	        openSeatModal();
+	        document.getElementById('seatModal').style.display = 'block';
 	
 	        // closeModal과 closeSeatModal 이벤트 바인딩
 	        document.getElementById('closeModal').onclick = closeModal;

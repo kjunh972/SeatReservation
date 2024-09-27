@@ -1,0 +1,91 @@
+<html xmlns="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${title}">강의실 정보</title>
+    <link rel="stylesheet" href="/css/classroomStyle.css" />
+    <link rel="stylesheet" href="/css/headerStyle.html" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        header {
+            margin-bottom: 20px;
+        }
+        .container {
+            display: flex;
+            justify-content: space-between;
+            gap: 60px; /* 섹션 간의 간격을 더 늘림 */
+        }
+        .section {
+            flex: 1;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            min-height: 250px;
+            width: 400px;
+        }
+        .section h2 {
+            margin-top: 0;
+            color: #333;
+        }
+        .section ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .section li {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            background-color: #fff;
+        }
+        .section .item {
+            margin-bottom: 15px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #fff;
+            min-height: 100px;
+            width: 100%;
+        }
+        .section .item p {
+            margin: 5px 0;
+        }
+        .error-message {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <header th:replace="~{/menu.html}"></header> 
+
+    <h1 th:text="${title}">강의실 정보</h1>
+
+    <div class="container">
+        <!-- 강의명 섹션 -->
+        <div class="section">
+            <h2>진행되는 강의</h2>
+            <ul>
+                <li th:each="lectureName : ${lectureNames}" th:text="${lectureName}">강의명</li>
+                <li th:if="${#lists.isEmpty(lectureNames)}" class="error-message">진행되는 강의가 없습니다.</li>
+            </ul>
+        </div>
+
+      <!-- 예약 내역 섹션 -->
+    <div class="section">
+        <h2>예약 내역</h2>
+        <ul>
+            <li th:if="${#lists.isEmpty(groupedReservations)}" class="error-message">예약 내역이 없습니다.</li>
+            <li th:each="entry : ${groupedReservations}">
+                <p th:text="'예약 번호: ' + ${entry.key}">예약 번호</p>
+                <p th:text="'좌석 번호: ' + ${entry.value.get(0).reservSeat}">좌석 번호</p>
+                <p th:text="'예약 시간: ' + ${reservationTimes[entry.key]}">예약 시간</p>
+            </li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>
