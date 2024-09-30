@@ -1,362 +1,525 @@
 <html xmlns="http://www.thymeleaf.org">
+
 <head>
-    <meta charset="UTF-8">
-    <title>시간표</title>
-    <!-- CSS 파일 링크 -->
-    <link rel="stylesheet" href="/css/classroomStyle.css" />
-    <link rel="stylesheet" href="/css/timeTableStyle.css" />
-    <!-- SweetAlert2 라이브러리 추가 (알림창 표시용) -->
+	<meta charset="UTF-8">
+	<title>시간표</title>
+	<!-- CSS 파일 링크 -->
+	<link rel="stylesheet" href="/css/classroomStyle.css" />
+	<link rel="stylesheet" href="/css/timeTableStyle.css" />
+	<!-- SweetAlert2 라이브러리 추가 (알림창 표시용) -->
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	
+
 	<!-- 선택 기능 추가를 위한 JavaScript -->
 	<script>
-	    document.addEventListener("DOMContentLoaded", function() {
-	        const cells = document.querySelectorAll(".clickable"); // 클릭 가능한 셀들
-	        const reserveButton = document.getElementById("reserve-seat-button"); // 예약 버튼
-	        const reserveForm = document.getElementById("reserve-seat-form"); // 예약 폼
-	        const editButton = document.querySelector('.edit-modal-button'); // 시간표 수정 버튼
-	        const deleteButton = document.querySelector('.delete-modal-button'); // 시간표 삭제 버튼
-	
-	        let selectedSubject = null;
-	        let selectedCells = [];
-	
-	        cells.forEach(function(cell) {
-	            cell.addEventListener("click", function() {
-	                const subjectDiv = this.querySelector('div');
-	                if (subjectDiv) {
-	                    const subject = subjectDiv.getAttribute('data-subject');
-	                    const classroomName = subjectDiv.getAttribute('data-classroom');
-	                    const day = subjectDiv.getAttribute('data-day');
-	                    const startHour = parseInt(subjectDiv.getAttribute('data-hour'), 10);
-	
-	                    if (subject) {
-	                        // 선택한 과목을 처음 클릭할 때
-	                        if (!selectedSubject || selectedSubject !== subject) {
-	                            // 새로운 과목을 선택할 경우 기존 선택 초기화
-	                            selectedCells.forEach(cell => cell.classList.remove('selected'));
-	                            selectedCells = [];
-	                            selectedSubject = subject;
-	                        }
-	
-	                        // 동일한 과목의 셀들을 선택 또는 선택 해제
-	                        const matchingCells = document.querySelectorAll(`td div[data-subject="${subject}"]`);
-	                        matchingCells.forEach(function(match) {
-	                            match.parentElement.classList.toggle('selected'); // 선택된 셀에 'selected' 클래스 추가/제거
-	                        });
-	
-	                        // 선택된 셀 목록 업데이트
-	                        selectedCells = Array.from(document.querySelectorAll('td.selected'));
-	                    }
-	                }
-	            });
-	        });
-	
-	        // 시간표 수정 버튼 클릭 시
-	        editButton.addEventListener("click", function() {
-	            if (selectedCells.length === 0) {
-	                alert("수정할 시간표를 선택하세요."); // 선택된 셀이 없을 경우 경고
-	                return;
-	            }
-	
-	            // 선택된 첫 번째 셀의 정보를 수정 모달에 채움
-	            const firstCell = selectedCells[0];
-	            const subject = firstCell.querySelector('div').getAttribute('data-subject');
-	            const classroomName = firstCell.querySelector('div').getAttribute('data-classroom');
-	            const day = firstCell.querySelector('div').getAttribute('data-day');
-	            const startHour = parseInt(firstCell.querySelector('div').getAttribute('data-hour'), 10);
-	
-	            // 수정 모달 필드에 값 설정
-	            document.getElementById('edit_subject').value = subject;
-	            document.getElementById('edit_classroomName').value = classroomName;
-	            document.getElementById('edit_day').value = day;
-	            document.getElementById('edit_startHour').value = startHour;
-	
-	            // 종료 시간은 마지막 선택된 셀의 시간으로 설정
-	            const endHour = startHour + selectedCells.length;
-	            document.getElementById('edit_endHour').value = endHour;
-	
-	            // 수정 모달 열기
-	            document.getElementById('edit-modal-checkbox').checked = true;
-	        });
-	
-	        // 예약 버튼 클릭 시 
-	        reserveButton.addEventListener("click", function() {
-	            if (selectedCells.length === 0) {
-	                alert("예약할 과목을 선택하세요."); // 선택된 셀이 없을 경우 경고
-	                return;
-	            }
-	            
-	     
-	
-	            // 선택된 셀들의 시간 정보 추출
-	            const selectHours = selectedCells.map(cell => {
-	                const hour = cell.querySelector('div').getAttribute('data-hour'); // 'data-hour' 속성에서 값 추출
-	                return parseInt(hour, 10); // 문자열을 숫자로 변환
-	            });
-	
-	            // 첫 번째 선택된 셀의 정보를 폼에 입력 (선택된 셀들 중 첫 번째 셀로 설정)
-	            const firstCell = selectedCells[0]; // 첫 번째 셀 선택
-	            const subject = firstCell.querySelector('div').getAttribute('data-subject');
-	            const classroomName = firstCell.querySelector('div').getAttribute('data-classroom');
-	            const day = firstCell.querySelector('div').getAttribute('data-day');
-	
-	            // 폼 필드에 값 설정
-	            document.getElementById("classroomName").value = classroomName;
-	            document.getElementById("subject").value = subject;
-	            document.getElementById("day").value = day;
-	            document.getElementById("selectHours").value = JSON.stringify(selectHours); // 선택된 시간들을 JSON으로 변환
-	
-	            // 폼 제출
-	            reserveForm.submit();
-	        });
-	        
-	
-			// 시간표 삭제 버튼 클릭 시
-	        deleteButton.addEventListener("click", function() {
-			    if (selectedCells.length === 0) {
-			        alert("삭제할 시간표를 선택하세요.");
-			        return;
-			    }
-			
-			    const subjectToDelete = selectedCells[0].querySelector('div').getAttribute('data-subject');
-			
-			    // SweetAlert2로 확인 알림창 표시
-			    Swal.fire({
-			        title: subjectToDelete + "을(를) 시간표에서 삭제하시겠습니까?",
-			        icon: "warning",
-			        showCancelButton: true,
-			        confirmButtonText: "네, 삭제합니다!",
-			        cancelButtonText: "아니요, 취소합니다.",
-			    }).then((result) => {
-			        if (result.isConfirmed) {
-			            // 삭제 폼 동적으로 생성
-			            const form = document.createElement('form');
-			            form.method = 'POST';
-			            form.action = '/deleteTimetable';
-			            
-			            // 삭제할 강의명 입력 필드 추가
-			            const input = document.createElement('input');
-			            input.type = 'hidden';
-			            input.name = 'delete_subject';
-			            input.value = subjectToDelete;
-			            form.appendChild(input);
-			
-			            // 폼을 body에 추가하고 제출
-			            document.body.appendChild(form);
-			            form.submit();
-			        }
-			    });
+		document.addEventListener("DOMContentLoaded", function () {
+			const cells = document.querySelectorAll(".clickable"); // 클릭 가능한 셀들
+			const reserveButton = document.getElementById("reserve-seat-button"); // 예약 버튼
+			const reserveForm = document.getElementById("reserve-seat-form"); // 예약 폼
+			const editButton = document.querySelector('.edit-modal-button'); // 시간표 수정 버튼
+			const deleteButton = document.querySelector('.delete-modal-button'); // 시간표 삭제 버튼
+
+			let selectedSubject = null;
+			let selectedCells = [];
+
+			cells.forEach(function (cell) {
+				cell.addEventListener("click", function () {
+					const subjectDiv = this.querySelector('div[data-subject]');
+					let startHour = null;
+					let day = null;
+
+					if (subjectDiv) {
+						// subjectDiv가 있는 경우
+						startHour = parseInt(subjectDiv.getAttribute('data-hour'), 10);
+						const subject = subjectDiv.getAttribute('data-subject');
+						const classroomName = subjectDiv.getAttribute('data-classroom');
+						day = subjectDiv.getAttribute('data-day');
+
+						if (subject) {
+							// 선택한 과목을 처음 클릭할 때
+							if (!selectedSubject || selectedSubject !== subject) {
+								// 새로운 과목을 선택할 경우 기존 선택 초기화
+								selectedCells.forEach(cell => cell.classList.remove('selected'));
+								selectedCells = [];
+								selectedSubject = subject;
+							}
+
+							// 동일한 과목의 셀들을 선택 또는 선택 해제
+							const matchingCells = document.querySelectorAll(`td div[data-subject="${subject}"]`);
+							matchingCells.forEach(function (match) {
+								match.parentElement.classList.toggle('selected'); // 선택된 셀에 'selected' 클래스 추가/제거
+							});
+
+							// 선택된 셀 목록 업데이트
+							selectedCells = Array.from(document.querySelectorAll('td.selected'));
+							console.log("selectedCells1 : ", selectedCells);
+						}
+					} else {
+						// subjectDiv가 없는 경우, 셀 자체에서 data-hour 가져오기
+						startHour = parseInt(this.querySelector('div[data-hour]').getAttribute('data-hour'), 10);
+						day = this.querySelector('div[data-day]').getAttribute('data-day');
+						console.log("day : ", day);
+
+						// 첫 선택인 경우 바로 선택
+						if (!selectedCells.includes(this)) {
+							// 선택한 과목을 처음 클릭할 때
+							if (!selectedSubject || selectedSubject !== subject) {
+								// 새로운 과목을 선택할 경우 기존 선택 초기화
+								selectedCells.forEach(cell => cell.classList.remove('selected'));
+								selectedCells = [];
+								selectedSubject = subject;
+							}
+
+							// 연속된 시간만 선택하도록 설정 (차이값이 1일 경우) && 같은 요일
+							if (selectedCells.length > 0) {
+								const lastCell = selectedCells[selectedCells.length - 1]; // 마지막 선택된 셀
+								const lastHour = parseInt(lastCell.querySelector('div[data-hour]').getAttribute('data-hour'), 10);
+								const lastDay = lastCell.querySelector('div[data-day]').getAttribute('data-day');
+								console.log("lastCell : ", lastCell);
+								console.log("lastHour : ", lastHour);
+								console.log("lastDay : ", lastDay);
+
+								// 연속된 시간 체크 (차이값이 1이고 요일이 같을 경우)
+								if (Math.abs(lastHour - startHour) === 1 && lastDay === day) {
+									// 클릭한 셀 선택 상태 토글
+									this.classList.toggle('selected');
+
+									// 선택된 상태인 경우 배열에 추가
+									if (this.classList.contains('selected')) {
+										selectedCells.push(this);
+									}
+								} else {
+									// 연속되지 않거나 요일이 다를 경우, 선택된 셀 초기화
+									selectedCells.forEach(cell => cell.classList.remove('selected'));
+									selectedCells = [];
+
+									// 클릭한 셀 선택 상태 토글
+									this.classList.toggle('selected');
+									if (this.classList.contains('selected')) {
+										selectedCells.push(this); // 새로 선택된 셀 추가
+									}
+								}
+							} else {
+								// 첫 선택인 경우 바로 선택
+								this.classList.toggle('selected');
+								if (this.classList.contains('selected')) {
+									selectedCells.push(this);
+								}
+							}
+						} else {
+							// 이미 선택된 셀을 클릭한 경우 선택 해제
+							// 모든 선택된 셀을 초기화
+							selectedCells.forEach(cell => cell.classList.remove('selected'));
+							selectedCells = []; // 선택된 셀 목록 초기화
+						}
+					}
+
+					console.log("startHour : ", startHour); // 여기서 startHour를 출력
+				});
 			});
 
-	    });
+			// 시간표 수정 버튼 클릭 시
+			editButton.addEventListener("click", function () {
+				if (selectedCells.length === 0) {
+					alert("수정할 시간표를 선택하세요."); // 선택된 셀이 없을 경우 경고
+					return;
+				}
+
+				// 선택된 첫 번째 셀의 정보를 수정 모달에 채움
+				const firstCell = selectedCells[0];
+				const subject = firstCell.querySelector('div').getAttribute('data-subject');
+				const classroomName = firstCell.querySelector('div').getAttribute('data-classroom');
+				const day = firstCell.querySelector('div').getAttribute('data-day');
+				const startHour = parseInt(firstCell.querySelector('div').getAttribute('data-hour'), 10);
+
+				// 수정 모달 필드에 값 설정
+				document.getElementById('edit_subject').value = subject;
+				document.getElementById('edit_classroomName').value = classroomName;
+				document.getElementById('edit_day').value = day;
+				document.getElementById('edit_startHour').value = startHour;
+
+				// 종료 시간은 마지막 선택된 셀의 시간으로 설정
+				const endHour = startHour + selectedCells.length;
+				document.getElementById('edit_endHour').value = endHour;
+
+				// 수정 모달 열기
+				document.getElementById('edit-modal-checkbox').checked = true;
+			});
+
+			const modal = document.getElementById('inputModal');
+			const closeButton = modal.querySelector('.close');
+			const submitButton = document.getElementById('submitInput');
+
+			// 모달 열기
+			function openModal() {
+				modal.style.display = 'block';
+			}
+
+			// 모달 닫기
+			function closeModal() {
+				modal.style.display = 'none';
+			}
+
+			// 모달 외부 클릭 시 닫기
+			window.onclick = function (event) {
+				if (event.target === modal) {
+					closeModal();
+				}
+			}
+
+			// 닫기 버튼 클릭 시 모달 닫기
+			closeButton.onclick = closeModal;
+
+			const inputModal = document.getElementById("inputModal"); // 모달
+			const submitInputBtn = document.getElementById("submitInput"); // 제출 버튼
+			const closeModalBtn = inputModal.querySelector('.close'); // 모달 닫기 버튼
+			
+			// submitInput 버튼 클릭 시 예약 처리 함수 실행
+			submitInputBtn.addEventListener('click', function (event) {
+				event.preventDefault(); // 폼 제출을 막기 위해 추가
+
+				// 강의명과 강의실 입력 값 가져오기
+				const subjectInput = document.getElementById("modalSubject").value;
+				const classroomInput = document.getElementById("modalClassroom").value;			
+
+				// 유효성 검사
+				if (!subjectInput || !classroomInput) {
+					alert("강의명과 강의실을 모두 입력하세요.");
+					return;
+				}
+
+				// 선택된 셀의 정보를 업데이트 (firstCell을 사용한 예시)
+				const firstCell = selectedCells[0]; // 첫 번째 셀 선택
+				firstCell.querySelector('div').setAttribute('data-subject', subjectInput);
+				firstCell.querySelector('div').setAttribute('data-classroom', classroomInput);
+				const day = firstCell.querySelector('div').getAttribute('data-day');
+
+				inputModal.style.display = "none"; // 모달 닫기
+
+				// 선택된 셀들의 시간 정보 추출
+				const selectHours = selectedCells.map(cell => {
+					const hour = cell.querySelector('div').getAttribute('data-hour'); // 'data-hour' 속성에서 값 추출
+					return parseInt(hour, 10); // 문자열을 숫자로 변환
+				});
+
+				// 폼 필드에 값 설정
+				document.getElementById("classroomName").value = classroomInput;
+				document.getElementById("day").value = day;
+				document.getElementById("subject").value = subjectInput; // 업데이트된 강의명 사용
+				document.getElementById("selectHours").value = JSON.stringify(selectHours); // 선택된 시간들을 JSON으로 변환
+
+				// 폼 제출
+				reserveForm.submit(); // 폼 제출
+			});
+
+			// 예약 버튼 클릭 시 
+			reserveButton.addEventListener("click", function () {
+				if (selectedCells.length === 0) {
+					alert("예약할 과목을 선택하세요."); // 선택된 셀이 없을 경우 경고
+					return;
+				}
+
+				// 첫 번째 선택된 셀의 정보를 가져오기
+				const firstCell = selectedCells[0]; // 첫 번째 셀 선택
+				const subject = firstCell.querySelector('div').getAttribute('data-subject');
+				const classroomName = firstCell.querySelector('div').getAttribute('data-classroom');
+				const day = firstCell.querySelector('div').getAttribute('data-day');
+
+				// 셀에 과목 정보가 없을 경우
+				if (!subject) {
+					// 모달과 버튼 요소 가져오기
+					const modal = document.getElementById("inputModal");
+					const submitInputBtn = document.getElementById("submitInput");
+
+					openModal();
+
+
+				} else {
+					// 과목 정보가 있는 경우, 폼 필드에 값 설정
+					const selectHours = selectedCells.map(cell => {
+						const hour = cell.querySelector('div').getAttribute('data-hour'); // 'data-hour' 속성에서 값 추출
+						return parseInt(hour, 10); // 문자열을 숫자로 변환
+					});
+
+					// 폼 필드에 값 설정
+					document.getElementById("classroomName").value = classroomName;
+					document.getElementById("subject").value = subject;
+					document.getElementById("day").value = day;
+					document.getElementById("selectHours").value = JSON.stringify(selectHours); // 선택된 시간들을 JSON으로 변환
+
+					// 폼 제출
+					reserveForm.submit(); // classroomStatus로 이동
+				}
+			});
+
+			// 시간표 삭제 버튼 클릭 시
+			deleteButton.addEventListener("click", function () {
+				if (selectedCells.length === 0) {
+					alert("삭제할 시간표를 선택하세요.");
+					return;
+				}
+
+				const subjectToDelete = selectedCells[0].querySelector('div').getAttribute('data-subject');
+
+				// SweetAlert2로 확인 알림창 표시
+				Swal.fire({
+					title: subjectToDelete + "을(를) 시간표에서 삭제하시겠습니까?",
+					icon: "warning",
+					showCancelButton: true,
+					confirmButtonText: "네, 삭제합니다!",
+					cancelButtonText: "아니요, 취소합니다.",
+				}).then((result) => {
+					if (result.isConfirmed) {
+						// 삭제 폼 동적으로 생성
+						const form = document.createElement('form');
+						form.method = 'POST';
+						form.action = '/deleteTimetable';
+
+						// 삭제할 강의명 입력 필드 추가
+						const input = document.createElement('input');
+						input.type = 'hidden';
+						input.name = 'delete_subject';
+						input.value = subjectToDelete;
+						form.appendChild(input);
+
+						// 폼을 body에 추가하고 제출
+						document.body.appendChild(form);
+						form.submit();
+					}
+				});
+			});
+
+		});
 	</script>
 </head>
+
 <body>
 	<header th:if="${userPosition == 'student'}">
-    	<header th:replace="~{/menu.html}"></header> <!-- 메뉴 포함 -->
+		<header th:replace="~{/menu.html}"></header> <!-- 메뉴 포함 -->
 	</header>
 	<header th:if="${userPosition == 'admin'}">
-	    <header th:replace="~{/menu_admin.html}"></header> <!-- 메뉴 포함 -->
+		<header th:replace="~{/menu_admin.html}"></header> <!-- 메뉴 포함 -->
 	</header>
 	<header th:if="${userPosition == 'professor'}">
-	    <header th:replace="~{/menu_admin.html}"></header> <!-- 메뉴 포함 -->
+		<header th:replace="~{/menu_admin.html}"></header> <!-- 메뉴 포함 -->
 	</header>
 
 
-    <h3>
-        <!-- 에러 메시지 표시 -->
-        <div th:if="${error}" class="error" th:text="${error}"></div>
-    </h3>
-    <h1>시간표</h1>
-    <!-- 시간표 컨테이너 -->
-    <div class="container">
-        <!-- 시간표 테이블 -->
-        <table>
-            <thead>
-                <!-- 요일 헤더 -->
-                <tr>
-                    <th></th>
-                    <!-- 요일별 반복 -->
-                    <th th:each="day : ${days}" th:text="${day}"></th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- 시간별 반복 -->
-                <tr th:each="hour : ${hours}">
-                    <!-- 시간 표시 -->
-                    <td th:text="${hour}"></td>
-                    <!-- 요일별 시간표 -->
-                    <td th:each="day : ${days}" class="clickable" data-day="${day}" data-hour="${hour}">
-                        <div th:each="timeTable, stat : ${userTimeTable}"
-                              th:if="${timeTable.day == day and timeTable.startHour le hour and timeTable.endHour gt hour}"
-                              th:classappend="'subject-' + ${stat.index % 10}"
-                              th:attr="data-subject=${timeTable.subject}, data-classroom=${timeTable.classroomName}, 
+	<h3>
+		<!-- 에러 메시지 표시 -->
+		<div th:if="${error}" class="error" th:text="${error}"></div>
+	</h3>
+	<h1>시간표</h1>
+	<!-- 시간표 컨테이너 -->
+	<div class="container">
+		<!-- 시간표 테이블 -->
+		<table>
+			<thead>
+				<!-- 요일 헤더 -->
+				<tr>
+					<th></th>
+					<!-- 요일별 반복 -->
+					<th th:each="day : ${days}" th:text="${day}"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<!-- 시간별 반복 -->
+				<tr th:each="hour : ${hours}">
+					<!-- 시간 표시 -->
+					<td th:text="${hour}"></td>
+					<!-- 요일별 시간표 -->
+					<td th:each="day : ${days}" class="clickable" data-day="${day}" data-hour="${hour}">
+						<div th:each="timeTable, stat : ${userTimeTable}"
+							th:if="${timeTable.day == day and timeTable.startHour le hour and timeTable.endHour gt hour}"
+							th:classappend="'subject-' + ${stat.index % 10}" th:attr="data-subject=${timeTable.subject}, data-classroom=${timeTable.classroomName}, 
                                       data-day=${timeTable.day}, data-hour=${hour}">
-                            <!-- 시간표 정보 표시 -->
-                            <span th:text="${timeTable.subject + ' (' + timeTable.classroomName + ')'}"></span><br>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+							<!-- 시간표 정보 표시 -->
+							<span th:text="${timeTable.subject + ' (' + timeTable.classroomName + ')'}"></span><br>
+						</div>
+						<!-- 과목이 없는 경우에도 시간을 표시할 기본 div 추가 -->
+						<div th:attr="data-hour=${hour}, data-day=${day}" style="display: none;"></div>
 
-    <!-- 좌석 예약 버튼 및 폼 -->
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<!-- 좌석 예약 버튼 및 폼 -->
 	<div class="button-container">
 		<!-- 좌석 예약 버튼 -->
-	    <button id="reserve-seat-button">좌석 예약</button>
-	    <!-- 시간표 추가 버튼 -->
-	    <label for="modal-addCheckbox" class="add-modal-button">시간표 추가</label>
-	    <!-- 시간표 수정 버튼 -->
-	    <label for="modal-checkbox" class="edit-modal-button">시간표 수정</label>
-	    <!-- 시간표 삭제 버튼 -->
-	    <label for="delete-modal-checkbox" class="delete-modal-button">시간표 삭제</label>    
+		<button id="reserve-seat-button">좌석 예약</button>
+		<!-- 시간표 추가 버튼 -->
+		<label for="modal-addCheckbox" class="add-modal-button">시간표 추가</label>
+		<!-- 시간표 수정 버튼 -->
+		<label for="modal-checkbox" class="edit-modal-button">시간표 수정</label>
+		<!-- 시간표 삭제 버튼 -->
+		<label for="delete-modal-checkbox" class="delete-modal-button">시간표 삭제</label>
 	</div>
-	
+
 	<!-- 좌석 예약 폼 -->
-    <form id="reserve-seat-form" action="/classroomStatus" method="POST" style="display: none;">
-        <input type="hidden" id="classroomName" name="classroomName">
-        <input type="hidden" id="subject" name="subject">
-        <input type="hidden" id="day" name="day">
-        <input type="hidden" id="selectHours" name="selectHours">
-        <input type="submit" value="예약하기">
-    </form>
-	
+	<form id="reserve-seat-form" action="/classroomStatus" method="POST" style="display: none;">
+		<input type="hidden" id="classroomName" name="classroomName">
+		<input type="hidden" id="subject" name="subject">
+		<input type="hidden" id="day" name="day">
+		<input type="hidden" id="selectHours" name="selectHours">
+		<input type="submit" value="예약하기">
+	</form>
+
 	<!-- 시간표 추가 모달 -->
 	<input type="checkbox" id="modal-addCheckbox" class="modal-checkbox" />
 	<div class="modal-container">
-	    <div class="modal-content">
-	        <!-- 모달 닫기 버튼 -->
-	        <label for="modal-addCheckbox" class="close">&times;</label>
-	        <!-- 모달 제목 -->
-	        <h2>시간표 추가</h2>
-	        <!-- 시간표 추가 폼 -->
-	        <form action="/timetable" method="POST" style="width: 100%;">
-	            <!-- 강의명 입력 -->
-	            <div class="input-container">
-	                <label for="add_subject">강의명:</label>
-	                <input type="text" id="add_subject" name="subject" style="width: calc(100% - 120px);">
-	            </div>
-	            <!-- 강의실 입력 -->
-	            <div class="input-container">
-	                <label for="add_classroomName">강의실:</label>
-	                <input type="text" id="add_classroomName" name="classroomName" style="width: calc(100% - 120px);">
-	            </div>
-	            <!-- 요일 선택 -->
-	            <div class="input-container">
-	                <label for="add_day">요일:</label>
-	                <select id="add_day" name="day" style="width: calc(100% - 120px);">
-	                    <option value="월요일">월요일</option>
-	                    <option value="화요일">화요일</option>
-	                    <option value="수요일">수요일</option>
-	                    <option value="목요일">목요일</option>
-	                    <option value="금요일">금요일</option>
-	                </select>
-	            </div>
-	            <!-- 시작 시간 선택 -->
-	            <div class="input-container">
-	                <label for="add_startHour">시작 시간:</label>
-	                <select id="add_startHour" name="startHour" style="width: calc(100% - 120px);">
-	                    <option value="9">9시</option>
-	                    <option value="10">10시</option>
-	                    <option value="11">11시</option>
-	                    <option value="12">12시</option>
-	                    <option value="13">13시</option> 
-	                    <option value="14">14시</option> 
-	                    <option value="15">15시</option> 
-	                    <option value="16">16시</option> 
-	                </select>
-	            </div>
-	            <!-- 종료 시간 선택 -->
-	            <div class="input-container">
-	                <label for="add_endHour">종료 시간:</label>
-	                <select id="add_endHour" name="endHour" style="width: calc(100% - 120px);">
-	                    <option value="9">9시</option>
-	                    <option value="10">10시</option>
-	                    <option value="11">11시</option>
-	                    <option value="12">12시</option>
-	                    <option value="13">13시</option> 
-	                    <option value="14">14시</option> 
-	                    <option value="15">15시</option> 
-	                    <option value="16">16시</option>
-	                </select>
-	            </div>
-	            <!-- 저장 버튼 -->
-	            <div style="margin-top: 10px;">
-	                <input type="submit" value="저장" style="width: 100%;">
-	            </div>
-	        </form>
-	    </div>
+		<div class="modal-content">
+			<!-- 모달 닫기 버튼 -->
+			<label for="modal-addCheckbox" class="close">&times;</label>
+			<!-- 모달 제목 -->
+			<h2>시간표 추가</h2>
+			<!-- 시간표 추가 폼 -->
+			<form action="/timetable" method="POST" style="width: 100%;">
+				<!-- 강의명 입력 -->
+				<div class="input-container">
+					<label for="add_subject">강의명:</label>
+					<input type="text" id="add_subject" name="subject" style="width: calc(100% - 120px);">
+				</div>
+				<!-- 강의실 입력 -->
+				<div class="input-container">
+					<label for="add_classroomName">강의실:</label>
+					<input type="text" id="add_classroomName" name="classroomName" style="width: calc(100% - 120px);">
+				</div>
+				<!-- 요일 선택 -->
+				<div class="input-container">
+					<label for="add_day">요일:</label>
+					<select id="add_day" name="day" style="width: calc(100% - 120px);">
+						<option value="월요일">월요일</option>
+						<option value="화요일">화요일</option>
+						<option value="수요일">수요일</option>
+						<option value="목요일">목요일</option>
+						<option value="금요일">금요일</option>
+					</select>
+				</div>
+				<!-- 시작 시간 선택 -->
+				<div class="input-container">
+					<label for="add_startHour">시작 시간:</label>
+					<select id="add_startHour" name="startHour" style="width: calc(100% - 120px);">
+						<option value="9">9시</option>
+						<option value="10">10시</option>
+						<option value="11">11시</option>
+						<option value="12">12시</option>
+						<option value="13">13시</option>
+						<option value="14">14시</option>
+						<option value="15">15시</option>
+						<option value="16">16시</option>
+					</select>
+				</div>
+				<!-- 종료 시간 선택 -->
+				<div class="input-container">
+					<label for="add_endHour">종료 시간:</label>
+					<select id="add_endHour" name="endHour" style="width: calc(100% - 120px);">
+						<option value="9">9시</option>
+						<option value="10">10시</option>
+						<option value="11">11시</option>
+						<option value="12">12시</option>
+						<option value="13">13시</option>
+						<option value="14">14시</option>
+						<option value="15">15시</option>
+						<option value="16">16시</option>
+					</select>
+				</div>
+				<!-- 저장 버튼 -->
+				<div style="margin-top: 10px;">
+					<input type="submit" value="저장" style="width: 100%;">
+				</div>
+			</form>
+		</div>
 	</div>
-	
+
 	<!-- 시간표 수정 모달 -->
 	<input type="checkbox" id="edit-modal-checkbox" class="modal-checkbox" />
 	<div class="modal-container">
+		<div class="modal-content">
+			<!-- 모달 닫기 버튼 -->
+			<label for="edit-modal-checkbox" class="close">&times;</label>
+			<!-- 모달 제목 -->
+			<h2>시간표 수정</h2>
+			<!-- 시간표 수정 폼 -->
+			<form action="/timetable" method="POST" style="width: 100%;">
+				<!-- 강의명 입력 -->
+				<div class="input-container">
+					<label for="edit_subject">강의명:</label>
+					<input type="text" id="edit_subject" name="subject" style="width: calc(100% - 120px);" readonly>
+				</div>
+				<!-- 강의실 입력 -->
+				<div class="input-container">
+					<label for="edit_classroomName">강의실:</label>
+					<input type="text" id="edit_classroomName" name="classroomName" style="width: calc(100% - 120px);">
+				</div>
+				<!-- 요일 선택 -->
+				<div class="input-container">
+					<label for="edit_day">요일:</label>
+					<select id="edit_day" name="day" style="width: calc(100% - 120px);">
+						<option value="월요일">월요일</option>
+						<option value="화요일">화요일</option>
+						<option value="수요일">수요일</option>
+						<option value="목요일">목요일</option>
+						<option value="금요일">금요일</option>
+					</select>
+				</div>
+				<!-- 시작 시간 선택 -->
+				<div class="input-container">
+					<label for="edit_startHour">시작 시간:</label>
+					<select id="edit_startHour" name="startHour" style="width: calc(100% - 120px);">
+						<option value="9">9시</option>
+						<option value="10">10시</option>
+						<option value="11">11시</option>
+						<option value="12">12시</option>
+						<option value="13">13시</option>
+						<option value="14">14시</option>
+						<option value="15">15시</option>
+						<option value="16">16시</option>
+					</select>
+				</div>
+				<!-- 종료 시간 선택 -->
+				<div class="input-container">
+					<label for="edit_endHour">종료 시간:</label>
+					<select id="edit_endHour" name="endHour" style="width: calc(100% - 120px);">
+						<option value="9">9시</option>
+						<option value="10">10시</option>
+						<option value="11">11시</option>
+						<option value="12">12시</option>
+						<option value="13">13시</option>
+						<option value="14">14시</option>
+						<option value="15">15시</option>
+						<option value="16">16시</option>
+					</select>
+				</div>
+				<!-- 저장 버튼 -->
+				<div style="margin-top: 10px;">
+					<input type="submit" value="저장" style="width: 100%;">
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<!-- 모달 HTML -->
+	<div id="inputModal" class="modal" style="display: none;">
 	    <div class="modal-content">
-	        <!-- 모달 닫기 버튼 -->
-	        <label for="edit-modal-checkbox" class="close">&times;</label>
-	        <!-- 모달 제목 -->
-	        <h2>시간표 수정</h2>
-	        <!-- 시간표 수정 폼 -->
-	        <form action="/timetable" method="POST" style="width: 100%;">
-	            <!-- 강의명 입력 -->
-	            <div class="input-container">
-	                <label for="edit_subject">강의명:</label>
-	                <input type="text" id="edit_subject" name="subject" style="width: calc(100% - 120px);" readonly>
-	            </div>
-	            <!-- 강의실 입력 -->
-	            <div class="input-container">
-	                <label for="edit_classroomName">강의실:</label>
-	                <input type="text" id="edit_classroomName" name="classroomName" style="width: calc(100% - 120px);">
-	            </div>
-	            <!-- 요일 선택 -->
-	            <div class="input-container">
-	                <label for="edit_day">요일:</label>
-	                <select id="edit_day" name="day" style="width: calc(100% - 120px);">
-	                    <option value="월요일">월요일</option>
-	                    <option value="화요일">화요일</option>
-	                    <option value="수요일">수요일</option>
-	                    <option value="목요일">목요일</option>
-	                    <option value="금요일">금요일</option>
-	                </select>
-	            </div>
-	            <!-- 시작 시간 선택 -->
-	            <div class="input-container">
-	                <label for="edit_startHour">시작 시간:</label>
-	                <select id="edit_startHour" name="startHour" style="width: calc(100% - 120px);">
-	                    <option value="9">9시</option>
-	                    <option value="10">10시</option>
-	                    <option value="11">11시</option>
-	                    <option value="12">12시</option>
-	                    <option value="13">13시</option>
-	                    <option value="14">14시</option>
-	                    <option value="15">15시</option>
-	                    <option value="16">16시</option>
-	                </select>
-	            </div>
-	            <!-- 종료 시간 선택 -->
-	            <div class="input-container">
-	                <label for="edit_endHour">종료 시간:</label>
-	                <select id="edit_endHour" name="endHour" style="width: calc(100% - 120px);">
-	                    <option value="9">9시</option>
-	                    <option value="10">10시</option>
-	                    <option value="11">11시</option>
-	                    <option value="12">12시</option>
-	                    <option value="13">13시</option>
-	                    <option value="14">14시</option>
-	                    <option value="15">15시</option>
-	                    <option value="16">16시</option>
-	                </select>
-	            </div>
-	            <!-- 저장 버튼 -->
-	            <div style="margin-top: 10px;">
-	                <input type="submit" value="저장" style="width: 100%;">
-	            </div>
-	        </form>
+	        <div class="modal-header">
+	            <span class="close">&times;</span>
+	            <h2>추가 예약 정보 입력</h2>		
+	        </div>
+	        <label for="classroomName">강의실: </label>
+	        <div class="input-group">		
+	            <input type="text" id="modalClassroom" required>
+	            <label for="modalClassroom"> 호</label>
+	        </div>
+	        <br>
+	        <label for="subject">강의실 예약하는 목적:</label>
+	        <input type="text" id="modalSubject" required>
+	        <br>
+	        <button id="submitInput">제출</button>
 	    </div>
 	</div>
 
-   
 </body>
+
 </html>

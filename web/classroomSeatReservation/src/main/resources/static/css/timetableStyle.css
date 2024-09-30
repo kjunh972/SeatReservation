@@ -60,6 +60,45 @@ h2 {
     margin-bottom: -5px; /* 모달 제목의 하단 여백을 조정합니다. */
 }
 
+.input-h2 {
+	margin-bottom: 2rem; /* 모달 제목의 하단 여백을 조정합니다. */	
+	font-size: 0.95rem;
+}
+
+/* 모달 헤더 스타일 */
+.modal-header {
+    display: flex; /* 플렉스 박스를 사용하여 제목과 닫기 버튼을 수평으로 배치 */
+    align-items: center; /* 수직 정렬을 중앙으로 설정 */
+}
+
+/* 제목 스타일 */
+.modal-header h2 {
+    margin-left: 10px; /* 닫기 버튼과 제목 사이의 여백 */
+    margin-top: 0; /* 제목의 상단 여백 제거 */
+    margin-bottom: 0; /* 제목의 하단 여백 제거 */
+}
+
+.input-group {
+    display: flex; /* flexbox로 자식 요소를 한 줄에 배치 */
+    align-items: center; /* 세로 중앙 정렬 */
+}
+
+#modalClassroom, label {
+    margin: 0; /* 기본 여백 제거 */
+    padding: 0; /* 기본 여백 제거 */
+}
+
+/* 모달 스타일 */
+.modal {
+	display: none; /* 모달이 숨김 상태로 시작됨 */
+	position: fixed; /* 화면에 고정된 위치에 표시됨 */
+	z-index: 1; /* 모달이 다른 모든 요소들 위에 표시됨 */
+	top: 0; /* 화면 상단 끝에 위치 */
+	width: 100%; /* 화면 너비에 맞게 가로 폭 설정 */
+	height: 100%; /* 화면 높이에 맞게 세로 높이 설정 */
+	overflow: auto; /* 내용이 넘칠 경우 스크롤 가능 */
+	background-color: rgba(0,0,0,0.4); /* 반투명한 검정색 배경 */
+}
 /* 모달 컨테이너 스타일 */
 .modal-container {
     display: none; /* 모달을 숨깁니다. */
