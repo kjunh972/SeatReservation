@@ -51,39 +51,48 @@
 	<!-- GET 방식일 때만 예약된 좌석 정보 표시 -->
 	<div th:if="${requestMethod == 'GET'}">
 		<div th:if="${userPosition == 'student'}">
-			<h1>예약된 좌석</h1>
-			<table>
-				<thead>
-					<tr>
-						<th>과목</th>
-						<th>강의실</th>
-						<th>좌석 번호</th>
-						<th>요일</th>
-						<th>시간대</th>
-						<th>예약 번호</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td th:text="${classroom.subject}"></td>
-						<td th:text="${classroom.classroomName} + '호'"></td>
-						<td th:text="${classroom.seatNumber} + '번 좌석'"></td>
-						<td th:text="${classroom.day}"></td>
-						<td th:text="${selectHours} + '시'"></td>
-						<td th:text="${classroom.randomNum} + '번'"></td>
-					</tr>
-				</tbody>
-			</table>
-			<!-- 버튼을 가운데 정렬하고 가로로 배치 -->
-			<div style="display: flex; justify-content: center; margin-top: 20px;">
-				<button type="button" onclick="location.href='/reserveList'"
-					style="width: 200px; height: 50px; font-size: 16px; margin-right: 10px;">
-					전체 예약 내용 보기
-				</button>
-				<button type="button" onclick="location.href='/timetable'"
-					style="width: 200px; height: 50px; font-size: 16px;">
-					돌아가기
-				</button>
+			<div id="seatListModal" class="seatListModal">
+				<div class="modal-content">
+					<span class="close" id="closeSeatListModal">&times;</span>
+					<h1>예약된 좌석</h1>
+					<table>
+						<thead>
+							<tr>
+								<th>과목</th>
+								<th>강의실</th>
+								<th>좌석 번호</th>
+								<th>요일</th>
+								<th>시간대</th>
+								<th>예약 번호</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td th:text="${classroom.subject}"></td>
+								<td th:text="${classroom.classroomName} + '호'"></td>
+								<td th:text="${classroom.seatNumber} + '번 좌석'"></td>
+								<td th:text="${classroom.day}"></td>
+								<td th:text="${selectHours} + '시'"></td>
+								<td th:text="${classroom.randomNum} + '번'"></td>
+							</tr>
+						</tbody>
+					</table>
+					<!-- 버튼을 가운데 정렬하고 가로로 배치 -->
+					<div style="display: flex; justify-content: center; margin-top: 20px;">
+						<button type="button" onclick="location.href='/reserveList'"
+							style="width: 150px; height: 50px; font-size: 16px; margin-right: 10px;">
+							전체 예약 내용 보기
+						</button>
+						<button type="button" onclick="location.href='/timetable'"
+							style="width: 150px; height: 50px; font-size: 16px; margin-right: 10px;">
+							돌아가기
+						</button>
+						<button type="button" onclick="closeSeatListModal()"
+							style="width: 150px; height: 50px; font-size: 16px;">
+							닫기
+						</button>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -91,88 +100,110 @@
 	<!-- GET 방식일 때만 예약된 좌석 정보 표시 -->
 	<div th:if="${requestMethod == 'GET'}">
 		<div th:if="${userPosition == 'admin'}">
-			<h1>금지된 좌석</h1>
-			<table>
-				<thead>
-					<tr>
-						<th>과목</th>
-						<th>강의실</th>
-						<th>좌석 번호</th>
-						<th>요일</th>
-						<th>시간대</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td th:text="${banSeatDTO.subject}"></td>
-						<td th:text="${banSeatDTO.classroomName} + '호'"></td>
-						<td th:text="${banSeatDTO.seatNumber} + '번 좌석'"></td>
-						<td th:text="${banSeatDTO.day}"></td>
-						<td th:text="${selectHours} + '시'"></td>
-					</tr>
-				</tbody>
-			</table>
-			<!-- 버튼을 가운데 정렬하고 가로로 배치 -->
-			<div style="display: flex; justify-content: center; margin-top: 20px;">
-				<button type="button" onclick="location.href='/banSeatList'"
-					style="width: 200px; height: 50px; font-size: 16px; margin-right: 10px;">
-					전체 예약 내용 보기
-				</button>
-				<button type="button" onclick="location.href='/timetable'"
-					style="width: 200px; height: 50px; font-size: 16px;">
-					돌아가기
-				</button>
+			<div id="seatListModal" class="seatListModal" style="display: block;">
+				<div class="modal-content">
+					<span class="close" id="closeSeatListModal">&times;</span>
+					<h1>금지된 좌석</h1>
+					<table>
+						<thead>
+							<tr>
+								<th>과목</th>
+								<th>강의실</th>
+								<th>좌석 번호</th>
+								<th>요일</th>
+								<th>시간대</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td th:text="${banSeatDTO.subject}"></td>
+								<td th:text="${banSeatDTO.classroomName} + '호'"></td>
+								<td th:text="${banSeatDTO.seatNumber} + '번 좌석'"></td>
+								<td th:text="${banSeatDTO.day}"></td>
+								<td th:text="${selectHours} + '시'"></td>
+							</tr>
+						</tbody>
+					</table>
+					<!-- 버튼을 가운데 정렬하고 가로로 배치 -->
+					<div style="display: flex; justify-content: center; margin-top: 20px;">
+						<button type="button" onclick="location.href='/banSeatList'"
+							style="width: 200px; height: 50px; font-size: 16px; margin-right: 10px;">
+							전체 예약 내용 보기
+						</button>
+						<button type="button" onclick="location.href='/timetable'"
+							style="width: 200px; height: 50px; font-size: 16px;">
+							돌아가기
+						</button>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
 
-	<!-- post 방식으로 접근했을때 시간표 보여주기 -->
-	<div th:if="${requestMethod == 'POST'}">
-		<h1>시간표</h1>
-		<!-- 시간표 컨테이너 -->
-		<div class="container">
-			<!-- 시간표 테이블 -->
-			<table>
-				<thead>
-					<!-- 요일 헤더 -->
-					<tr>
-						<th></th>
-						<!-- 요일별 반복 -->
-						<th th:each="day : ${days}" th:text="${day}"></th>
-					</tr>
-				</thead>
-				<tbody>
-					<!-- 시간별 반복 -->
-					<tr th:each="hour : ${hours}">
-						<!-- 시간 표시 -->
-						<td th:text="${hour}"></td>
-						<!-- 요일별 시간표 -->
-						<td th:each="day : ${days}" class="clickable" data-day="${day}" data-hour="${hour}">
-							<div th:each="timeTable, stat : ${userTimeTable}"
-								th:if="${timeTable.day == day and timeTable.startHour le hour and timeTable.endHour gt hour}"
-								th:classappend="'subject-' + ${stat.index % 10}" th:attr="data-subject=${timeTable.subject}, data-classroom=${timeTable.classroomName}, 
+	<h1>시간표</h1>
+	<!-- 시간표 컨테이너 -->
+	<div class="container">
+		<!-- 시간표 테이블 -->
+		<table>
+			<thead>
+				<!-- 요일 헤더 -->
+				<tr>
+					<th></th>
+					<!-- 요일별 반복 -->
+					<th th:each="day : ${days}" th:text="${day}"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<!-- 시간별 반복 -->
+				<tr th:each="hour : ${hours}">
+					<!-- 시간 표시 -->
+					<td th:text="${hour}"></td>
+					<!-- 요일별 시간표 -->
+					<td th:each="day : ${days}" class="clickable" data-day="${day}" data-hour="${hour}">
+						<div th:each="timeTable, stat : ${userTimeTable}"
+							th:if="${timeTable.day == day and timeTable.startHour le hour and timeTable.endHour gt hour}"
+							th:classappend="'subject-' + ${stat.index % 10}" th:attr="data-subject=${timeTable.subject}, data-classroom=${timeTable.classroomName}, 
 	                                      data-day=${timeTable.day}, data-hour=${hour}">
-								<!-- 시간표 정보 표시 -->
-								<span th:text="${timeTable.subject + ' (' + timeTable.classroomName + ')'}"></span><br>
-							</div>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
+							<!-- 시간표 정보 표시 -->
+							<span th:text="${timeTable.subject + ' (' + timeTable.classroomName + ')'}"></span><br>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
 	</div>
 
 	<script th:inline="javascript">
 		let selectedSeat, selectedClassroom;
-		var userPosition = /*[[${userPosition}]]*/ 'default'; // Thymeleaf에서 사용자 직책 정보 전달
-		const requestMethod = /*[[${requestMethod}]]*/ 'GET'; // 요청 메서드 가져오기
-		let classrooNull = /*[[${classroom.classroomNull}]]*/ 0; // 요청 메서드 가져오기
+		const userPosition = /*[[${userPosition}]]*/ 'default';
+		const classrooNull = /*[[${classroom.classroomNull}]]*/ 0;
+		const requestMethod = /*[[${requestMethod}]]*/ 'GET';
 
-		// 뒤로 가기 하면 모달 닫고 timetable 페이지로 넘어가게
-		if (classrooNull == 0) {
-			closeSeatModal(); // 모달 닫기 함수 호출
+		// 모달 바깥 클릭 시 seatListModal 모달 닫기
+		window.onclick = event => {
+			if (event.target === document.getElementById('seatListModal')) closeSeatListModal();
 		}
 
+		// get 방식으로 들어왔을때 seatModal모달 닫고 seatListModal 모달 열
+		if (classrooNull == 0) {
+			openSeatListModal();
+			document.getElementById('seatModal').style.display = 'none';
+			closeSeatModal(); // 모달 닫기 함수 호출
+
+		}
+
+		// 모달 닫기
+		function closeSeatListModal() {
+			document.getElementById('seatListModal').style.display = 'none';
+			window.location.href = "/timetable"; // timetable으로 이동
+
+		}
+
+		// 모달 열기
+		function openSeatListModal() {
+			document.getElementById('seatListModal').style.display = 'block';
+
+		}
 
 		document.addEventListener('DOMContentLoaded', () => {
 			const leftSeats = document.querySelector('.left-seats');
@@ -203,15 +234,18 @@
 				});
 			}
 
-			/*
-			if (requestMethod === 'GET') {
-				closeSeatModal(); // 모달 닫기 함수 호출
+			if (requestMethod == 'GET') {
+				document.getElementById('seatListModal').style.display = 'block';
 			}
-			*/
 
 			if (classrooNull == 1) {
 				openSeatModal();
 
+			}
+
+			console.log("classrooNull : ", classrooNull)
+			if (classrooNull == 0) {
+				openSeatListModal(); // 모달 닫기 함수 호출
 			}
 
 			const goBackHome = () => {
@@ -292,12 +326,23 @@
 				}
 			}
 
+			// 예약 확인 모달 닫기 함수
+			function closeSeatListModal() {
+				document.getElementById('seatListModal').style.display = 'none';
+			}
+
 			// 좌석 모달 열기 함수
 			function openSeatModal() {
 				if (document.referrer.includes('/timetable')) {
 					document.getElementById('seatModal').style.display = 'block';
 					console.log("openSeatModal : document.referrer.includes('/timetable')")
 				}
+			}
+
+			// 좌석 모달 열기 함수
+			function openSeatListModal() {
+				console.log("function openSeatListModal")
+				document.getElementById('seatModal').style.display = 'block';
 			}
 
 			// 좌석 클릭 시 모달 열기
@@ -364,6 +409,7 @@
 			window.onclick = event => {
 				if (event.target === document.getElementById('myModal')) closeModal();
 				if (event.target === document.getElementById('seatModal')) closeSeatModal();
+				if (event.target === document.getElementById('seatListModal')) closeSeatListModal();
 			}
 
 			// 좌석 현황 모달 열기
@@ -375,4 +421,5 @@
 		});
 	</script>
 </body>
+
 </html>

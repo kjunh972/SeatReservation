@@ -4,14 +4,13 @@
     <meta charset="UTF-8">
     <title>강의실 생성 확인</title>
     <link rel="stylesheet" href="/css/classroomStyle.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 <header th:replace="~{/menu.html}"></header>
 <h1>강의실 생성 확인</h1>
 
 <div>
-    <p>강의실 이름: <span th:text="${classroomNumber}"></span></p>
-    <p>선택된 좌석 스타일: <span th:text="${seatTemplate}"></span></p>
     <!-- 오류 메시지 표시 -->
     <div th:if="${error}">
         <p th:text="${error}" style="color: red;"></p>
@@ -27,36 +26,42 @@
         <input type="hidden" name="leftSeatColumns" th:value="${leftSeatColumns}">
         <input type="hidden" name="rightSeatRows" th:value="${rightSeatRows}">
         <input type="hidden" name="rightSeatColumns" th:value="${rightSeatColumns}">
-        <button type="button" onclick="checkAndSubmit()">저장</button>
+        <button type="button" onclick="showConfirmation()">저장</button>
     </form>
 </div>
 
 <script>
-	function checkAndSubmit() {
+	function showConfirmation() {
 	    const classroomNumber = document.querySelector('input[name="classroomNumber"]').value;
+	    const seatTemplate = document.querySelector('input[name="seatTemplate"]').value;
 
-		// 강의실 이름 중복 확인 AJAX 요청
-        const xhr = new XMLHttpRequest();
-        xhr.open("POST", "/checkClassroomExists");
-        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        xhr.onload = function () {
-            if (xhr.status === 200) {
-                const exists = xhr.responseText === 'true';
-                if (exists) {
-                    alert("이미 존재하는 강의실 이름입니다.");
-                    return false;
-                }
-                document.querySelector('form').submit(); // 중복이 없는 경우 폼 제출
-            } else {
-                alert("서버 오류. 나중에 다시 시도해 주세요.");
-                return false;
-            }
-        };
-        xhr.send("classroomNumber=" + encodeURIComponent(classroomNumber));
+	    // 좌석 배치 정보
+	    const leftSeatRows = document.querySelector('input[name="leftSeatRows"]').value;
+	    const leftSeatColumns = document.querySelector('input[name="leftSeatColumns"]').value;
+	    const rightSeatRows = document.querySelector('input[name="rightSeatRows"]').value;
+	    const rightSeatColumns = document.querySelector('input[name="rightSeatColumns"]').value;
 
-        return false; // AJAX로 폼 제출을 막습니다.
-    }
-
+	    // SweetAlert2로 강의실 생성 확인 알림창 표시
+	    Swal.fire({
+	        title: '강의실 생성 확인',
+	        html: `
+	            <p><strong>강의실 이름:</strong> ${classroomNumber}</p>
+	            <p><strong>선택된 좌석 스타일:</strong> ${seatTemplate}</p>
+	            <p><strong>좌석 정보:</strong><br>
+	                왼쪽 좌석: ${leftSeatRows}행 ${leftSeatColumns}열<br>
+	                오른쪽 좌석: ${rightSeatRows}행 ${rightSeatColumns}열
+	            </p>
+	        `,
+	        icon: 'info',
+	        showCancelButton: true,
+	        confirmButtonText: '저장',
+	        cancelButtonText: '취소',
+	    }).then((result) => {
+	        if (result.isConfirmed) {
+	            document.getElementById('classroomForm').submit(); // 확인 시 폼 제출
+	        }
+	    });
+	}
 </script>
 </body>
 </html>

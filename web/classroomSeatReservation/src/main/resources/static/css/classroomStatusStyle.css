@@ -78,6 +78,18 @@ background-color: rgba(0,0,0,0.4); /* 반투명한 검정색 배경 */
     transform: translate(-50%, -50%); /* 중앙 정렬을 위해 위치 조정 */
 }
 
+.seatListModal {
+    display: none; /* 모달이 숨김 상태로 시작됨 */
+    position: fixed; /* 화면에 고정된 위치에 표시됨 */
+    z-index: 1; /* 모달이 다른 모든 요소들 위에 표시됨 */
+    top: 70%; /* 화면의 50% 높이 위치 */
+    left: 50%; /* 화면의 50% 너비 위치 */
+    width: 170vw; /* 화면 너비의 80%로 설정 */
+    height: 165vh; /* 화면 높이의 80%로 설정 */
+    overflow: auto; /* 내용이 넘칠 경우 스크롤 가능 */
+    background-color: rgba(0,0,0,0.4); /* 반투명한 검정색 배경 */
+    transform: translate(-50%, -50%); /* 중앙 정렬을 위해 위치 조정 */
+}
 
 .modal-content {
 background-color: #fefefe; /* 모달의 내용 배경색 설정 */

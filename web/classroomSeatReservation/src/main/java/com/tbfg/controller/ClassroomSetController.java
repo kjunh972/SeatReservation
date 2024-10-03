@@ -20,6 +20,7 @@ public class ClassroomSetController {
 
     @Autowired
     private ClassroomDAO classroomDAO;
+    ClassroomDTO classroomDTO = new ClassroomDTO();
 
     @GetMapping("/classroomSet")
     public String seatLayout(Model model) {
@@ -126,17 +127,18 @@ public class ClassroomSetController {
                 rightRow = Integer.parseInt(matcher.group(4));  
             }
         }
-
+        
+        System.out.println("leftCol : "+leftCol);
         // ClassroomDTO에 데이터 저장
-        ClassroomDTO classroom = new ClassroomDTO();
-        classroom.setClassroomName(classroomNumber);
-        classroom.setLeftCol(leftCol != null ? leftCol : 0);
-        classroom.setLeftRow(leftRow != null ? leftRow : 0);   
-        classroom.setRightCol(rightCol != null ? rightCol : 0);
-        classroom.setRightRow(rightRow != null ? rightRow : 0);
+        
+        classroomDTO.setClassroomName(classroomNumber);
+        classroomDTO.setLeftCol(leftCol != null ? leftCol : 0);
+        classroomDTO.setLeftRow(leftRow != null ? leftRow : 0);   
+        classroomDTO.setRightCol(rightCol != null ? rightCol : 0);
+        classroomDTO.setRightRow(rightRow != null ? rightRow : 0);
 
         // DB에 강의실 저장
-        classroomDAO.save(classroom);
+        classroomDAO.save(classroomDTO);
 
         // 저장 후 classroomResult로 리다이렉트
         return "redirect:/classroomResult?classroomNumber=" + classroomNumber; // 저장 후 결과 페이지로 리다이렉트
@@ -160,6 +162,9 @@ public class ClassroomSetController {
                 model.addAttribute("error", "강의실을 찾을 수 없습니다.");
             }
         }
+        classroomDTO.setClassroomNull(1);
+        System.out.println("classroomDTO.getClassroomNull() Result : "+classroomDTO.getClassroomNull());
+        model.addAttribute("classroom",classroomDTO);
         return "classroomResult"; // 'classroomResult.html' 뷰를 반환합니다.
     }
 

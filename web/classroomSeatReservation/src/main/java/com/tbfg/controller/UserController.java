@@ -152,7 +152,7 @@ public class UserController {
         	
         	// 직책에 따라 페이지 리다이렉트
             if ("admin".equals(GetPosition(session))) {
-                return "redirect:/admin";  // 관리자 페이지로 리다이렉트
+                return "redirect:/timetable";  // 관리자 페이지로 리다이렉트
             } else {
                 return "redirect:/index.html";  // 나머지는 classroomLike 페이지로 리다이렉트
             }

@@ -129,12 +129,31 @@ public class Contoller {
 		System.out.println("classroomDTO.getClassroomNull(1)4 classroomStatusGet : " + classroomDTO.getClassroomNull());
 
 		// 선택한 시간대 문자열로 변환
-		String hours = classroomDTO.getSelectHours().stream().map(String::valueOf).collect(Collectors.joining("시, "));
+		String hour = classroomDTO.getSelectHours().stream().map(String::valueOf).collect(Collectors.joining("시, "));
 
+		
+
+		TimetableDAO timetableDAO = new TimetableDAO(jdbcTemplate);
+
+		// 사용자의 모든 시간표를 가져옴.
+		List<TimeTableDTO> userTimeTable = timetableDAO.getTimetable(GetId(session));
+
+		// 요일과 시간 목록을 생성하여 모델에 추가
+		List<String> days = Arrays.asList("월요일", "화요일", "수요일", "목요일", "금요일");
+		List<Integer> hours = Arrays.asList(9, 10, 11, 12, 13, 14, 15, 16);
+
+		// 모델에 사용자의 시간표 정보를 추가합니다.
+		model.addAttribute("userTimeTable", userTimeTable);
+		// 모델에 요일 목록을 추가합니다.
+		model.addAttribute("days", days);
+		// 모델에 시간 목록을 추가합니다.
+		model.addAttribute("hours", hours);
+		// 사용자 중복 예약 확인
+		
 		// HTTP 요청 메서드를 모델에 추가
 		model.addAttribute("requestMethod", request.getMethod());
 		model.addAttribute("banSeatDTO", banSeatDTO);
-		model.addAttribute("selectHours", hours);
+		model.addAttribute("selectHours", hour);
 		model.addAttribute("classroom", classroomDTO);
 		model.addAttribute("userPosition", userPosition);
 		return "classroomStatus";
