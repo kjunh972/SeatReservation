@@ -122,16 +122,16 @@ h2 {
 
 /* 모달 닫기 버튼 스타일 */
 .close {
-    color: #aaa; /* 글자 색상을 설정합니다. */
+    color: black; /* 글자 색상을 설정합니다. */
     align-self: flex-end; /* 오른쪽 정렬합니다. */
-    font-size: 28px; /* 글꼴 크기를 설정합니다. */
+    font-size: 3rem; /* 글꼴 크기를 설정합니다. */
     font-weight: bold; /* 글꼴 두껍게 설정합니다. */
     cursor: pointer; /* 마우스 커서를 포인터로 변경합니다. */
 }
 
 .close:hover,
 .close:focus {
-    color: black; /* 호버 또는 포커스 시 글자 색상을 변경합니다. */
+    color: #aaa; /* 호버 또는 포커스 시 글자 색상을 변경합니다. */
 }
 
 /* 모달 체크박스 */
@@ -144,8 +144,9 @@ h2 {
     display: block;
 }
 
-/* 버튼 스타일 */
-.add-modal-button, .edit-modal-button, .delete-modal-button {
+/* 버튼과 라벨 공통 스타일 */
+.button-container button,
+.button-container label {
     background-color: #4CAF50; /* 배경색을 설정합니다. */
     color: white; /* 텍스트 색상을 설정합니다. */
     padding: 15px 32px; /* 내부 여백을 설정합니다. */

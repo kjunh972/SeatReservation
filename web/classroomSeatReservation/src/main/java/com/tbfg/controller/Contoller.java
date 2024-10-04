@@ -11,13 +11,16 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -25,6 +28,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tbfg.dao.ClassroomDAO;
 import com.tbfg.dao.ProfessorDAO;
+import com.tbfg.dao.ReservationInfoDTO;
 import com.tbfg.dao.TimetableDAO;
 import com.tbfg.dto.BanSeatDTO;
 import com.tbfg.dto.BanSeatList;
@@ -49,6 +53,8 @@ public class Contoller {
 	private JdbcTemplate jdbcTemplate;
 	@Autowired
 	private ClassroomDAO classroomDAO = new ClassroomDAO(jdbcTemplate);
+	@Autowired
+	private ProfessorDAO proDAO = new ProfessorDAO(jdbcTemplate);
 
 	// 세션에서 사용자 ID를 가져오는 메서드
 	public String GetId(HttpSession session) {
@@ -121,17 +127,12 @@ public class Contoller {
 		}
 
 		if (classroomDTO.getClassroomNull() == 1) {
-			System.out.println(
-					"classroomDTO.getClassroomNull(1)3 classroomStatusGet : " + classroomDTO.getClassroomNull());
 			return "redirect:/timetable";
 		}
 		classroomDTO.setClassroomNull(0);
-		System.out.println("classroomDTO.getClassroomNull(1)4 classroomStatusGet : " + classroomDTO.getClassroomNull());
 
 		// 선택한 시간대 문자열로 변환
 		String hour = classroomDTO.getSelectHours().stream().map(String::valueOf).collect(Collectors.joining("시, "));
-
-		
 
 		TimetableDAO timetableDAO = new TimetableDAO(jdbcTemplate);
 
@@ -149,7 +150,7 @@ public class Contoller {
 		// 모델에 시간 목록을 추가합니다.
 		model.addAttribute("hours", hours);
 		// 사용자 중복 예약 확인
-		
+
 		// HTTP 요청 메서드를 모델에 추가
 		model.addAttribute("requestMethod", request.getMethod());
 		model.addAttribute("banSeatDTO", banSeatDTO);
@@ -206,9 +207,7 @@ public class Contoller {
 		banSeatDTO.setBannedSeats(bannedSeats);
 
 		classroomDTO.setClassroomNull(1);
-		System.out.println("classroomDTO.getClassroomNull(1)1 classroomStatus: " + classroomDTO.getClassroomNull());
 		if (classroomDTO.getClassroomNull() == 0) {
-			System.out.println("classroomDTO.getClassroomNull(1)5 classroomStatus: " + classroomDTO.getClassroomNull());
 			return "redirect:/timetable";
 		}
 
@@ -236,6 +235,180 @@ public class Contoller {
 		model.addAttribute("userPosition", userPosition);
 
 		return "classroomStatus";
+	}
+
+	@GetMapping("/classroomSeat")
+	public String classroomSeatGet() {
+		return "redirect:/timetable";
+	}
+
+	@PostMapping("/classroomSeat")
+	public String classroomSeat(@RequestParam("classroomName") String classroomName,
+			@RequestParam("selectHours") String selectHoursJson, @RequestParam("day") String day,
+			@RequestParam("subject") String subject, HttpServletRequest request, HttpSession session, Model model)
+			throws JsonProcessingException {
+
+		// 세션에서 사용자 ID를 가져옴
+		String userId = GetId(session);
+		// 세션에서 사용자 포지션을 가져옴
+		String userPosition = GetPosition(session);
+
+		if (userId == null) {
+			model.addAttribute("error", "세션이 만료되었습니다. 다시 로그인 해주세요.");
+			return "login";
+		}
+
+		ClassroomDAO classroomDAO = new ClassroomDAO(jdbcTemplate);
+		classroomDTO = classroomDAO.getClassroomInfo(classroomName);
+		classroomDTO.setSeatCount(classroomDTO.getLeftCol() + classroomDTO.getLeftRow() + classroomDTO.getRightCol()
+				+ classroomDTO.getRightRow());
+
+		// 시간대 정보 처리
+		ObjectMapper objectMapper = new ObjectMapper();
+		List<Integer> selectHours = objectMapper.readValue(selectHoursJson, new TypeReference<List<Integer>>() {
+		});
+		classroomDTO.setSelectHours(selectHours);
+		classroomDTO.setDay(day);
+		classroomDTO.setSubject(subject);
+
+		// 이미 예약된 좌석 목록 처리
+		List<Integer> reservedSeats = classroomDAO.getReservedSeats(classroomName, selectHours, day,
+				classroomDTO.getSubject());
+		classroomDTO.setReservedSeats(reservedSeats);
+		model.addAttribute("reservedSeats", reservedSeats);
+
+		// 예약된 좌석을 classroomDTO에 반영하여 예약 상태를 업데이트
+		for (Integer seat : reservedSeats) {
+			classroomDTO.reserveSeat(seat);
+		}
+
+		// 이미 예약된 좌석 목록 처리
+		List<ReservationInfoDTO> reservationInfoList = classroomDAO.getReservationInfo(classroomName, selectHours, day,
+				subject);
+
+		Map<Integer, Integer> seatToReservNum = new HashMap<>();
+
+		for (ReservationInfoDTO info : reservationInfoList) {
+			seatToReservNum.put(info.getReservSeat(), info.getReservNum());
+		}
+
+		model.addAttribute("seatToReservNum", seatToReservNum);
+
+		// 금지된 좌석 목록 처리
+		List<Integer> bannedSeats = classroomDAO.getBannedSeats(classroomName, selectHours, classroomDTO.getSubject(),
+				classroomDTO.getDay());
+		BanSeatDTO banSeatDTO = new BanSeatDTO();
+		banSeatDTO.setBannedSeats(bannedSeats);
+
+		classroomDTO.setClassroomNull(1);
+		if (classroomDTO.getClassroomNull() == 0) {
+			return "redirect:/timetable";
+		}
+
+		TimetableDAO timetableDAO = new TimetableDAO(jdbcTemplate);
+
+		// 사용자의 모든 시간표를 가져옴.
+		List<TimeTableDTO> userTimeTable = timetableDAO.getTimetable(GetId(session));
+
+		// 요일과 시간 목록을 생성하여 모델에 추가
+		List<String> days = Arrays.asList("월요일", "화요일", "수요일", "목요일", "금요일");
+		List<Integer> hours = Arrays.asList(9, 10, 11, 12, 13, 14, 15, 16);
+
+		// 모델에 사용자의 시간표 정보를 추가합니다.
+		model.addAttribute("userTimeTable", userTimeTable);
+		// 모델에 요일 목록을 추가합니다.
+		model.addAttribute("days", days);
+		// 모델에 시간 목록을 추가합니다.
+		model.addAttribute("hours", hours);
+		// 사용자 중복 예약 확인
+		boolean isAlreadyReserved = classroomDAO.checkSeat(userId, classroomName, selectHours, day);
+		model.addAttribute("alreadyReserved", isAlreadyReserved);
+		model.addAttribute("requestMethod", request.getMethod());
+		model.addAttribute("classroom", classroomDTO);
+		model.addAttribute("banSeatDTO", banSeatDTO);
+		model.addAttribute("userPosition", userPosition);
+
+		return "classroomSeat";
+	}
+
+	@PostMapping("/moveSeat")
+	public ResponseEntity<Map<String, Object>> moveSeat(@RequestBody Map<String, Integer> request) {
+		Map<String, Object> response = new HashMap<>();
+		try {
+			int reservNum = request.get("reservNum");
+			int newSeat = request.get("newSeat");
+
+			// 기존 예약 정보 조회
+			ReserveList oldReservation = proDAO.findByReservNum(reservNum);
+			if (oldReservation == null) {
+				response.put("success", false);
+				response.put("message", "유효하지 않은 예약 번호입니다.");
+				return ResponseEntity.ok(response);
+			}
+
+			// 좌석 이동 처리
+			boolean updateSuccess = classroomDAO.updateReservationSeat(reservNum, newSeat);
+			if (updateSuccess) {
+				response.put("success", true);
+				response.put("message", "자리 이동이 성공적으로 완료되었습니다.");
+				response.put("oldSeat", oldReservation.getReservSeat());
+				response.put("newSeat", newSeat);
+				response.put("classroomName", oldReservation.getClassroomName());
+			} else {
+				response.put("success", false);
+				response.put("message", "자리 이동 중 오류가 발생했습니다.");
+			}
+		} catch (Exception e) {
+			response.put("success", false);
+			response.put("message", "서버 오류: " + e.getMessage());
+			e.printStackTrace();
+		}
+		return ResponseEntity.ok(response);
+	}
+
+	@PostMapping("/cancelReservationNew")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> cancelReservationNew(@RequestBody Map<String, Integer> request) {
+		Map<String, Object> response = new HashMap<>();
+		try {
+			int reservNum = request.get("reservNum");
+			boolean success = proDAO.cancelReservation(reservNum);
+			if (success) {
+				response.put("success", true);
+				response.put("message", "예약이 성공적으로 취소되었습니다.");
+			} else {
+				response.put("success", false);
+				response.put("message", "예약 취소에 실패했습니다.");
+			}
+		} catch (Exception e) {
+			response.put("success", false);
+			response.put("message", "서버 오류: " + e.getMessage());
+			e.printStackTrace();
+		}
+		return ResponseEntity.ok(response);
+	}
+
+	@PostMapping("/changeReservationNumberNew")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> changeReservationNumberNew(@RequestBody Map<String, Integer> request) {
+		Map<String, Object> response = new HashMap<>();
+		try {
+			int oldReservNum = request.get("oldReservNum");
+			int newReservNum = request.get("newReservNum");
+			boolean success = proDAO.changeReservationNumber(oldReservNum, newReservNum);
+			if (success) {
+				response.put("success", true);
+				response.put("message", "예약 번호가 성공적으로 변경되었습니다.");
+			} else {
+				response.put("success", false);
+				response.put("message", "예약 번호 변경에 실패했습니다.");
+			}
+		} catch (Exception e) {
+			response.put("success", false);
+			response.put("message", "서버 오류: " + e.getMessage());
+			e.printStackTrace();
+		}
+		return ResponseEntity.ok(response);
 	}
 
 	// 강의실 좌석 예약 메서드
@@ -266,7 +439,6 @@ public class Contoller {
 		String hours = classroomDTO.getSelectHours().stream().map(String::valueOf).collect(Collectors.joining("시, "));
 
 		classroomDTO.setClassroomNull(0);
-		System.out.println("classroomDTO.getClassroomNull(1)2 reserveSeat : " + classroomDTO.getClassroomNull());
 		classroomDTO.setSeatNumber(seatNumber);
 
 		model.addAttribute("seatNumber", seatNumber); // 좌석 번호 모델에 추가
@@ -296,7 +468,6 @@ public class Contoller {
 		banSeatDTO.setClassroomName(classroomDTO.getClassroomName());
 		banSeatDTO.setBanSeat(seatNumber);
 		banSeatDTO.setDay(classroomDTO.getDay());
-		System.out.println("seatNumber" + seatNumber);
 
 		// 금지된 좌석 정보를 저장할 DAO 객체 생성
 		ClassroomDAO classroomDAO = new ClassroomDAO(jdbcTemplate);
@@ -328,7 +499,6 @@ public class Contoller {
 		banSeatDTO.setSeatNumber(seatNumber);
 
 		classroomDTO.setClassroomNull(0);
-		System.out.println("classroomDTO.getClassroomNull(1)2 banSeat : " + classroomDTO.getClassroomNull());
 
 		model.addAttribute("reservedSeats", reservedSeats);
 		model.addAttribute("classroom", classroomDTO);
@@ -368,11 +538,11 @@ public class Contoller {
 		return "reserveList";
 	}
 
-	// 예약 금지한 좌석 목록 조회하는 메서드
 	@GetMapping("/banList")
 	public String banList(HttpSession session, Model model) {
-		// 세션에서 사용자 ID 가져오기
+		// 세션에서 사용자 ID와 직책 가져오기
 		String userId = GetId(session);
+		String userPosition = GetPosition(session);
 
 		// 세션이 만료되었거나 사용자 ID가 없는 경우
 		if (userId == null) {
@@ -380,10 +550,13 @@ public class Contoller {
 			return "login"; // 로그인 페이지로 리다이렉트
 		}
 
-		ProfessorDAO proDAO = new ProfessorDAO(jdbcTemplate);
-
-		// 로그인한 사용자의 금지된 좌석 목록을 가져옴
-		Map<String, List<BanSeatList>> banSeatList = proDAO.getBanSeatList(userId);
+		// admin인 경우 모든 금지된 좌석 목록을, 그 외의 경우 해당 사용자의 금지된 좌석 목록을 가져옴
+		Map<String, List<BanSeatList>> banSeatList;
+		if ("admin".equals(userPosition)) {
+			banSeatList = proDAO.getAllBanSeatList();
+		} else {
+			banSeatList = proDAO.getBanSeatList(userId);
+		}
 
 		// 금지된 좌석 목록이 비어있는 경우
 		if (banSeatList.isEmpty()) {
@@ -392,6 +565,9 @@ public class Contoller {
 			// 강의실별로 그룹화된 금지된 좌석 정보를 모델에 추가하여 뷰에서 사용 가능하도록 설정
 			model.addAttribute("banSeatList", banSeatList);
 		}
+
+		// userPosition을 모델에 추가
+		model.addAttribute("userPosition", userPosition);
 
 		return "banList";
 	}
@@ -410,8 +586,6 @@ public class Contoller {
 		}
 
 		boolean success = classroomDAO.unbanSeat(classroomName, banSeat, day);
-
-		ProfessorDAO proDAO = new ProfessorDAO(jdbcTemplate);
 
 		// 로그인한 사용자의 금지된 좌석 목록을 가져옴
 		Map<String, List<BanSeatList>> banSeatList = proDAO.getBanSeatList(userId);
@@ -463,7 +637,6 @@ public class Contoller {
 
 		// 로그인한 사용자의 예약 목록을 가져옴
 		Map<String, List<ReserveList>> reserveList = classroomDAO.getReserveList(userId);
-		System.out.println("reserveList : " + reserveList);
 
 		// 예약 목록이 비어있는 경우
 		if (reserveList.isEmpty()) {
@@ -507,7 +680,6 @@ public class Contoller {
 
 		// 로그인한 사용자의 예약 목록을 가져옴
 		Map<String, List<ReserveList>> reserveList = classroomDAO.getReserveList(userId);
-		System.out.println("reserveList : " + reserveList);
 
 		// 예약 목록이 비어있는 경우
 		if (reserveList.isEmpty()) {
@@ -661,10 +833,11 @@ public class Contoller {
 		List<String> days = Arrays.asList("월요일", "화요일", "수요일", "목요일", "금요일");
 		List<Integer> hours = Arrays.asList(9, 10, 11, 12, 13, 14, 15, 16);
 
-		System.out.println("classroomDTO.getClassroomNull(2);timetable : " + classroomDTO.getClassroomNull());
 		classroomDTO.setClassroomNull(1);
-		System.out.println("classroomDTO.getClassroomNull(1);timetable : " + classroomDTO.getClassroomNull());
 
+		List<String> classrooms = classroomDAO.getAllClassrooms();
+	    model.addAttribute("classrooms", classrooms);
+	    
 		String userPosition = GetPosition(session);
 		model.addAttribute("userPosition", userPosition);
 		// 모델에 사용자의 시간표 정보를 추가합니다.
@@ -732,7 +905,7 @@ public class Contoller {
 		// 모델에 시간 목록을 추가합니다.
 		model.addAttribute("hours", hours);
 
-		return "timetable";
+		return "redirect:/timetable";
 	}
 
 	// 시간표를 삭제하는 메서드

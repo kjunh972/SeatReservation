@@ -1,102 +1,109 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <!-- 페이지 제목 설정 -->
     <title>좌석 예약 금지 목록</title>
     
-    <!-- 외부 CSS 파일 링크 -->
     <link rel="stylesheet" href="/css/reserveListStyle.css" />
-    <!-- SweetAlert2 라이브러리 추가 (알림창 표시용) -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <script>
-        // 좌석 다시 예약 가능한 상태로 변경 확인 창을 띄우는 함수
+        // 좌석 예약 금지를 해제하는 확인 창을 띄우는 함수
         function unbanSeat(button) {
+            // 버튼에 설정된 강의실 이름, 좌석 번호, 요일 정보를 가져옴
             var classroomName = button.getAttribute("data-classroomName");
             var banSeat = button.getAttribute("data-banSeat");
             var day = button.getAttribute("data-day");
 
+            // 예약 금지 해제를 확인하는 메시지 생성
             var confirmMessage = "강의실 : " + classroomName + "호, 좌석 : " + banSeat + "번<br>예약 금지 해제 요일 : " + day + "<br>좌석 예약 금지를 정말 해제하시겠습니까?";
 
+            // SweetAlert2로 확인 창을 띄움
             Swal.fire({
-                title: '예약 금지 해제 확인',
-                html: confirmMessage,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: '네, 해제합니다',
-                cancelButtonText: '아니요, 유지합니다',
+                title: '예약 금지 해제 확인', // 제목 설정
+                html: confirmMessage, // 확인 메시지 설정
+                icon: 'warning', // 경고 아이콘 표시
+                showCancelButton: true, // 취소 버튼 표시
+                confirmButtonText: '네, 해제합니다', // 확인 버튼 텍스트
+                cancelButtonText: '아니요, 유지합니다', // 취소 버튼 텍스트
             }).then((result) => {
+                // 확인 버튼이 눌렸을 경우 폼 제출
                 if (result.isConfirmed) {
                     button.form.submit();
                 }
             });
         }
 
+        // 페이지 로드 후 성공 또는 오류 메시지를 확인하여 알림창 표시
         window.onload = function() {
-            var successElement = document.querySelector(".success");
-            var errorElement = document.querySelector(".error");
+            var successElement = document.querySelector(".success"); // 성공 메시지 엘리먼트 확인
+            var errorElement = document.querySelector(".error"); // 오류 메시지 엘리먼트 확인
 
             if (successElement) {
+                // 성공 메시지가 있을 경우 성공 알림창 표시
                 Swal.fire({
-                    icon: 'success',
-                    title: '완료',
-                    text: successElement.textContent
+                    icon: 'success', // 성공 아이콘
+                    title: '완료', // 알림 제목
+                    text: successElement.textContent // 성공 메시지 텍스트
                 });
             }
 
             if (errorElement) {
+                // 오류 메시지가 있을 경우 오류 알림창 표시
                 Swal.fire({
-                    icon: 'error',
-                    title: '오류',
-                    text: errorElement.textContent
+                    icon: 'error', // 오류 아이콘
+                    title: '오류', // 알림 제목
+                    text: errorElement.textContent // 오류 메시지 텍스트
                 });
             }
         }
     </script>
 </head>
 <body>
-    <!-- 상단 메뉴 포함 -->
     <header th:replace="~{/menu_admin.html}"></header>
     
-    <!-- 페이지 제목 -->
     <h1>좌석 예약 금지 목록</h1>
     
-    <!-- 오류 또는 성공 메시지 표시 -->
-    <div th:if="${empty}" class="empty" th:text="${empty}"></div>
-    <div th:if="${error}" class="error" th:text="${error}" style="display:none;"></div>
-    <div th:if="${success}" class="success" th:text="${success}" style="display:none;"></div>
+    <div th:if="${empty}" class="empty" th:text="${empty}"></div> <!-- 예약 금지 목록이 없을 때 표시 -->
+    <div th:if="${error}" class="error" th:text="${error}" style="display:none;"></div> <!-- 오류 메시지 -->
+    <div th:if="${success}" class="success" th:text="${success}" style="display:none;"></div> <!-- 성공 메시지 -->
     
     <!-- 예약 금지 리스트 테이블 -->
     <table>
-        <!-- 각 예약 금지 리스트 항목에 대해 반복 -->
+        <!-- 각 예약 금지 리스트 항목에 대해 반복 처리 -->
         <tr th:each="entry : ${banSeatList}">
             <td colspan="5">
                 <!-- 예약 금지 항목 테이블 -->
                 <table>
                     <thead>
                         <tr>
-							<th>과목명</th>
-                            <th>강의실 이름</th>
-                            <th>좌석 번호</th>
-                            <th>요일</th>
-                            <th>금지 시간대</th>
-                            <th>해제</th>
+                            <th>교수</th> <!-- 교수명 열 -->
+                            <th>과목명</th> <!-- 과목명 열 -->
+                            <th>강의실 이름</th> <!-- 강의실 이름 열 -->
+                            <th>좌석 번호</th> <!-- 좌석 번호 열 -->
+                            <th>요일</th> <!-- 요일 열 -->
+                            <th>금지 시간대</th> <!-- 금지 시간대 열 -->
+                            <th>해제</th> <!-- 좌석 예약 금지 해제 버튼 열 -->
                         </tr>
                     </thead>
                     <tbody class="centerContent">
+                        <!-- 예약 금지 좌석 정보를 각 열에 표시 -->
                         <tr th:each="banSeat : ${entry.value}">
-							<td th:text="${banSeat.subject}"></td>
-                            <td th:text="${banSeat.classroomName}"></td>
-                            <td th:text="${banSeat.banSeat}"></td>
-                            <td th:text="${banSeat.day}"></td>
+                            <td th:text="${banSeat.userId}"></td> <!-- 교수명 표시 -->
+                            <td th:text="${banSeat.subject}"></td> <!-- 과목명 표시 -->
+                            <td th:text="${banSeat.classroomName}"></td> <!-- 강의실 이름 표시 -->
+                            <td th:text="${banSeat.banSeat}"></td> <!-- 좌석 번호 표시 -->
+                            <td th:text="${banSeat.day}"></td> <!-- 요일 표시 -->
                             <!-- 금지 시간대를 콤마로 구분하여 표시 -->
-                            <td th:text="${banSeat.banHourString}"></td>
+                            <td th:text="${banSeat.banHourString}"></td> <!-- 금지 시간대 표시 -->
                             <td>
+                                <!-- 좌석 예약 금지 해제 폼 -->
                                 <form th:action="@{/unbanSeat}" method="post">
+                                    <!-- 폼에 예약 해제에 필요한 정보를 숨겨서 전달 -->
                                     <input type="hidden" name="classroomName" th:value="${banSeat.classroomName}" />
                                     <input type="hidden" name="banSeat" th:value="${banSeat.banSeat}" />
                                     <input type="hidden" name="day" th:value="${banSeat.day}" />
 
+                                    <!-- 좌석 예약 금지 해제 버튼 (클릭 시 unbanSeat 함수 호출) -->
                                     <button type="button" 
                                             th:data-classroomName="${banSeat.classroomName}"
                                             th:data-banSeat="${banSeat.banSeat}"
