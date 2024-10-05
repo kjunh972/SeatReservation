@@ -27,10 +27,9 @@
 			const addForm = document.querySelector('#modal-addCheckbox').nextElementSibling.querySelector('form'); // 시간표 추가 폼
 			const editForm = document.querySelector('#edit-modal-checkbox').nextElementSibling.querySelector('form'); // 시간표 수정 폼 
 
-			let selectedSubject = null; // 선택된 과목을 저장할 변수
-			let selectedCells = []; // 선택된 셀들을 저장할 배열
+			let selectedSubject = null;
+			let selectedCells = [];
 
-			// 각 셀에 클릭 이벤트 리스너 추가
 			cells.forEach(function (cell) {
 				cell.addEventListener("click", function () {
 					const subjectDiv = this.querySelector('div[data-subject]');
@@ -61,11 +60,13 @@
 
 							// 선택된 셀 목록 업데이트
 							selectedCells = Array.from(document.querySelectorAll('td.selected'));
+							console.log("selectedCells1 : ", selectedCells);
 						}
 					} else {
 						// subjectDiv가 없는 경우, 셀 자체에서 data-hour 가져오기
 						startHour = parseInt(this.querySelector('div[data-hour]').getAttribute('data-hour'), 10);
 						day = this.querySelector('div[data-day]').getAttribute('data-day');
+						console.log("day : ", day);
 
 						// 첫 선택인 경우 바로 선택
 						if (!selectedCells.includes(this)) {
@@ -82,6 +83,9 @@
 								const lastCell = selectedCells[selectedCells.length - 1]; // 마지막 선택된 셀
 								const lastHour = parseInt(lastCell.querySelector('div[data-hour]').getAttribute('data-hour'), 10);
 								const lastDay = lastCell.querySelector('div[data-day]').getAttribute('data-day');
+								console.log("lastCell : ", lastCell);
+								console.log("lastHour : ", lastHour);
+								console.log("lastDay : ", lastDay);
 
 								// 연속된 시간 체크 (차이값이 1이고 요일이 같을 경우)
 								if (Math.abs(lastHour - startHour) === 1 && lastDay === day) {
@@ -117,6 +121,8 @@
 							selectedCells = []; // 선택된 셀 목록 초기화
 						}
 					}
+
+					console.log("startHour : ", startHour); // 여기서 startHour를 출력
 				});
 			});
 
@@ -131,6 +137,21 @@
 				if (selectedCells.length > 0) {
 					const firstCell = selectedCells[0];
 					const lastCell = selectedCells[selectedCells.length - 1];
+
+					// 선택된 셀 중 이미 강의가 있는지 확인
+					const hasExistingLecture = selectedCells.some(cell =>
+						cell.querySelector('div[data-subject]') !== null
+					);
+
+					if (hasExistingLecture) {
+						Swal.fire({
+							title: '강의 추가 불가',
+							text: '이미 강의가 존재하는 시간대입니다.',
+							icon: 'warning',
+							confirmButtonText: '확인'
+						});
+						return; // 함수 실행 중단
+					}
 
 					const day = firstCell.querySelector('div').getAttribute('data-day');
 					const startHour = firstCell.querySelector('div').getAttribute('data-hour');
@@ -150,10 +171,12 @@
 				addModal.checked = true;
 			});
 
-			// 시간표 추가 폼 제출 이벤트 처리
+			// 시간표 추가 폼 제출 이벤트 리스너
 			addForm.addEventListener('submit', function (e) {
+				// 폼의 기본 제출 동작 방지
 				e.preventDefault();
 
+				// 폼 데이터 추출
 				const formData = new FormData(this);
 				const subject = formData.get('subject');
 				const day = formData.get('day');
@@ -164,17 +187,20 @@
 				const existingLectures = document.querySelectorAll('td.clickable div[data-subject]');
 				let conflict = false;
 
+				// 모든 기존 강의에 대해 충돌 검사
 				existingLectures.forEach(lecture => {
 					const lectureSubject = lecture.getAttribute('data-subject');
 					const lectureDay = lecture.getAttribute('data-day');
 					const lectureHour = parseInt(lecture.getAttribute('data-hour'), 10);
 
+					// 같은 과목이거나 시간이 겹치는 경우 충돌로 판단
 					if (lectureSubject === subject ||
 						(lectureDay === day && lectureHour >= startHour && lectureHour < endHour)) {
 						conflict = true;
 					}
 				});
 
+				// 충돌이 있는 경우 에러 메시지 표시 후 함수 종료
 				if (conflict) {
 					Swal.fire({
 						title: '추가 실패',
@@ -185,34 +211,39 @@
 					return;
 				}
 
+				// 서버로 시간표 추가 요청 전송
 				fetch('/timetable', {
 					method: 'POST',
 					body: formData
 				})
 					.then(response => {
+						// 서버 응답이 정상이 아닐 경우 에러 발생
 						if (!response.ok) {
 							throw new Error('서버 응답이 실패했습니다.');
 						}
 						return response.text();
 					})
 					.then(() => {
-						// 모달 체크박스 해제 (모달 닫기)
+						// 추가 모달 닫기
 						document.getElementById('modal-addCheckbox').checked = false;
 
-						// 추가 완료 알림 표시
+						// 추가 완료 알림 표시 (SweetAlert2 사용)
 						Swal.fire({
 							title: '추가 완료',
 							text: '시간표가 추가되었습니다.',
 							icon: 'success',
 							confirmButtonText: '확인'
 						}).then((result) => {
+							// 확인 버튼 클릭 시 페이지 새로고침
 							if (result.isConfirmed) {
 								window.location.reload();
 							}
 						});
 					})
 					.catch(error => {
+						// 에러 발생 시 콘솔에 에러 로그 출력
 						console.error('Error:', error);
+						// 에러 알림 표시 (SweetAlert2 사용)
 						Swal.fire({
 							title: '오류 발생',
 							text: '시간표 추가 중 오류가 발생했습니다.',
@@ -267,38 +298,44 @@
 				document.getElementById('edit-modal-checkbox').checked = true;
 			});
 
-			// 시간표 수정 폼 제출 이벤트 처리
+			// 시간표 수정 폼 제출 이벤트 리스너
 			editForm.addEventListener('submit', function (e) {
+				// 폼의 기본 제출 동작 방지
 				e.preventDefault();
 
+				// 서버로 시간표 수정 요청 전송
 				fetch('/timetable', {
 					method: 'POST',
-					body: new FormData(this)
+					body: new FormData(this) // 현재 폼의 데이터를 FormData 객체로 전송
 				})
 					.then(response => {
+						// 서버 응답이 정상이 아닐 경우 에러 발생
 						if (!response.ok) {
 							throw new Error('서버 응답이 실패했습니다.');
 						}
-						return response.text();
+						return response.text(); // 응답 텍스트 반환
 					})
 					.then(() => {
-						// 모달 닫기
+						// 수정 모달 닫기
 						document.getElementById('edit-modal-checkbox').checked = false;
 
-						// 서버 응답이 성공적이면 수정 완료 알림을 표시합니다.
+						// 수정 완료 알림 표시 (SweetAlert2 사용)
 						Swal.fire({
 							title: '수정 완료',
 							text: '시간표 수정이 완료되었습니다.',
 							icon: 'success',
 							confirmButtonText: '확인'
 						}).then((result) => {
+							// 확인 버튼 클릭 시 페이지 새로고침
 							if (result.isConfirmed) {
 								window.location.reload();
 							}
 						});
 					})
 					.catch(error => {
+						// 에러 발생 시 콘솔에 에러 로그 출력
 						console.error('Error:', error);
+						// 에러 알림 표시 (SweetAlert2 사용)
 						Swal.fire({
 							title: '오류 발생',
 							text: '시간표 수정 중 오류가 발생했습니다.',

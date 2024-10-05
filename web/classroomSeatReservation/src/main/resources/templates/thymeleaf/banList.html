@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <!-- 페이지 제목 설정 -->
     <title>좌석 예약 금지 목록</title>
     
+    <!-- 외부 CSS 파일 링크 -->
     <link rel="stylesheet" href="/css/reserveListStyle.css" />
+    <!-- SweetAlert2 라이브러리 추가 (알림창 표시용) -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <script>
@@ -59,10 +62,13 @@
     </script>
 </head>
 <body>
+    <!-- 상단 메뉴 포함 (외부 HTML 파일을 삽입하여 메뉴 구성) -->
     <header th:replace="~{/menu_admin.html}"></header>
     
+    <!-- 페이지 제목 -->
     <h1>좌석 예약 금지 목록</h1>
     
+    <!-- 오류 또는 성공 메시지 표시 (조건에 따라 메시지 표시) -->
     <div th:if="${empty}" class="empty" th:text="${empty}"></div> <!-- 예약 금지 목록이 없을 때 표시 -->
     <div th:if="${error}" class="error" th:text="${error}" style="display:none;"></div> <!-- 오류 메시지 -->
     <div th:if="${success}" class="success" th:text="${success}" style="display:none;"></div> <!-- 성공 메시지 -->

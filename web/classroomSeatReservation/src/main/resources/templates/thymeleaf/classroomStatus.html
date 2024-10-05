@@ -169,85 +169,94 @@
 	</div>
 
 	<script th:inline="javascript">
-		let selectedSeat, selectedClassroom; // 선택된 좌석과 강의실 변수
-		const userPosition = /*[[${userPosition}]]*/ 'default'; // 사용자 위치 (학생/교수 등)
-		const classrooNull = /*[[${classroom.classroomNull}]]*/ 0; // 강의실 존재 여부
-		const requestMethod = /*[[${requestMethod}]]*/ 'GET'; // 요청 방식 (GET/POST)
+		// 선택된 좌석과 강의실 정보를 저장할 변수
+		let selectedSeat, selectedClassroom;
+		// 사용자의 직책 정보
+		const userPosition = /*[[${userPosition}]]*/ 'default';
+		// 1일때 좌석표 바로 열기위한 변수
+		const classrooNull = /*[[${classroom.classroomNull}]]*/ 0;
+		// 요청 메소드
+		const requestMethod = /*[[${requestMethod}]]*/ 'GET';
 
 		// 모달 바깥 클릭 시 seatListModal 모달 닫기
 		window.onclick = event => {
 			if (event.target === document.getElementById('seatListModal')) closeSeatListModal();
 		}
 
-		// 강의실이 존재하지 않을 경우 seatListModal 모달 열기 및 seatModal 모달 닫기
+		// GET 방식으로 들어왔을 때 seatModal 모달 닫고 seatListModal 모달 열기
 		if (classrooNull == 0) {
-			openSeatListModal(); // 예약 리스트 모달 열기
-			document.getElementById('seatModal').style.display = 'none'; // 좌석 모달 숨기기
-			closeSeatModal(); // 좌석 모달 닫기 함수 호출
+			openSeatListModal();
+			document.getElementById('seatModal').style.display = 'none';
+			closeSeatModal(); // 모달 닫기 함수 호출
 		}
 
-		// 예약 확인 모달 닫기
+		// 예약 확인 모달 닫기 함수
 		function closeSeatListModal() {
-			document.getElementById('seatListModal').style.display = 'none'; // 예약 리스트 모달 숨기기
-			window.location.href = "/timetable"; // timetable 페이지로 이동
+			document.getElementById('seatListModal').style.display = 'none';
+			window.location.href = "/timetable"; // 시간표 페이지로 이동
 		}
 
-		// 예약 확인 모달 열기
+		// 예약 확인 모달 열기 함수
 		function openSeatListModal() {
-			document.getElementById('seatListModal').style.display = 'block'; // 예약 리스트 모달 표시
+			document.getElementById('seatListModal').style.display = 'block';
 		}
 
+		// DOM이 완전히 로드된 후 실행될 함수
 		document.addEventListener('DOMContentLoaded', () => {
-			const leftSeats = document.querySelector('.left-seats'); // 왼쪽 좌석 컨테이너
-			const rightSeats = document.querySelector('.right-seats'); // 오른쪽 좌석 컨테이너
-			let seatNumber = 1; // 좌석 번호 초기화
+			// 좌석 배치를 위한 DOM 요소
+			const leftSeats = document.querySelector('.left-seats');
+			const rightSeats = document.querySelector('.right-seats');
+			let seatNumber = 1; // 좌석 번호 초기값
 
-			// 좌석 상태를 Thymeleaf로부터 가져옴
+			// Thymeleaf에서 전달받은 좌석 상태 정보
 			const seatStatusList = /*[[${reservedSeats}]]*/[]; // 예약된 좌석 번호 배열
 			const bannedSeatsList = /*[[${banSeatDTO.bannedSeats}]]*/[]; // 금지된 좌석 번호 배열    
 
-			// 좌석 상태 리스트 생성
-			const totalSeats = /*[[${classroom.seatCount}]]*/ 0; // 총 좌석 수
-			const seatArray = Array(totalSeats).fill(false); // 기본적으로 모든 좌석은 비어있음
+			// 전체 좌석 수와 좌석 상태 배열 초기화
+			const totalSeats = /*[[${classroom.seatCount}]]*/ 0;
+			const seatArray = Array(totalSeats).fill(false); // 모든 좌석을 초기에 비어있음으로 설정
 
 			// 예약된 좌석 상태 업데이트
 			if (seatStatusList != null) {
 				seatStatusList.forEach(seat => {
-					seatArray[seat - 1] = true; // 예약 상태 설정
+					seatArray[seat - 1] = true; // 예약된 좌석은 true로 설정
 				});
 			}
 
 			// 금지된 좌석 상태 업데이트
 			if (bannedSeatsList != null) {
 				bannedSeatsList.forEach(seat => {
-					seatArray[seat - 1] = 'banned'; // 금지 상태 설정
+					seatArray[seat - 1] = 'banned'; // 금지된 좌석은 'banned'로 설정
 				});
 			}
 
-			// GET 방식으로 접근할 경우 예약 리스트 모달 열기
+			// GET 요청일 경우 좌석 리스트 모달 표시
 			if (requestMethod == 'GET') {
 				document.getElementById('seatListModal').style.display = 'block';
 			}
 
-			// 강의실이 비어있을 경우 좌석 모달 열기
+			// classrooNull이 1이면 (Post일때) 좌석 모달 열기
 			if (classrooNull == 1) {
 				openSeatModal();
 			}
 
-			// 강의실이 존재하지 않을 경우 예약 리스트 모달 열기
+			// classrooNull이 0이면 (Get일때) 좌석 리스트 모달 열기
 			if (classrooNull == 0) {
-				openSeatListModal(); // 모달 열기
+				openSeatListModal();
 			}
 
+			// 홈으로 돌아가는 함수 (뒤로가기 버튼 처리용)
 			const goBackHome = () => {
-				window.location.href = '/'; // 홈으로 리다이렉션
+				window.location.href = '/'; // 홈 페이지로 리다이렉션
 			};
 
-			// 현재 페이지 상태를 pushState로 추가
+			// 현재 페이지 상태를 pushState로 추가 (뒤로가기 처리를 위함)
 			window.history.pushState(null, "", window.location.pathname);
-			// popstate 이벤트 리스너 추가 (뒤로가기 버튼 감지)
+
+			// popstate 이벤트 리스너 추가 (브라우저의 뒤로가기 버튼 감지)
 			window.addEventListener("popstate", goBackHome);
-			// 페이지를 떠날 때 이벤트 리스너 제거
+
+			// 페이지를 떠날 때 이벤트 리스너 제거 (메모리 누수 방지)
 			window.addEventListener('beforeunload', () => {
 				window.removeEventListener("popstate", goBackHome);
 			});
@@ -255,129 +264,164 @@
 			// 좌석 버튼 생성 함수
 			function createSeatButton(number, classroomName) {
 				const seatStatus = seatArray[number - 1]; // 좌석 상태 확인
-				let seat = document.createElement('button'); // 좌석 버튼 생성
-
-				// 좌석 상태에 따라 클래스 추가
+				let seat = document.createElement('button');
 				if (seatStatus === true) {
-					seat.classList.add('seat', 'reserved'); // 예약된 좌석
+					seat.classList.add('seat', 'reserved'); // 예약된 좌석 스타일
 				} else if (seatStatus === 'banned') {
-					seat.classList.add('seat', 'banned'); // 금지된 좌석
-					seat.disabled = true; // 클릭 비활성화
+					seat.classList.add('seat', 'banned'); // 금지된 좌석 스타일
+					seat.disabled = true; // 클릭 불가능하게 설정
 				} else {
-					seat.classList.add('seat', 'empty'); // 빈 좌석
+					seat.classList.add('seat', 'empty'); // 빈 좌석 스타일
 				}
-
-				seat.textContent = number; // 좌석 번호 설정
-				seat.dataset.seat = number; // 데이터 속성에 좌석 번호 저장
-				seat.dataset.classroom = classroomName; // 데이터 속성에 강의실 이름 저장
-				seat.onclick = () => openModal(seat); // 클릭 시 모달 열기
-				return seat; // 생성된 좌석 버튼 반환
+				seat.textContent = number; // 좌석 번호 표시
+				seat.dataset.seat = number; // 좌석 번호 데이터 추가
+				seat.dataset.classroom = classroomName; // 강의실 이름 데이터 추가
+				seat.onclick = () => openModal(seat); // 클릭 이벤트 핸들러 추가
+				return seat;
 			}
 
 			// 좌석 배치를 생성하는 함수
 			function createSeatLayout(leftRows, leftCols, rightRows, rightCols, classroomName) {
-				// 왼쪽 및 오른쪽 좌석 행 생성
 				for (let i = 0; i < Math.max(leftRows, rightRows); i++) {
 					let leftRow = document.createElement('div');
-					leftRow.classList.add('seat-row'); // 왼쪽 좌석 행 클래스 추가
+					leftRow.classList.add('seat-row');
 					let rightRow = document.createElement('div');
-					rightRow.classList.add('seat-row'); // 오른쪽 좌석 행 클래스 추가
+					rightRow.classList.add('seat-row');
 
-					// 왼쪽 좌석 버튼 추가
+					// 왼쪽 좌석 생성
 					for (let j = 0; j < leftCols; j++) {
 						if (i < leftRows) {
-							leftRow.appendChild(createSeatButton(seatNumber++, classroomName)); // 좌석 버튼 생성 및 추가
+							leftRow.appendChild(createSeatButton(seatNumber++, classroomName));
 						}
 					}
 
-					// 오른쪽 좌석 버튼 추가
+					// 오른쪽 좌석 생성
 					for (let j = 0; j < rightCols; j++) {
 						if (i < rightRows) {
-							rightRow.appendChild(createSeatButton(seatNumber++, classroomName)); // 좌석 버튼 생성 및 추가
+							rightRow.appendChild(createSeatButton(seatNumber++, classroomName));
 						}
 					}
 
-					leftSeats.appendChild(leftRow); // 왼쪽 좌석 추가
-					rightSeats.appendChild(rightRow); // 오른쪽 좌석 추가
+					// 생성된 좌석 행을 좌석 영역에 추가
+					leftSeats.appendChild(leftRow);
+					rightSeats.appendChild(rightRow);
 				}
 			}
 
-			const leftRows = /*[[${classroom.leftRow}]]*/ 2; // 왼쪽 행 수
-			const leftCols = /*[[${classroom.leftCol}]]*/ 3; // 왼쪽 열 수
-			const rightRows = /*[[${classroom.rightRow}]]*/ 2; // 오른쪽 행 수
-			const rightCols = /*[[${classroom.rightCol}]]*/ 3; // 오른쪽 열 수
-			const classroomName = /*[[${classroom.classroomName}]]*/ 'undefined'; // 강의실 이름
+			// Thymeleaf에서 전달받은 강의실 정보
+			const leftRows = /*[[${classroom.leftRow}]]*/ 2;
+			const leftCols = /*[[${classroom.leftCol}]]*/ 3;
+			const rightRows = /*[[${classroom.rightRow}]]*/ 2;
+			const rightCols = /*[[${classroom.rightCol}]]*/ 3;
+			const classroomName = /*[[${classroom.classroomName}]]*/ 'undefined';
 
-			createSeatLayout(leftRows, leftCols, rightRows, rightCols, classroomName); // 좌석 배치 생성 호출
+			// 좌석 배치 생성
+			createSeatLayout(leftRows, leftCols, rightRows, rightCols, classroomName);
 
 			// 모달 닫기 함수
 			function closeModal() {
-				document.getElementById('myModal').style.display = 'none'; // 일반 모달 숨기기
+				document.getElementById('myModal').style.display = 'none';
 			}
 
 			// 좌석 모달 닫기 함수
 			function closeSeatModal() {
-				document.getElementById('seatModal').style.display = 'none'; // 좌석 모달 숨기기
-				if (classrooNull == 1) { // 강의실이 비어있는 경우
-					window.location.href = "/timetable"; // timetable으로 이동
+				document.getElementById('seatModal').style.display = 'none';
+				if (classrooNull == 1) { // classrooNull이 1이면
+					window.location.href = "/timetable"; // 시간표 페이지로 이동
 				}
 			}
 
 			// 예약 확인 모달 닫기 함수
 			function closeSeatListModal() {
-				document.getElementById('seatListModal').style.display = 'none'; // 예약 리스트 모달 숨기기
+				document.getElementById('seatListModal').style.display = 'none';
 			}
 
 			// 좌석 모달 열기 함수
 			function openSeatModal() {
-				if (document.referrer.includes('/timetable')) { // 이전 페이지가 timetable인 경우
-					document.getElementById('seatModal').style.display = 'block'; // 좌석 모달 표시
+				if (document.referrer.includes('/timetable')) {
+					document.getElementById('seatModal').style.display = 'block';
 				}
 			}
 
 			// 좌석 리스트 모달 열기 함수
 			function openSeatListModal() {
-				document.getElementById('seatModal').style.display = 'block'; // 예약 리스트 모달 표시
+				document.getElementById('seatModal').style.display = 'block';
 			}
 
-			// 좌석 클릭 시 모달 열기
+			// 좌석 클릭 시 모달 열기 함수
 			function openModal(button) {
-				if (button.classList.contains('reserved')) { // 예약된 좌석 클릭 시
-					Swal.fire('예약된 좌석입니다.', '', 'warning'); // 경고 메시지 표시
+				if (button.classList.contains('reserved')) {
+					Swal.fire('예약된 좌석입니다.', '', 'warning');
 					return;
 				}
-				if (button.classList.contains('banned')) { // 금지된 좌석 클릭 시
-					Swal.fire('예약할 수 없는 좌석입니다.', '', 'warning'); // 경고 메시지 표시
+				if (button.classList.contains('banned')) {
+					Swal.fire('금지된 좌석입니다.', '', 'warning');
 					return;
+				}
+				if (userPosition === "student") {
+					if (seatStatusList.length > 0) {
+						Swal.fire({
+							title: '이미 다른 좌석을 예약하셨습니다.',
+							icon: 'warning',
+							confirmButtonText: '확인'
+						}).then((result) => {
+							if (result.isConfirmed) {
+								window.location.href = '/reserveList'; // 예약 리스트 페이지로 이동
+							}
+						});
+						return;
+					}
 				}
 
-				selectedSeat = button.dataset.seat; // 선택된 좌석 번호 저장
-				selectedClassroom = button.dataset.classroom; // 선택된 강의실 이름 저장
-				document.getElementById('myModal').style.display = 'block'; // 좌석 모달 열기
+				selectedSeat = button.dataset.seat;
+				selectedClassroom = button.dataset.classroom;
+
+				let message = userPosition === "student"
+					? `${selectedClassroom}호 ${selectedSeat}번 좌석을 예약하시겠습니까?`
+					: `${selectedClassroom}호 ${selectedSeat}번 좌석을 금지하시겠습니까?`;
+
+				document.getElementById('modalMessage').textContent = message;
+				document.getElementById('myModal').style.display = 'block';
 			}
 
-			// 예약 확인 버튼 클릭 시 호출되는 함수
+			// 예약 또는 금지 처리 함수
 			document.getElementById('confirmButton').onclick = () => {
-				// AJAX 요청을 보내 예약 처리
-				fetch('/reserve', {
-					method: 'POST',
-					headers: {'Content-Type': 'application/json'},
-					body: JSON.stringify({seat: selectedSeat, classroom: selectedClassroom}) // 좌석 및 강의실 정보 전송
-				}).then(response => {
-					if (response.ok) {
-						Swal.fire('예약이 완료되었습니다.', '', 'success'); // 성공 메시지 표시
-						closeModal(); // 모달 닫기
-						setTimeout(() => {
-							window.location.reload(); // 페이지 새로고침
-						}, 2000); // 2초 후 새로고침
-					} else {
-						Swal.fire('예약 실패. 다시 시도해주세요.', '', 'error'); // 오류 메시지 표시
-					}
-				}).catch(error => {
-					console.error('Error:', error); // 오류 로그
-					Swal.fire('예약 실패. 다시 시도해주세요.', '', 'error'); // 오류 메시지 표시
-				});
+				const form = document.createElement('form');
+				form.method = 'POST';
+				form.action = userPosition === "student" ? '/reserveSeat' : '/banSeat';
+
+				const classroomName = /*[[${classroom.classroomName}]]*/ 'default';
+				const day = /*[[${classroom.day}]]*/ 'default';
+
+				form.innerHTML = `
+	                <input type="hidden" name="classroomName" value="${classroomName}">
+	                <input type="hidden" name="seatNumber" value="${selectedSeat}">
+	                <input type="hidden" name="day" value="${day}">
+	            `;
+
+				document.body.appendChild(form);
+				form.submit();
+				closeModal();
+				// 좌석 예약 확인 버튼 눌렀을 때 예 버튼 누르면 좌석 모달 닫기
+				document.getElementById('seatModal').style.display = 'none';
 			};
+
+			// 아니오 버튼 클릭 시 모달 닫기
+			document.getElementById('cancelButton').onclick = closeModal;
+
+			// 모달 바깥 클릭 시 모달 닫기
+			window.onclick = event => {
+				if (event.target === document.getElementById('myModal')) closeModal();
+				if (event.target === document.getElementById('seatModal')) closeSeatModal();
+				if (event.target === document.getElementById('seatListModal')) closeSeatListModal();
+			}
+
+			// 좌석 현황 모달 열기
+			openSeatModal();
+
+			// closeModal과 closeSeatModal 이벤트 바인딩
+			document.getElementById('closeModal').onclick = closeModal;
+			document.getElementById('closeSeatModal').onclick = closeSeatModal;
 		});
 	</script>
 </body>
