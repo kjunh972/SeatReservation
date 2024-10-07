@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -329,6 +330,35 @@ public class Contoller {
 		model.addAttribute("userPosition", userPosition);
 
 		return "classroomSeat";
+	}
+
+	// 예약 번호를 받아 학생 정보를 조회하고 JSON 형태로 반환하는 API 엔드포인트
+	@GetMapping("/getStudentInfo")
+	public ResponseEntity<Map<String, Object>> getStudentInfo(@RequestParam int reservNum) {
+	    // 응답 데이터를 저장할 Map 객체 생성
+	    Map<String, Object> response = new HashMap<>();
+	    try {
+	        // ProfessorDAO를 통해 학생 정보 조회
+	        Optional<Map<String, Object>> studentInfo = proDAO.findStudentInfo(reservNum);
+	        
+	        if (studentInfo.isPresent()) {
+	            // 학생 정보가 존재하는 경우, 응답 데이터에 학생 정보 추가
+	            Map<String, Object> info = studentInfo.get();
+	            response.put("success", true);
+	            response.put("studentName", info.get("name"));
+	            response.put("studentId", info.get("studentId"));
+	        } else {
+	            // 학생 정보가 없는 경우, 실패 메시지 설정
+	            response.put("success", false);
+	            response.put("message", "학생 정보를 찾을 수 없습니다.");
+	        }
+	    } catch (Exception e) {
+	        // 예외 발생 시 에러 메시지 설정
+	        response.put("success", false);
+	        response.put("message", "학생 정보를 찾는 중 오류가 발생했습니다: " + e.getMessage());
+	    }
+	    // HTTP 상태 코드 200(OK)와 함께 응답 반환
+	    return ResponseEntity.ok(response);
 	}
 
 	@PostMapping("/moveSeat")
@@ -836,8 +866,8 @@ public class Contoller {
 		classroomDTO.setClassroomNull(1);
 
 		List<String> classrooms = classroomDAO.getAllClassrooms();
-	    model.addAttribute("classrooms", classrooms);
-	    
+		model.addAttribute("classrooms", classrooms);
+
 		String userPosition = GetPosition(session);
 		model.addAttribute("userPosition", userPosition);
 		// 모델에 사용자의 시간표 정보를 추가합니다.

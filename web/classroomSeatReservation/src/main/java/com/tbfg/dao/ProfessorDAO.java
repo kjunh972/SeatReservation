@@ -1,8 +1,10 @@
 package com.tbfg.dao;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -262,5 +264,32 @@ public class ProfessorDAO {
 			e.printStackTrace();
 			return false; // 예외 발생 시 false 반환
 		}
+	}
+	
+	// 예약 번호로 학생 정보를 조회하는 메서드
+	public Optional<Map<String, Object>> findStudentInfo(int reservNum) {
+	    // Yuhan 테이블과 Reservation 테이블을 조인하여 학생 정보를 조회하는 SQL 쿼리
+	    String sql = "SELECT y.name, y.studentId " +
+	                 "FROM Yuhan y " +
+	                 "JOIN Reservation r ON y.id = r.user_id " +
+	                 "WHERE r.reservNum = ?";
+	    
+	    try {
+	        // JdbcTemplate을 사용하여 쿼리 실행 및 결과 매핑
+	        return jdbcTemplate.query(
+	            sql,
+	            (rs, rowNum) -> {
+	                // 결과셋에서 이름과 학번을 추출하여 Map으로 변환
+	                Map<String, Object> result = new HashMap<>();
+	                result.put("name", rs.getString("name"));
+	                result.put("studentId", rs.getInt("studentId"));
+	                return result;
+	            },
+	            reservNum // SQL 쿼리의 파라미터로 예약 번호 전달
+	        ).stream().findFirst(); // 결과 중 첫 번째 항목만 선택하여 Optional로 반환
+	    } catch (EmptyResultDataAccessException e) {
+	        // 조회 결과가 없는 경우 빈 Optional 반환
+	        return Optional.empty();
+	    }
 	}
 }

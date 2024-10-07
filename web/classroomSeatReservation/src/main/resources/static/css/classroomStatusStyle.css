@@ -178,6 +178,7 @@ button {
 	/* 버튼의 텍스트를 가운데 정렬 */
 }
 
+/* 알람 버튼 크기 늘리기 */
 .swal2-popup .swal2-actions .swal2-confirm,
 .swal2-popup .swal2-actions .swal2-cancel {
 	width: 5.5rem !important;

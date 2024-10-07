@@ -42,7 +42,8 @@
 	<div id="myModal" class="modal">
 		<div class="modal-content">
 			<span class="close" id="closeModal">&times;</span>
-			<h1 id="modalMessage">좌석 관리</h1>
+			<h1 id="modalMessage"  style="margin-top: -2.5rem;">좌석 관리</h1>
+			<h3 id="studentInfo" style="margin-bottom: 2rem; margin-top: -2rem;"></h3> <!-- 학생 정보 표시 -->
 			<button id="changeSeat" style="width: 8.5rem; height: 3.2rem; font-size: 1rem;">자리 이동</button>
 			<button id="cancelSeat" style="width: 8.5rem; height: 3.2rem; font-size: 1rem;">예약 취소</button>
 			<button id="changeNum" style="width: 8.5rem; height: 3.2rem; font-size: 1rem;">예약 번호 변경</button>
@@ -241,6 +242,8 @@
 							seat: seat.dataset.seat,
 							reservNum: seat.dataset.reservNum
 						};
+						// 학생 정보 가져오기
+						fetchStudentInfo(selectedSeatInfo.reservNum);
 						modal.style.display = 'block';
 					} else if (seat.classList.contains('empty')) {
 						// 빈 좌석 클릭 시 좌석 예약 금지 모달 열기
@@ -303,6 +306,23 @@
 			// 좌석 배치 생성
 			createSeatLayout(leftRows, leftCols, rightRows, rightCols, classroomName);
 
+			// 학생 정보를 가져오는 함수
+			function fetchStudentInfo(reservNum) {
+				fetch(`/getStudentInfo?reservNum=${reservNum}`)
+					.then(response => response.json())
+					.then(data => {
+						if (data.success) {
+							const studentInfoElement = document.getElementById('studentInfo');
+							studentInfoElement.textContent = `예약 학생: ${data.studentName} (${data.studentId})`;
+						} else {
+							console.error('학생 정보를 가져오는데 실패했습니다.');
+						}
+					})
+					.catch(error => {
+						console.error('Error:', error);
+					});
+			}
+
 			// 모달 닫기 함수
 			function closeModal() {
 				if (modal) {
@@ -318,10 +338,10 @@
 
 			// 좌석 모달 닫기 함수
 			function closeSeatModal() {
-				document.getElementById('seatModal').style.display = 'none';	
+				document.getElementById('seatModal').style.display = 'none';
 				updateSeatModalTitle();
 				if (classrooNull == 1 && changeSeatOn == 0) { // 강의실이 null이고 좌석 변경이 꺼져있는 경우
-				    window.location.href = "/timetable"; // 시간표 페이지로 이동
+					window.location.href = "/timetable"; // 시간표 페이지로 이동
 				}
 				if (changeSeatOn == 1) {
 					changeSeatOn = 0; // changeSeatOn가 1이면 changeSeatOn을 초기화
@@ -525,7 +545,7 @@
 						Swal.fire('오류', '예약 번호 변경 중 오류가 발생했습니다: ' + error.message, 'error');
 					});
 			}
-			
+
 		});
 	</script>
 </body>
