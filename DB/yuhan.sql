@@ -97,7 +97,7 @@ CREATE TABLE BanSeatHour (
   PRIMARY KEY (banNum, banHour) -- 복합 기본 키 설정
 );
 
--- 학생 시간표 테이블
+-- 학생 시간표 테이블 (수정됨)
 CREATE TABLE StuTimetable (
   user_id VARCHAR(50) NOT NULL, -- 사용자 ID
   day VARCHAR(10), -- 요일
@@ -105,6 +105,7 @@ CREATE TABLE StuTimetable (
   end_hour INT, -- 종료 시간
   classroomName VARCHAR(10), -- 강의실 이름
   subject VARCHAR(30), -- 과목
+  attendance BOOLEAN DEFAULT FALSE, -- 출석 여부 (true: 출석, false: 결석)
   FOREIGN KEY (classroomName) REFERENCES Classrooms(classroom_name) -- 강의실 이름 외래 키
 );
 
@@ -123,11 +124,11 @@ INSERT INTO Classrooms (classroom_name,leftRow,leftCol,rightRow,rightCol) VALUES
 ('7202',4,7,2,7), ('7203',4,5,4,5), ('7204',4,5,4,5), ('7205',4,5,4,5), ('7206',4,5,4,5), ('7207',4,4,4,4), ('7208',4,4,4,4), ('7209',4,4,4,4), ('7210',3,6,4,5), ('7211',4,4,3,4);
 
 -- 학생 시간표 삽입
-INSERT INTO StuTimetable (user_id, day, start_hour, end_hour, subject, classroomName) VALUES
-('kjunh972', '월요일', 13, 16, 'Java Framework', '7207'),  
-('kjunh972', '화요일', 9, 12, '모바일 프로그래밍', '7207'),
-('kjunh972', '화요일', 13, 16, 'C#', '7206'),              
-('kjunh972', '수요일', 9, 10, '진로 탐색', '5406'),
-('kjunh972', '수요일', 10, 11, '취창업', '5406'),
-('kjunh972', '목요일', 9, 12, '소프트웨어 공학', '7202'),
-('kjunh972', '목요일', 13, 16, '데이터베이스 프로그래밍', '7207');  
+INSERT INTO StuTimetable (user_id, day, start_hour, end_hour, subject, classroomName, attendance) VALUES
+('kjunh972', '월요일', 13, 16, 'Java Framework', '7207', true),  
+('kjunh972', '화요일', 9, 12, '모바일 프로그래밍', '7207', false),
+('kjunh972', '화요일', 13, 16, '빅데이터 활용', '7202', false),              
+('kjunh972', '수요일', 9, 10, '진로 탐색', '5406', false),
+('kjunh972', '수요일', 10, 11, '취창업', '5406' , false),
+('kjunh972', '목요일', 9, 12, '소프트웨어 공학', '7202', false),
+('kjunh972', '목요일', 13, 16, '데이터베이스 프로그래밍', '7207', false);  
