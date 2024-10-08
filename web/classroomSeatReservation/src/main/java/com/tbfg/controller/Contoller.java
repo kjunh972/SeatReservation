@@ -1,5 +1,8 @@
 package com.tbfg.controller;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -31,6 +34,7 @@ import com.tbfg.dao.ClassroomDAO;
 import com.tbfg.dao.ProfessorDAO;
 import com.tbfg.dao.ReservationInfoDTO;
 import com.tbfg.dao.TimetableDAO;
+import com.tbfg.dto.AttendanceDTO;
 import com.tbfg.dto.BanSeatDTO;
 import com.tbfg.dto.BanSeatList;
 import com.tbfg.dto.ClassroomDTO;
@@ -335,30 +339,30 @@ public class Contoller {
 	// 예약 번호를 받아 학생 정보를 조회하고 JSON 형태로 반환하는 API 엔드포인트
 	@GetMapping("/getStudentInfo")
 	public ResponseEntity<Map<String, Object>> getStudentInfo(@RequestParam int reservNum) {
-	    // 응답 데이터를 저장할 Map 객체 생성
-	    Map<String, Object> response = new HashMap<>();
-	    try {
-	        // ProfessorDAO를 통해 학생 정보 조회
-	        Optional<Map<String, Object>> studentInfo = proDAO.findStudentInfo(reservNum);
-	        
-	        if (studentInfo.isPresent()) {
-	            // 학생 정보가 존재하는 경우, 응답 데이터에 학생 정보 추가
-	            Map<String, Object> info = studentInfo.get();
-	            response.put("success", true);
-	            response.put("studentName", info.get("name"));
-	            response.put("studentId", info.get("studentId"));
-	        } else {
-	            // 학생 정보가 없는 경우, 실패 메시지 설정
-	            response.put("success", false);
-	            response.put("message", "학생 정보를 찾을 수 없습니다.");
-	        }
-	    } catch (Exception e) {
-	        // 예외 발생 시 에러 메시지 설정
-	        response.put("success", false);
-	        response.put("message", "학생 정보를 찾는 중 오류가 발생했습니다: " + e.getMessage());
-	    }
-	    // HTTP 상태 코드 200(OK)와 함께 응답 반환
-	    return ResponseEntity.ok(response);
+		// 응답 데이터를 저장할 Map 객체 생성
+		Map<String, Object> response = new HashMap<>();
+		try {
+			// ProfessorDAO를 통해 학생 정보 조회
+			Optional<Map<String, Object>> studentInfo = proDAO.findStudentInfo(reservNum);
+
+			if (studentInfo.isPresent()) {
+				// 학생 정보가 존재하는 경우, 응답 데이터에 학생 정보 추가
+				Map<String, Object> info = studentInfo.get();
+				response.put("success", true);
+				response.put("studentName", info.get("name"));
+				response.put("studentId", info.get("studentId"));
+			} else {
+				// 학생 정보가 없는 경우, 실패 메시지 설정
+				response.put("success", false);
+				response.put("message", "학생 정보를 찾을 수 없습니다.");
+			}
+		} catch (Exception e) {
+			// 예외 발생 시 에러 메시지 설정
+			response.put("success", false);
+			response.put("message", "학생 정보를 찾는 중 오류가 발생했습니다: " + e.getMessage());
+		}
+		// HTTP 상태 코드 200(OK)와 함께 응답 반환
+		return ResponseEntity.ok(response);
 	}
 
 	@PostMapping("/moveSeat")
@@ -854,6 +858,9 @@ public class Contoller {
 			return "login"; // 로그인 페이지로 리다이렉트
 		}
 
+		// classroomDTO 초기화
+		this.classroomDTO = new ClassroomDTO(); // 이 줄을 추가
+
 		TimetableDAO timetableDAO = new TimetableDAO(jdbcTemplate);
 
 		// 사용자의 모든 시간표를 가져옴.
@@ -952,5 +959,61 @@ public class Contoller {
 
 		// 바로 timetable로 이동
 		return "redirect:/timetable";
+	}
+
+	@GetMapping("/attendanceCheck")
+	public String attendanceCheck(Model model, HttpSession session) {
+		String userId = GetId(session);
+		if (userId == null) {
+			model.addAttribute("error", "세션이 만료되었습니다. 다시 로그인 해주세요.");
+			return "login"; // 로그인 페이지로 리다이렉트
+		}
+
+		LocalDate today = LocalDate.now();
+		DayOfWeek dayOfWeek = today.getDayOfWeek();
+		String koreanDayOfWeek = convertToKoreanDayOfWeek(dayOfWeek);
+
+		LocalTime currentTime = LocalTime.now();
+		int currentHour = currentTime.getHour();
+
+		System.out.println("Checking attendance for user: " + userId + ", day: " + koreanDayOfWeek + ", currentHour: "
+				+ currentHour);
+
+		List<AttendanceDTO> attendanceList = classroomDAO.getTodayAttendance(userId, koreanDayOfWeek, currentHour);
+
+		System.out.println("Attendance list size: " + attendanceList.size());
+
+		boolean isProfessorOrAdmin = classroomDAO.isProfessorOrAdmin(userId);
+
+		model.addAttribute("attendanceList", attendanceList);
+		model.addAttribute("currentDate", today);
+		model.addAttribute("currentTime", currentTime);
+		model.addAttribute("isProfessorOrAdmin", isProfessorOrAdmin);
+		model.addAttribute("userId", userId);
+		model.addAttribute("currentDay", koreanDayOfWeek);
+		model.addAttribute("currentHour", currentHour);
+
+		return "attendanceCheck";
+	}
+
+	private String convertToKoreanDayOfWeek(DayOfWeek dayOfWeek) {
+		switch (dayOfWeek) {
+		case MONDAY:
+			return "월요일";
+		case TUESDAY:
+			return "화요일";
+		case WEDNESDAY:
+			return "수요일";
+		case THURSDAY:
+			return "목요일";
+		case FRIDAY:
+			return "금요일";
+		case SATURDAY:
+			return "토요일";
+		case SUNDAY:
+			return "일요일";
+		default:
+			return "";
+		}
 	}
 }

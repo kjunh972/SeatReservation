@@ -22,7 +22,7 @@
 	</header>
 
 	<!-- 좌석 예약 현황 모달 -->
-	<div id="seatModal" class="seatModal" th:if="${classroom}">
+	<div id="seatModal" class="modal" th:if="${classroom}">
 		<div class="modal-content">
 			<span class="close" id="closeSeatModal">&times;</span>
 			<h1 id="seatModalTitle" th:if="${classroom}" th:text="${classroom.classroomName} + '호 좌석 예약 현황'">강의실 좌석 예약

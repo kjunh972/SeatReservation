@@ -55,6 +55,11 @@
         .custom-seats input {
             width: 3rem;
         }
+		
+		.button-container {
+		    display: flex;
+		    justify-content: center;
+		}
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
@@ -136,58 +141,98 @@
                     return `왼쪽: ${leftRows}x${leftColumns}, 오른쪽: ${rightRows}x${rightColumns}`;
                 }
 
-                function validateForm() {
-                    const selectedSeat = document.querySelector('input[name="seatTemplate"]:checked');
-                    const classroomNumber = document.querySelector('input[name="classroomNumber"]').value.trim();
+				function validateForm() {
+				    const selectedSeat = document.querySelector('input[name="seatTemplate"]:checked');
+				    const classroomNumber = document.querySelector('input[name="classroomNumber"]').value.trim();
+				    
+				    let leftRows = '';
+				    let leftColumns = '';
+				    let rightRows = '';
+				    let rightColumns = '';
 
-                    // 좌석 템플릿 선택 여부 확인
-                    if (!selectedSeat) {
-                        alert("좌석 템플릿을 선택해 주세요.");
-                        return false;
-                    }
+				    // 좌석 템플릿 선택 여부 확인
+				    if (!selectedSeat) {
+				        alert("좌석 템플릿을 선택해 주세요.");
+				        return false;
+				    }
 
-                    // 커스텀 좌석 템플릿 선택 시 입력 필드 확인
-                    if (selectedSeat.value === '커스텀') {
-                        const leftRows = document.querySelector('input[name="leftSeatRows"]').value;
-                        const leftColumns = document.querySelector('input[name="leftSeatColumns"]').value;
-                        const rightRows = document.querySelector('input[name="rightSeatRows"]').value;
-                        const rightColumns = document.querySelector('input[name="rightSeatColumns"]').value;
+				    // 커스텀 좌석 템플릿 선택 시 입력 필드 확인
+				    if (selectedSeat.value === '커스텀') {
+				        leftRows = document.querySelector('input[name="leftSeatRows"]').value;
+				        leftColumns = document.querySelector('input[name="leftSeatColumns"]').value;
+				        rightRows = document.querySelector('input[name="rightSeatRows"]').value;
+				        rightColumns = document.querySelector('input[name="rightSeatColumns"]').value;
 
-                        if (!leftRows || !leftColumns || !rightRows || !rightColumns) {
-                            alert("모든 커스텀 입력 필드를 채워 주세요.");
-                            return false;
-                        }
-                    }
+				        if (!leftRows || !leftColumns || !rightRows || !rightColumns) {
+				            Swal.fire({
+				                icon: 'error',
+				                title: '입력 필드 오류',
+				                text: '모든 커스텀 입력 필드를 채워 주세요.',
+				            });
+				            return false;
+				        }
+				    }
 
-                    // 강의실 이름 입력 여부 확인
-                    if (!classroomNumber) {
-                        alert("강의실 이름을 입력해 주세요.");
-                        return false;
-                    }
+				    // 강의실 이름 입력 여부 확인
+				    if (!classroomNumber) {
+				        alert("강의실 이름을 입력해 주세요.");
+				        return false;
+				    }
 
-                    // 좌석 생성 여부를 확인하는 SweetAlert2 알림창
-                    Swal.fire({
-                        title: '강의실 생성 확인',
-                        html: `
-                            <p>강의실 이름: ${classroomNumber}</p>
-                            <p>선택된 좌석 스타일: ${selectedSeat.value}</p>
-                            ${selectedSeat.value === '커스텀' ? `
-                                <p>왼쪽 좌석: ${leftRows}행 ${leftColumns}열</p>
-                                <p>오른쪽 좌석: ${rightRows}행 ${rightColumns}열</p>
-                            ` : ''}
-                        `,
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonText: '예, 생성하겠습니다',
-                        cancelButtonText: '취소'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            document.querySelector('form').submit(); // 확인 시 폼 제출
-                        }
-                    });
+				    // 강의실 중복 확인 함수
+				    const checkClassroomExists = () => {
+				        return new Promise((resolve, reject) => {
+				            const xhr = new XMLHttpRequest();
+				            xhr.open("POST", "/checkClassroomExists");
+				            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+				            xhr.onload = function () {
+				                if (xhr.status === 200) {
+				                    resolve(JSON.parse(xhr.responseText)); // true or false 반환
+				                } else {
+				                    reject("중복 확인 중 오류가 발생했습니다.");
+				                }
+				            };
+				            xhr.send(`classroomNumber=${classroomNumber}`);
+				        });
+				    };
 
-                    return false; // 폼 자동 제출 방지
-                }
+				    // 강의실 중복 확인 후 처리
+				    checkClassroomExists().then(isDuplicate => {
+				        if (isDuplicate) {
+				            Swal.fire({
+				                icon: 'error',
+				                title: '중복된 강의실 이름',
+				                text: '이미 존재하는 강의실 이름입니다. 다른 이름을 입력해 주세요.',
+				            });
+				            return false;
+				        } else {
+				            // SweetAlert2로 폼 제출 여부 확인
+				            Swal.fire({
+				                title: '강의실 생성 확인',
+								html: `
+				                    <p>강의실 이름: ${classroomNumber}</p>
+				                    <p>선택된 좌석 스타일: ${selectedSeat.value}</p>
+				                    ${selectedSeat.value === '커스텀' ? `
+				                        <p>왼쪽 : ${leftRows}X${leftColumns}, 오른쪽 : ${rightRows}X${rightColumns}</p>
+				                    ` : ''}
+				                `,
+				                icon: 'warning',
+				                showCancelButton: true,
+				                confirmButtonText: '예, 생성하겠습니다',
+				                cancelButtonText: '취소'
+				            }).then((result) => {
+				                if (result.isConfirmed) {
+				                    document.querySelector('form').submit(); // 확인 시 폼 제출
+				                }
+				            });
+				        }
+				    }).catch(error => {
+				        alert(error);
+				    });
+
+				    return false; // 폼 자동 제출 방지
+				}
+
 
                 document.querySelectorAll('input[type="radio"]').forEach(input => {
                     input.addEventListener('change', updateSelection);
@@ -211,7 +256,9 @@
         </label>
     </div>
 
-    <button type="submit">생성하기</button>
+	<div class="button-container">
+	    <button type="submit">생성하기</button>
+	</div>
 </form>
 </body>
 </html>

@@ -23,7 +23,7 @@
 	</header>
 
 	<!-- 좌석 예약 현황 모달 -->
-	<div id="seatModal" class="seatModal" th:if="${classroom}">
+	<div id="seatModal" class="modal" th:if="${classroom}">
 		<div class="modal-content">
 			<span class="close" id="closeSeatModal">&times;</span>
 			<h1 th:if="${classroom}" th:text="${classroom.classroomName} + '호 좌석 예약 현황'">강의실 좌석 예약 현황</h1>
@@ -51,7 +51,7 @@
 	<!-- GET 방식일 때만 예약된 좌석 정보 표시 -->
 	<div th:if="${requestMethod == 'GET'}">
 		<div th:if="${userPosition == 'student'}">
-			<div id="seatListModal" class="seatListModal">
+			<div id="seatListModal" class="modal">
 				<div class="modal-content">
 					<span class="close" id="closeSeatListModal">&times;</span>
 					<h1>예약된 좌석</h1>
@@ -96,7 +96,7 @@
 	<!-- GET 방식일 때만 예약된 좌석 정보 표시 -->
 	<div th:if="${requestMethod == 'GET'}">
 		<div th:if="${userPosition == 'admin' or userPosition == 'professor'}">
-			<div id="seatListModal" class="seatListModal">
+			<div id="seatListModal" class="modal">
 				<div class="modal-content">
 					<h1>금지된 좌석</h1>
 					<table>

@@ -47,7 +47,7 @@
 
         function validateForm() {
             var selectedSchool = document.getElementById('schoolInput').value;
-            var allowedSchools = ['대학교1', '대학교2', '대학교3'];
+            var allowedSchools = ['가톨릭대학교', '고려대학교', '동양미래대학교', '서울대학교', '성공회대학교', '연세대학교','유한대학교','중앙대학교'];
             var password = document.getElementById('pass').value;
             var confirmPassword = document.getElementById('confirmPass').value;
 
@@ -138,9 +138,14 @@
             <input type="text" id="schoolInput" name="school" onkeyup="filterSchools()" onclick="filterSchools()" placeholder="학교 검색" required>
             <div id="schoolList" class="autocomplete-list" style="display: none;">
                 <option value="">학교 선택</option>
-                <option value="대학교1" onclick="fillSchool('대학교1')">대학교1</option>
-                <option value="대학교2" onclick="fillSchool('대학교2')">대학교2</option>
-                <option value="대학교3" onclick="fillSchool('대학교3')">대학교3</option>
+				<option value="가톨릭대학교" onclick="fillSchool('가톨릭대학교')">가톨릭대학교</option>
+                <option value="고려대학교" onclick="fillSchool('고려대학교')">고려대학교</option>
+                <option value="동양미래대학교" onclick="fillSchool('동양미래대학교')">동양미래대학교</option>
+				<option value="서울대학교" onclick="fillSchool('서울대학교')">서울대학교</option>
+				<option value="성공회대학교" onclick="fillSchool('성공회대학교')">성공회대학교</option>
+				<option value="연세대학교" onclick="fillSchool('연세대학교')">연세대학교</option>
+				<option value="유한대학교" onclick="fillSchool('유한대학교')">유한대학교</option>
+				<option value="중앙대학교" onclick="fillSchool('중앙대학교')">중앙대학교</option>
             </div>
         </div>
         <div>

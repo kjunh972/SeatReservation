@@ -78,7 +78,7 @@ public class UserController {
         }
 
         // 학교 유효성 검사
-        String[] allowedSchools = {"대학교1", "대학교2", "대학교3"};
+        String[] allowedSchools = {"가톨릭대학교", "고려대학교", "동양미래대학교", "서울대학교", "성공회대학교", "연세대학교","유한대학교","중앙대학교"};
         boolean isValidSchool = false;
 
         for (String allowedSchool : allowedSchools) {

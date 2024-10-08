@@ -1,6 +1,9 @@
 package com.tbfg.controller;
 
 import com.tbfg.dto.ClassroomDTO;
+
+import jakarta.servlet.http.HttpSession;
+
 import com.tbfg.dao.ClassroomDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,10 +26,17 @@ public class ClassroomSetController {
     ClassroomDTO classroomDTO = new ClassroomDTO();
 
     @GetMapping("/classroomSet")
-    public String seatLayout(Model model) {
+    public String seatLayout(HttpSession session, Model model) {
+    	Contoller ct = new Contoller();
+    	String userId = ct.GetId(session);
+		if (userId == null) {
+			model.addAttribute("error", "세션이 만료되었습니다. 다시 로그인 해주세요.");
+			return "login"; // 로그인 페이지로 리다이렉트
+		}
         model.addAttribute("predefinedLayouts", getPredefinedLayouts());
         return "classroomSet"; // 'classroomSet.html'이라는 이름의 뷰를 반환합니다.
     }
+    
 
     @PostMapping("/resultLayout")
     public String resultLayout(
@@ -36,8 +46,13 @@ public class ClassroomSetController {
             @RequestParam(required = false) Integer rightSeatRows,
             @RequestParam(required = false) Integer rightSeatColumns,
             @RequestParam(required = false) String classroomNumber,
-            Model model) {
-
+            HttpSession session, Model model) {
+    	Contoller ct = new Contoller();
+    	String userId = ct.GetId(session);
+		if (userId == null) {
+			model.addAttribute("error", "세션이 만료되었습니다. 다시 로그인 해주세요.");
+			return "login"; // 로그인 페이지로 리다이렉트
+		}
         // 좌석 템플릿을 가져옵니다. 커스텀 템플릿의 경우 사용자가 입력한 값을 기반으로 템플릿을 생성
         if ("커스텀".equals(seatTemplate)) {
             if (leftSeatRows == null || leftSeatColumns == null || rightSeatRows == null || rightSeatColumns == null) {
@@ -121,10 +136,10 @@ public class ClassroomSetController {
             Matcher matcher = pattern.matcher(seatTemplate);
 
             if (matcher.find()) {
-            	leftCol = Integer.parseInt(matcher.group(1));
-                leftRow = Integer.parseInt(matcher.group(2));
-                rightCol = Integer.parseInt(matcher.group(3));
-                rightRow = Integer.parseInt(matcher.group(4));  
+            	leftRow = Integer.parseInt(matcher.group(1));
+                leftCol = Integer.parseInt(matcher.group(2));
+                rightRow = Integer.parseInt(matcher.group(3));
+                rightCol = Integer.parseInt(matcher.group(4));  
             }
         }
         
@@ -162,10 +177,17 @@ public class ClassroomSetController {
                 model.addAttribute("error", "강의실을 찾을 수 없습니다.");
             }
         }
+        
+        // 미리 정의된 좌석 레이아웃 추가
+        model.addAttribute("predefinedLayouts", getPredefinedLayouts());
+        
+        // classroomDTO 객체에 값 설정
         classroomDTO.setClassroomNull(1);
         System.out.println("classroomDTO.getClassroomNull() Result : "+classroomDTO.getClassroomNull());
         model.addAttribute("classroom",classroomDTO);
-        return "classroomResult"; // 'classroomResult.html' 뷰를 반환합니다.
+        
+        // 'classroomResult.html' 뷰를 반환
+        return "classroomResult";
     }
 
     private List<String> getPredefinedLayouts() {

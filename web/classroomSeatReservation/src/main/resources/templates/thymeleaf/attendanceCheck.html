@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>출석 확인</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .absent {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+	<!-- 상단 메뉴 포함 (외부 HTML 파일을 삽입하여 메뉴 구성) -->
+	<header th:replace="~{/menu_admin.html}"></header>
+	
+    <h1>오늘의 출석 현황</h1>
+	<p>현재 날짜: <span th:text="${currentDate}"></span></p>
+	<p>현재 시간: <span th:text="${currentTime}"></span></p>
+	<p>현재 요일: <span th:text="${currentDay}"></span></p>
+	
+    <table>
+        <thead>
+            <tr>
+                <th>학생 ID</th>
+                <th>이름</th>
+                <th>학번</th>
+                <th>과목</th>
+                <th>강의실</th>
+                <th>시작 시간</th>
+                <th>종료 시간</th>
+                <th>출석 상태</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="attendance : ${attendanceList}">
+                <td th:text="${attendance.userId}"></td>
+                <td th:text="${attendance.userName}"></td>
+                <td th:text="${attendance.studentId}"></td>
+                <td th:text="${attendance.subject}"></td>
+                <td th:text="${attendance.classroomName}"></td>
+                <td th:text="${attendance.startHour}"></td>
+                <td th:text="${attendance.endHour}"></td>
+                <td th:text="${attendance.status}" th:class="${attendance.status == '결석' ? 'absent' : ''}"></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
