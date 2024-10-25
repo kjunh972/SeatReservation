@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
@@ -63,8 +64,13 @@ namespace lockScreen
 
         private Timer checkForegroundTimer; // 포그라운드 창 확인 타이머
         private TextBox numTextBox; // 좌석 예약 번호 입력 상자
+        private TextBox nameTextBox; // 학생 이름 입력 상자
+        private TextBox studentIdTextBox; // 학번 입력 상자
         private MySqlConnection connection; // MySQL 데이터베이스 연결
         private Button submitButton; // 확인 버튼
+
+        // 데이터베이스 연결 설정
+        string connectionString = "server=yuhandb.clu0u0yy2ir8.ap-northeast-2.rds.amazonaws.com;database=YuhanDB;uid=root;pwd=rootroot;";
 
         // 컴퓨터 이름 및 좌석 번호를 추출합니다.
         private static string computerName = SystemInformation.ComputerName;
@@ -88,6 +94,24 @@ namespace lockScreen
 
             // 좌석 예약 번호 입력 상자 생성 및 설정
             this.numTextBox = CreatePlaceholderTextBox("좌석 예약 번호", new Point((this.ClientSize.Width - 200) * 10, (this.ClientSize.Height - 110) * 3));
+            // 학생 이름 입력 상자 생성 및 설정
+            this.nameTextBox = CreatePlaceholderTextBox("학생 이름", new Point((this.ClientSize.Width - 200) * 10, (this.ClientSize.Height - 150) * 3));
+
+            // 학번 입력 상자 생성 및 설정
+            this.studentIdTextBox = CreatePlaceholderTextBox("학번", new Point((this.ClientSize.Width - 200) * 10, (this.ClientSize.Height - 70) * 3));
+
+            // 좌석 예약 번호 입력 상자 위치 조정
+            this.numTextBox.Location = new Point((this.ClientSize.Width - 200) * 10, (this.ClientSize.Height + 10) * 3);
+
+            // 레이블 생성 및 추가
+            this.Controls.Add(CreateLabel("학생 이름", new Point((this.ClientSize.Width - 195) * 8, (this.ClientSize.Height - 150) * 3)));
+            this.Controls.Add(CreateLabel("학번", new Point((this.ClientSize.Width - 195) * 8, (this.ClientSize.Height - 70) * 3)));
+            this.Controls.Add(CreateLabel("좌석 예약 번호", new Point((this.ClientSize.Width - 195) * 8, (this.ClientSize.Height + 10) * 3)));
+
+            // 폼에 새로운 입력 상자 추가
+            this.Controls.Add(this.nameTextBox);
+            this.Controls.Add(this.studentIdTextBox);
+
 
             // 확인 버튼 생성 및 설정
             submitButton = new Button
@@ -98,15 +122,10 @@ namespace lockScreen
             };
             submitButton.Click += SubmitButton_Click; // 버튼 클릭 시 이벤트 핸들러 추가
 
-            // 레이블 생성 및 추가
-            this.Controls.Add(CreateLabel("좌석 예약 번호", new Point((this.ClientSize.Width - 195) * 8, (this.ClientSize.Height - 110) * 3)));
-
             // 폼에 입력 상자와 버튼 추가
             this.Controls.Add(this.numTextBox);
             this.Controls.Add(submitButton);
 
-            // 데이터베이스 연결 설정
-            string connectionString = "server=localhost;database=YuhanDB;uid=root;pwd=root;";
             connection = new MySqlConnection(connectionString); // MySQL 연결 객체 생성
 
             this.Load += LockScreenForm_Load; // 폼 로드 시 호출될 이벤트 핸들러 추가
@@ -159,7 +178,7 @@ namespace lockScreen
 
                 if (!isSeatNumCorrect)
                 {
-                    errorMessage = "좌석 예약 번호가 올바르지 않습니다.";
+                    errorMessage = "이름 혹은 학번, 좌석 예약 번호가 올바르지 않습니다.";
                 }
                 else
                 {
@@ -182,29 +201,176 @@ namespace lockScreen
 
         private bool AreAllFieldsFilled()
         {
-            // 입력된 값이 기본 플레이스홀더와 다른지 확인
-            return numTextBox.Text != "좌석 예약 번호";
+            return nameTextBox.Text != "학생 이름" &&
+                   studentIdTextBox.Text != "학번" &&
+                   numTextBox.Text != "좌석 예약 번호";
         }
 
         private bool IsSeatNumCorrect()
         {
+            MySqlConnection localConnection = null;
             try
             {
-                connection.Open(); // 데이터베이스 연결 열기
-                string query = "SELECT reservNum FROM Reservation WHERE classroom_name = @classroomName AND reservSeat = @seat;"; // 쿼리 정의
-                MySqlCommand command = new MySqlCommand(query, connection); // MySqlCommand 객체 생성
-                command.Parameters.AddWithValue("@classroomName", classroomName); // 파라미터 추가
-                command.Parameters.AddWithValue("@seat", seat); // 파라미터 추가
+                localConnection = new MySqlConnection(connectionString);
+                localConnection.Open();
 
-                object result = command.ExecuteScalar(); // 쿼리 실행 및 결과 가져오기
-                connection.Close(); // 데이터베이스 연결 닫기
+                string query = @"
+                SELECT r.reservNum, y.name, y.studentId
+                FROM Reservation r
+                JOIN Yuhan y ON r.user_id = y.id
+                WHERE r.classroom_name = @classroomName 
+                AND r.reservSeat = @seat 
+                AND r.reservNum = @reservNum
+                AND y.name = @name
+                AND y.studentId = @studentId;";
 
-                return result != null && result.ToString() == numTextBox.Text; // 결과 비교
+                using (MySqlCommand command = new MySqlCommand(query, localConnection))
+                {
+                    command.Parameters.AddWithValue("@classroomName", classroomName);
+                    command.Parameters.AddWithValue("@seat", seat);
+                    command.Parameters.AddWithValue("@reservNum", numTextBox.Text);
+                    command.Parameters.AddWithValue("@name", nameTextBox.Text);
+                    command.Parameters.AddWithValue("@studentId", studentIdTextBox.Text);
+
+                    using (MySqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            string reservNum = reader["reservNum"].ToString();
+
+                            // DataReader를 명시적으로 닫습니다.
+                            reader.Close();
+
+                            // 락스크린 잠금 해제
+                            MessageBox.Show($"환영합니다, {nameTextBox.Text}님 (학번: {studentIdTextBox.Text})");
+
+                            // 연결을 닫고 UpdateAttendance 메서드를 호출합니다.
+                            localConnection.Close();
+                            UpdateAttendance(reservNum);
+
+                            return true;
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("데이터베이스 연결에 실패했습니다: " + ex.Message); // 에러 메시지 표시
-                return false;
+                MessageBox.Show("데이터베이스 연결에 실패했습니다: " + ex.Message);
+            }
+            finally
+            {
+                if (localConnection != null && localConnection.State == ConnectionState.Open)
+                {
+                    localConnection.Close();
+                }
+            }
+
+            return false;
+        }
+
+        private void UpdateAttendance(string reservNum)
+        {
+            MySqlConnection localConnection = null;
+            try
+            {
+                localConnection = new MySqlConnection(connectionString);
+                localConnection.Open();
+
+                // 1. 예약 정보 가져오기
+                string reservationQuery = @"
+            SELECT user_id, day, subject, classroom_name
+            FROM Reservation
+            WHERE reservNum = @reservNum;";
+
+                string userId = "", day = "", subject = "", classroomName = "";
+
+                using (MySqlCommand command = new MySqlCommand(reservationQuery, localConnection))
+                {
+                    command.Parameters.AddWithValue("@reservNum", reservNum);
+
+                    using (MySqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            userId = reader["user_id"].ToString();
+                            day = reader["day"].ToString();
+                            subject = reader["subject"].ToString();
+                            classroomName = reader["classroom_name"].ToString();
+                        }
+                        else
+                        {
+                            MessageBox.Show("해당 예약 번호의 정보를 찾을 수 없습니다.");
+                            return;
+                        }
+                    }
+                }
+
+                // 2. 학생 시간표 확인 및 출석 처리
+                string updateQuery = @"
+            UPDATE StuTimetable 
+            SET attendance = TRUE 
+            WHERE user_id = @userId 
+            AND day = @day 
+            AND subject = @subject 
+            AND classroomName = @classroomName
+            AND attendance = FALSE;";
+
+                using (MySqlCommand command = new MySqlCommand(updateQuery, localConnection))
+                {
+                    command.Parameters.AddWithValue("@userId", userId);
+                    command.Parameters.AddWithValue("@day", day);
+                    command.Parameters.AddWithValue("@subject", subject);
+                    command.Parameters.AddWithValue("@classroomName", classroomName);
+
+                    int rowsAffected = command.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                    {
+                        MessageBox.Show("출석이 처리되었습니다.");
+                    }
+                    else
+                    {
+                        // 시간표 확인을 위한 SELECT 쿼리
+                        string checkQuery = @"
+                    SELECT * FROM StuTimetable 
+                    WHERE user_id = @userId 
+                    AND day = @day 
+                    AND subject = @subject 
+                    AND classroomName = @classroomName;";
+
+                        using (MySqlCommand checkCommand = new MySqlCommand(checkQuery, localConnection))
+                        {
+                            checkCommand.Parameters.AddWithValue("@userId", userId);
+                            checkCommand.Parameters.AddWithValue("@day", day);
+                            checkCommand.Parameters.AddWithValue("@subject", subject);
+                            checkCommand.Parameters.AddWithValue("@classroomName", classroomName);
+
+                            using (MySqlDataReader reader = checkCommand.ExecuteReader())
+                            {
+                                if (reader.HasRows)
+                                {
+                                    MessageBox.Show("이미 출석 처리되었거나 시간표가 일치하지 않습니다.");
+                                }
+                                else
+                                {
+                                    MessageBox.Show("해당 시간표 정보를 찾을 수 없습니다.");
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"출석 처리 중 오류 발생: {ex.Message}");
+                Console.WriteLine($"Stack Trace: {ex.StackTrace}");
+                MessageBox.Show("출석 처리 중 오류가 발생했습니다: " + ex.Message);
+            }
+            finally
+            {
+                if (localConnection != null && localConnection.State == ConnectionState.Open)
+                {
+                    localConnection.Close();
+                }
             }
         }
 
