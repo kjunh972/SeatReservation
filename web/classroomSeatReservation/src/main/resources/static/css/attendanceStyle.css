@@ -1,0 +1,275 @@
+/* 출석 모달의 컨테이너 스타일 */
+#attModal .att-container {
+    max-width: 1200px; /* 최대 너비 설정 */
+    margin: 2rem auto 0; /* 상단 여백과 중앙 정렬 */
+    background-color: #fff; /* 배경색 흰색 */
+    padding: 20px; /* 내부 여백 */
+    border-radius: 8px; /* 모서리 둥글게 */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+}
+
+/* 학생이 없을 때 표시되는 메시지 스타일 */
+#attModal .att-no-students-message {
+    text-align: center; /* 텍스트 중앙 정렬 */
+    padding: 40px; /* 내부 여백 */
+    background-color: #f8f9fa; /* 배경색 연한 회색 */
+    border-radius: 8px; /* 모서리 둥글게 */
+    margin-top: 20px; /* 상단 여백 */
+}
+
+/* 학생 없음 메시지의 아이콘 스타일 */
+#attModal .att-no-students-message i {
+    font-size: 48px; /* 아이콘 크기 */
+    color: #778da9; /* 아이콘 색상 */
+    margin-bottom: 20px; /* 하단 여백 */
+}
+
+/* 학생 없음 메시지의 텍스트 스타일 */
+#attModal .att-no-students-message p {
+    font-size: 18px; /* 글자 크기 */
+    color: #495057; /* 글자 색상 */
+}
+
+/* 모달 내용 컨테이너 스타일 */
+.attModal-content {
+    background-color: #fefefe; /* 배경색 흰색 */
+    margin: 2vh auto; /* 상하 여백과 중앙 정렬 */
+    padding: 30px; /* 내부 여백 */
+    border: none; /* 테두리 없음 */
+    width: 95%; /* 너비 */
+    max-width: 95vw; /* 최대 너비 */
+    height: 90vh; /* 높이 */
+    overflow-y: auto; /* 세로 스크롤 허용 */
+    position: relative; /* 상대 위치 지정 */
+    border-radius: 12px; /* 모서리 둥글게 */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+}
+
+/* 정보 패널 스타일 */
+#attModal .att-info-panel {
+    background-color: #778da9; /* 배경색 */
+    color: #fff; /* 글자색 흰색 */
+    padding: 20px; /* 내부 여백 */
+    border-radius: 8px; /* 모서리 둥글게 */
+    margin-bottom: 30px; /* 하단 여백 */
+    display: flex; /* 플렉스 박스 사용 */
+    justify-content: space-between; /* 내부 요소 간격 균등 분배 */
+    align-items: center; /* 세로 중앙 정렬 */
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+}
+
+/* 정보 패널 내 텍스트 스타일 */
+#attModal .att-info-panel span {
+    font-size: 1.2em; /* 글자 크기 */
+    font-weight: 500; /* 글자 두께 */
+}
+
+/* 출석 테이블 스타일 */
+#attModal .att-table {
+    width: 100%; /* 전체 너비 */
+    border-collapse: separate; /* 테두리 분리 */
+    border-spacing: 0; /* 셀 간격 없음 */
+    margin-top: 30px; /* 상단 여백 */
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+    border-radius: 8px; /* 모서리 둥글게 */
+    overflow: hidden; /* 내용 넘침 숨김 */
+}
+
+/* 테이블 헤더와 셀 스타일 */
+#attModal .att-table th,
+#attModal .att-table td {
+    padding: 15px; /* 내부 여백 */
+    text-align: left; /* 왼쪽 정렬 */
+    border-bottom: 1px solid #e9ecef; /* 하단 테두리 */
+}
+
+/* 테이블 헤더 스타일 */
+#attModal .att-table th {
+    background-color: #778da9; /* 배경색 */
+    color: #fff; /* 글자색 흰색 */
+    font-weight: 600; /* 글자 두께 */
+    text-transform: uppercase; /* 대문자 변환 */
+}
+
+/* 테이블 마지막 행 셀 스타일 */
+#attModal .att-table tr:last-child td {
+    border-bottom: none; /* 하단 테두리 없음 */
+}
+
+/* 테이블 짝수 행 스타일 */
+#attModal .att-table tr:nth-child(even) {
+    background-color: #f8f9fa; /* 배경색 연한 회색 */
+}
+
+/* 테이블 행 호버 효과 */
+#attModal .att-table tr:hover {
+    background-color: #e9ecef; /* 호버 시 배경색 */
+    transition: background-color 0.3s ease; /* 배경색 전환 효과 */
+}
+
+/* 커스텀 셀렉트 박스 컨테이너 스타일 */
+#attModal .att-custom-select {
+    position: relative; /* 상대 위치 지정 */
+    display: inline-block; /* 인라인 블록 표시 */
+    width: 120px; /* 너비 */
+}
+
+/* 커스텀 셀렉트 박스 스타일 */
+#attModal .att-custom-select select {
+    appearance: none; /* 기본 스타일 제거 */
+    -webkit-appearance: none; /* 웹킷 브라우저용 */
+    -moz-appearance: none; /* 파이어폭스용 */
+    width: 100%; /* 전체 너비 */
+    padding: 8px 12px; /* 내부 여백 */
+    border: 1px solid #ced4da; /* 테두리 */
+    border-radius: 4px; /* 모서리 둥글게 */
+    background-color: #fff; /* 배경색 흰색 */
+    color: #495057; /* 글자색 */
+    cursor: pointer; /* 커서 모양 변경 */
+    transition: all 0.3s ease; /* 전환 효과 */
+}
+
+/* 커스텀 셀렉트 박스 포커스 스타일 */
+#attModal .att-custom-select select:focus {
+    outline: none; /* 기본 아웃라인 제거 */
+    box-shadow: 0 0 0 2px rgba(119, 141, 169, 0.3); /* 포커스 시 그림자 효과 */
+    border-color: #778da9; /* 테두리 색상 변경 */
+}
+
+/* 커스텀 셀렉트 박스 화살표 아이콘 */
+#attModal .att-custom-select::after {
+    content: '\25BC'; /* 아래쪽 화살표 유니코드 */
+    position: absolute; /* 절대 위치 지정 */
+    top: 50%; /* 상단에서 50% 위치 */
+    right: 12px; /* 우측에서 12px 위치 */
+    transform: translateY(-50%); /* 세로 중앙 정렬 */
+    pointer-events: none; /* 포인터 이벤트 무시 */
+    color: #778da9; /* 아이콘 색상 */
+}
+
+/* 새로고침 버튼 스타일 */
+#attModal .att-refresh-button {
+    position: fixed; /* 고정 위치 */
+    bottom: 30px; /* 하단에서 30px 위치 */
+    right: 30px; /* 우측에서 30px 위치 */
+    background-color: #778da9; /* 배경색 */
+    color: white; /* 글자색 흰색 */
+    border: none; /* 테두리 없음 */
+    border-radius: 50%; /* 원형 모양 */
+    width: 70px; /* 너비 */
+    height: 70px; /* 높이 */
+    font-size: 28px; /* 글자 크기 */
+    cursor: pointer; /* 커서 모양 변경 */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* 그림자 효과 */
+    transition: all 0.3s ease; /* 전환 효과 */
+    display: flex; /* 플렉스 박스 사용 */
+    align-items: center; /* 세로 중앙 정렬 */
+    justify-content: center; /* 가로 중앙 정렬 */
+}
+
+/* 새로고침 버튼 호버 효과 */
+#attModal .att-refresh-button:hover {
+    background-color: #8a9eb5; /* 호버 시 배경색 */
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2); /* 그림자 효과 강화 */
+    transform: translateY(-3px); /* 위로 3px 이동 */
+}
+
+/* 새로고침 버튼 클릭 효과 */
+#attModal .att-refresh-button:active {
+    transform: translateY(0); /* 원래 위치로 복귀 */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* 그림자 효과 감소 */
+}
+
+/* 회전 애니메이션 키프레임 정의 */
+@keyframes att-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* 회전 애니메이션 적용 클래스 */
+#attModal .att-refresh-button.spinning {
+    animation: att-spin 1s linear infinite; /* 1초 동안 무한 반복 회전 */
+}
+
+/* 모달 기본 스타일 */
+#attModal.modal {
+    display: none; /* 초기에는 숨김 */
+    position: fixed; /* 고정 위치 */
+    z-index: 1; /* 최상위 레이어 */
+    left: 0;
+    top: 0;
+    width: 100%; /* 전체 너비 */
+    height: 100%; /* 전체 높이 */
+    overflow: auto; /* 스크롤 허용 */
+    background-color: rgba(0,0,0,0.4); /* 반투명 배경 */
+}
+
+/* 모달 닫기 버튼 스타일 */
+#attModal .close {
+    color: #aaa; /* 글자색 */
+    float: right; /* 우측 정렬 */
+    font-size: 28px; /* 글자 크기 */
+    font-weight: bold; /* 글자 두께 */
+}
+
+/* 모달 닫기 버튼 호버 및 포커스 효과 */
+#attModal .close:hover,
+#attModal .close:focus {
+    color: black; /* 글자색 변경 */
+    text-decoration: none; /* 텍스트 장식 제거 */
+    cursor: pointer; /* 커서 모양 변경 */
+}
+
+/* 커스텀 셀렉트 박스 선택된 항목 스타일 */
+#attModal .select-selected {
+    background-color: #fff; /* 배경색 흰색 */
+}
+
+/* 커스텀 셀렉트 박스 화살표 스타일 */
+#attModal .select-selected:after {
+    position: absolute; /* 절대 위치 지정 */
+    content: ""; /* 내용 없음 */
+    top: 14px; /* 상단에서 14px 위치 */
+    right: 10px; /* 우측에서 10px 위치 */
+    width: 0;
+    height: 0;
+    border: 6px solid transparent; /* 투명한 테두리 */
+    border-color: #778da9 transparent transparent transparent; /* 아래쪽 화살표 모양 */
+}
+
+/* 커스텀 셀렉트 박스 활성화 시 화살표 스타일 */
+#attModal .select-selected.select-arrow-active:after {
+    border-color: transparent transparent #778da9 transparent; /* 위쪽 화살표 모양 */
+    top: 7px; /* 상단에서 7px 위치 */
+}
+
+/* 커스텀 셀렉트 박스 항목 스타일 */
+#attModal .select-items div,
+#attModal .select-selected {
+    color: #495057; /* 글자색 */
+    padding: 8px 16px; /* 내부 여백 */
+    border: 1px solid transparent; /* 투명한 테두리 */
+    border-color: transparent transparent rgba(0, 0, 0, 0.1) transparent; /* 하단 테두리만 표시 */
+    cursor: pointer; /* 커서 모양 변경 */
+}
+
+/* 커스텀 셀렉트 박스 항목 목록 스타일 */
+#attModal .select-items {
+    position: absolute; /* 절대 위치 지정 */
+    background-color: #fff; /* 배경색 흰색 */
+    top: 100%; /* 선택된 항목 바로 아래에 위치 */
+    left: 0;
+    right: 0;
+    z-index: 99; /* 다른 요소 위에 표시 */
+}
+
+/* 커스텀 셀렉트 박스 숨김 클래스 */
+#attModal .select-hide {
+    display: none; /* 숨김 처리 */
+}
+
+/* 커스텀 셀렉트 박스 항목 호버 및 선택 효과 */
+#attModal .select-items div:hover,
+#attModal .same-as-selected {
+    background-color: rgba(0, 0, 0, 0.1); /* 배경색 변경 */
+}

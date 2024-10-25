@@ -1,4 +1,4 @@
-package com.tbfg.dao;
+package com.tbfg.dto;
 
 public class ReservationInfoDTO {
 	private int reservNum;

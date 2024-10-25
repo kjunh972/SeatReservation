@@ -4,22 +4,19 @@
 <head>
 	<meta charset="UTF-8">
 	<title>강의실 좌석 예약 현황</title>
+	<link rel="stylesheet" href="/css/timetableStyle.css" />
 	<link rel="stylesheet" href="/css/classroomStyle.css" />
 	<link rel="stylesheet" href="/css/classroomStatusStyle.css" />
 	<link rel="stylesheet" href="/css/reserveSeatStyle.css" />
-	<link rel="stylesheet" href="/css/timeTableStyle.css" />
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
-	<header th:if="${userPosition == 'student'}">
-		<header th:replace="~{/menu.html}"></header> <!-- 메뉴 포함 -->
+	<header th:if="${userPosition == 'admin' or userPosition == 'professor'}">
+	    <header th:replace="~{/menu_admin.html}"></header> <!-- 메뉴 포함 -->
 	</header>
-	<header th:if="${userPosition == 'admin'}">
-		<header th:replace="~{/menu_admin.html}"></header> <!-- 메뉴 포함 -->
-	</header>
-	<header th:if="${userPosition == 'professor'}">
-		<header th:replace="~{/menu_admin.html}"></header> <!-- 메뉴 포함 -->
+	<header th:unless="${userPosition == 'admin' or userPosition == 'professor'}">
+	    <header th:replace="~{/menu.html}"></header> <!-- 메뉴 포함 -->
 	</header>
 
 	<!-- 좌석 예약 현황 모달 -->
@@ -52,10 +49,10 @@
 	<div th:if="${requestMethod == 'GET'}">
 		<div th:if="${userPosition == 'student'}">
 			<div id="seatListModal" class="modal">
-				<div class="modal-content">
-					<span class="close" id="closeSeatListModal">&times;</span>
-					<h1>예약된 좌석</h1>
-					<table>
+				<div class="modal-content seat-list-content">
+					<span class="close seat-list-close" id="closeSeatListModal">&times;</span>
+					<h1 class="seat-list-title">예약된 좌석</h1>
+					<table class="seat-list-table">
 						<thead>
 							<tr>
 								<th>과목</th>
@@ -78,13 +75,11 @@
 						</tbody>
 					</table>
 					<!-- 버튼을 가운데 정렬하고 가로로 배치 -->
-					<div style="display: flex; justify-content: center;">
-						<button type="button" onclick="location.href='/reserveList'"
-							style="width: 8.5rem; height: 3.2rem; font-size: 1rem; margin-right: 0.6rem;">
+					<div class="seat-list-button-container">
+						<button type="button" onclick="location.href='/reserveList'" class="seat-list-button">
 							전체 내용 보기
 						</button>
-						<button type="button" onclick="closeSeatListModal()"
-							style="width: 8.5rem; height: 3.2rem; font-size: 1rem;">
+						<button type="button" onclick="closeSeatListModal()" class="seat-list-button">
 							닫기
 						</button>
 					</div>
@@ -97,9 +92,9 @@
 	<div th:if="${requestMethod == 'GET'}">
 		<div th:if="${userPosition == 'admin' or userPosition == 'professor'}">
 			<div id="seatListModal" class="modal">
-				<div class="modal-content">
-					<h1>금지된 좌석</h1>
-					<table>
+				<div class="modal-content seat-list-content">
+					<h1 class="seat-list-title">금지된 좌석</h1>
+					<table class="seat-list-table">
 						<thead>
 							<tr>
 								<th>과목</th>
@@ -120,13 +115,11 @@
 						</tbody>
 					</table>
 					<!-- 버튼을 가운데 정렬하고 가로로 배치 -->
-					<div style="display: flex; justify-content: center;">
-						<button type="button" onclick="location.href='/reserveList'"
-							style="width: 8.5rem; height: 3.2rem; font-size: 1rem; margin-right: 0.6rem;">
+					<div class="seat-list-button-container">
+						<button type="button" onclick="location.href='/reserveList'" class="seat-list-button">
 							전체 내용 보기
 						</button>
-						<button type="button" onclick="closeSeatListModal()"
-							style="width: 8.5rem; height: 3.2rem; font-size: 1rem;">
+						<button type="button" onclick="closeSeatListModal()" class="seat-list-button">
 							닫기
 						</button>
 					</div>
@@ -162,10 +155,28 @@
 							<!-- 시간표 정보 표시 -->
 							<span th:text="${timeTable.subject + ' (' + timeTable.classroomName + ')'}"></span><br>
 						</div>
+						<!-- 과목이 없는 경우에도 시간을 표시할 기본 div 추가 -->
+						<div th:attr="data-hour=${hour}, data-day=${day}" style="display: none;"></div>
+
 					</td>
 				</tr>
 			</tbody>
 		</table>
+	</div>
+
+	<!-- 하단 버튼 -->
+	<div class="timetable-button-container">
+		<!-- 좌석 예약 버튼 -->
+		<button th:if="${userPosition == 'student'}" id="reserve-seat-button" class="timetable-button">좌석 예약</button>
+		<!-- 좌석 관리 버튼 -->
+		<button th:if="${userPosition == 'admin' or userPosition == 'professor'}" id="manage-seat-button"
+			class="timetable-button">좌석 관리</button>
+		<!-- 시간표 추가 버튼 -->
+		<label for="modal-addCheckbox" class="timetable-button add-modal-button">시간표 추가</label>
+		<!-- 시간표 수정 버튼 -->
+		<label for="modal-checkbox" class="timetable-button edit-modal-button">시간표 수정</label>
+		<!-- 시간표 삭제 버튼 -->
+		<label for="delete-modal-checkbox" class="timetable-button delete-modal-button">시간표 삭제</label>
 	</div>
 
 	<script th:inline="javascript">
@@ -261,23 +272,45 @@
 				window.removeEventListener("popstate", goBackHome);
 			});
 
-			// 좌석 버튼 생성 함수
 			function createSeatButton(number, classroomName) {
-				const seatStatus = seatArray[number - 1]; // 좌석 상태 확인
-				let seat = document.createElement('button');
-				if (seatStatus === true) {
-					seat.classList.add('seat', 'reserved'); // 예약된 좌석 스타일
-				} else if (seatStatus === 'banned') {
-					seat.classList.add('seat', 'banned'); // 금지된 좌석 스타일
-					seat.disabled = true; // 클릭 불가능하게 설정
-				} else {
-					seat.classList.add('seat', 'empty'); // 빈 좌석 스타일
-				}
-				seat.textContent = number; // 좌석 번호 표시
-				seat.dataset.seat = number; // 좌석 번호 데이터 추가
-				seat.dataset.classroom = classroomName; // 강의실 이름 데이터 추가
-				seat.onclick = () => openModal(seat); // 클릭 이벤트 핸들러 추가
-				return seat;
+			    const seatStatus = seatArray[number - 1]; // 좌석 상태 확인
+			    let seat = document.createElement('button');
+			    seat.classList.add('seat-button'); // seat-button 클래스 추가
+
+			    // 7202호에 대한 특별 처리
+			    if (classroomName === '7202') {
+			        if (number === 19 || number === 20) {
+			            // 19번과 20번 좌석은 빈 공간으로 처리
+			            seat.style.visibility = 'hidden';
+			            seat.style.pointerEvents = 'none';
+			        } else if (number > 20) {
+			            // 21번 이상의 좌석은 번호를 2 줄여서 표시
+			            let adjustedNumber = number - 2;
+			            seat.textContent = adjustedNumber;
+			            seat.dataset.seat = adjustedNumber;
+			        } else {
+			            // 나머지 좌석은 기존 번호 사용
+			            seat.textContent = number;
+			            seat.dataset.seat = number;
+			        }
+			    } else {
+			        // 7202호가 아닌 경우 기존 번호 사용
+			        seat.textContent = number;
+			        seat.dataset.seat = number;
+			    }
+
+			    if (seatStatus === true) {
+			        seat.classList.add('reserved'); // 예약된 좌석 스타일
+			    } else if (seatStatus === 'banned') {
+			        seat.classList.add('banned'); // 금지된 좌석 스타일
+			        seat.disabled = true; // 클릭 불가능하게 설정
+			    } else {
+			        seat.classList.add('empty'); // 빈 좌석 스타일
+			    }
+
+			    seat.dataset.classroom = classroomName; // 강의실 이름 데이터 추가
+			    seat.onclick = () => openModal(seat); // 클릭 이벤트 핸들러 추가
+			    return seat;
 			}
 
 			// 좌석 배치를 생성하는 함수
@@ -291,14 +324,16 @@
 					// 왼쪽 좌석 생성
 					for (let j = 0; j < leftCols; j++) {
 						if (i < leftRows) {
-							leftRow.appendChild(createSeatButton(seatNumber++, classroomName));
+							let seat = createSeatButton(seatNumber++, classroomName);
+							if (seat) leftRow.appendChild(seat);
 						}
 					}
 
 					// 오른쪽 좌석 생성
 					for (let j = 0; j < rightCols; j++) {
 						if (i < rightRows) {
-							rightRow.appendChild(createSeatButton(seatNumber++, classroomName));
+							let seat = createSeatButton(seatNumber++, classroomName);
+							if (seat) rightRow.appendChild(seat);
 						}
 					}
 

@@ -1,264 +1,254 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>강의실 생성</title>
-    <link rel="stylesheet" href="/css/classroomStyle.css"/>
-    <style>
-        .autocomplete-list {
-            position: absolute;
-            background-color: #f1f1f1;
-            border: 0.0625rem solid #ccc;
-            max-height: 9.375rem;
-            overflow-y: auto;
-            z-index: 999;
-            width: 100%;
-        }
+<!DOCTYPE html> 
+<html xmlns:th="http://www.thymeleaf.org"> 
 
-        .seat-layout-preview {
-            border: 0.0625rem solid #000;
-            width: 15rem;
-            height: auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin: 0.625rem;
-            text-align: center;
-            padding: 0.625rem;
-            background-color: white;
-        }
-
-        .seat-selection {
-            width: 100%;
-            display: flex;
-            flex-direction: row;
-            align-items: flex-start;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin-bottom: 1.25rem;
-        }
-
-        .seat-info {
-            margin-top: 1.25rem;
-            text-align: center;
-        }
-
-        .seat-option {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-
-        .custom-seats input {
-            width: 3rem;
-        }
-		
-		.button-container {
-		    display: flex;
-		    justify-content: center;
-		}
-    </style>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<head> 
+	<meta charset="UTF-8"> 
+	<title>강의실 생성</title> 
+	<!-- CSS 파일 연결 -->
+	<link rel="stylesheet" href="/css/classroomSetStyle.css" /> 
+	<!-- SweetAlert2 라이브러리 추가 -->
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> 
 </head>
-<body>
-<header th:replace="~{/menu.html}"></header>
-<h1>강의실 생성</h1>
 
-<form method="post" th:action="@{/saveClassroom}" onsubmit="return validateForm()">
-    <div class="container">
-        <div class="seat-selection">
-            <div th:each="layout : ${predefinedLayouts}" class="seat-option">
-                <label>
-                    <input type="radio" name="seatTemplate" th:value="${layout}" class="predefined-seat">
-                    <span th:text="${layout}"></span>
-                </label>
-                <div class="seat-layout-preview">
-                    <img th:src="${'/images/' + (layout == '왼쪽 : 4X5, 오른쪽 : 4X5' ? '4X5.png' : 
-                                                  (layout == '왼쪽 : 4X6, 오른쪽 : 4X6' ? '4X6.png' : 
-                                                  (layout == '왼쪽 : 4X7, 오른쪽 : 4X7' ? '4X7.png' : 'default.png')))}" 
-                         alt="Seat Layout Image" style="width: 100%; height: auto;">
-                </div>
-            </div>
+<body> 
+	<!-- 메뉴 파일을 가져와 헤더로 사용 -->
+	<header th:replace="~{/menu.html}"></header> 
+	 <!-- 강의실 설정 컨테이너 -->
+	<div class="classroom-set">
+		<h1 class="page-title">강의실 생성</h1> <!-- 페이지 제목 -->
 
-            <div class="seat-option">
-                <label>
-                    <input type="radio" name="seatTemplate" value="커스텀" id="customSeatRadio" onclick="toggleCustomInputs(true)">
-                    커스텀
-                </label>
-                <div class="custom-seats">
-                    <br><label>왼쪽 가로: <input type="number" name="leftSeatRows" min="1" max="10" id="leftSeatRows" disabled></label><br>
-                    <label>왼쪽 세로: <input type="number" name="leftSeatColumns" min="1" max="10" id="leftSeatColumns" disabled></label><br><br>
-                    <label>오른쪽 가로: <input type="number" name="rightSeatRows" min="1" max="10" id="rightSeatRows" disabled></label><br>
-                    <label>오른쪽 세로: <input type="number" name="rightSeatColumns" min="1" max="10" id="rightSeatColumns" disabled></label>
-                </div>
-            </div>
+		<form method="post" th:action="@{/saveClassroom}" onsubmit="return validateForm()"> <!-- 강의실 생성 폼 시작 -->
+			<div class="container"> <!-- 컨테이너 전체 영역 -->
+				<div class="seat-selection"> <!-- 좌석 선택 영역 시작 -->
+					<div th:each="layout : ${predefinedLayouts}" class="seat-option"> <!-- 각 미리 정의된 레이아웃에 대한 반복 -->
+						<label> <!-- 레이아웃 선택을 위한 라벨 -->
+							<input type="radio" name="seatTemplate" th:value="${layout}" class="predefined-seat">
+							<!-- 레이아웃 선택 라디오 버튼 -->
+							<span th:text="${layout}"></span> <!-- 레이아웃 이름 표시 -->
+						</label>
+						<div class="seat-layout-preview"> <!-- 레이아웃 미리보기 -->
+							<img th:src="${'/images/' + (layout == '왼쪽 : 4X5, 오른쪽 : 4X5' ? '4X5.png' : 
+                                                      (layout == '왼쪽 : 4X6, 오른쪽 : 4X6' ? '4X6.png' : 
+                                                      (layout == '왼쪽 : 4X7, 오른쪽 : 4X7' ? '4X7.png' : 'default.png')))}"
+								alt="Seat Layout Image"> <!-- 레이아웃에 따른 이미지 표시 -->
+						</div>
+					</div>
+					<div class="seat-option custom-option"> <!-- 커스텀 옵션 영역 -->
+						<label> <!-- 커스텀 옵션 선택을 위한 라벨 -->
+							<input type="radio" name="seatTemplate" value="커스텀" id="customSeatRadio"
+								onclick="toggleCustomInputs(true)"> <!-- 커스텀 옵션 라디오 버튼 -->
+							<span>커스텀</span> <!-- 커스텀 옵션 텍스트 -->
+						</label>
+						<div class="custom-seats"> <!-- 커스텀 좌석 설정 영역 -->
+							<div class="custom-input"> <!-- 왼쪽 좌석 설정 -->
+								<label>왼쪽 가로: <input type="number" name="leftSeatRows" min="1" max="10"
+										id="leftSeatRows" disabled></label> <!-- 왼쪽 가로 좌석 수 입력 -->
+								<label>왼쪽 세로: <input type="number" name="leftSeatColumns" min="1" max="10"
+										id="leftSeatColumns" disabled></label> <!-- 왼쪽 세로 좌석 수 입력 -->
+							</div>
+							<div class="custom-input"> <!-- 오른쪽 좌석 설정 -->
+								<label>오른쪽 가로: <input type="number" name="rightSeatRows" min="1" max="10"
+										id="rightSeatRows" disabled></label> <!-- 오른쪽 가로 좌석 수 입력 -->
+								<label>오른쪽 세로: <input type="number" name="rightSeatColumns" min="1" max="10"
+										id="rightSeatColumns" disabled></label> <!-- 오른쪽 세로 좌석 수 입력 -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 
-            <script>
-                function toggleCustomInputs(isCustom) {
-                    document.getElementById('leftSeatRows').disabled = !isCustom;
-                    document.getElementById('leftSeatColumns').disabled = !isCustom;
-                    document.getElementById('rightSeatRows').disabled = !isCustom;
-                    document.getElementById('rightSeatColumns').disabled = !isCustom;
-                }
+			<div class="seat-info"> <!-- 선택된 좌석 정보 표시 영역 -->
+				<h3>선택된 좌석 스타일</h3> <!-- 선택된 좌석 스타일 제목 -->
+				<p><span id="selectedSeatTemplate" class="selected-template">□X□</span></p> <!-- 선택된 좌석 스타일 표시 -->
+			</div>
 
-                function updateSelection() {
-                    const selectedSeat = document.querySelector('input[name="seatTemplate"]:checked');
-                    const seatTemplateText = selectedSeat && selectedSeat.value === '커스텀'
-                        ? getCustomDimensions()
-                        : (selectedSeat ? selectedSeat.value : '□X□');
-                    document.getElementById('selectedSeatTemplate').textContent = seatTemplateText;
-                    handleCustomInputs(selectedSeat);
-                }
+			<div class="classroom-name"> <!-- 강의실 이름 입력 영역 -->
+				<input type="text" name="classroomNumber" placeholder="생성할 강의실 이름을 입력하세요"> <!-- 강의실 이름 입력 필드 -->
+			</div>
 
-                function handleCustomInputs(selected) {
-                    const leftRowsInput = document.querySelector('input[name="leftSeatRows"]');
-                    const leftColumnsInput = document.querySelector('input[name="leftSeatColumns"]');
-                    const rightRowsInput = document.querySelector('input[name="rightSeatRows"]');
-                    const rightColumnsInput = document.querySelector('input[name="rightSeatColumns"]');
-
-                    if (selected && selected.value === '커스텀') {
-                        leftRowsInput.disabled = false;
-                        leftColumnsInput.disabled = false;
-                        rightRowsInput.disabled = false;
-                        rightColumnsInput.disabled = false;
-                    } else {
-                        leftRowsInput.disabled = true;
-                        leftColumnsInput.disabled = true;
-                        rightRowsInput.disabled = true;
-                        rightColumnsInput.disabled = true;
-                    }
-                }
-
-                function getCustomDimensions() {
-                    const leftRows = document.querySelector('input[name="leftSeatRows"]').value || '0';
-                    const leftColumns = document.querySelector('input[name="leftSeatColumns"]').value || '0';
-                    const rightRows = document.querySelector('input[name="rightSeatRows"]').value || '0';
-                    const rightColumns = document.querySelector('input[name="rightSeatColumns"]').value || '0';
-
-                    return `왼쪽: ${leftRows}x${leftColumns}, 오른쪽: ${rightRows}x${rightColumns}`;
-                }
-
-				function validateForm() {
-				    const selectedSeat = document.querySelector('input[name="seatTemplate"]:checked');
-				    const classroomNumber = document.querySelector('input[name="classroomNumber"]').value.trim();
-				    
-				    let leftRows = '';
-				    let leftColumns = '';
-				    let rightRows = '';
-				    let rightColumns = '';
-
-				    // 좌석 템플릿 선택 여부 확인
-				    if (!selectedSeat) {
-				        alert("좌석 템플릿을 선택해 주세요.");
-				        return false;
-				    }
-
-				    // 커스텀 좌석 템플릿 선택 시 입력 필드 확인
-				    if (selectedSeat.value === '커스텀') {
-				        leftRows = document.querySelector('input[name="leftSeatRows"]').value;
-				        leftColumns = document.querySelector('input[name="leftSeatColumns"]').value;
-				        rightRows = document.querySelector('input[name="rightSeatRows"]').value;
-				        rightColumns = document.querySelector('input[name="rightSeatColumns"]').value;
-
-				        if (!leftRows || !leftColumns || !rightRows || !rightColumns) {
-				            Swal.fire({
-				                icon: 'error',
-				                title: '입력 필드 오류',
-				                text: '모든 커스텀 입력 필드를 채워 주세요.',
-				            });
-				            return false;
-				        }
-				    }
-
-				    // 강의실 이름 입력 여부 확인
-				    if (!classroomNumber) {
-				        alert("강의실 이름을 입력해 주세요.");
-				        return false;
-				    }
-
-				    // 강의실 중복 확인 함수
-				    const checkClassroomExists = () => {
-				        return new Promise((resolve, reject) => {
-				            const xhr = new XMLHttpRequest();
-				            xhr.open("POST", "/checkClassroomExists");
-				            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-				            xhr.onload = function () {
-				                if (xhr.status === 200) {
-				                    resolve(JSON.parse(xhr.responseText)); // true or false 반환
-				                } else {
-				                    reject("중복 확인 중 오류가 발생했습니다.");
-				                }
-				            };
-				            xhr.send(`classroomNumber=${classroomNumber}`);
-				        });
-				    };
-
-				    // 강의실 중복 확인 후 처리
-				    checkClassroomExists().then(isDuplicate => {
-				        if (isDuplicate) {
-				            Swal.fire({
-				                icon: 'error',
-				                title: '중복된 강의실 이름',
-				                text: '이미 존재하는 강의실 이름입니다. 다른 이름을 입력해 주세요.',
-				            });
-				            return false;
-				        } else {
-				            // SweetAlert2로 폼 제출 여부 확인
-				            Swal.fire({
-				                title: '강의실 생성 확인',
-								html: `
-				                    <p>강의실 이름: ${classroomNumber}</p>
-				                    <p>선택된 좌석 스타일: ${selectedSeat.value}</p>
-				                    ${selectedSeat.value === '커스텀' ? `
-				                        <p>왼쪽 : ${leftRows}X${leftColumns}, 오른쪽 : ${rightRows}X${rightColumns}</p>
-				                    ` : ''}
-				                `,
-				                icon: 'warning',
-				                showCancelButton: true,
-				                confirmButtonText: '예, 생성하겠습니다',
-				                cancelButtonText: '취소'
-				            }).then((result) => {
-				                if (result.isConfirmed) {
-				                    document.querySelector('form').submit(); // 확인 시 폼 제출
-				                }
-				            });
-				        }
-				    }).catch(error => {
-				        alert(error);
-				    });
-
-				    return false; // 폼 자동 제출 방지
-				}
-
-
-                document.querySelectorAll('input[type="radio"]').forEach(input => {
-                    input.addEventListener('change', updateSelection);
-                });
-
-                document.querySelectorAll('input[type="number"]').forEach(input => {
-                    input.addEventListener('input', updateSelection);
-                });
-            </script>
-        </div>
-    </div>
-
-    <div class="seat-info">
-        <h3>선택된 좌석 스타일</h3>
-        <p><span id="selectedSeatTemplate" class="selected-template">□X□</span></p>
-    </div>
-    
-    <div class="seat-info">
-        <label>
-            <input type="number" name="classroomNumber" placeholder="생성할 강의실 이름을 입력하세요">
-        </label>
-    </div>
-
-	<div class="button-container">
-	    <button type="submit">생성하기</button>
+			<div class="button-container"> <!-- 버튼 컨테이너 -->
+				<button type="submit">강의실 생성하기</button> <!-- 제출 버튼 -->
+			</div>
+		</form>
 	</div>
-</form>
+
+	<script>
+		// 커스텀 입력 필드의 활성화/비활성화를 토글하는 함수
+		function toggleCustomInputs(isCustom) {
+			// 각 입력 필드의 disabled 속성을 isCustom 값의 반대로 설정
+			document.getElementById('leftSeatRows').disabled = !isCustom;
+			document.getElementById('leftSeatColumns').disabled = !isCustom;
+			document.getElementById('rightSeatRows').disabled = !isCustom;
+			document.getElementById('rightSeatColumns').disabled = !isCustom;
+		}
+
+		// 선택된 좌석 템플릿을 업데이트하는 함수
+		function updateSelection() {
+			// 선택된 라디오 버튼을 찾음
+			const selectedSeat = document.querySelector('input[name="seatTemplate"]:checked');
+			// 선택된 템플릿에 따라 표시할 텍스트를 결정
+			const seatTemplateText = selectedSeat && selectedSeat.value === '커스텀'
+				? getCustomDimensions() // 커스텀인 경우 사용자 입력값으로 텍스트 생성
+				: (selectedSeat ? selectedSeat.value : '□X□'); // 그 외의 경우 선택된 값 또는 기본값 사용
+			// 선택된 템플릿 텍스트를 화면에 표시
+			document.getElementById('selectedSeatTemplate').textContent = seatTemplateText;
+			// 커스텀 입력 필드 상태 업데이트
+			handleCustomInputs(selectedSeat);
+		}
+
+		// 커스텀 입력 필드의 상태를 관리하는 함수
+		function handleCustomInputs(selected) {
+			// 각 입력 필드 요소를 선택
+			const leftRowsInput = document.querySelector('input[name="leftSeatRows"]');
+			const leftColumnsInput = document.querySelector('input[name="leftSeatColumns"]');
+			const rightRowsInput = document.querySelector('input[name="rightSeatRows"]');
+			const rightColumnsInput = document.querySelector('input[name="rightSeatColumns"]');
+
+			// 선택된 템플릿이 '커스텀'인 경우 입력 필드 활성화, 그 외의 경우 비활성화
+			if (selected && selected.value === '커스텀') {
+				leftRowsInput.disabled = false;
+				leftColumnsInput.disabled = false;
+				rightRowsInput.disabled = false;
+				rightColumnsInput.disabled = false;
+			} else {
+				leftRowsInput.disabled = true;
+				leftColumnsInput.disabled = true;
+				rightRowsInput.disabled = true;
+				rightColumnsInput.disabled = true;
+			}
+		}
+
+		// 커스텀 좌석 배치의 치수를 문자열로 반환하는 함수
+		function getCustomDimensions() {
+			// 각 입력 필드의 값을 가져옴 (값이 없으면 '0'으로 설정)
+			const leftRows = document.querySelector('input[name="leftSeatRows"]').value || '0';
+			const leftColumns = document.querySelector('input[name="leftSeatColumns"]').value || '0';
+			const rightRows = document.querySelector('input[name="rightSeatRows"]').value || '0';
+			const rightColumns = document.querySelector('input[name="rightSeatColumns"]').value || '0';
+
+			// 좌석 배치 정보를 문자열로 반환
+			return `왼쪽: ${leftRows}x${leftColumns}, 오른쪽: ${rightRows}x${rightColumns}`;
+		}
+
+		// 폼 제출 전 유효성을 검사하는 함수
+		function validateForm() {
+			// 선택된 좌석 템플릿과 입력된 강의실 이름을 가져옴
+			const selectedSeat = document.querySelector('input[name="seatTemplate"]:checked');
+			const classroomNumber = document.querySelector('input[name="classroomNumber"]').value.trim();
+
+			// 커스텀 좌석 배치를 위한 변수 초기화
+			let leftRows = '';
+			let leftColumns = '';
+			let rightRows = '';
+			let rightColumns = '';
+
+			// 좌석 템플릿 선택 여부 확인
+			if (!selectedSeat) {
+				Swal.fire({
+					icon: 'error',
+					title: '좌석 템플릿 오류',
+					text: '좌석 템플릿을 선택해 주세요.',
+				});
+				return false;
+			}
+
+			// 커스텀 좌석 템플릿 선택 시 입력 필드 확인
+			if (selectedSeat.value === '커스텀') {
+				leftRows = document.querySelector('input[name="leftSeatRows"]').value;
+				leftColumns = document.querySelector('input[name="leftSeatColumns"]').value;
+				rightRows = document.querySelector('input[name="rightSeatRows"]').value;
+				rightColumns = document.querySelector('input[name="rightSeatColumns"]').value;
+
+				if (!leftRows || !leftColumns || !rightRows || !rightColumns) {
+					Swal.fire({
+						icon: 'error',
+						title: '입력 필드 오류',
+						text: '모든 커스텀 입력 필드를 채워 주세요.',
+					});
+					return false;
+				}
+			}
+
+			// 강의실 이름 입력 여부 확인
+			if (!classroomNumber) {
+				Swal.fire({
+					icon: 'error',
+					title: '강의실 이름 오류',
+					text: '강의실 이름을 입력해 주세요.',
+				});
+				return false;
+			}
+
+			// 강의실 중복 확인 함수 정의
+			const checkClassroomExists = () => {
+				return new Promise((resolve, reject) => {
+					const xhr = new XMLHttpRequest();
+					xhr.open("POST", "/checkClassroomExists");
+					xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+					xhr.onload = function () {
+						if (xhr.status === 200) {
+							resolve(JSON.parse(xhr.responseText)); // true or false 반환
+						} else {
+							reject("중복 확인 중 오류가 발생했습니다.");
+						}
+					};
+					xhr.send(`classroomNumber=${classroomNumber}`);
+				});
+			};
+
+			// 강의실 중복 확인 후 처리
+			checkClassroomExists().then(isDuplicate => {
+				if (isDuplicate) {
+					// 중복된 강의실 이름인 경우 오류 메시지 표시
+					Swal.fire({
+						icon: 'error',
+						title: '중복된 강의실 이름',
+						text: '이미 존재하는 강의실 이름입니다. 다른 이름을 입력해 주세요.',
+					});
+					return false;
+				} else {
+					// 중복이 아닌 경우 강의실 생성 확인 대화상자 표시
+					Swal.fire({
+						title: '강의실 생성 확인',
+						html: `
+	                        <p>강의실 이름: ${classroomNumber}</p>
+	                        <p>선택된 좌석 스타일: ${selectedSeat.value}</p>
+	                        ${selectedSeat.value === '커스텀' ? `
+	                            <p>왼쪽 : ${leftRows}X${leftColumns}, 오른쪽 : ${rightRows}X${rightColumns}</p>
+	                        ` : ''}
+	                    `,
+						icon: 'warning',
+						showCancelButton: true,
+						confirmButtonText: '예, 생성하겠습니다',
+						cancelButtonText: '취소'
+					}).then((result) => {
+						if (result.isConfirmed) {
+							document.querySelector('form').submit(); // 확인 시 폼 제출
+						}
+					});
+				}
+			}).catch(error => {
+				// 오류 발생 시 오류 메시지 표시
+				Swal.fire({
+					icon: 'error',
+					title: '오류 발생',
+					text: error,
+				});
+			});
+
+			return false; // 폼 자동 제출 방지
+		}
+
+		// 모든 라디오 버튼에 change 이벤트 리스너 추가
+		document.querySelectorAll('input[type="radio"]').forEach(input => {
+			input.addEventListener('change', updateSelection);
+		});
+
+		// 모든 숫자 입력 필드에 input 이벤트 리스너 추가
+		document.querySelectorAll('input[type="number"]').forEach(input => {
+			input.addEventListener('input', updateSelection);
+		});
+	</script>
 </body>
+
 </html>

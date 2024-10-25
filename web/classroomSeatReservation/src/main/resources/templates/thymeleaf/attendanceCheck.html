@@ -1,60 +1,403 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <title>출석 확인</title>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid black;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        .absent {
-            color: red;
-        }
-    </style>
+    <!-- 외부 CSS 파일들을 링크 -->
+    <link rel="stylesheet" href="/css/timetableStyle.css" />
+    <link rel="stylesheet" href="/css/classroomStyle.css" />
+    <link rel="stylesheet" href="/css/attendanceStyle.css" />
+    <!-- SweetAlert2 라이브러리 스크립트 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- jQuery 라이브러리 스크립트 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Font Awesome 아이콘 라이브러리 CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
+
 <body>
-	<!-- 상단 메뉴 포함 (외부 HTML 파일을 삽입하여 메뉴 구성) -->
-	<header th:replace="~{/menu_admin.html}"></header>
-	
-    <h1>오늘의 출석 현황</h1>
-	<p>현재 날짜: <span th:text="${currentDate}"></span></p>
-	<p>현재 시간: <span th:text="${currentTime}"></span></p>
-	<p>현재 요일: <span th:text="${currentDay}"></span></p>
-	
-    <table>
-        <thead>
-            <tr>
-                <th>학생 ID</th>
-                <th>이름</th>
-                <th>학번</th>
-                <th>과목</th>
-                <th>강의실</th>
-                <th>시작 시간</th>
-                <th>종료 시간</th>
-                <th>출석 상태</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="attendance : ${attendanceList}">
-                <td th:text="${attendance.userId}"></td>
-                <td th:text="${attendance.userName}"></td>
-                <td th:text="${attendance.studentId}"></td>
-                <td th:text="${attendance.subject}"></td>
-                <td th:text="${attendance.classroomName}"></td>
-                <td th:text="${attendance.startHour}"></td>
-                <td th:text="${attendance.endHour}"></td>
-                <td th:text="${attendance.status}" th:class="${attendance.status == '결석' ? 'absent' : ''}"></td>
-            </tr>
-        </tbody>
-    </table>
+    <!-- 상단 메뉴를 포함 (외부 HTML 파일을 삽입하여 메뉴 구성) -->
+    <header th:replace="~{/menu_admin.html}"></header>
+
+    <!-- 출석 확인 모달 -->
+    <div id="attModal" class="modal">
+        <div class="attModal-content">
+            <!-- 모달 닫기 버튼 -->
+            <span class="close" id="closeModal">&times;</span>
+            <div class="att-container">
+                <h1>오늘의 출석 현황</h1>
+                <!-- 현재 날짜, 시간, 요일을 표시하는 패널 -->
+                <div class="att-info-panel">
+                    <span id="currentDate" th:text="${#temporals.format(currentDate, 'yyyy-MM-dd')}"></span>
+                    <span id="currentTime"></span>
+                    <span id="currentDay" th:text="${currentDay}"></span>
+                </div>
+
+                <!-- 학생이 없을 때 표시되는 메시지 -->
+                <div id="noStudentsMessage" class="att-no-students-message">
+                    <i class="fas fa-user-graduate"></i>
+                    <p>강의 듣는 학생이 없습니다.</p>
+                </div>
+
+                <!-- 출석 현황 테이블 -->
+                <table id="attendanceTable" class="att-table">
+                    <thead>
+                        <tr>
+                            <th>학생 ID</th>
+                            <th>이름</th>
+                            <th>학번</th>
+                            <th>과목</th>
+                            <th>강의실</th>
+                            <th>시작 시간</th>
+                            <th>종료 시간</th>
+                            <th>출석 상태</th>
+                        </tr>
+                    </thead>
+                    <tbody id="attendanceTableBody">
+                        <tr th:each="attendance : ${attendanceList}" th:attr="data-userid=${attendance.userId}">
+                            <td th:text="${attendance.userId}"></td>
+                            <td th:text="${attendance.userName}"></td>
+                            <td th:text="${attendance.studentId}"></td>
+                            <td th:text="${attendance.subject}"></td>
+                            <td th:text="${attendance.classroomName}"></td>
+                            <td th:text="${attendance.startHour + '시'}"></td>
+                            <td th:text="${attendance.endHour + '시'}"></td>
+                            <td>
+                                <div class="att-custom-select">
+                                    <select
+                                        th:attr="data-userid=${attendance.userId}, data-username=${attendance.userName}, data-studentid=${attendance.studentId}, data-subject=${attendance.subject}, data-day=${currentDay}, data-starthour=${attendance.startHour}"
+                                        onchange="changeAttendance(this)">
+                                        <option value="출석" th:selected="${attendance.status == '출석'}">출석</option>
+                                        <option value="결석" th:selected="${attendance.status == '결석'}">결석</option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- 페이지 새로고침 버튼 -->
+            <button class="att-refresh-button" onclick="refreshPage()">↻</button>
+        </div>
+    </div>
+
+    <h1>시간표</h1>
+    <div class="container">
+        <!-- 시간표 테이블 -->
+        <table>
+            <thead>
+                <tr>
+                    <th></th>
+                    <!-- Thymeleaf를 사용하여 요일 헤더 생성 -->
+                    <th th:each="day : ${days}" th:text="${day}"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="hour : ${hours}">
+                    <td th:text="${hour}"></td>
+                    <!-- 각 요일 생성 -->
+                    <td th:each="day : ${days}" class="clickable" data-day="${day}" data-hour="${hour}">
+                        <!-- 해당 시간에 수업이 있는 경우 표시 -->
+                        <div th:each="timeTable, stat : ${userTimeTable}"
+                            th:if="${timeTable.day == day and timeTable.startHour le hour and timeTable.endHour gt hour}"
+                            th:classappend="'subject-' + ${stat.index % 10}" th:attr="data-subject=${timeTable.subject}, data-classroom=${timeTable.classroomName}, 
+                                              data-day=${timeTable.day}, data-hour=${hour}">
+                            <span th:text="${timeTable.subject + ' (' + timeTable.classroomName + ')'}"></span><br>
+                        </div>
+                        <!-- 빈 셀을 위한 숨겨진 div -->
+                        <div th:attr="data-hour=${hour}, data-day=${day}" style="display: none;"></div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 시간표 관련 버튼들 -->
+    <div class="timetable-button-container">
+        <!-- 학생인 경우에만 표시되는 좌석 예약 버튼 -->
+        <button th:if="${userPosition == 'student'}" id="reserve-seat-button" class="timetable-button">좌석 예약</button>
+        <!-- 관리자나 교수인 경우에만 표시되는 좌석 관리 버튼 -->
+        <button th:if="${userPosition == 'admin' or userPosition == 'professor'}" id="manage-seat-button"
+            class="timetable-button">좌석 관리</button>
+        <!-- 시간표 추가 버튼 -->
+        <label for="modal-addCheckbox" class="timetable-button add-modal-button">시간표 추가</label>
+        <!-- 시간표 수정 버튼 -->
+        <label for="modal-checkbox" class="timetable-button edit-modal-button">시간표 수정</label>
+        <!-- 시간표 삭제 버튼 -->
+        <label for="delete-modal-checkbox" class="timetable-button delete-modal-button">시간표 삭제</label>
+    </div>
+
+	<script th:inline="javascript">
+		// 현재 시간을 업데이트하는 함수
+		function updateTime() {
+			// 현재 날짜와 시간을 가져옴
+			const now = new Date();
+			// 한국 시간 형식으로 시간 문자열 생성 (24시간 형식)
+			const timeString = now.toLocaleTimeString('ko-KR', {hour12: false});
+			// 'currentTime' ID를 가진 요소의 텍스트를 현재 시간으로 업데이트
+			document.getElementById('currentTime').textContent = timeString;
+		}
+
+		// 출석 상태를 업데이트하는 함수
+		function updateAttendanceStatus() {
+			// AJAX를 사용하여 서버에서 출석 상태 데이터를 가져옴
+			$.ajax({
+				url: '/getAttendanceStatus',
+				type: 'GET',
+				dataType: 'json',
+				success: function (response) {
+					// 필요한 DOM 요소들을 가져옴
+					const tableBody = document.getElementById('attendanceTableBody');
+					const noStudentsMessage = document.getElementById('noStudentsMessage');
+					const attendanceTable = document.getElementById('attendanceTable');
+
+					// 응답이 배열이고 비어있지 않은 경우
+					if (Array.isArray(response) && response.length > 0) {
+						// '학생 없음' 메시지를 숨기고 출석 테이블을 표시
+						noStudentsMessage.style.display = 'none';
+						attendanceTable.style.display = 'table';
+						// 테이블 내용을 초기화
+						tableBody.innerHTML = '';
+
+						// 각 출석 데이터에 대해 새로운 행을 생성하고 테이블에 추가
+						response.forEach(attendance => {
+							const newRow = `
+	                            <tr data-userid="${attendance.userId}">
+	                                <td>${attendance.userId}</td>
+	                                <td>${attendance.userName}</td>
+	                                <td>${attendance.studentId}</td>
+	                                <td>${attendance.subject}</td>
+	                                <td>${attendance.classroomName}</td>
+	                                <td>${attendance.startHour}시</td>
+	                                <td>${attendance.endHour}시</td>
+	                                <td>
+	                                    <div class="att-custom-select">
+	                                        <select data-userid="${attendance.userId}" data-username="${attendance.userName}" data-studentid="${attendance.studentId}" data-subject="${attendance.subject}" data-day="${attendance.day}" data-starthour="${attendance.startHour}" onchange="changeAttendance(this)">
+	                                            <option value="출석" ${attendance.status === '출석' ? 'selected' : ''}>출석</option>
+	                                            <option value="결석" ${attendance.status === '결석' ? 'selected' : ''}>결석</option>
+	                                        </select>
+	                                    </div>
+	                                </td>
+	                            </tr>
+	                        `;
+							tableBody.innerHTML += newRow;
+						});
+
+						// 커스텀 셀렉트 박스 초기화
+						initCustomSelects();
+					} else {
+						// 학생이 없는 경우 '학생 없음' 메시지를 표시하고 테이블을 숨김
+						noStudentsMessage.style.display = 'block';
+						attendanceTable.style.display = 'none';
+						tableBody.innerHTML = '';
+					}
+				},
+				error: function (xhr, status, error) {
+					// 에러 발생 시 '학생 없음' 메시지를 표시하고 테이블을 숨김
+					const noStudentsMessage = document.getElementById('noStudentsMessage');
+					const attendanceTable = document.getElementById('attendanceTable');
+					noStudentsMessage.style.display = 'block';
+					attendanceTable.style.display = 'none';
+				}
+			});
+		}
+
+		// 출석 상태를 변경하는 함수
+		function changeAttendance(selectElement) {
+			// 선택된 요소의 데이터 속성들을 가져옴
+			const userId = selectElement.getAttribute('data-userid');
+			const userName = selectElement.getAttribute('data-username');
+			const studentId = selectElement.getAttribute('data-studentid');
+			const subject = selectElement.getAttribute('data-subject');
+			const day = selectElement.getAttribute('data-day');
+			const startHour = selectElement.getAttribute('data-starthour');
+			const newStatus = selectElement.value;
+
+			// 확인 메시지 설정
+			let message = '';
+			if (newStatus === '출석') {
+				message = `${userName} (학번: ${studentId})을 강제로 출석 처리하시겠습니까?`;
+			} else {
+				message = `${userName} (학번: ${studentId})을 강제로 결석 처리하시겠습니까?`;
+			}
+
+			// SweetAlert2를 사용하여 확인 대화상자 표시
+			Swal.fire({
+				title: '출석 상태 변경',
+				text: message,
+				icon: 'warning',
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				confirmButtonText: '확인',
+				cancelButtonText: '취소'
+			}).then((result) => {
+				if (result.isConfirmed) {
+					// 사용자가 확인을 선택한 경우, AJAX 요청으로 서버에 상태 변경 요청
+					$.ajax({
+						url: '/updateAttendance',
+						type: 'POST',
+						data: {
+							userId: userId,
+							day: day,
+							startHour: startHour,
+							subject: subject,
+							isAttended: newStatus === '출석'
+						},
+						success: function (response) {
+							// 성공 시 알림 표시
+							Swal.fire(
+								'변경 완료',
+								'출석 상태가 변경되었습니다.',
+								'success'
+							);
+							// 출석 상태 즉시 업데이트
+							updateAttendanceStatus();
+						},
+						error: function () {
+							// 실패 시 에러 알림 표시
+							Swal.fire(
+								'오류',
+								'출석 상태 변경에 실패했습니다.',
+								'error'
+							);
+							// 선택 상태를 원래대로 되돌림
+							selectElement.value = newStatus === '출석' ? '결석' : '출석';
+						}
+					});
+				} else {
+					// 사용자가 취소를 선택한 경우, 선택 상태를 원래대로 되돌림
+					selectElement.value = newStatus === '출석' ? '결석' : '출석';
+				}
+			});
+		}
+
+		// 페이지를 새로고침하는 함수
+		function refreshPage() {
+			// 새로고침 버튼에 회전 애니메이션 적용
+			const refreshButton = document.querySelector('.att-refresh-button');
+			refreshButton.classList.add('spinning');
+			// 0.5초 후에 페이지 새로고침
+			setTimeout(() => {
+				location.reload();
+			}, 500);
+		}
+
+		// 커스텀 셀렉트 박스를 초기화하는 함수
+		function initCustomSelects() {
+			var x, i, j, l, ll, selElmnt, a, b, c;
+			// 'att-custom-select' 클래스를 가진 모든 요소를 선택
+			x = document.getElementsByClassName("att-custom-select");
+			l = x.length;
+			for (i = 0; i < l; i++) {
+				selElmnt = x[i].getElementsByTagName("select")[0];
+				ll = selElmnt.length;
+				// 선택된 옵션을 표시할 DIV 요소 생성
+				a = document.createElement("DIV");
+				a.setAttribute("class", "select-selected");
+				a.innerHTML = selElmnt.options[selElmnt.selectedIndex].innerHTML;
+				x[i].appendChild(a);
+				// 옵션 목록을 포함할 DIV 요소 생성
+				b = document.createElement("DIV");
+				b.setAttribute("class", "select-items select-hide");
+				for (j = 0; j < ll; j++) {
+					// 각 옵션에 대한 DIV 요소 생성
+					c = document.createElement("DIV");
+					c.innerHTML = selElmnt.options[j].innerHTML;
+					c.addEventListener("click", function (e) {
+						// 옵션 선택 시 실행될 함수
+						var y, i, k, s, h, sl, yl;
+						s = this.parentNode.parentNode.getElementsByTagName("select")[0];
+						sl = s.length;
+						h = this.parentNode.previousSibling;
+						for (i = 0; i < sl; i++) {
+							if (s.options[i].innerHTML == this.innerHTML) {
+								s.selectedIndex = i;
+								h.innerHTML = this.innerHTML;
+								y = this.parentNode.getElementsByClassName("same-as-selected");
+								yl = y.length;
+								for (k = 0; k < yl; k++) {
+									y[k].removeAttribute("class");
+								}
+								this.setAttribute("class", "same-as-selected");
+								break;
+							}
+						}
+						h.click();
+						// 변경 이벤트 발생
+						s.dispatchEvent(new Event('change'));
+					});
+					b.appendChild(c);
+				}
+				x[i].appendChild(b);
+				a.addEventListener("click", function (e) {
+					// 셀렉트 박스 클릭 시 옵션 목록 표시/숨김
+					e.stopPropagation();
+					closeAllSelect(this);
+					this.nextSibling.classList.toggle("select-hide");
+					this.classList.toggle("select-arrow-active");
+				});
+			}
+
+			// 다른 곳을 클릭했을 때 모든 셀렉트 박스를 닫는 함수
+			function closeAllSelect(elmnt) {
+				var x, y, i, xl, yl, arrNo = [];
+				x = document.getElementsByClassName("select-items");
+				y = document.getElementsByClassName("select-selected");
+				xl = x.length;
+				yl = y.length;
+				for (i = 0; i < yl; i++) {
+					if (elmnt == y[i]) {
+						arrNo.push(i)
+					} else {
+						y[i].classList.remove("select-arrow-active");
+					}
+				}
+				for (i = 0; i < xl; i++) {
+					if (arrNo.indexOf(i)) {
+						x[i].classList.add("select-hide");
+					}
+				}
+			}
+
+			// 문서 전체에 클릭 이벤트 리스너 추가
+			document.addEventListener("click", closeAllSelect);
+		}
+
+		// 페이지 로드 시 실행되는 함수
+		window.onload = function () {
+			// 모달 요소 가져오기
+			var modal = document.getElementById("attModal");
+			// 모달 표시
+			modal.style.display = "block";
+
+			// 닫기 버튼 요소 가져오기
+			var span = document.getElementsByClassName("close")[0];
+			// 닫기 버튼 클릭 시 이벤트 처리
+			span.onclick = function () {
+				modal.style.display = "none";
+				window.location.href = "/timetable"; // 시간표 페이지로 이동
+			}
+
+			// 모달 외부 클릭 시 이벤트 처리
+			window.onclick = function (event) {
+				if (event.target == modal) {
+					modal.style.display = "none";
+					window.location.href = "/timetable"; // 시간표 페이지로 이동
+				}
+			}
+
+			// 초기 시간 업데이트
+			updateTime();
+			// 1초마다 시간 업데이트
+			setInterval(updateTime, 1000);
+			// 0.1초마다 출석 상태 업데이트
+			setInterval(updateAttendanceStatus, 100);
+			// 커스텀 셀렉트 박스 초기화
+			initCustomSelects();
+		}
+	</script>
 </body>
+
 </html>

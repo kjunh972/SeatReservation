@@ -23,11 +23,12 @@ public class ClassroomSetController {
 
     @Autowired
     private ClassroomDAO classroomDAO;
-    ClassroomDTO classroomDTO = new ClassroomDTO();
+    private ClassroomDTO classroomDTO = new ClassroomDTO();
+    private Contoller ct = new Contoller();
 
     @GetMapping("/classroomSet")
     public String seatLayout(HttpSession session, Model model) {
-    	Contoller ct = new Contoller();
+    	
     	String userId = ct.GetId(session);
 		if (userId == null) {
 			model.addAttribute("error", "세션이 만료되었습니다. 다시 로그인 해주세요.");
@@ -47,7 +48,6 @@ public class ClassroomSetController {
             @RequestParam(required = false) Integer rightSeatColumns,
             @RequestParam(required = false) String classroomNumber,
             HttpSession session, Model model) {
-    	Contoller ct = new Contoller();
     	String userId = ct.GetId(session);
 		if (userId == null) {
 			model.addAttribute("error", "세션이 만료되었습니다. 다시 로그인 해주세요.");

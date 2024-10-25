@@ -1,17 +1,9 @@
-/* timeTableStyle.css에 추가 */
-
-body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f0f3f5;
-    color: #333;
-}
-
+/* h1 스타일 */
 h1 {
-    color: #778da9;
-    text-align: center;
-    margin-top: 30px;
-    font-size: 2.5em;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    color: #778da9; /* 글자색 설정 */
+    text-align: center; /* 중앙 정렬 */
+    font-size: 2.5em; /* 글자 크기 */
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1); /* 텍스트 그림자 효과 */
 }
 
 /* 과목별 배경색 지정 */
@@ -26,144 +18,161 @@ h1 {
 .subject-8 { background-color: #ff9966; } /* 연한 코랄색 */
 .subject-9 { background-color: #66ccff; } /* 연한 청록색 */
 
+/* 메인 컨테이너 스타일 */
 .container {
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 0 20px rgba(119, 141, 169, 0.2);
-    padding: 20px;
-    margin: 20px auto;
-    max-width: 90%;
+    background-color: white; /* 배경색 */
+    border-radius: 10px; /* 모서리 둥글게 */
+    box-shadow: 0 0 20px rgba(119, 141, 169, 0.2); /* 그림자 효과 */
+    padding: 20px; /* 내부 여백 */
+    margin: 20px auto; /* 상하 여백과 좌우 중앙 정렬 */
+    max-width: 90%; /* 최대 너비 */
 }
 
+/* 테이블 기본 스타일 */
 table {
-    border-collapse: separate;
-    border-spacing: 0;
-    width: 100%;
-    background-color: white;
-    border-radius: 8px;
-    overflow: hidden;
+    border-collapse: separate; /* 셀 경계 분리 */
+    border-spacing: 0; /* 셀 간격 없음 */
+    width: 100%; /* 전체 너비 */
+    background-color: white; /* 배경색 */
+    border-radius: 8px; /* 모서리 둥글게 */
+    overflow: hidden; /* 내용이 넘칠 경우 숨김 */
 }
 
+/* 테이블 헤더 스타일 */
 th {
-    background-color: #778da9;
-    color: white;
-    font-weight: bold;
-    padding: 12px;
-    text-align: center;
-    text-transform: uppercase;
+    background-color: #778da9; /* 배경색 */
+    color: white; /* 글자색 */
+    font-weight: bold; /* 글자 두께 */
+    padding: 12px; /* 내부 여백 */
+    text-align: center; /* 텍스트 중앙 정렬 */
+    text-transform: uppercase; /* 대문자 변환 */
 }
 
+/* 테이블 셀 스타일 */
 td {
-    padding: 12px;
-    text-align: center;
-    border-bottom: 1px solid #e0e0e0;
+    padding: 12px; /* 내부 여백 */
+    text-align: center; /* 텍스트 중앙 정렬 */
+    border-bottom: 1px solid #e0e0e0; /* 하단 테두리 */
 }
 
+/* 테이블 마지막 행의 셀 스타일 */
 tr:last-child td {
-    border-bottom: none;
+    border-bottom: none; /* 마지막 행의 하단 테두리 제거 */
 }
 
+/* 클릭 가능한 셀 호버 효과 */
 .clickable:hover {
-    background-color: rgba(119, 141, 169, 0.1);
+    background-color: rgba(119, 141, 169, 0.1); /* 호버 시 배경색 변경 */
 }
 
+/* 선택된 셀 스타일 */
 .selected {
-    outline: 2px solid #778da9;
+    outline: 2px solid #778da9; /* 외곽선 추가 */
 }
 
-.button-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
+/* 버튼 컨테이너 스타일 */
+.timetable-button-container {
+    display: flex; /* Flexbox 사용 */
+    justify-content: center; /* 가로 중앙 정렬 */
+    margin-top: 20px; /* 상단 여백 */
 }
 
-.button-container button,
-.button-container label {
-    background-color: #778da9;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    margin: 0 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+/* 버튼 및 라벨 버튼 스타일 */
+.timetable-button-container .timetable-button,
+.timetable-button-container label.timetable-button {
+    background-color: #778da9; /* 배경색 */
+    color: white; /* 글자색 */
+    border: none; /* 테두리 없음 */
+    padding: 10px 20px; /* 내부 여백 */
+    margin: 0 10px; /* 좌우 여백 */
+    border-radius: 5px; /* 모서리 둥글게 */
+    cursor: pointer; /* 마우스 커서 변경 */
+    transition: background-color 0.3s ease; /* 배경색 전환 효과 */
 }
 
-.button-container button:hover,
-.button-container label:hover {
-    background-color: #5a6f89;
+/* 버튼 호버 효과 */
+.timetable-button-container .timetable-button:hover,
+.timetable-button-container label.timetable-button:hover {
+    background-color: #5a6f89; /* 호버 시 배경색 변경 */
 }
 
+/* 모달 기본 스타일 */
 .modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
+    display: none; /* 초기에는 숨김 */
+    position: fixed; /* 화면에 고정 */
+    z-index: 1000; /* 다른 요소들 위에 표시 */
     left: 0;
     top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.4);
+    width: 100%; /* 전체 너비 */
+    height: 100%; /* 전체 높이 */
+    overflow: auto; /* 내용이 넘칠 경우 스크롤 허용 */
+    background-color: rgba(0,0,0,0.4); /* 반투명한 검은색 배경 */
 }
 
+/* 모달 내용 스타일 */
 .modal-content {
-    background-color: #f8f9fa;
-    margin: 5% auto;
-    padding: 20px;
-    border-radius: 10px;
-    width: 100%;
-    max-width: 700px;
-    max-height: 80vh;
-    overflow-y: auto;
-    position: relative;
+    background-color: #f8f9fa; /* 배경색 */
+    margin: 5% auto; /* 상단 여백과 좌우 중앙 정렬 */
+    padding: 20px; /* 내부 여백 */
+    border-radius: 10px; /* 모서리 둥글게 */
+    width: 100%; /* 너비 */
+    max-width: 700px; /* 최대 너비 */
+    max-height: 80vh; /* 최대 높이 */
+    overflow-y: auto; /* 세로 스크롤 허용 */
+    position: relative; /* 상대 위치 지정 */
 }
-
 
 /* 모달 닫기 버튼 스타일 */
 .close {
-    color: black; /* 글자 색상을 설정합니다. */
-    align-self: flex-end; /* 오른쪽 정렬합니다. */
-    font-size: 3rem; /* 글꼴 크기를 설정합니다. */
-    font-weight: bold; /* 글꼴 두껍게 설정합니다. */
-    cursor: pointer; /* 마우스 커서를 포인터로 변경합니다. */
+    color: black; /* 글자색 */
+    align-self: flex-end; /* 오른쪽 정렬 */
+    font-size: 3rem; /* 글자 크기 */
+    font-weight: bold; /* 글자 두께 */
+    cursor: pointer; /* 마우스 커서 변경 */
 }
 
+/* 모달 닫기 버튼 호버 및 포커스 효과 */
 .close:hover,
 .close:focus {
-    color: #aaa; /* 호버 또는 포커스 시 글자 색상을 변경합니다. */
+    color: #aaa; /* 호버 또는 포커스 시 글자색 변경 */
 }
 
+/* 모달 내 제목 스타일 */
 .modal-content h2 {
-    color: #778da9;
-    border-bottom: 2px solid #778da9;
-    padding-bottom: 10px;
+    color: #778da9; /* 글자색 */
+    border-bottom: 2px solid #778da9; /* 하단 테두리 */
+    padding-bottom: 10px; /* 하단 내부 여백 */
 }
 
+/* 모달 내 입력 필드 및 선택 필드 스타일 */
 .modal-content input[type="text"],
 .modal-content select {
-    border: 1px solid #778da9;
-    border-radius: 4px;
-    padding: 8px;
+    border: 1px solid #778da9; /* 테두리 */
+    border-radius: 4px; /* 모서리 둥글게 */
+    padding: 8px; /* 내부 여백 */
 }
 
+/* 모달 내 제출 버튼 스타일 */
 .modal-content input[type="submit"] {
-    background-color: #778da9;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+    background-color: #778da9; /* 배경색 */
+    color: white; /* 글자색 */
+    border: none; /* 테두리 없음 */
+    padding: 10px 20px; /* 내부 여백 */
+    border-radius: 5px; /* 모서리 둥글게 */
+    cursor: pointer; /* 마우스 커서 변경 */
+    transition: background-color 0.3s ease; /* 배경색 전환 효과 */
 }
 
+/* 모달 내 제출 버튼 호버 효과 */
 .modal-content input[type="submit"]:hover {
-    background-color: #5a6f89;
+    background-color: #5a6f89; /* 호버 시 배경색 변경 */
 }
 
+/* 에러 메시지 스타일 */
 .error {
-    background-color: #ffdddd;
-    border-left: 6px solid #f44336;
-    margin-bottom: 15px;
-    padding: 10px;
-    color: #f44336;
+    background-color: #ffdddd; /* 배경색 */
+    border-left: 6px solid #f44336; /* 좌측 테두리 */
+    margin-bottom: 15px; /* 하단 여백 */
+    padding: 10px; /* 내부 여백 */
+    color: #f44336; /* 글자색 */
 }

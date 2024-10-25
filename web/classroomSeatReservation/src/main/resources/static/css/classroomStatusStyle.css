@@ -1,131 +1,117 @@
-.seat-layout {
-	display: flex;
-	flex-direction: row;
-	/* 좌석을 좌우로 나열 */
-	justify-content: space-between;
-	/* 좌석 간의 간격 설정 */
-	gap: 6rem;
-	/* 왼쪽과 오른쪽 좌석 사이의 간격 */
+/* h1 태그의 상단 여백을 뷰포트 높이의 6.7%로 설정 */
+h1 {
+    margin-top: 6.7vh;
 }
 
+/* 좌석 레이아웃을 위한 컨테이너 스타일 */
+.seat-layout {
+    display: flex; /* Flexbox 레이아웃 사용 */
+    flex-direction: row; /* 자식 요소들을 가로로 배치 */
+    justify-content: space-between; /* 자식 요소들 사이에 균등한 간격 배치 */
+    gap: 6rem; /* 좌석 그룹 사이의 간격을 6rem으로 설정 */
+}
+
+/* 왼쪽과 오른쪽 좌석 그룹의 공통 스타일 */
 .left-seats,
 .right-seats {
-	display: flex;
-	flex-direction: column;
-	/* 좌석을 세로로 나열 */
+    display: flex; /* Flexbox 레이아웃 사용 */
+    flex-direction: column; /* 자식 요소들을 세로로 배치 */
 }
 
+/* 좌석 행의 스타일 */
 .seat-row {
-	display: flex;
-	gap: 1rem;
-	/* 좌석 간의 간격 */
-	margin-bottom: 1rem;
-	/* 좌석 행 사이의 아래 여백 */
+    display: flex; /* Flexbox 레이아웃 사용 */
+    gap: 1rem; /* 좌석 간의 간격을 1rem으로 설정 */
+    margin-bottom: 1rem; /* 좌석 행 사이의 아래 여백을 1rem으로 설정 */
 }
 
+/* 전체 그리드 컨테이너 스타일 */
 .grid-container {
-	display: flex;
-	justify-content: center;
-	/* 전체 좌석 구역을 가운데 정렬 */
-	padding: 1.2rem;
+    display: flex; /* Flexbox 레이아웃 사용 */
+    justify-content: center; /* 내용을 수평 중앙에 배치 */
+    padding: 1.2rem; /* 내부 여백을 1.2rem으로 설정 */
 }
 
+/* 그리드 레이아웃 스타일 */
 .grid {
-	display: flex;
-	justify-content: space-between;
-	/* 왼쪽과 오른쪽 구역 사이의 간격 설정 */
-	gap: 4rem;
-	/* 구역 간의 간격 설정 */
+    display: flex; /* Flexbox 레이아웃 사용 */
+    justify-content: space-between; /* 자식 요소들 사이에 균등한 간격 배치 */
+    gap: 4rem; /* 그리드 요소들 사이의 간격을 4rem으로 설정 */
 }
 
-.seat.empty {
-	background-color: #98fb98 !important;
-	/* 빈 좌석 배경색 지정 */
+/* 빈 좌석 버튼 스타일 */
+.seat-button.empty {
+    background-color: #98fb98 !important;
 }
 
-.seat.reserved {
-	background-color: #ff6347 !important;
-	/* 예약된 좌석 배경색 지정 */
+/* 예약된 좌석 버튼 스타일 */
+.seat-button.reserved {
+    background-color: #ff6347 !important;
 }
 
-.seat.banned {
-	background-color: gray;
-	cursor: not-allowed;
+/* 사용 금지된 좌석 버튼 스타일 */
+.seat-button.banned {
+    background-color: gray !important; 
+    cursor: not-allowed; /* 마우스 커서를 사용 불가 모양으로 변경 */
 }
 
-button {
-	width: 50px;
-	/* 버튼 가로 크기 */
-	height: 50px;
-	/* 버튼 세로 크기 */
-	color: black;
-	/* 글자색 검은색으로 변경 */
-	display: flex;
-	/* 내부 요소를 가운데 정렬하기 위해 flex 사용 */
-	justify-content: center;
-	/* 수평 가운데 정렬 */
-	align-items: center;
-	/* 수직 가운데 정렬 */
-	border: none;
-	/* 버튼의 기본 테두리 제거 */
-	cursor: pointer;
-	/* 마우스 포인터를 손 모양으로 변경 */
-	user-select: none;
-	/* 텍스트 선택 방지 */
+/* 좌석 버튼의 기본 스타일 */
+.seat-button {
+    width: 50px; /* 버튼의 너비를 50px로 설정 */
+    height: 50px; /* 버튼의 높이를 50px로 설정 */
+    color: black; /* 텍스트 색상을 검은색으로 설정 */
+    display: flex; /* Flexbox 레이아웃 사용 */
+    justify-content: center; /* 내용을 수평 중앙에 배치 */
+    align-items: center; /* 내용을 수직 중앙에 배치 */
+    border: none; /* 테두리 제거 */
+    cursor: pointer; /* 마우스 커서를 포인터로 변경 */
+    user-select: none; /* 텍스트 선택 방지 */
 }
 
+/* 모달 창의 기본 스타일 */
 .modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
+    display: none; /* 초기에는 숨김 상태 */
+    position: fixed; /* 화면에 고정 */
+    z-index: 1000; /* 다른 요소들 위에 표시 */
     left: 0;
     top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.4);
+    width: 100%; /* 전체 너비 */
+    height: 100%; /* 전체 높이 */
+    overflow: auto; /* 내용이 넘칠 경우 스크롤 허용 */
+    background-color: rgba(0,0,0,0.4); /* 반투명한 검은색 배경 */
 }
 
+/* 모달 내용의 스타일 */
 .modal-content {
-    background-color: #f8f9fa;
-    margin: 5% auto;
-    padding: 20px;
-    border-radius: 10px;
-    width: 100%;
-    max-width: 700px;
-    max-height: 80vh;
-    overflow-y: auto;
-    position: relative;
+    background-color: #f8f9fa; /* 배경색을 연한 회색으로 설정 */
+    margin: 5% auto; /* 상단에서 5% 여백, 좌우 중앙 정렬 */
+    padding: 20px; /* 내부 여백 */
+    border-radius: 10px; /* 모서리를 둥글게 */
+    width: 100%; /* 전체 너비 */
+    max-width: 700px; /* 최대 너비 제한 */
+    max-height: 80vh; /* 최대 높이를 뷰포트 높이의 80%로 제한 */
+    overflow-y: auto; /* 세로 방향 스크롤 허용 */
+    position: relative; /* 상대적 위치 지정 */
 }
 
-
-/* 예/아니오 버튼 스타일 */
+/* 확인 및 취소 버튼의 공통 스타일 */
 #confirmButton,
 #cancelButton {
-	display: inline-block;
-	/* 버튼을 인라인 블록으로 표시 */
-	width: 85px;
-	/* 버튼의 가로 크기 설정 */
-	height: 40px;
-	/* 버튼의 세로 크기 설정 */
-	margin: 20px;
-	/* 버튼들 사이의 여백 추가 */
-	border-radius: 4px;
-	/* 버튼의 모서리를 둥글게 만듦 */
-	background-color: #4CAF50;
-	/* 버튼의 배경색 설정 */
-	color: white;
-	/* 버튼 텍스트 색상 설정 */
-	cursor: pointer;
-	/* 마우스 포인터를 손 모양으로 변경 */
-	text-align: center;
-	/* 버튼의 텍스트를 가운데 정렬 */
+    display: inline-block; /* 인라인 블록으로 표시 */
+    width: 85px; /* 너비 설정 */
+    height: 40px; /* 높이 설정 */
+    margin: 20px; /* 외부 여백 */
+    border-radius: 4px; /* 모서리를 둥글게 */
+    background-color: #4CAF50; /* 배경색을 녹색으로 설정 */
+    color: white; /* 텍스트 색상을 흰색으로 설정 */
+    cursor: pointer; /* 마우스 커서를 포인터로 변경 */
+    text-align: center; /* 텍스트를 중앙 정렬 */
 }
 
-/* 알람 버튼 크기 늘리기 */
+/* SweetAlert2 팝업의 확인 및 취소 버튼 스타일 */
 .swal2-popup .swal2-actions .swal2-confirm,
 .swal2-popup .swal2-actions .swal2-cancel {
-	width: 5.5rem !important;
-	height: 3.2rem !important;
-	font-size: 1rem !important;
+    width: 5.5rem !important; /* 너비를 5.5rem으로 설정 (우선순위 높임) */
+    height: 3.2rem !important; /* 높이를 3.2rem으로 설정 (우선순위 높임) */
+    font-size: 1rem !important; /* 글자 크기를 1rem으로 설정 (우선순위 높임) */
 }

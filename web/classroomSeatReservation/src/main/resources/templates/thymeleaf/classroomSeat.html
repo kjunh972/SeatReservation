@@ -6,7 +6,7 @@
 	<title>강의실 좌석 예약 현황</title>
 	<link rel="stylesheet" href="/css/classroomStyle.css" />
 	<link rel="stylesheet" href="/css/classroomStatusStyle.css" />
-	<link rel="stylesheet" href="/css/timeTableStyle.css" />
+	<link rel="stylesheet" href="/css/timetableStyle.css" />
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
@@ -166,26 +166,48 @@
 				}
 			}
 
-			// 좌석 버튼 생성 함수
 			function createSeatButton(number, classroomName) {
-				const seatStatus = seatArray[number - 1];
-				let seat = document.createElement('button');
-				if (seatStatus === true) {
-					seat.classList.add('seat', 'reserved'); // 예약된 좌석 스타일
-					if (seatToReservNum[number]) {
-						seat.dataset.reservNum = seatToReservNum[number]; // 예약 번호 데이터 추가
-					}
-				} else if (seatStatus === 'banned') {
-					seat.classList.add('seat', 'banned'); // 금지된 좌석 스타일
-					seat.disabled = true; // 클릭 불가능하게 설정
-				} else {
-					seat.classList.add('seat', 'empty'); // 빈 좌석 스타일
-				}
-				seat.textContent = number; // 좌석 번호 표시
-				seat.dataset.seat = number; // 좌석 번호 데이터 추가
-				seat.dataset.classroom = classroomName; // 강의실 이름 데이터 추가
-				seat.onclick = () => handleSeatClick(seat); // 클릭 이벤트 핸들러 추가
-				return seat;
+			    const seatStatus = seatArray[number - 1]; // 좌석 상태 확인
+			    let seat = document.createElement('button');
+			    seat.classList.add('seat-button'); // seat-button 클래스 추가
+
+			    // 7202호에 대한 특별 처리
+			    if (classroomName === '7202') {
+			        if (number === 19 || number === 20) {
+			            // 19번과 20번 좌석은 빈 공간으로 처리
+			            seat.style.visibility = 'hidden';
+			            seat.style.pointerEvents = 'none';
+			        } else if (number > 20) {
+			            // 21번 이상의 좌석은 번호를 2 줄여서 표시
+			            let adjustedNumber = number - 2;
+			            seat.textContent = adjustedNumber; // 조정된 좌석 번호 표시
+			            seat.dataset.seat = adjustedNumber; // 조정된 좌석 번호 데이터 추가
+			        } else {
+			            // 나머지 좌석은 기존 번호 사용
+			            seat.textContent = number; // 좌석 번호 표시
+			            seat.dataset.seat = number; // 좌석 번호 데이터 추가
+			        }
+			    } else {
+			        // 7202호가 아닌 경우 기존 번호 사용
+			        seat.textContent = number; // 좌석 번호 표시
+			        seat.dataset.seat = number; // 좌석 번호 데이터 추가
+			    }
+
+			    if (seatStatus === true) {
+			        seat.classList.add('reserved'); // 예약된 좌석 스타일
+			        if (seatToReservNum[number]) {
+			            seat.dataset.reservNum = seatToReservNum[number]; // 예약 번호 데이터 추가
+			        }
+			    } else if (seatStatus === 'banned') {
+			        seat.classList.add('banned'); // 금지된 좌석 스타일
+			        seat.disabled = true; // 클릭 불가능하게 설정
+			    } else {
+			        seat.classList.add('empty'); // 빈 좌석 스타일
+			    }
+
+			    seat.dataset.classroom = classroomName; // 강의실 이름 데이터 추가
+			    seat.onclick = () => handleSeatClick(seat); // 클릭 이벤트 핸들러 추가
+			    return seat;
 			}
 
 			// 좌석 예약 금지 모달 열기 함수

@@ -1,50 +1,53 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <meta charset="UTF-8">
-    <title>강의실 생성 확인</title>
-    <link rel="stylesheet" href="/css/classroomStyle.css"/>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<meta charset="UTF-8">
+	<title>강의실 생성 확인</title>
+	<link rel="stylesheet" href="/css/classroomStyle.css" />
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
+
 <body>
-<header th:replace="~{/menu.html}"></header>
-<h1>강의실 생성 확인</h1>
+	<!-- 메뉴 추가 -->
+	<header th:replace="~{/menu.html}"></header>
+	<h1>강의실 생성 확인</h1>
 
-<div>
-    <!-- 오류 메시지 표시 -->
-    <div th:if="${error}">
-        <p th:text="${error}" style="color: red;"></p>
-    </div>
-    
-    <a href="/classroomSet">다시 선택하기</a>
+	<div>
+		<!-- 오류 메시지 표시 -->
+		<div th:if="${error}">
+			<p th:text="${error}" style="color: red;"></p>
+		</div>
 
-    <form id="classroomForm" method="post" th:action="@{/saveClassroom}">
-        <input type="hidden" name="seatTemplate" th:value="${seatTemplate}">
-        <input type="hidden" name="classroomNumber" th:value="${classroomNumber}">
-        <!-- 커스텀 좌석 데이터도 필요하다면 추가로 hidden 필드를 사용할 수 있습니다 -->
-        <input type="hidden" name="leftSeatRows" th:value="${leftSeatRows}">
-        <input type="hidden" name="leftSeatColumns" th:value="${leftSeatColumns}">
-        <input type="hidden" name="rightSeatRows" th:value="${rightSeatRows}">
-        <input type="hidden" name="rightSeatColumns" th:value="${rightSeatColumns}">
-        <button type="button" onclick="showConfirmation()">저장</button>
-    </form>
-</div>
+		<a href="/classroomSet">다시 선택하기</a>
 
-<script>
-	function showConfirmation() {
-	    const classroomNumber = document.querySelector('input[name="classroomNumber"]').value;
-	    const seatTemplate = document.querySelector('input[name="seatTemplate"]').value;
+		<form id="classroomForm" method="post" th:action="@{/saveClassroom}">
+			<input type="hidden" name="seatTemplate" th:value="${seatTemplate}">
+			<input type="hidden" name="classroomNumber" th:value="${classroomNumber}">
+			<!-- 커스텀 좌석 데이터도 필요하다면 추가로 hidden 필드를 사용할 수 있습니다 -->
+			<input type="hidden" name="leftSeatRows" th:value="${leftSeatRows}">
+			<input type="hidden" name="leftSeatColumns" th:value="${leftSeatColumns}">
+			<input type="hidden" name="rightSeatRows" th:value="${rightSeatRows}">
+			<input type="hidden" name="rightSeatColumns" th:value="${rightSeatColumns}">
+			<button type="button" onclick="showConfirmation()">저장</button>
+		</form>
+	</div>
 
-	    // 좌석 배치 정보
-	    const leftSeatRows = document.querySelector('input[name="leftSeatRows"]').value;
-	    const leftSeatColumns = document.querySelector('input[name="leftSeatColumns"]').value;
-	    const rightSeatRows = document.querySelector('input[name="rightSeatRows"]').value;
-	    const rightSeatColumns = document.querySelector('input[name="rightSeatColumns"]').value;
+	<script>
+		function showConfirmation() {
+			const classroomNumber = document.querySelector('input[name="classroomNumber"]').value;
+			const seatTemplate = document.querySelector('input[name="seatTemplate"]').value;
 
-	    // SweetAlert2로 강의실 생성 확인 알림창 표시
-	    Swal.fire({
-	        title: '강의실 생성 확인',
-	        html: `
+			// 좌석 배치 정보
+			const leftSeatRows = document.querySelector('input[name="leftSeatRows"]').value;
+			const leftSeatColumns = document.querySelector('input[name="leftSeatColumns"]').value;
+			const rightSeatRows = document.querySelector('input[name="rightSeatRows"]').value;
+			const rightSeatColumns = document.querySelector('input[name="rightSeatColumns"]').value;
+
+			// SweetAlert2로 강의실 생성 확인 알림창 표시
+			Swal.fire({
+				title: '강의실 생성 확인',
+				html: `
 	            <p><strong>강의실 이름:</strong> ${classroomNumber}</p>
 	            <p><strong>선택된 좌석 스타일:</strong> ${seatTemplate}</p>
 	            <p><strong>좌석 정보:</strong><br>
@@ -52,16 +55,17 @@
 	                오른쪽 좌석: ${rightSeatRows}행 ${rightSeatColumns}열
 	            </p>
 	        `,
-	        icon: 'info',
-	        showCancelButton: true,
-	        confirmButtonText: '저장',
-	        cancelButtonText: '취소',
-	    }).then((result) => {
-	        if (result.isConfirmed) {
-	            document.getElementById('classroomForm').submit(); // 확인 시 폼 제출
-	        }
-	    });
-	}
-</script>
+				icon: 'info',
+				showCancelButton: true,
+				confirmButtonText: '저장',
+				cancelButtonText: '취소',
+			}).then((result) => {
+				if (result.isConfirmed) {
+					document.getElementById('classroomForm').submit(); // 확인 시 폼 제출
+				}
+			});
+		}
+	</script>
 </body>
+
 </html>

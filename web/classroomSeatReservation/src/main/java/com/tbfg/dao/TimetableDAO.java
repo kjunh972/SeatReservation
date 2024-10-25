@@ -1,6 +1,7 @@
 package com.tbfg.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -70,5 +71,11 @@ public class TimetableDAO {
 	public List<String> getSubjectsByClassroom(String classroomName, String userId) {
         String sql = "SELECT subject FROM stutimetable WHERE classroomName = ? AND user_id = ?";
         return jdbcTemplate.queryForList(sql, new Object[]{classroomName, userId}, String.class);
+    }
+    
+    // 과목명과 요일을 가져오는 메소드
+    public List<Map<String, Object>> getSubjectsDay(String classroomName, String userId) {
+        String sql = "SELECT subject, day FROM stutimetable WHERE classroomName = ? AND user_id = ?";
+        return jdbcTemplate.queryForList(sql, new Object[]{classroomName, userId});
     }
 }

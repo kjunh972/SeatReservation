@@ -5,127 +5,71 @@
 	<meta charset="UTF-8">
 	<title>강의실 좌석 예약 현황</title>
 	<link rel="stylesheet" href="/css/classroomStyle.css" />
+	<link rel="stylesheet" href="/css/timetableStyle.css" />
 	<link rel="stylesheet" href="/css/classroomStatusStyle.css" />
+	<link rel="stylesheet" href="/css/classroomSetStyle.css" />
 	<!-- SweetAlert2 라이브러리 추가 (알림창 표시용) -->
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-	<style>
-	        .autocomplete-list {
-	            position: absolute;
-	            background-color: #f1f1f1;
-	            border: 0.0625rem solid #ccc;
-	            max-height: 9.375rem;
-	            overflow-y: auto;
-	            z-index: 999;
-	            width: 100%;
-	        }
-
-	        .seat-layout-preview {
-	            border: 0.0625rem solid #000;
-	            width: 15rem;
-	            height: auto;
-	            display: flex;
-	            flex-direction: column;
-	            align-items: center;
-	            justify-content: center;
-	            margin: 0.625rem;
-	            text-align: center;
-	            padding: 0.625rem;
-	            background-color: white;
-	        }
-
-	        .seat-selection {
-	            width: 100%;
-	            display: flex;
-	            flex-direction: row;
-	            align-items: flex-start;
-	            justify-content: center;
-	            flex-wrap: wrap;
-	            gap: 1rem;
-	            margin-bottom: 1.25rem;
-	        }
-
-	        .seat-info {
-	            margin-top: 1.25rem;
-	            text-align: center;
-	        }
-
-	        .seat-option {
-	            display: flex;
-	            flex-direction: column;
-	            align-items: center;
-	            margin-bottom: 1rem;
-	        }
-
-	        .custom-seats input {
-	            width: 3rem;
-	        }
-			
-			.button-container {
-			    display: flex;
-			    justify-content: center;
-			}
-			
-			.button-container button {
-				width: 7rem;
-				color: white;
-			}
-
-
-	    </style>
 </head>
 
 <body>
+	<!-- 메뉴 추가 -->
 	<header th:replace="~{/menu.html}"></header>
 
-	<h1>강의실 생성</h1>
-	<div class="container">
-	        <div class="seat-selection">
-	            <div th:each="layout : ${predefinedLayouts}" class="seat-option">
-	                <label>
-	                    <input type="radio" name="seatTemplate" th:value="${layout}" class="predefined-seat">
-	                    <span th:text="${layout}"></span>
-	                </label>
-	                <div class="seat-layout-preview">
-	                    <img th:src="${'/images/' + (layout == '왼쪽 : 4X5, 오른쪽 : 4X5' ? '4X5.png' : 
-	                                                  (layout == '왼쪽 : 4X6, 오른쪽 : 4X6' ? '4X6.png' : 
-	                                                  (layout == '왼쪽 : 4X7, 오른쪽 : 4X7' ? '4X7.png' : 'default.png')))}" 
-	                         alt="Seat Layout Image" style="width: 100%; height: auto;">
-	                </div>
-	            </div>
+	<div class="classroom-set">
+		<h1>강의실 생성</h1>
+		<div class="container">
+			<div class="seat-selection">
+				<div th:each="layout : ${predefinedLayouts}" class="seat-option">
+					<label>
+						<input type="radio" name="seatTemplate" th:value="${layout}" class="predefined-seat">
+						<span th:text="${layout}"></span>
+					</label>
+					<div class="seat-layout-preview">
+						<img th:src="${'/images/' + (layout == '왼쪽 : 4X5, 오른쪽 : 4X5' ? '4X5.png' : 
+                                                    (layout == '왼쪽 : 4X6, 오른쪽 : 4X6' ? '4X6.png' : 
+                                                    (layout == '왼쪽 : 4X7, 오른쪽 : 4X7' ? '4X7.png' : 'default.png')))}"
+							alt="Seat Layout Image" style="width: 100%; height: auto;">
+					</div>
+				</div>
 
 				<div class="seat-option">
-				    <label>
-				        <input type="radio" name="seatTemplate" value="커스텀" id="customSeatRadio" onclick="toggleCustomInputs(true)">
-				        커스텀
-				    </label>
-				    <div class="custom-seats">
-				        <br><label>왼쪽 가로: <input type="number" name="leftSeatRows" min="1" max="10" id="leftSeatRows" disabled></label><br>
-				        <label>왼쪽 세로: <input type="number" name="leftSeatColumns" min="1" max="10" id="leftSeatColumns" disabled></label><br><br>
-				        <label>오른쪽 가로: <input type="number" name="rightSeatRows" min="1" max="10" id="rightSeatRows" disabled></label><br>
-				        <label>오른쪽 세로: <input type="number" name="rightSeatColumns" min="1" max="10" id="rightSeatColumns" disabled></label>
-				    </div>
+					<label>
+						<input type="radio" name="seatTemplate" value="커스텀" id="customSeatRadio"
+							onclick="toggleCustomInputs(true)">
+						커스텀
+					</label>
+					<div class="custom-seats">
+						<br><label>왼쪽 가로: <input type="number" name="leftSeatRows" min="1" max="10" id="leftSeatRows"
+								disabled></label><br>
+						<label>왼쪽 세로: <input type="number" name="leftSeatColumns" min="1" max="10" id="leftSeatColumns"
+								disabled></label><br><br>
+						<label>오른쪽 가로: <input type="number" name="rightSeatRows" min="1" max="10" id="rightSeatRows"
+								disabled></label><br>
+						<label>오른쪽 세로: <input type="number" name="rightSeatColumns" min="1" max="10"
+								id="rightSeatColumns" disabled></label>
+					</div>
 				</div>
-	        </div>
-	    </div>
-	<div class="seat-info">
-	        <h3>선택된 좌석 스타일</h3>
-	        <p><span id="selectedSeatTemplate" class="selected-template">□X□</span></p>
-	    </div>
-	    
-	    <div class="seat-info">
-	        <label>
-	            <input type="number" name="classroomNumber" placeholder="생성할 강의실 호수 입력" min="1">
-	        </label>
-	    </div>
+			</div>
+		</div>
+		<div class="seat-info">
+			<h3>선택된 좌석 스타일</h3>
+			<p><span id="selectedSeatTemplate" class="selected-template">□X□</span></p>
+		</div>
+
+		<div class="seat-info">
+			<label>
+				<input type="number" name="classroomNumber" placeholder="생성할 강의실 호수 입력" min="1">
+			</label>
+		</div>
 
 		<div class="button-container">
-		    <button type="submit">생성하기</button>
+			<button type="submit">생성하기</button>
 		</div>
-	
-	
-	
+	</div>
+
 	<!-- 좌석 예약 현황 모달 -->
-	<div id="seatModal" class="modal" th:if="${classroom}">
+	<div id="seatModal" class="modal classroom-set" th:if="${classroom}">
 		<div class="modal-content">
 			<span class="close" id="closeSeatModal">&times;</span>
 			<h1 th:if="${classroom}" th:text="${classroom.classroomName} + '호 좌석 예약 현황'">강의실 좌석 예약 현황</h1>
@@ -169,7 +113,7 @@
 			} else {
 				console.error("closeSeatModal 버튼을 찾을 수 없습니다.");
 			}
-			
+
 			if (classrooNull == 1) {
 				openSeatModal();
 			}
@@ -180,11 +124,11 @@
 					closeSeatModal();
 				}
 			}
-			
+
 			// 좌석 배치를 생성하는 함수
 			function createSeatButton(number, classroomName) {
 				let seat = document.createElement('button');
-				seat.classList.add('seat', 'empty'); // 빈 좌석
+				seat.classList.add('seat-button', 'empty'); // 'seat'를 'seat-button'으로 변경
 				seat.textContent = number;
 				seat.dataset.seat = number;
 				seat.dataset.classroom = classroomName;
@@ -198,8 +142,8 @@
 			const rightCols = /*[[${classroom.rightRow}]]*/ 2;
 			const rightRows = /*[[${classroom.rightCol}]]*/ 3;
 			const classroomName = /*[[${classroom.classroomName}]]*/ 'undefined';
-			
-			console.log("leftRows : ",leftRows)
+
+			console.log("leftRows : ", leftRows);
 
 			// 좌석 배치를 생성하는 함수
 			function createSeatLayout(leftRows, leftCols, rightRows, rightCols, classroomName) {
@@ -226,9 +170,8 @@
 				}
 			}
 
-
 			createSeatLayout(leftRows, leftCols, rightRows, rightCols, classroomName);
-
+			
 			// 페이지 이동 시 popstate 처리
 			const goBackHome = () => {
 				window.location.href = '/'; // 홈으로 리다이렉션
@@ -240,7 +183,6 @@
 				window.removeEventListener("popstate", goBackHome);
 			});
 		});
-	</script>
 	</script>
 </body>
 

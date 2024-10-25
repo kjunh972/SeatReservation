@@ -22,6 +22,7 @@ import org.springframework.stereotype.Repository;
 import com.tbfg.dto.AttendanceDTO;
 import com.tbfg.dto.BanSeatDTO;
 import com.tbfg.dto.ClassroomDTO;
+import com.tbfg.dto.ReservationInfoDTO;
 import com.tbfg.dto.ReserveList;
 
 @Repository
@@ -53,28 +54,36 @@ public class ClassroomDAO {
 		jdbcTemplate.update(sql, reservNum, hour);
 	}
 
+	// 특정 강의실, 시간, 요일, 과목에 대한 예약 정보를 조회하는 메서드
 	@SuppressWarnings("deprecation")
 	public List<ReservationInfoDTO> getReservationInfo(String classroomName, List<Integer> selectHours, String day,
-			String subject) {
-		String sql = "SELECT DISTINCT r.reservNum, r.reservSeat " + "FROM Reservation r "
-				+ "JOIN ReservationHour rh ON r.reservNum = rh.reservNum "
-				+ "WHERE r.classroom_name = ? AND r.day = ? AND r.subject = ? " + "AND rh.reservHour IN ("
-				+ String.join(",", Collections.nCopies(selectHours.size(), "?")) + ")";
+	        String subject) {
+	    // SQL 쿼리 문자열 생성
+	    String sql = "SELECT DISTINCT r.reservNum, r.reservSeat " + "FROM Reservation r "
+	            + "JOIN ReservationHour rh ON r.reservNum = rh.reservNum "
+	            + "WHERE r.classroom_name = ? AND r.day = ? AND r.subject = ? " + "AND rh.reservHour IN ("
+	            + String.join(",", Collections.nCopies(selectHours.size(), "?")) + ")";
 
-		List<Object> params = new ArrayList<>();
-		params.add(classroomName);
-		params.add(day);
-		params.add(subject);
-		params.addAll(selectHours);
+	    // 쿼리 파라미터 리스트 생성
+	    List<Object> params = new ArrayList<>();
+	    params.add(classroomName);
+	    params.add(day);
+	    params.add(subject);
+	    params.addAll(selectHours);
 
-		return jdbcTemplate.query(sql, params.toArray(),
-				(rs, rowNum) -> new ReservationInfoDTO(rs.getInt("reservNum"), rs.getInt("reservSeat")));
+	    // 쿼리 실행 및 결과를 ReservationInfoDTO 객체 리스트로 매핑하여 반환
+	    return jdbcTemplate.query(sql, params.toArray(),
+	            (rs, rowNum) -> new ReservationInfoDTO(rs.getInt("reservNum"), rs.getInt("reservSeat")));
 	}
 
+	// 예약된 좌석을 업데이트하는 메서드
 	public boolean updateReservationSeat(int reservNum, int newSeat) {
-		String sql = "UPDATE Reservation SET reservSeat = ? WHERE reservNum = ?";
-		int rowsAffected = jdbcTemplate.update(sql, newSeat, reservNum);
-		return rowsAffected > 0;
+	    // SQL 업데이트 쿼리 문자열
+	    String sql = "UPDATE Reservation SET reservSeat = ? WHERE reservNum = ?";
+	    // 쿼리 실행 및 영향받은 행 수 반환
+	    int rowsAffected = jdbcTemplate.update(sql, newSeat, reservNum);
+	    // 영향받은 행이 있으면 true, 없으면 false 반환
+	    return rowsAffected > 0;
 	}
 
 	// 특정 강의실, 시간대, 요일, 과목명에 따라 예약된 좌석을 가져오는 메서드
@@ -151,45 +160,85 @@ public class ClassroomDAO {
 
 	// 예약 취소 메서드
 	public boolean cancelReservation(int reservNum, String userId) {
-		// 예약 삭제를 위한 SQL 쿼리
-		String deleteReservationSql = "DELETE FROM Reservation WHERE reservNum = ? AND user_id = ?";
-		// 예약 시간 삭제를 위한 SQL 쿼리
-		String deleteReservationHourSql = "DELETE FROM ReservationHour WHERE reservNum = ?";
+	    // 예약이 존재하는지 확인
+	    String checkSql = "SELECT COUNT(*) FROM Reservation WHERE reservNum = ? AND user_id = ?";
+	    Integer count = jdbcTemplate.queryForObject(checkSql, Integer.class, reservNum, userId);
 
-		// Reservation 테이블에서 예약 삭제 시도
-		int reservationSql = jdbcTemplate.update(deleteReservationSql, reservNum, userId);
+	    if (count != null && count > 0) {
+	        // 예약이 존재하면 삭제
+	        String deleteSql = "DELETE FROM Reservation WHERE reservNum = ? AND user_id = ?";
+	        jdbcTemplate.update(deleteSql, reservNum, userId);
+	        return true;
+	    }
 
-		if (reservationSql > 0) {
-			// 예약이 성공적으로 삭제된 경우, ReservationHour 테이블에서 해당 예약 번호에 관련된 모든 시간 삭제
-			int reservationHourSql = jdbcTemplate.update(deleteReservationHourSql, reservNum);
-			// 시간 삭제 작업이 성공적으로 수행되었는지 확인
-			return reservationHourSql >= 0; // 예약 시간 삭제 여부를 확인
-		}
+	    // 관리자나 교수인 경우 예약 번호만으로 삭제 가능
+	    String roleCheckSql = "SELECT position FROM Yuhan WHERE id = ?";
+	    String position = jdbcTemplate.queryForObject(roleCheckSql, String.class, userId);
 
-		// 예약 삭제가 실패한 경우
-		return false;
+	    if ("admin".equals(position) || "professor".equals(position)) {
+	        String deleteSql = "DELETE FROM Reservation WHERE reservNum = ?";
+	        jdbcTemplate.update(deleteSql, reservNum);
+	        return true;
+	    }
+
+	    return false;
+	}
+
+	// 사용자 역할 확인 메소드
+	public String getUserPosition(String userId) {
+	    // 교수 테이블에서 역할 확인
+	    String roleCheckSqlProfessor = "SELECT position FROM proYuhan WHERE id = ?";
+	    List<String> professorPositions = jdbcTemplate.query(roleCheckSqlProfessor, (rs, rowNum) -> rs.getString("position"), userId);
+
+	    if (!professorPositions.isEmpty()) {
+	        return professorPositions.get(0);
+	    }
+
+	    // 학생 테이블에서 역할 확인
+	    String roleCheckSqlStudent = "SELECT position FROM Yuhan WHERE id = ?";
+	    List<String> studentPositions = jdbcTemplate.query(roleCheckSqlStudent, (rs, rowNum) -> rs.getString("position"), userId);
+
+	    if (!studentPositions.isEmpty()) {
+	        return studentPositions.get(0);
+	    }
+
+	    // 결과가 없을 경우 기본값 또는 예외 처리
+	    return null;
 	}
 
 	// 예약 시간 변경 메소드
 	public boolean updateReservation(int reservNum, String newHour, String userId) {
-		// 예약 시간 업데이트 전에 기존 예약 시간 삭제를 위한 SQL 쿼리
-		// 예약이 존재하고 사용자 ID가 일치하는 경우에만 예약 시간 삭제
-		String deleteSql = "DELETE FROM ReservationHour WHERE reservNum = ? AND EXISTS (SELECT 1 FROM Reservation WHERE reservNum = ? AND user_id = ?)";
-		jdbcTemplate.update(deleteSql, reservNum, reservNum, userId);
+	    try {
+	        String position = getUserPosition(userId);
 
-		// 새로운 시간대 문자열을 쉼표로 분리하여 배열로 변환
-		String[] hours = newHour.split(",");
-		// 새로운 예약 시간을 삽입하기 위한 SQL 쿼리
-		String insertSql = "INSERT INTO ReservationHour (reservNum, reservHour) VALUES (?, ?)";
+	        if (position == null) {
+	            System.out.println("User position not found for userId: " + userId);
+	            return false;
+	        }
 
-		int insertHourSql = 0;
-		// 새로운 시간대 배열을 순회하며 각각의 시간대에 대해 예약 시간 삽입
-		for (String hour : hours) {
-			insertHourSql += jdbcTemplate.update(insertSql, reservNum, Integer.parseInt(hour));
-		}
+	        String deleteSql;
+	        if ("admin".equals(position) || "professor".equals(position)) {
+	            deleteSql = "DELETE FROM ReservationHour WHERE reservNum = ?";
+	            jdbcTemplate.update(deleteSql, reservNum);
+	        } else {
+	            deleteSql = "DELETE FROM ReservationHour WHERE reservNum = ? AND EXISTS (SELECT 1 FROM Reservation WHERE reservNum = ? AND user_id = ?)";
+	            jdbcTemplate.update(deleteSql, reservNum, reservNum, userId);
+	        }
 
-		// 모든 새로운 예약 시간대가 성공적으로 삽입되었는지 확인
-		return insertHourSql == hours.length;
+	        String[] hours = newHour.split(",");
+	        String insertSql = "INSERT INTO ReservationHour (reservNum, reservHour) VALUES (?, ?)";
+
+	        int insertHourSql = 0;
+	        for (String hour : hours) {
+	            insertHourSql += jdbcTemplate.update(insertSql, reservNum, Integer.parseInt(hour));
+	        }
+
+	        return insertHourSql == hours.length;
+	    } catch (Exception e) {
+	        System.out.println("Error updating reservation: " + e.getMessage());
+	        e.printStackTrace();
+	        return false;
+	    }
 	}
 
 	// 사용자 아이디를 받아 즐겨찾기한 강의실 목록을 가져오는 메서드
@@ -388,37 +437,143 @@ public class ClassroomDAO {
 		});
 	}
 
+	// 오늘의 출석 정보를 조회하는 메서드
 	public List<AttendanceDTO> getTodayAttendance(String userId, String day, int currentHour) {
-		String sql = "SELECT DISTINCT st.user_id, y.name AS user_name, y.studentId, st.subject, st.classroomName, st.start_hour, st.end_hour, "
-				+ "CASE WHEN r.user_id IS NOT NULL THEN '출석' ELSE '결석' END AS status " + "FROM StuTimetable st "
-				+ "JOIN Yuhan y ON st.user_id = y.id "
-				+ "LEFT JOIN Reservation r ON st.user_id = r.user_id AND st.subject = r.subject "
-				+ "AND st.classroomName = r.classroom_name AND st.day = r.day "
-				+ "WHERE st.day = ? AND st.start_hour <= ? AND st.end_hour > ? "
-				+ "AND st.user_id NOT IN (SELECT id FROM proYuhan WHERE position IN ('professor', 'admin'))";
-
-		System.out.println("Executing SQL: " + sql);
-		System.out.println("Parameters: day=" + day + ", currentHour=" + currentHour);
-
-		return jdbcTemplate.query(sql, (rs, rowNum) -> {
-			AttendanceDTO dto = new AttendanceDTO();
-			dto.setUserId(rs.getString("user_id"));
-			dto.setUserName(rs.getString("user_name"));
-			dto.setStudentId(rs.getInt("studentId"));
-			dto.setSubject(rs.getString("subject"));
-			dto.setClassroomName(rs.getString("classroomName"));
-			dto.setStartHour(rs.getInt("start_hour"));
-			dto.setEndHour(rs.getInt("end_hour"));
-			dto.setStatus(rs.getString("status"));
-			return dto;
-		}, day, currentHour, currentHour);
+	    // SQL 쿼리 문자열 정의
+	    String sql = "SELECT st.user_id, y.name AS user_name, y.studentId, st.subject, st.classroomName, st.start_hour, st.end_hour, " +
+	                 "CASE WHEN st.attendance = 1 THEN '출석' ELSE '결석' END AS status " +
+	                 "FROM StuTimetable st " +
+	                 "JOIN Yuhan y ON st.user_id = y.id " +
+	                 "WHERE st.day = ? AND st.start_hour <= ? AND st.end_hour > ? " +
+	                 "AND (st.user_id = ? OR ? IN (SELECT id FROM proYuhan WHERE position IN ('professor', 'admin')))";
+	    
+	    // 쿼리 실행 및 결과를 AttendanceDTO 객체 리스트로 매핑
+	    return jdbcTemplate.query(
+	        sql,
+	        (rs, rowNum) -> {
+	            // ResultSet에서 데이터를 추출하여 AttendanceDTO 객체 생성
+	            AttendanceDTO dto = new AttendanceDTO();
+	            dto.setUserId(rs.getString("user_id"));
+	            dto.setUserName(rs.getString("user_name"));
+	            dto.setStudentId(rs.getInt("studentId"));
+	            dto.setSubject(rs.getString("subject"));
+	            dto.setClassroomName(rs.getString("classroomName"));
+	            dto.setStartHour(rs.getInt("start_hour"));
+	            dto.setEndHour(rs.getInt("end_hour"));
+	            dto.setStatus(rs.getString("status"));
+	            return dto;
+	        },
+	        day, currentHour, currentHour, userId, userId
+	    );
 	}
 
+	// 사용자가 교수 또는 관리자인지 확인하는 메서드
 	public boolean isProfessorOrAdmin(String userId) {
-		String sql = "SELECT COUNT(*) FROM proYuhan WHERE id = ? AND position IN ('professor', 'admin')";
-		Integer count = jdbcTemplate.queryForObject(sql, Integer.class, userId);
-		System.out.println("isProfessorOrAdmin check for user " + userId + ": result " + count);
-		return count != null && count > 0;
+	    // SQL 쿼리 문자열 정의
+	    String sql = "SELECT COUNT(*) FROM proYuhan WHERE id = ? AND position IN ('professor', 'admin')";
+	    // 쿼리 실행 및 결과 반환
+	    Integer count = jdbcTemplate.queryForObject(sql, Integer.class, userId);
+	    // 결과가 null이 아니고 0보다 크면 true 반환
+	    return count != null && count > 0;
 	}
 
+	// 출석 상태를 업데이트하는 메서드
+	public void updateAttendance(String userId, String day, int startHour, String subject, boolean isAttended) {
+	    // SQL 업데이트 쿼리 문자열 정의
+	    String sql = "UPDATE StuTimetable SET attendance = ? " +
+	                 "WHERE user_id = ? AND day = ? AND start_hour = ? AND subject = ?";
+	    
+	    // 출석 여부를 정수값으로 변환 (출석: 1, 결석: 0)
+	    int attendanceValue = isAttended ? 1 : 0;
+	    
+	    // 쿼리 실행
+	    jdbcTemplate.update(sql, attendanceValue, userId, day, startHour, subject);
+	}
+	
+	// 교수의 시간표에 등록된 과목을 가져오는 메서드
+	public List<String> getSubjectsFromStuTimeTable(String userId) {
+	    String sql = "SELECT DISTINCT subject FROM StuTimetable WHERE user_id = ?";
+	    return jdbcTemplate.queryForList(sql, String.class, userId);
+	}
+
+	// 특정 과목에 대한 예약 목록을 가져오는 메서드
+	public Map<String, List<ReserveList>> getAdminReserveListBySubject(String subject) {
+	    String sql = "SELECT r.reservNum, r.user_id, r.classroom_name, r.subject, r.reservSeat, r.day, rh.reservHour "
+	               + "FROM Reservation r "
+	               + "JOIN ReservationHour rh ON r.reservNum = rh.reservNum "
+	               + "WHERE r.subject = :subject";
+	    
+	    NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
+	    MapSqlParameterSource parameters = new MapSqlParameterSource();
+	    parameters.addValue("subject", subject);
+
+	    List<ReserveList> reserveList = namedParameterJdbcTemplate.query(sql, parameters, (rs, rowNum) -> {
+	        ReserveList reserve = new ReserveList();
+	        reserve.setReservNum(rs.getInt("reservNum"));
+	        reserve.setUserId(rs.getString("user_id"));
+	        reserve.setClassroomName(rs.getString("classroom_name"));
+	        reserve.setSubject(rs.getString("subject"));
+	        reserve.setReservSeat(rs.getInt("reservSeat"));
+	        reserve.setDay(rs.getString("day"));
+	        reserve.setReservHour(rs.getInt("reservHour")); // 예약 시간대 설정
+	        return reserve;
+	    });
+
+	    // 예약 번호별로 그룹화된 예약 정보를 저장할 맵
+	    Map<Integer, ReserveList> groupedByReservNum = new LinkedHashMap<>();
+
+	    // 예약 정보 그룹화
+	    for (ReserveList reserve : reserveList) {
+	        int reservNum = reserve.getReservNum(); // 현재 예약의 예약 번호를 가져옴
+	        if (groupedByReservNum.containsKey(reservNum)) {
+	            // 동일한 예약 번호가 이미 존재하면, 기존 예약 정보에 현재 시간대를 추가
+	            ReserveList existingReservation = groupedByReservNum.get(reservNum);
+	            String hoursString = existingReservation.getReservHourString();
+	            if (hoursString == null || hoursString.isEmpty()) {
+	                hoursString = String.valueOf(reserve.getReservHour());
+	            } else {
+	                hoursString += "," + reserve.getReservHour();
+	            }
+	            existingReservation.setReservHourString(hoursString); // 시간대를 문자열로 합침
+	        } else {
+	            // 동일한 예약 번호가 없으면, 현재 예약을 맵에 추가
+	            reserve.setReservHourString(String.valueOf(reserve.getReservHour())); // 초기 시간대 설정
+	            groupedByReservNum.put(reservNum, reserve);
+	        }
+	    }
+
+	    // 예약 번호별로 그룹화된 예약 정보를 강의실 이름별로 반환
+	    return groupedByReservNum.values().stream().collect(Collectors.groupingBy(ReserveList::getClassroomName));
+	}
+
+	// 모든 예약 목록을 가져오는 메서드
+	public Map<String, List<ReserveList>> getAdminReserveList() {
+	    List<ReserveList> reserveList = reserveList();
+
+	    // 예약 번호별로 그룹화된 예약 정보를 저장할 맵
+	    Map<Integer, ReserveList> groupedByReservNum = new LinkedHashMap<>();
+
+	    // 예약 정보 그룹화
+	    for (ReserveList reserve : reserveList) {
+	        int reservNum = reserve.getReservNum(); // 현재 예약의 예약 번호를 가져옴
+	        if (groupedByReservNum.containsKey(reservNum)) {
+	            // 동일한 예약 번호가 이미 존재하면, 기존 예약 정보에 현재 시간대를 추가
+	            ReserveList existingReservation = groupedByReservNum.get(reservNum);
+	            String hoursString = existingReservation.getReservHourString();
+	            if (hoursString == null || hoursString.isEmpty()) {
+	                hoursString = String.valueOf(reserve.getReservHour());
+	            } else {
+	                hoursString += "," + reserve.getReservHour();
+	            }
+	            existingReservation.setReservHourString(hoursString); // 시간대를 문자열로 합침
+	        } else {
+	            // 동일한 예약 번호가 없으면, 현재 예약을 맵에 추가
+	            reserve.setReservHourString(String.valueOf(reserve.getReservHour())); // 초기 시간대 설정
+	            groupedByReservNum.put(reservNum, reserve);
+	        }
+	    }
+
+	    // 예약 번호별로 그룹화된 예약 정보를 강의실 이름별로 반환
+	    return groupedByReservNum.values().stream().collect(Collectors.groupingBy(ReserveList::getClassroomName));
+	}
 }
