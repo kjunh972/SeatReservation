@@ -41,12 +41,12 @@ h1 {
 
 /* 빈 좌석 버튼 스타일 */
 .seat-button.empty {
-    background-color: #98fb98 !important;
+    background-color: lightgray !important; /* 빈 좌석 배경색 지정 */
 }
 
 /* 예약된 좌석 버튼 스타일 */
 .seat-button.reserved {
-    background-color: #ff6347 !important;
+    background-color: #415a77 !important; /* 예약된 좌석 배경색 지정 */
 }
 
 /* 사용 금지된 좌석 버튼 스타일 */
@@ -94,6 +94,27 @@ h1 {
     position: relative; /* 상대적 위치 지정 */
 }
 
+
+/* 좌석 예약 확인 모달 창의 스타일 */
+#myModal .modal-content {
+    background-color: #f8f9fa; /* 배경색 */
+    position: fixed; /* 화면에 고정 */
+    top: 20%; /* 화면 높이의 60% 위치 */
+    left: 50%; /* 화면 너비의 50% 위치 */
+    transform: translate(-50%, -50%); /* 중앙 정렬 */
+    padding: 20px; /* 내부 여백 */
+    border-radius: 10px; /* 모서리를 둥글게 */
+    width: 100%; /* 전체 너비 */
+    max-width: 700px; /* 최대 너비 제한 */
+    max-height: 80vh; /* 최대 높이 */
+    overflow-y: auto; /* 세로 방향 스크롤 허용 */
+    display: flex; /* Flexbox 레이아웃 사용 */
+    flex-direction: column; /* 세로 방향 정렬 */
+    align-items: center; /* 수평 중앙 정렬 */
+    justify-content: center; /* 수직 중앙 정렬 */
+    text-align: center; /* 텍스트 중앙 정렬 */
+}
+
 /* 확인 및 취소 버튼의 공통 스타일 */
 #confirmButton,
 #cancelButton {
@@ -102,7 +123,7 @@ h1 {
     height: 40px; /* 높이 설정 */
     margin: 20px; /* 외부 여백 */
     border-radius: 4px; /* 모서리를 둥글게 */
-    background-color: #4CAF50; /* 배경색을 녹색으로 설정 */
+    background-color: #415a77; /* 버튼의 배경색 설정 */
     color: white; /* 텍스트 색상을 흰색으로 설정 */
     cursor: pointer; /* 마우스 커서를 포인터로 변경 */
     text-align: center; /* 텍스트를 중앙 정렬 */

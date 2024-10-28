@@ -1,0 +1,348 @@
+/* 기본 스타일 초기화 */
+body, ul, li {
+    margin: 0; /* 모든 여백 제거 */
+    padding: 0; /* 모든 패딩 제거 */
+    list-style: none; /* 리스트 스타일 제거 */
+}
+
+.selectPosition {
+    text-align: center; /* 링크를 가운데 정렬 */
+    margin-top: 10px; /* 위쪽 여백 설정 */
+}
+
+.selectPosition a {
+    color: darkgray; /* 링크 글씨 색상을 파란색으로 설정 */
+    font-weight: bold; /* 링크를 굵게 설정 */
+    cursor: pointer; /* 마우스를 올리면 커서를 포인터로 변경 */
+}
+
+/* 버튼 컨테이너 스타일*/
+.button-container {
+    display: flex; /* Flexbox 사용 */
+    flex-direction: row; /* 버튼들을 가로로 나열 */
+    align-items: flex-start; /* 왼쪽 정렬 */
+    margin-top: 5.62rem; /* 버튼 위쪽 여백 */
+    margin-left: 9rem; /* 왼쪽에서 약간 오른쪽으로 이동 */
+}
+
+/* 버튼 스타일 - 정사각형 */
+button {
+    width: 4rem; /* 버튼 너비 설정 */
+    height: 4rem; /* 버튼 높이 설정 */
+    font-size: 1.2rem; /* 버튼 글자 크기 설정 */
+    background-color: #778da9; /* 버튼 배경색 설정 */
+    color: white; /* 버튼 텍스트 색상 흰색 */
+    border: none; /* 테두리 제거 */
+    border-radius: 1.25rem; /* 테두리를 둥글게 설정 */
+    cursor: pointer; /* 커서를 포인터로 변경 */
+    margin-right: 1.25rem; /* 버튼들 사이의 간격 (오른쪽 여백 설정) */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* 배경색 및 크기 변화가 부드럽게 일어나도록 설정 */
+}
+
+button:hover {
+    background-color: #415a77; /* 마우스를 올리면 버튼 배경색 변경 */
+    transform: scale(1.05); /* 마우스를 올리면 버튼이 살짝 커지는 효과 추가 */
+}
+
+/* 버튼 컨테이너 중앙 정렬 */
+.button-container {
+    text-align: center; /* 버튼을 가운데 정렬 */
+    margin-top: 5.62rem; /* 버튼 위쪽 여백 추가 */
+}
+
+/* 메인 컨테이너 설정 */
+.main-container {
+    display: flex; /* 플렉스박스 사용하여 레이아웃 설정 */
+    flex-direction: column; /* 수직으로 정렬 */
+    align-items: flex-start; /* 아이템들을 왼쪽 정렬 */
+    justify-content: flex-start; /* 상단에서 시작 */
+    padding-top: 3rem; /* 상단 여백 설정 */
+}
+
+/* 시간표와 버튼 아래에 여백 추가 */
+.container {
+    margin-top: -3rem; /* 시간표 위쪽 여백 설정 */
+    margin-bottom: 3.13rem; /* 시간표와 버튼 사이의 여백 설정 */
+}
+
+/* 시간표 섹션 스타일  */
+.timetable-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* 시간표도 왼쪽 정렬 */
+    margin-top: 2rem;
+    margin-left: 9rem; /* 시간표를 왼쪽에서 약간 오른쪽으로 이동 */
+}
+/* 시간표 테이블 스타일 */
+table {
+    border-collapse: collapse; /* 테이블 테두리 합치기 */
+    box-shadow: 0 0 1.25rem rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
+}
+
+/* 셀 스타일 */
+th, td {
+    padding: 0.63rem; /* 셀 여백 설정 */
+    text-align: center; /* 가운데 정렬 */
+    border: 0.06rem solid #ddd; /* 테두리 스타일 설정 */
+    width: 8.13rem; /* 셀 너비 설정 */
+}
+
+/* 테이블 헤더 스타일 */
+th {
+    background-color: #778da9; /* 헤더 배경색 설정 */
+    color: #fff; /* 헤더 텍스트 색상 설정 */
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f2f2f2; /* 짝수 행 배경색 설정 */
+}
+
+/* 로그인 폼을 오른쪽으로 고정 */
+.login-container {
+    position: fixed; /* 로그인 폼을 화면에 고정 */
+    right: 0; /* 오른쪽에 배치 */
+    top: 29%; /* 상단에서 35% 아래에 배치 */
+    display: flex; /* 플렉스박스를 사용하여 내부 요소 정렬 */
+    justify-content: flex-end; /* 내부 요소들을 오른쪽 끝으로 정렬 */
+    align-items: center; /* 내부 요소들을 수직 중앙 정렬 */
+    padding-right: 8rem; /* 오른쪽 여백 설정 */
+}
+
+/* 로그인 박스 스타일 */
+.login-box {
+    width: 18.75rem; /* 로그인 박스 너비 설정 */
+    text-align: center; /* 텍스트를 가운데 정렬 */
+    background-color: #fff; /* 배경색을 흰색으로 설정 */
+    border: 1px solid #ccc; /* 연한 회색 테두리 추가 */
+    border-radius: 0.94rem; /* 박스 테두리를 둥글게 설정 */
+    padding: 1.25rem; /* 내부 여백 설정 */
+    box-shadow: 0 0.13rem 0.25rem rgba(0,0,0,0.1); /* 박스에 그림자 효과 추가 */
+}
+
+/* 로그인 폼 input 스타일 */
+input[type="text"], input[type="password"] {
+    width: calc(100% - 1.38rem); /* 입력창 너비 설정 */
+    padding: 0.63rem; /* 내부 여백 설정 */
+    margin: 0.63rem 0; /* 위아래 여백 설정 */
+    border-radius: 0.94rem; /* 입력창 테두리를 둥글게 설정 */
+    border: 1px solid #ccc; /* 연한 회색 테두리 추가 */
+}
+
+input[type="submit"] {
+    background-color: #778da9; /* 제출 버튼 배경색 설정 */
+    color: white; /* 버튼 텍스트 색상 흰색 */
+    border: none; /* 버튼 테두리 제거 */
+    border-radius: 0.94rem; /* 버튼 테두리를 둥글게 설정 */
+    padding: 0.63rem; /* 내부 여백 설정 */
+    width: 100%; /* 버튼 너비 100% 설정 */
+    cursor: pointer; /* 커서를 포인터로 변경 */
+    transition: background-color 0.3s ease; /* 배경색 변화 부드럽게 설정 */
+}
+
+input[type="submit"]:hover {
+    background-color: #415a77; /* 제출 버튼 호버 시 배경색 변경 */
+}
+
+
+
+/* 팝업 배경 스타일 */
+        .modal {
+            display: none; /* 기본적으로 팝업을 숨김 */
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
+            justify-content: center;
+  			align-items: center;
+    		display: flex; /* 중앙에 위치하도록 수정 */
+        }
+
+        /* 팝업 콘텐츠 스타일 */
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
+            text-align: center;
+        }
+
+        /* 버튼 세로 정렬 */
+        .modal-content .button-container {
+           display: flex;
+    flex-direction: column;
+    align-items: center; /* 가로 중앙 정렬 */
+    justify-content: center; /* 세로 중앙 정렬 */
+    gap: 10px;
+    margin-top: 20px; /* 제목과 버튼 사이에 여백 추가 */
+        }
+        
+
+
+        /* 닫기 버튼 */
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+/* 모바일 화면을 위한 스타일 */
+@media (max-width: 48rem) {
+
+    /* 모바일에서 버튼 컨테이너 숨기기 */
+    .button-container {
+        display: none;
+    }
+
+     /* 모바일에서 로그인 컨테이너를 화면 최상단으로 이동 */
+    .login-container {
+        position: fixed;
+        top: 4.5rem; /* 사이드바와 겹치지 않도록 간격 */
+        align-items: center; /* 아이템들을 중앙 정렬 */
+        right: 1rem;
+        width: 90%;
+        padding: 0rem;
+        background-color: transparent;
+        z-index: 100;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+    }
+
+    /* 로그인 박스 크기를 줄이기 */
+    .login-box {
+        width: 75%; /* 너비를 40%로 설정 */
+        height:50%;
+        padding: 0.2rem; /* 내부 여백 축소 */
+        margin: 0 auto; /* 중앙 정렬 */
+        background-color: #fff;
+        border-radius: 0.3rem; /* 테두리를 작게 둥글게 설정 */
+        box-shadow: 0 0 0.3rem rgba(0, 0, 0, 0.1);
+    }
+
+    /* 입력 필드와 버튼의 높이를 줄이기 */
+    input[type="text"], input[type="password"], input[type="submit"] {
+        padding: 0.5rem; /* 내부 여백 줄이기 */
+    	margin: 0.3rem ; /* 위아래 여백 설정 (10px ÷ 16px) */
+        font-size: 0.5rem; /* 폰트 크기 줄이기 */
+    }
+
+	h2  {
+		font-size: 1rem; /* 글자 크기 감소 */
+	}
+	
+	/* 체크박스 크기 줄이기 */
+    input[type="checkbox"]+ span {
+        width: 0.8rem; /* 체크박스 너비를 줄임 */
+        height: 0.8rem; /* 체크박스 높이를 줄임 */
+        transform: scale(0.8); /* 크기를 더 줄이는 효과 */
+        margin-right: 0.3rem; /* 체크박스와 텍스트 사이 간격 */
+        padding: 0.63rem; /* 내부 여백 설정 (10px ÷ 16px) */
+   		margin: 0rem; /* 위아래 여백 설정 */
+   		margin-bottom: 0rem;
+   		font-size: 0.8rem; /* 텍스트 크기 줄이기 */
+    }
+   
+
+	input[type="submit"] {
+		width: 90%;
+		margin-top:0rem;
+		}
+		
+	a{
+		margin:0.2rem;
+	}
+		
+    /* 시간표 섹션을 로그인 박스 아래에 위치 */
+    .timetable-section {
+        margin-top: 12rem; /* 로그인 박스 아래로 충분한 공간 확보 */
+        margin-left: 0; /* 왼쪽 마진 제거 */
+        width: 100%; /* 화면 전체 너비로 확장 */
+        display: flex;
+        justify-content: center; /* 중앙 정렬 */
+        align-items: center;
+    }
+
+    /* 시간표 테이블 스타일 */
+   
+    table {
+        font-size: 0.625rem; /* 테이블 글자 크기 조정 (10px -> 0.625rem) */
+        width: 100%; /* 테이블 너비를 100%로 설정 */
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: 0.313rem; /* 셀 안의 여백 조정 (5px -> 0.313rem) */
+        text-align: center; /* 텍스트 가운데 정렬 */
+        width: auto; /* 각 셀의 너비를 자동으로 설정 */
+        
+    }
+    /* 메인 컨테이너 설정 */
+.main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 아이템들을 중앙 정렬 */
+    justify-content: flex-start;
+    padding-top: 6rem;
+    margin:5%;
+}
+
+    /* 헤더에서 모바일 버전에서 메뉴 바와 앱 이름 중앙 정렬 */
+    header, nav, .app-name {
+        text-align: center;
+        line-height: 5rem; /* 헤더 텍스트 세로 가운데 정렬 */
+    }
+
+    /* 사이드바가 보이도록 하기 위한 설정 */
+    .sidebar {
+        position: fixed;
+        top: 3.5rem; /* 로그인 박스와 사이드바 겹치지 않도록 간격 */
+        left: 0;
+        width: 200px; /* 사이드바 너비 */
+        background-color: #248277; /* 사이드바 배경 */
+        height: 100vh; /* 전체 화면 높이 */
+        z-index: 101; /* 로그인 박스 위에 배치 */
+        transition: transform 0.3s ease;
+    }
+
+    /* 사이드바 열기 버튼 */
+    .toggle-btn {
+        position: fixed;
+        top: 1rem;
+        left: 1rem;
+        font-size: 1.5rem;
+        background-color: transparent;
+        border: none;
+        color: #000;
+        cursor: pointer;
+        z-index: 102;
+    }
+}

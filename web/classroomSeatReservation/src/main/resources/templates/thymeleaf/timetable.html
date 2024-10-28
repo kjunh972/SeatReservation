@@ -608,6 +608,7 @@
 		<div th:if="${error}" class="error" th:text="${error}"></div>
 	</h3>
 	<h1>시간표</h1>
+	<div class="timetable-wrapper">
 		<!-- 시간표 컨테이너 -->
 		<div class="container">
 			<!-- 시간표 테이블 -->
@@ -642,7 +643,14 @@
 				</tbody>
 			</table>
 		</div>
-
+		
+		<!-- 관리자 전용 버튼 -->
+		<div th:if="${userPosition == 'admin' or userPosition == 'professor'}" class="admin-button-container">
+   	 		<a href="reserveList" class="admin-button">예약 목록</a>
+    		<a href="attendanceCheck" class="admin-button">출석 확인</a>
+    		<a href="banList" class="admin-button">예약 금지좌석 확인</a>
+		</div>
+</div>
 		<!-- 하단 버튼 -->
 		<div class="timetable-button-container">
 		    <!-- 좌석 예약 버튼 -->

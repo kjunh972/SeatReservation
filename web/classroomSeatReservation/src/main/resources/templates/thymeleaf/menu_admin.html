@@ -7,7 +7,7 @@
     <style>
         /* 헤더 스타일 */
         header {
-            background-color: #778da9; /* 배경색 설정 */
+            background-color: #1b263b; /* 배경색 설정 */
             font-size: 15pt; /* 폰트 크기 */
             height: 40px; /* 높이 설정 */
             line-height: 40px; /* 텍스트를 수직으로 가운데 정렬 */
@@ -18,6 +18,7 @@
         header a {
             text-decoration: none; /* 밑줄 제거 */
             color: white; /* 텍스트 색상 */
+            margin-left: 10px;
             margin-right: 10px; /* 오른쪽 마진 설정 */
         }
 
@@ -34,13 +35,12 @@
 </head>
 <body>
     <header class="header"> <!-- 헤더 부분 -->
-        <a href="timetable">Home</a> <!-- 홈 링크 -->
-        <a href="myPage" class="rightUp">마이페이지 </a> <!-- 마이페이지 링크 -->
-        <a href="banList" class="rightUp last">예약금지좌석확인</a> <!-- 예약확인 링크 -->
-        <a href="admin" class="rightUp last">관리자대시보드</a> <!-- 시간표 링크 -->
-		<a href="attendanceCheck" class="rightUp">출석 확인</a> <!-- 마이페이지 링크 -->
-        <a href="classroomSet" class="rightUp last">강의실 템플릿(강의실 생성)</a> <!-- 시간표 링크 -->
-		<a href="reserveList" class="rightUp last">예약 목록</a> <!-- 전체 예약 목록 링크 -->
+        <a href="login">Home</a> <!-- 홈 링크 -->
+        <a href="myPage" class="rightUp">마이페이지</a> <!-- 마이페이지 링크 -->
+        <a href="classroomSet" class="rightUp last">강의실 생성</a> <!-- 강의실 템플릿 링크 -->
+        <a href="admin" class="rightUp last">강의실 목록</a> <!-- 관리자대시보드 링크 -->
+        <a href="timetable" class="rightUp last">시간표 및 관리</a> <!-- 시간표 링크 -->
+
     </header>
 </body>
 </html>

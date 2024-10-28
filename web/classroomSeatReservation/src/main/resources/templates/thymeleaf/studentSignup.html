@@ -3,22 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>강의실 자리 예약 프로그램 학생 회원가입</title>
+	<header th:replace="/menu.html"></header>
+	
     <link rel="stylesheet" href="/css/classroomStyle.css" />
-    <style>
-        .autocomplete-list {
-            position: absolute;
-            background-color: #f1f1f1;
-            border: 1px solid #ccc;
-            max-height: 150px;
-            overflow-y: auto;
-            z-index: 999;
-            width: 100%;
-        }
-        .error-message {
-            color: red;
-            font-size: 0.9em;
-        }
-    </style>
+	<link rel="stylesheet" href="/css/studentSignupStyle.css" />
     <script>
         let isIdChecked = false;
 
@@ -47,7 +35,7 @@
 
         function validateForm() {
             var selectedSchool = document.getElementById('schoolInput').value;
-            var allowedSchools = ['가톨릭대학교', '고려대학교', '동양미래대학교', '서울대학교', '성공회대학교', '연세대학교','유한대학교','중앙대학교'];
+            var allowedSchools = ['대학교1', '대학교2', '대학교3'];
             var password = document.getElementById('pass').value;
             var confirmPassword = document.getElementById('confirmPass').value;
 
@@ -118,60 +106,55 @@
 <body>
     <h2>강의실 자리 예약 프로그램 학생 회원가입</h2>
     <form id="studentSignupForm" action="/signupCheck" method="post" onsubmit="handleFormSubmit(event)">
-        <div>
-            <label for="id">사용자 아이디:</label>
-            <input type="text" id="id" name="id" required>
+        <div class="form-group">
+            <label for="id">ID</label>
+            <input type="text" id="id" name="id" placeholder="사용자 아이디"required>
             <button type="button" onclick="checkId()">아이디 중복확인</button>
             <span class="error-message" id="idError" th:text="${idError}"></span>
         </div>
-        <div>
-            <label for="pass">비밀번호:</label>
-            <input type="password" id="pass" name="pass" required>
+        <div class="form-group">
+            <label for="pass">Password</label>
+            <input type="password" id="pass" name="pass" placeholder="비밀번호"required>
             <span class="error-message">비밀번호는 최소 8자이며, 하나 이상의 문자 및 숫자를 포함해야 합니다.</span>
         </div>
-        <div>
-            <label for="confirmPass">비밀번호 확인:</label>
-            <input type="password" id="confirmPass" name="confirmPass" required>
+        <div class="form-group">
+            <label for="confirmPass">Verify password</label>
+            <input type="password" id="confirmPass" name="confirmPass" placeholder="비밀번호 확인"required>
         </div>
-        <div>
-            <label for="schoolInput">학교:</label>
+        <div class="form-group">
+            <label for="schoolInput">University</label>
             <input type="text" id="schoolInput" name="school" onkeyup="filterSchools()" onclick="filterSchools()" placeholder="학교 검색" required>
             <div id="schoolList" class="autocomplete-list" style="display: none;">
                 <option value="">학교 선택</option>
-				<option value="가톨릭대학교" onclick="fillSchool('가톨릭대학교')">가톨릭대학교</option>
-                <option value="고려대학교" onclick="fillSchool('고려대학교')">고려대학교</option>
-                <option value="동양미래대학교" onclick="fillSchool('동양미래대학교')">동양미래대학교</option>
-				<option value="서울대학교" onclick="fillSchool('서울대학교')">서울대학교</option>
-				<option value="성공회대학교" onclick="fillSchool('성공회대학교')">성공회대학교</option>
-				<option value="연세대학교" onclick="fillSchool('연세대학교')">연세대학교</option>
-				<option value="유한대학교" onclick="fillSchool('유한대학교')">유한대학교</option>
-				<option value="중앙대학교" onclick="fillSchool('중앙대학교')">중앙대학교</option>
+                <option value="대학교1" onclick="fillSchool('대학교1')">대학교1</option>
+                <option value="대학교2" onclick="fillSchool('대학교2')">대학교2</option>
+                <option value="대학교3" onclick="fillSchool('대학교3')">대학교3</option>
             </div>
         </div>
-        <div>
-            <label for="major">전공:</label>
-            <input type="text" id="major" name="major" required>
+        <div class="form-group">
+            <label for="major">Specialty</label>
+            <input type="text" id="major" name="major" placeholder="전공"required>
         </div>
-        <div>
-            <label for="name">이름:</label>
-            <input type="text" id="name" name="name" required>
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" placeholder="이름"required>
         </div>
-        <div>
-            <label for="age">나이:</label>
-            <input type="text" id="age" name="age" required>
+        <div class="form-group">
+            <label for="age">Age</label>
+            <input type="text" id="age" name="age" placeholder="나이"required>
         </div>
-        <div>
-            <label for="grade">학년:</label>
-            <input type="text" id="grade" name="grade" required>
+        <div class="form-group">
+            <label for="grade">Grade</label>
+            <input type="text" id="grade" name="grade" placeholder="학년"required>
         </div>
-        <div>
-            <label for="classNumber">반:</label>
-            <input type="text" id="classNumber" name="classNumber" required>
+        <div class="form-group">
+            <label for="classNumber">ClassNumber</label>
+            <input type="text" id="classNumber" name="classNumber" placeholder="반"required>
         </div>
-        <div>
-            <label for="studentId">학번:</label>
-            <input type="text" id="studentId" name="studentId" required>
-        </div>
+        <div class="form-group">
+            <label for="studentId">StudentId</label>
+            <input type="text" id="studentId" name="studentId" placeholder="학번"required>
+        </divclass="form-group">
         <button type="submit">가입완료하기</button>
     </form>
 </body>

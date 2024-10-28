@@ -8,6 +8,11 @@ public class TimeTableDTO {
     private String subject;
     private String classroomName;
     private Integer warning;
+    private String reservationStatus;  // 예약 상태 필드 추가
+    
+    
+ // 예약 정보를 저장할 필드 추가 (ReserveList)
+    private ReserveList reservationInfo;
     
 	public String getUserId() {
 		return userId;
@@ -50,6 +55,18 @@ public class TimeTableDTO {
 	}
 	public void setWarning(Integer warning) {
 		this.warning = warning;
+	}
+	public ReserveList getReservationInfo() {
+		return reservationInfo;
+	}
+	public void setReservationInfo(ReserveList reservationInfo) {
+		this.reservationInfo = reservationInfo;
+	}
+	public String getReservationStatus() {
+		return reservationStatus;
+	}
+	public void setReservationStatus(String reservationStatus) {
+		this.reservationStatus = reservationStatus;
 	}
     
     

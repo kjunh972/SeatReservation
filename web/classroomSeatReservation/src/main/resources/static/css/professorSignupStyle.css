@@ -1,0 +1,51 @@
+.autocomplete-list {
+           position: absolute;
+           background-color: #f1f1f1;
+           border: 1px solid #ccc;
+           max-height: 150px;
+           overflow-y: auto;
+           z-index: 999;
+           width: 100%;
+       }
+	form {
+	    display: flex; /* 플렉스 박스 사용 */
+	    flex-direction: column; /* 세로 방향 정렬 */
+	    align-items: center; /* 가로 방향 가운데 정렬 */
+	    width: 100%; /* 폼 너비 100% 설정 */
+	    max-width: 600px; /* 최대 너비 설정 */
+	    margin: 0 auto; /* 중앙 정렬을 위한 자동 마진 */
+	    padding: 1rem; /* 전체 폼 내부 여백 설정 */
+	}
+
+	.form-group {
+	    width: 100%; /* 각 그룹의 너비를 100%로 설정 */
+	    margin-bottom: 1.25rem; /* 아래 여백 설정 */
+	}
+
+	input[type="text"], input[type="password"] {
+	    width: calc(100% - 1.38rem); /* 입력창 너비 설정 */
+	    padding: 0.63rem; /* 내부 여백 설정 */
+	    border-radius: 0.94rem; /* 입력창 테두리를 둥글게 설정 */
+	    border: 1px solid grey; /* 연한 회색 테두리 추가 */
+	    text-align: left; /* 글씨 왼쪽 정렬 */
+	}
+
+	.error-message {
+	    color: red; /* 에러 메시지 색상 설정 */
+	    font-size: 0.875rem; /* 에러 메시지 글자 크기 설정 */
+	}
+
+	button[type="button"],[type="submit"] {
+	    margin-top: 0.63rem; /* 버튼 위쪽에 여백 추가 */
+	    padding: 0.63rem 1.25rem; /* 버튼 내부 여백 설정 */
+	    border: none; /* 버튼 테두리 제거 */
+	    border-radius: 0.94rem; /* 버튼 테두리를 둥글게 설정 */
+	    background-color: #778da9; /* 버튼 배경색 설정 */
+	    color: white; /* 버튼 글자색 설정 */
+	    font-size: 1rem; /* 버튼 글자 크기 설정 */
+	    cursor: pointer; /* 마우스 커서 포인터로 변경 */
+	}
+
+	button[type="button"]:hover {
+	    background-color: #415a77; /* 마우스 오버 시 배경색 변경 */
+	}

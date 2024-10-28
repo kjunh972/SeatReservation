@@ -36,8 +36,23 @@ public class MyPageController {
             return "login"; // 로그인 페이지로 리다이렉트
         }
 
-        // 사용자 정보를 모델에 추가하여 마이페이지를 렌더링
+     // 사용자 포지션 변수 초기화
+        String userPosition = null;
+
+        // 사용자 정보를 확인하고 포지션 설정
+        if (user instanceof UserDTO) {
+            UserDTO userDTO = (UserDTO) user; // UserDTO로 캐스팅
+            userPosition = userDTO.getPosition(); // 사용자 포지션 가져오기
+        } else if (user instanceof ProfessorDTO) {
+        	
+            ProfessorDTO proDTO = (ProfessorDTO) user; // ProfessorDTO로 캐스팅
+            userPosition = proDTO.getPosition(); // 교수 포지션 가져오기
+        }
+
+        // 모델에 사용자 정보와 포지션 추가
         model.addAttribute("user", user);
+        model.addAttribute("userPosition", userPosition); // userPosition 추가
+
         return "myPage"; // 마이페이지로 이동
     }
 

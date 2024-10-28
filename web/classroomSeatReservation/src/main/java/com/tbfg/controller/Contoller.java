@@ -146,7 +146,7 @@ public class Contoller {
 	}
 
 	// 메인페이지 메서드
-	@GetMapping("/index")
+	@GetMapping("index")
 	public String index() {
 		return "index";
 	}
@@ -166,9 +166,18 @@ public class Contoller {
 		classroomDAO.getTimetableClassrooms(GetId(session));
 		// 즐겨찾기 강의실 목록 가져오기
 		List<String> favoriteClassrooms = classroomDAO.getFavoriteClassrooms(GetId(session));
+		
+		
+		// 사용자 이름을 세션에서 가져와 모델에 추가
+	    UserDTO userDTO = (UserDTO) session.getAttribute("loggedInUser");
+	    String userName = userDTO != null ? userDTO.getName() : "";
+	    
+	    
+		
 		// 모델에 즐겨찾기 강의실 추가
 		model.addAttribute("classroomButtons", favoriteClassrooms);
-
+		//사용자의 이름 추가
+		model.addAttribute("userName", userName);
 		return "classroomLike";
 	}
 
@@ -978,4 +987,54 @@ public class Contoller {
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
 	    }
 	}
+	
+	
+	
+	
+	
+	
+	 // 오늘의 시간표를 JSON 데이터로 반환하는 메서드
+    @GetMapping("/api/today-schedule")
+    @ResponseBody
+    public List<TimeTableDTO> getTodaySchedule(HttpSession session) {
+        // 세션에서 사용자 ID가 있는지 확인
+        String userId = GetId(session);
+        if (userId == null) {
+            return new ArrayList<>(); // 세션이 없으면 빈 리스트 반환
+        }
+
+        // 오늘의 요일 구하기
+        LocalDate today = LocalDate.now();
+        DayOfWeek dayOfWeek = today.getDayOfWeek(); // 오늘의 요일 구하기
+
+        // 요일을 한글로 변환
+        String koreanDay = convertWeek(dayOfWeek);
+
+        
+        // DAO에서 오늘의 시간표와 예약 정보를 함께 가져옴
+        List<TimeTableDTO> todayTimetable = timetableDAO.getTodayTimetableWithReservation(userId, koreanDay);
+
+     // 각 시간표에 대해 예약 정보를 확인
+        for (TimeTableDTO timeTableDTO : todayTimetable) {  // 여기서 timetableList -> todayTimetable로 수정
+            // 예약 정보를 가져오기 위한 DAO 호출
+            ReserveList reserveInfo = classroomDAO.getReservationInfo(
+                timeTableDTO.getClassroomName(),
+                userId,
+                timeTableDTO.getStartHour()
+            );
+            
+            if (reserveInfo != null) {
+                // 예약 정보가 있는 경우 예약 상태나 번호를 뷰에서 활용할 수 있도록 추가
+                timeTableDTO.setReservationInfo(reserveInfo); // 예약 정보를 추가하는 새로운 메서드 혹은 방식
+            } else {
+                // 예약이 없는 경우도 처리 가능
+                timeTableDTO.setReservationInfo(null); // 혹은 미예약 상태로 처리
+            }
+        }
+
+
+        return todayTimetable;
+        
+        
+    }
 }

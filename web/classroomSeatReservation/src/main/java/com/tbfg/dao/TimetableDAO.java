@@ -78,4 +78,50 @@ public class TimetableDAO {
         String sql = "SELECT subject, day FROM stutimetable WHERE classroomName = ? AND user_id = ?";
         return jdbcTemplate.queryForList(sql, new Object[]{classroomName, userId});
     }
+    
+    
+    
+    
+    
+    
+    
+    @Autowired
+    private ClassroomDAO classroomDAO;  // classroomDAO 선언 및 주입
+
+    public List<TimeTableDTO> getTodayTimetableWithReservation(String userId, String koreanDay) {
+        // SQL 쿼리: 오늘 요일에 해당하는 시간표를 가져옵니다.
+        String sql = "SELECT * FROM StuTimetable WHERE user_id = ? AND day = ?";
+
+        RowMapper<TimeTableDTO> rowMapper = (rs, rowNum) -> {
+            TimeTableDTO timeTableDTO = new TimeTableDTO();
+            timeTableDTO.setUserId(rs.getString("user_id"));
+            timeTableDTO.setDay(rs.getString("day"));
+            timeTableDTO.setStartHour(rs.getInt("start_hour"));
+            timeTableDTO.setEndHour(rs.getInt("end_hour"));
+            timeTableDTO.setSubject(rs.getString("subject"));
+            timeTableDTO.setClassroomName(rs.getString("classroomName"));
+            return timeTableDTO;
+        };
+
+        // SQL 실행: 오늘 요일에 해당하는 시간표를 반환
+        List<TimeTableDTO> timetableList = jdbcTemplate.query(sql, rowMapper, userId, koreanDay);
+
+        // 각 시간표에 대해 예약 정보를 확인
+        for (TimeTableDTO timeTableDTO : timetableList) {
+			// ClassroomDAO를 통해 해당 시간표의 예약 여부를 확인
+            List<Integer> reservedSeats = classroomDAO.getReservedSeats(
+                timeTableDTO.getClassroomName(), List.of(timeTableDTO.getStartHour()), koreanDay, 
+                timeTableDTO.getSubject()
+            );
+            
+            // 예약 여부를 설정
+            if (reservedSeats.isEmpty()) {
+                timeTableDTO.setReservationStatus("미예약");
+            } else {
+                timeTableDTO.setReservationStatus("예약완료");
+            }
+        }
+
+        return timetableList;  // 시간표와 예약 정보를 함께 반환
+    }
 }

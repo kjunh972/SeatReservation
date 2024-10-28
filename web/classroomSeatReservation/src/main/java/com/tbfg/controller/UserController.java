@@ -136,18 +136,25 @@ public class UserController {
 				// 세션에 사용자 정보 저장
 				session.setAttribute("loggedInUser", userDTO);
 				model.addAttribute("userDTO", userDTO);
+				
+				// 학생 여부를 세션에 저장
+	            session.setAttribute("isStudent", true);
+	            
 			} else if (proDAO.isProExists(id)) {
 				proDTO = proDAO.getProById(id);
 				// 세션에 교수 정보 저장
 				session.setAttribute("loggedInUser", proDTO);
 				model.addAttribute("userDTO", proDTO);
+				
+				// 교수이므로 학생 여부를 false로 설정
+	            session.setAttribute("isStudent", false);
 			}
 
 			// 직책에 따라 페이지 리다이렉트
 			if ("admin".equals(ct.GetPosition(session))) {
 				return "redirect:/index.html"; // 관리자 페이지로 리다이렉트
 			} else {
-				return "redirect:/index.html"; // 나머지는 classroomLike 페이지로 리다이렉트
+				return "redirect:/index.html"; // 나머지는 login 페이지로 리다이렉트
 			}
 		}
 

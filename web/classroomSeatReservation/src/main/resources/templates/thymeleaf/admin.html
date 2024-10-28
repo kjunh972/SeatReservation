@@ -3,39 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>관리자 페이지</title>
-    <link rel="stylesheet" href="/css/classroomStyle.css" />
-    <style>
-        .container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr); /* 2열로 설정 */
-            gap: 100px; /* 각 항목 사이의 간격 */
-        }
-
-        .building h2 {
-            margin-bottom: 10px;
-        }
-
-        .building ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .building li {
-            margin-bottom: 5px;
-        }
-
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-    </style>
+	<link rel="stylesheet" href="/css/classroomStyle.css" />
+	<link rel="stylesheet" href="/css/adminStyle.css" />
 </head>
 <body>
     <!-- 공통 메뉴를 포함 -->
     <header th:replace="~{/menu_admin.html}"></header> 
     
     <h1>전체 강의실</h1>
+    <br><h4>관리중인 강의실 목록입니다</h4>
     
     <!-- Grid 컨테이너 시작 -->
     <div class="container">
@@ -47,7 +23,7 @@
                 <li th:each="classroom : ${group5}">
                     <form action="/timeSelect" method="post">
                         <input type="hidden" name="classroomName" th:value="${classroom}" />
-                        <button type="submit" th:text="${classroom}"></button>
+                        <button class="button" type="submit" th:text="${classroom}"></button>
                     </form>
                 </li>
             </ul>
@@ -60,7 +36,7 @@
                 <li th:each="classroom : ${group7}">
                     <form action="/timeSelect" method="post">
                         <input type="hidden" name="classroomName" th:value="${classroom}" />
-                        <button type="submit" th:text="${classroom}"></button>
+                        <button class="button" type="submit" th:text="${classroom}"></button>
                     </form>
                 </li>
             </ul>

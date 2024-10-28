@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -576,4 +577,48 @@ public class ClassroomDAO {
 	    // 예약 번호별로 그룹화된 예약 정보를 강의실 이름별로 반환
 	    return groupedByReservNum.values().stream().collect(Collectors.groupingBy(ReserveList::getClassroomName));
 	}
+	
+	
+	// 오늘의 시간표 메서드
+		public List<Integer> getReservedSeats2(String classroomName, List<Integer> hours, String day, String subject) {
+		    if (hours == null || hours.isEmpty()) {
+		        return List.of(); // 빈 리스트 반환
+		    }
+		    
+		    // 예약된 좌석을 가져오는 SQL 쿼리
+		    String sql = "SELECT r.reservSeat "
+		               + "FROM Reservation r "
+		               + "JOIN ReservationHour rh ON r.reservNum = rh.reservNum "
+		               + "WHERE r.classroom_name = ? "  // 강의실 이름 필터링
+		               + "AND rh.reservHour IN (" + String.join(",", hours.stream().map(String::valueOf).toArray(String[]::new)) + ") "   // 시간대 필터링
+		               + "AND r.day = ? "    // 요일 필터링
+		               + "AND r.subject = ?";  // 과목 필터링
+
+		    return jdbcTemplate.queryForList(sql, Integer.class, classroomName, day, subject);
+		}
+		
+		
+		 public ReserveList getReservationInfo(String classroomName, String userId, int startHour) {
+	         String sql = "SELECT r.reservNum, r.reservSeat, rh.reservHour " +
+	                      "FROM Reservation r " +
+	                      "JOIN ReservationHour rh ON r.reservNum = rh.reservNum " +
+	                      "WHERE r.classroom_name = ? " +
+	                      "AND r.user_id = ? " +
+	                      "AND rh.reservHour = ?";
+
+	         // SQL 쿼리 실행 및 예약 정보 조회
+	         try {
+	             return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
+	                 ReserveList reserveList = new ReserveList();
+	                 reserveList.setReservNum(rs.getInt("reservNum"));
+	                 reserveList.setReservSeat(rs.getInt("reservSeat"));
+	                 reserveList.setReservHour(rs.getInt("reservHour"));
+	                 return reserveList;
+	             }, classroomName, userId, startHour);
+	         } catch (EmptyResultDataAccessException e) {
+	             return null; // 예약 정보가 없을 경우 null 반환
+	         }
+	     
+
+	 }
 }
