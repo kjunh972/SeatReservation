@@ -36,36 +36,30 @@ public class UserController {
 	@Autowired
 	private ProfessorDAO proDAO = new ProfessorDAO(jdbcTemplate); // ProfessorDAO 객체 생성 및 주입
 	private ProfessorDTO proDTO = new ProfessorDTO(); // ProfessorDTO 객체 생성
-	private Contoller ct = new Contoller();
 	@Autowired
-	private TimetableDAO timetableDAO = new TimetableDAO(jdbcTemplate);
+	private Contoller ct = new Contoller();
 
 	public boolean isValidPassword(String password) {
 		String regex = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$";
 		return Pattern.matches(regex, password);
 	}
 
-	// 로그인 페이지를 보여주는 메서드
 	@GetMapping("/login")
-	public String showLoginPage(HttpSession session, Model model) {// 세션에서 로그인한 사용자 정보 확인
+	public String showLoginPage(HttpSession session, Model model) {
 		String userPosition = ct.GetPosition(session);
+		String userId = ct.GetId(session);
+		
+		ct.getTimetablePage(model, session);
 
-		// 사용자의 모든 시간표를 가져옴.
-		List<TimeTableDTO> userTimeTable = timetableDAO.getTimetable(ct.GetId(session));
-
-		// 요일과 시간 목록을 생성하여 모델에 추가
-		List<String> days = Arrays.asList("월요일", "화요일", "수요일", "목요일", "금요일");
-		List<Integer> hours = Arrays.asList(9, 10, 11, 12, 13, 14, 15, 16);
-
-		// 모델에 사용자의 시간표 정보를 추가합니다.
-		model.addAttribute("userTimeTable", userTimeTable);
-		// 모델에 요일 목록을 추가합니다.
-		model.addAttribute("days", days);
-		// 모델에 시간 목록을 추가합니다.
-		model.addAttribute("hours", hours);
-
+		// 로그인 세션이 만료 된 경우
+		if (userId == null) {
+			model.addAttribute("userNull", true);
+			return "login";
+		}
+		
 		model.addAttribute("userPosition", userPosition);
-		return "login"; // 로그인 되지 않은 상태에서는 login.html 로 이
+
+		return "login";
 	}
 
 	// 로그아웃 처리를 위한 메서드
@@ -136,26 +130,21 @@ public class UserController {
 				// 세션에 사용자 정보 저장
 				session.setAttribute("loggedInUser", userDTO);
 				model.addAttribute("userDTO", userDTO);
-				
+
 				// 학생 여부를 세션에 저장
-	            session.setAttribute("isStudent", true);
-	            
+				session.setAttribute("isStudent", true);
+
 			} else if (proDAO.isProExists(id)) {
 				proDTO = proDAO.getProById(id);
 				// 세션에 교수 정보 저장
 				session.setAttribute("loggedInUser", proDTO);
 				model.addAttribute("userDTO", proDTO);
-				
+
 				// 교수이므로 학생 여부를 false로 설정
-	            session.setAttribute("isStudent", false);
+				session.setAttribute("isStudent", false);
 			}
 
-			// 직책에 따라 페이지 리다이렉트
-			if ("admin".equals(ct.GetPosition(session))) {
-				return "redirect:/index.html"; // 관리자 페이지로 리다이렉트
-			} else {
-				return "redirect:/index.html"; // 나머지는 login 페이지로 리다이렉트
-			}
+			return "redirect:/index.html";
 		}
 
 		// 로그인 실패 시 에러 메시지 추가

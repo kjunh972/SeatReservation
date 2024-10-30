@@ -19,9 +19,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class MyPageController {
 
     @Autowired
-    private UserDAO userDAO;  // UserDAO 객체를 주입받음
+    private UserDAO userDAO;  
     @Autowired
-    private ProfessorDAO professorDAO;  // ProfessorDAO 객체를 주입받음
+    private ProfessorDAO professorDAO;  
+    @Autowired
+    private Contoller ct = new Contoller();
     
 
     // 마이페이지를 보여주는 메서드
@@ -33,6 +35,7 @@ public class MyPageController {
         // 만약 사용자 정보가 없으면, 세션 만료로 간주하고 에러 메시지와 함께 로그인 페이지로 이동
         if (user == null) {
             model.addAttribute("error", "세션이 만료되었습니다. 다시 로그인 해주세요.");
+            ct.getTimetablePage(model, session);
             return "login"; // 로그인 페이지로 리다이렉트
         }
 
