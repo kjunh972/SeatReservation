@@ -2,287 +2,220 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <!-- 페이지 제목 설정 -->
-    <title>예약 확인 페이지</title>
+	<title>예약 확인 페이지</title>
+	<link rel="stylesheet" href="/css/timetableStyle.css" />
+	<link rel="stylesheet" href="/css/classroomStyle.css" />
+	<link rel="stylesheet" href="/css/reserveListStyle.css" />
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<script>
+		// 예약 취소 확인 창을 띄우는 함수
+		function cancelHour(button) {
+			var reservNum = button.getAttribute("data-reservNum");
+			var classroomName = button.getAttribute("data-classroomName");
+			var reservSeat = button.getAttribute("data-reservSeat");
 
-    <!-- 외부 CSS 파일 링크 -->
-    <link rel="stylesheet" href="/css/timetableStyle.css" />
-    <link rel="stylesheet" href="/css/classroomStyle.css" />
-    <link rel="stylesheet" href="/css/reserveListStyle.css" />
-    <!-- SweetAlert2 라이브러리 추가 (알림창 표시용) -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+			var confirmMessage = "예약번호 : " + reservNum + ", 강의실 : " + classroomName + "호, 좌석 : " + reservSeat + "번<br>자리 예약을 정말 취소하시겠습니까?";
 
-    <script>
-        // 예약 취소 확인 창을 띄우는 함수
-        function cancelHour(button) {
-            var reservNum = button.getAttribute("data-reservNum");
-            var classroomName = button.getAttribute("data-classroomName");
-            var reservSeat = button.getAttribute("data-reservSeat");
+			Swal.fire({
+				title: '예약 취소 확인',
+				html: confirmMessage,
+				icon: 'warning',
+				showCancelButton: true,
+				confirmButtonText: '네, 취소합니다',
+				cancelButtonText: '아니요, 유지합니다',
+			}).then((result) => {
+				if (result.isConfirmed) {
+					button.form.submit();
+				}
+			});
+		}
 
-            var confirmMessage = "예약번호 : " + reservNum + ", 강의실 : " + classroomName + "호, 좌석 : " + reservSeat + "번<br>자리 예약을 정말 취소하시겠습니까?";
+		// 예약 시간대 변경 시 확인 메시지 함수
+		function changeHour(form) {
+			var reservNum = form.reservNum.value;
+			var classroomName = form.classroomName.value;
+			var reservSeat = form.reservSeat.value;
+			var startHour = parseInt(form.startHour.value);
+			var endHour = parseInt(form.endHour.value);
 
-            Swal.fire({
-                title: '예약 취소 확인',
-                html: confirmMessage,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: '네, 취소합니다',
-                cancelButtonText: '아니요, 유지합니다',
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    button.form.submit();
-                }
-            });
-        }
+			if (startHour >= endHour) {
+				Swal.fire({
+					icon: 'error',
+					title: '시간 설정 오류',
+					text: '시작 시간이 종료 시간보다 클 수 없습니다',
+				});
+				return false;
+			}
 
-        // 예약 시간대 변경 시 확인 메시지 함수
-        function changeHour(form) {
-            var reservNum = form.reservNum.value;
-            var classroomName = form.classroomName.value;
-            var reservSeat = form.reservSeat.value;
-            var startHour = parseInt(form.startHour.value);
-            var endHour = parseInt(form.endHour.value);
+			var reservHourString = formatHours(startHour, endHour);
+			var confirmMessage = "예약번호 : " + reservNum + ", 강의실 : " + classroomName + "호, 좌석 : " + reservSeat + "번<br>예약시간 : " + reservHourString + "로<br>정말 예약시간을 변경하시겠습니까?";
 
-            if (startHour >= endHour) {
-                Swal.fire({
-                    icon: 'error',
-                    title: '시간 설정 오류',
-                    text: '시작 시간이 종료 시간보다 클 수 없습니다',
-                });
-                return false;
-            }
+			Swal.fire({
+				title: '예약 시간 변경 확인',
+				html: confirmMessage,
+				icon: 'warning',
+				showCancelButton: true,
+				confirmButtonText: '네, 변경합니다',
+				cancelButtonText: '아니요, 취소합니다',
+			}).then((result) => {
+				if (result.isConfirmed) {
+					form.newHour.value = startHour + "," + endHour;
+					form.submit();
+				}
+			});
 
-            var reservHourString = formatHours(startHour, endHour);
-            var confirmMessage = "예약번호 : " + reservNum + ", 강의실 : " + classroomName + "호, 좌석 : " + reservSeat + "번<br>예약시간 : " + reservHourString + "로<br>정말 예약시간을 변경하시겠습니까?";
+			return false;
+		}
 
-            Swal.fire({
-                title: '예약 시간 변경 확인',
-                html: confirmMessage,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: '네, 변경합니다',
-                cancelButtonText: '아니요, 취소합니다',
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    form.newHour.value = startHour + "," + endHour;
-                    form.submit();
-                }
-            });
+		// 시작 시간과 종료 시간을 포맷팅하는 함수
+		function formatHours(startHour, endHour) {
+			return startHour + "시 ~ " + endHour + "시";
+		}
 
-            return false;
-        }
+		// 페이지 로드 시 실행되는 함수
+		window.onload = function () {
+			var successElement = document.querySelector(".success");
+			var errorElement = document.querySelector(".error");
 
-        // 시작 시간과 종료 시간을 포맷팅하는 함수
-        function formatHours(startHour, endHour) {
-            return startHour + "시 ~ " + endHour + "시";
-        }
+			if (successElement) {
+				Swal.fire({
+					icon: 'success',
+					title: '완료',
+					text: successElement.textContent
+				});
+			}
 
-        // 페이지 로드 시 실행되는 함수
-        window.onload = function () {
-            var successElement = document.querySelector(".success");
-            var errorElement = document.querySelector(".error");
+			if (errorElement) {
+				Swal.fire({
+					icon: 'error',
+					title: '오류',
+					text: errorElement.textContent
+				});
+			}
 
-            if (successElement) {
-                Swal.fire({
-                    icon: 'success',
-                    title: '완료',
-                    text: successElement.textContent
-                });
-            }
+			var listModal = document.getElementById('listModal');
+			if (listModal) {
+				listModal.style.display = 'block';
+			}
 
-            if (errorElement) {
-                Swal.fire({
-                    icon: 'error',
-                    title: '오류',
-                    text: errorElement.textContent
-                });
-            }
+			formatReservationHours();
+		}
 
-            var listModal = document.getElementById('listModal');
-            if (listModal) {
-                listModal.style.display = 'block';
-            }
+		function closeListModal() {
+			var listModal = document.getElementById('listModal');
+			if (listModal) {
+				listModal.style.display = 'none';
+				window.location.href = "/timetable";
+			}
+		}
 
-            formatReservationHours();
-        }
+		document.addEventListener('DOMContentLoaded', function () {
+			var closeModalButton = document.getElementById('closeModal');
+			if (closeModalButton) {
+				closeModalButton.addEventListener('click', closeListModal);
+			}
+		});
 
-        function closeListModal() {
-            var listModal = document.getElementById('listModal');
-            if (listModal) {
-                listModal.style.display = 'none';
-                window.location.href = "/timetable";
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', function () {
-            var closeModalButton = document.getElementById('closeModal');
-            if (closeModalButton) {
-                closeModalButton.addEventListener('click', closeListModal);
-            }
-        });
-
-        function formatReservationHours() {
-            var timeElements = document.querySelectorAll(".reservation-time");
-            timeElements.forEach(function (element) {
-                var hours = element.textContent.split(',');
-                if (hours.length > 1) {
-                    var startHour = hours[0];
-                    var endHour = hours[hours.length - 1];
-                    element.textContent = startHour + "시 ~ " + endHour + "시";
-                }
-            });
-        }
-    </script>
+		function formatReservationHours() {
+			var timeElements = document.querySelectorAll(".reservation-time");
+			timeElements.forEach(function (element) {
+				var hours = element.textContent.split(',');
+				if (hours.length > 1) {
+					var startHour = hours[0];
+					var endHour = hours[hours.length - 1];
+					element.textContent = startHour + "시 ~ " + endHour + "시";
+				}
+			});
+		}
+	</script>
 </head>
 
 <body>
-    <!-- 상단 메뉴 포함 -->
-    <header th:replace="~{/menu.html}"></header>
+	<header th:if="${userPosition == 'student'}">
+		<header th:replace="~{/menu.html}"></header> <!-- 메뉴 포함 -->
+	</header>
+	<header th:if="${userPosition == 'admin'}">
+		<header th:replace="~{/menu_admin.html}"></header> <!-- 메뉴 포함 -->
+	</header>
+	<header th:if="${userPosition == 'professor'}">
+		<header th:replace="~{/menu_admin.html}"></header> <!-- 메뉴 포함 -->
+	</header>
 
-    <!-- 모달 -->
-    <div id="listModal" class="modal">
-        <div class="listModal-content">
-            <span class="close" id="closeModal">&times;</span>
-            <h1>예약 확인 페이지</h1>
+	<div id="listModal" class="modal">
+		<div class="listModal-content">
+			<span class="close" id="closeModal">&times;</span>
+			<h1>예약 확인</h1>
+			<h3>아래 예약 정보를 확인해주세요.</h3>
+			
+			<div th:if="${empty}" class="empty" th:text="${empty}"></div>
+			<div th:if="${error}" class="error" th:text="${error}" style="display:none;"></div>
+			<div th:if="${success}" class="success" th:text="${success}" style="display:none;"></div>
 
-            <div th:if="${empty}" class="empty" th:text="${empty}"></div>
-            <div th:if="${error}" class="error" th:text="${error}" style="display:none;"></div>
-            <div th:if="${success}" class="success" th:text="${success}" style="display:none;"></div>
+			<div class="reservations-container">
+				<!-- 각 예약 정보를 하나의 폼으로 표시 -->
+				<div th:each="classroom : ${reserveList}">
+					<div th:each="reservation : ${classroom.value}">
+						<form class="reservation-form" action="/cancelReservation" method="post">
+							<div class="reservation-info">
+								<div class="info-row">
+									<p>강의명: <span th:text="${reservation.subject}"></span></p>
+									<p>강의실: <span th:text="${reservation.classroomName + '호'}"></span></p>
+								</div>
+								<div class="info-row">
+									<p>요일: <span th:text="${reservation.day}"></span></p>
+									<p>사용시간: <span th:text="${reservation.reservHourString +'시'}"></span></p>
+								</div>
+								<div class="info-row">
+									<p>좌석: <span th:text="${reservation.reservSeat + '번'}"></span></p>
+									<p>예약 번호: <span th:text="${reservation.reservNum + '번'}"></span></p>								
+								</div>
+								<div class="info-row">
+									<p>아이디: <span th:text="${reservation.userId}"></span></p>
+								</div>							<input type="hidden" name="reservNum" th:value="${reservation.reservNum}">
+								<input type="hidden" name="classroomName" th:value="${reservation.classroomName}">
+								<input type="hidden" name="reservSeat" th:value="${reservation.reservSeat}">
+								<button type="button" class="cancel-btn" onclick="cancelHour(this)" th:attr="data-reservNum=${reservation.reservNum},
+	                                             data-classroomName=${reservation.classroomName},
+	                                             data-reservSeat=${reservation.reservSeat}">
+									예약 취소
+								</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
 
-            <table>
-                <tr th:each="entry : ${reserveList}">
-                    <td colspan="5">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>과목명</th>
-                                    <th>강의실 이름</th>
-                                    <th>예약 번호</th>
-                                    <th>사용자 ID</th>
-                                    <th>좌석 번호</th>
-                                    <th>요일</th>
-                                    <th>예약 시간</th>
-                                    <th>취소</th>
-                                    <th>변경</th>
-                                </tr>
-                            </thead>
-                            <tbody class="centerContent">
-                                <tr th:each="reservation : ${entry.value}">
-                                    <td th:text="${reservation.subject}"></td>
-                                    <td th:text="${reservation.classroomName + '호'}"></td>
-                                    <td th:text="${reservation.reservNum + '번'}"></td>
-                                    <td th:text="${reservation.userId}"></td>
-                                    <td th:text="${reservation.reservSeat + '번 좌석'}"></td>
-                                    <td th:text="${reservation.day}"></td>
-                                    <td class="reservation-time" th:text="${reservation.reservHourString}"></td>
-                                    <td>
-                                        <form th:action="@{/cancelReservation}" method="post">
-                                            <input type="hidden" name="reservNum" th:value="${reservation.reservNum}" />
-                                            <button type="button" th:data-reservNum="${reservation.reservNum}"
-                                                th:data-classroomName="${reservation.classroomName}"
-                                                th:data-reservSeat="${reservation.reservSeat}" class="cancel"
-                                                onclick="cancelHour(this)">취소</button>
-                                        </form>
-                                    </td>
-                                    <td>
-                                        <form th:action="@{/updateReservation}" method="post"
-                                            onsubmit="return changeHour(this);">
-                                            <input type="hidden" name="reservNum" th:value="${reservation.reservNum}" />
-                                            <input type="hidden" name="classroomName"
-                                                th:value="${reservation.classroomName}" />
-                                            <input type="hidden" name="reservSeat"
-                                                th:value="${reservation.reservSeat}" />
+			<button class="add-reservation-btn" onclick="window.location.href='/timetable'">예약 추가하기</button>
+		</div>
+	</div>
 
-                                            <div class="input-container">
-                                                <div class="input-container">
-                                                    <label for="startHour">시작 시간:</label>
-                                                    <select id="startHour" name="startHour">
-                                                        <option value="9">09시</option>
-                                                        <option value="10">10시</option>
-                                                        <option value="11">11시</option>
-                                                        <option value="12">12시</option>
-                                                        <option value="13">13시</option>
-                                                        <option value="14">14시</option>
-                                                        <option value="15">15시</option>
-                                                        <option value="16">16시</option>
-                                                        <option value="17">17시</option>
-                                                        <option value="18">18시</option>
-                                                        <option value="19">19시</option>
-                                                        <option value="20">20시</option>
-                                                    </select>
-                                                </div>
 
-                                                <div class="input-container">
-                                                    <label for="endHour">종료 시간:</label>
-                                                    <select id="endHour" name="endHour">
-                                                        <option value="10">10시</option>
-                                                        <option value="11">11시</option>
-                                                        <option value="12">12시</option>
-                                                        <option value="13">13시</option>
-                                                        <option value="14">14시</option>
-                                                        <option value="15">15시</option>
-                                                        <option value="16">16시</option>
-                                                        <option value="17">17시</option>
-                                                        <option value="18">18시</option>
-                                                        <option value="19">19시</option>
-                                                        <option value="20">20시</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-
-                                            <input type="hidden" id="newHour" name="newHour" />
-                                            <button type="submit" class="update">변경</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </td>
-                </tr>
-            </table>
-            <div style="display: flex; justify-content: center;  margin-top: 2.5rem;">
-                <button type="button" onclick="location.href='/timetable'"
-                    style="width: 15rem; height: 4rem; font-size: 1.5rem;">
-                    시간표로 이동하기
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <h1>시간표</h1>
-    <div class="container">
-        <table>
-            <thead>
-                <tr>
-                    <th></th>
-                    <th th:each="day : ${days}" th:text="${day}"></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="hour : ${hours}">
-                    <td th:text="${hour}"></td>
-                    <td th:each="day : ${days}" class="clickable" data-day="${day}" data-hour="${hour}">
-                        <div th:each="timeTable, stat : ${userTimeTable}"
-                            th:if="${timeTable.day == day and timeTable.startHour le hour and timeTable.endHour gt hour}"
-                            th:classappend="'subject-' + ${stat.index % 10}" th:attr="data-subject=${timeTable.subject}, data-classroom=${timeTable.classroomName}, 
-		                                      data-day=${timeTable.day}, data-hour=${hour}">
-                            <span th:text="${timeTable.subject + ' (' + timeTable.classroomName + ')'}"></span><br>
-                        </div>
-                        <div th:attr="data-hour=${hour}, data-day=${day}" style="display: none;"></div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <div class="timetable-button-container">
-        <button th:if="${userPosition == 'student'}" id="reserve-seat-button" class="timetable-button">좌석 예약</button>
-        <button th:if="${userPosition == 'admin' or userPosition == 'professor'}" id="manage-seat-button"
-            class="timetable-button">좌석 관리</button>
-        <label for="modal-addCheckbox" class="timetable-button add-modal-button">시간표 추가</label>
-        <label for="modal-checkbox" class="timetable-button edit-modal-button">시간표 수정</label>
-        <label for="delete-modal-checkbox" class="timetable-button delete-modal-button">시간표 삭제</label>
-    </div>
+	<!-- 시간표 부분 -->
+	<h1>시간표</h1>
+	<div class="container">
+		<table>
+			<thead>
+				<tr>
+					<th th:each="day : ${days}" th:text="${day}"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="hour : ${hours}">
+					<td th:text="${hour}"></td>
+					<td th:each="day : ${days}" class="clickable" th:attr="data-day=${day}, data-hour=${hour}">
+						<div th:each="timeTable, stat : ${userTimeTable}"
+							th:if="${timeTable.day == day and timeTable.startHour le hour and timeTable.endHour gt hour}"
+							th:classappend="'subject-' + ${stat.index % 10}" th:attr="data-subject=${timeTable.subject},
+	                                     data-classroom=${timeTable.classroomName},
+	                                     data-day=${timeTable.day},
+	                                     data-hour=${hour}">
+							<span th:text="${timeTable.subject + ' (' + timeTable.classroomName + ')'}"></span><br>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 </body>
 
 </html>

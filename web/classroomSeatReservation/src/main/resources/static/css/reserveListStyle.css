@@ -1,167 +1,125 @@
-/* 모달 컨테이너의 기본 스타일 설정 */
-#listModal .modal-content {
-    padding: 20px; /* 내부 여백 */
-    background-color: #fff; /* 배경색 흰색 */
-    border-radius: 10px; /* 모서리 둥글게 */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+#listModal h1{
+	color: black;
+	text-align: center; /* 중앙 정렬 */
+}
+#listModal h3{
+	color: dimgray;
+	font-weight: normal;
+	text-align: center; /* 중앙 정렬 */
+}
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
 }
 
-/* 모달 내 메인 제목 스타일 */
-#listModal h1 {
-    margin-top: 4rem; /* 상단 여백 */
-    text-align: center; /* 중앙 정렬 */
-    font-size: 1.9rem; /* 글자 크기 */
-    color: #778da9; /* 글자 색상 */
-}
-
-/* 데이터가 없을 때 표시되는 에러 메시지 스타일 */
-#listModal .empty {
-    font-size: 1rem; /* 글자 크기 */
-    color: #778da9; /* 글자 색상 */
-    text-align: center; /* 중앙 정렬 */
-    font-weight: bold; /* 글자 두께 */
-    margin-top: 5rem; /* 상단 여백 */
-}
-
-/* 리스트 모달의 내용 컨테이너 스타일 */
 .listModal-content {
-    background-color: #fefefe; /* 배경색 */
-    margin: 0 auto; /* 상하 마진 제거, 좌우 중앙 정렬 */
-    padding: 20px; /* 내부 여백 */
-    border: 1px solid #888; /* 테두리 */
-    width: 95%; /* 너비 */
-    max-width: 93vw; /* 최대 너비 */
-    height: 85vh; /* 높이 */
-    overflow-y: auto; /* 세로 스크롤 허용 */
-    position: relative; /* 상대 위치 */
-    top: 5vh; /* 상단에서 5vh만큼 아래로 이동 */
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 800px;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
 }
 
-/* 테이블 기본 스타일 */
-#listModal table {
-    width: 100%; /* 전체 너비 */
-    margin-top: 1.3rem; /* 상단 여백 */
-    background-color: #fff; /* 배경색 */
-    border-radius: 0.5rem; /* 모서리 둥글게 */
-    box-shadow: 0 0.1rem 0.2rem rgba(119, 141, 169, 0.1); /* 그림자 효과 */
-    border-collapse: separate; /* 셀 경계 분리 */
-    border-spacing: 0; /* 셀 간격 없음 */
+.close {
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
 }
 
-/* 테이블 셀 공통 스타일 */
-#listModal th, 
-#listModal td {
-    padding: 0.8rem; /* 내부 여백 */
-    text-align: center; /* 텍스트 중앙 정렬 */
-    border-bottom: 0.1rem solid #778da9; /* 하단 테두리 */
-    font-size: 1rem; /* 글자 크기 */
-    font-weight: bold; /* 글자 두께 */
+.reservations-container {
+    margin: 20px 0;
 }
 
-/* 테이블 헤더 스타일 */
-#listModal th {
-    background-color: #778da9; /* 배경색 */
-    color: white; /* 글자색 */
-    font-weight: bold; /* 글자 두께 */
-    font-size: 1.2rem; /* 글자 크기 */
+.reservation-form {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 15px;
 }
 
-/* 테이블 행 호버 효과 */
-#listModal tr:hover {
-    background-color: rgba(119, 141, 169, 0.1); /* 호버 시 배경색 변경 */
+.reservation-info {
+    width: 100%;
 }
 
-/* 테이블 마지막 행의 하단 테두리 제거 */
-#listModal tr:last-child td {
-    border-bottom: none;
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
 }
 
-/* 입력 필드 컨테이너 스타일 */
-#listModal .input-container {
-    display: flex; /* Flexbox 사용 */
-    flex-wrap: nowrap; /* 줄바꿈 방지 */
-    justify-content: center; /* 가로 중앙 정렬 */
-    align-items: center; /* 세로 중앙 정렬 */
-    margin-bottom: 0.5rem; /* 하단 여백 */
+.info-row p {
+    margin: 0;
+    flex: 1;
 }
 
-/* 레이블 스타일 */
-#listModal .input-container label {
-    white-space: nowrap; /* 줄바꿈 방지 */
-    font-weight: bold; /* 글자 두께 */
-    margin-right: 0.5rem; /* 우측 여백 */
-    color: #778da9; /* 글자색 */
+.info-row span {
+    font-weight: bold;
+    margin-left: 5px;
 }
 
-/* 선택 필드 스타일 */
-#listModal .input-container select {
-    width: auto; /* 자동 너비 */
-    padding: 0.5rem; /* 내부 여백 */
-    border-radius: 0.25rem; /* 모서리 둥글게 */
-    border: 1px solid #778da9; /* 테두리 */
-    margin-right: 1.5rem; /* 우측 여백 */
-    color: #778da9; /* 글자색 */
+.cancel-btn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    float: right;
+    margin-top: 10px;
 }
 
-/* 버튼 기본 스타일 */
-#listModal button {
-    padding: 10px 20px; /* 내부 여백 */
-    margin-top: 35px; /* 상단 여백 */
-    border: none; /* 테두리 없음 */
-    border-radius: 5px; /* 모서리 둥글게 */
-    background-color: #778da9; /* 배경색 */
-    color: white; /* 글자색 */
-    font-size: 16px; /* 글자 크기 */
-    cursor: pointer; /* 마우스 커서 변경 */
+.cancel-btn:hover {
+    background-color: #c82333;
 }
 
-/* 취소 버튼 스타일 */
-#listModal button.cancel {
-    background-color: #a85751; /* 배경색 */
+.add-reservation-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 20px;
 }
 
-/* 변경 버튼 스타일 */
-#listModal button.update {
-    background-color: #778da9; /* 배경색 */
+.add-reservation-btn:hover {
+    background-color: #0056b3;
 }
 
-/* 취소 버튼 호버 효과 */
-#listModal button.cancel:hover {
-    background-color: #8f4b46; /* 호버 시 배경색 변경 */
-}
-
-/* 변경 버튼 호버 효과 */
-#listModal button.update:hover {
-    background-color: #5c6f86; /* 호버 시 배경색 변경 */
-}
-
-/* 일반 버튼 호버 효과 */
-#listModal button:hover {
-    background-color: #5c6f86; /* 호버 시 배경색 변경 */
-}
-
-/* 폼 내용 중앙 정렬을 위한 클래스 */
-#listModal .centerContent {
+.empty, .error, .success {
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 4px;
     text-align: center;
 }
 
-/* 폼 내 Flexbox 스타일 조정 */
-#listModal .centerContent .input-container {
-    display: inline-block;
+.empty {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
 }
 
-/* 시간표로 이동하기 버튼 스타일 */
-#listModal button[onclick="location.href='/timetable'"] {
-    display: block; /* 블록 레벨 요소로 표시 */
-    margin: 2.5rem auto 0; /* 상단 여백과 중앙 정렬 */
-    width: 10rem; /* 너비 */
-    height: 3rem; /* 높이 */
-    font-size: 1rem; /* 글자 크기 */
-    background-color: #778da9; /* 배경색 */
-    color: white; /* 글자색 */
+.error {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
 }
 
-/* 시간표로 이동하기 버튼 호버 효과 */
-#listModal button[onclick="location.href='/timetable'"]:hover {
-    background-color: #5c6f86; /* 호버 시 배경색 변경 */
+.success {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
 }
