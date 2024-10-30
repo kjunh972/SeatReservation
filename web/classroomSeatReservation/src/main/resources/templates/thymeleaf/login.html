@@ -155,6 +155,9 @@
 					text: errorMessage.textContent,
 					confirmButtonText: '확인',
 					allowOutsideClick: false,
+					customClass: {
+						confirmButton: 'swal-confirm-button'
+					},
 					didOpen: () => {
 						if (window.onkeydown) window.onkeydown = null;
 						if (window.onclick) window.onclick = null;
@@ -238,7 +241,10 @@
 								icon: 'info',
 								title: '알림',
 								text: '오늘의 시간표가 없습니다.',
-								confirmButtonText: '확인'
+								confirmButtonText: '확인',
+								customClass: {
+									confirmButton: 'swal-confirm-button',
+								}
 							});
 						}
 					} else {
@@ -265,13 +271,15 @@
 							icon: 'error',
 							title: '오류',
 							text: '시간표를 불러오는 중 오류가 발생했습니다.',
-							confirmButtonText: '확인'
+							confirmButtonText: '확인',
+							customClass: {
+								confirmButton: 'swal-confirm-button',
+							}
 						});
 					}
 				}
 			});
 		}
-
 		// 좌석 예약을 처리하는 함수
 		function reserveSeat(subject, classroomName, startHour, endHour) {
 			if (window.sessionExpired || window.stopAjax || localStorage.getItem('sessionExpired') === 'true') return;
@@ -282,7 +290,11 @@
 				icon: 'info',
 				showCancelButton: true,
 				confirmButtonText: '이동하기',
-				cancelButtonText: '취소'
+				cancelButtonText: '취소',
+				customClass: {
+					confirmButton: 'swal-confirm-button',
+					cancelButton: 'swal-cancel-button'
+				}
 			}).then((result) => {
 				if (result.isConfirmed) {
 					window.location.href = '/timetable';

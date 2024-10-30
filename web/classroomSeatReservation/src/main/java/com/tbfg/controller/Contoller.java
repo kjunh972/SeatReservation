@@ -150,8 +150,6 @@ public class Contoller {
 	public String index(HttpSession session, Model model) {
 		String userId = GetId(session);
 
-		
-
 		// 로그인 세션이 만료 된 경우
 	    if (userId == null) {
 	    	getTimetablePage(model, session);
@@ -197,6 +195,7 @@ public class Contoller {
 		String userPosition = GetPosition(session); // 세션에서 사용자 직책을 가져옴
 
 		if (userId == null) { // 세션이 만료된 경우 로그인 페이지로 리다이렉트
+			getTimetablePage(model, session);
 			model.addAttribute("error", "세션이 만료되었습니다. 다시 로그인 해주세요.");
 			return "login";
 		}
@@ -232,6 +231,7 @@ public class Contoller {
 		String userPosition = GetPosition(session); // 세션에서 사용자 직책을 가져옴
 
 		if (userId == null) { // 세션이 만료된 경우 로그인 페이지로 리다이렉트
+			getTimetablePage(model, session);
 			model.addAttribute("error", "세션이 만료되었습니다. 다시 로그인 해주세요.");
 			return "login";
 		}
@@ -296,6 +296,7 @@ public class Contoller {
 		String userPosition = GetPosition(session); // 세션에서 사용자 직책을 가져옴
 
 		if (userId == null) { // 세션이 만료된 경우 로그인 페이지로 리다이렉트
+			getTimetablePage(model, session);
 			model.addAttribute("error", "세션이 만료되었습니다. 다시 로그인 해주세요.");
 			return "login";
 		}
@@ -477,6 +478,7 @@ public class Contoller {
 	public String reserveSeat(String classroomName, Integer seatNumber, String day, String subject, HttpSession session,
 			Model model) throws JsonProcessingException {
 		if (GetId(session) == null) { // 세션에 사용자 ID가 있는지 확인
+			getTimetablePage(model, session);
 			model.addAttribute("error", "세션이 만료되었습니다. 다시 로그인 해주세요.");
 			return "login"; // 로그인 페이지로 리다이렉트
 		}
@@ -521,6 +523,7 @@ public class Contoller {
 
 		// 사용자 ID가 없으면 로그인 페이지로 리다이렉트
 		if (userId == null) {
+			getTimetablePage(model, session);
 			model.addAttribute("error", "세션이 만료되었습니다. 다시 로그인 해주세요.");
 			return "login";
 		}
@@ -584,8 +587,8 @@ public class Contoller {
 
 		// 세션이 만료되었거나 사용자 ID가 없는 경우 로그인 페이지로 리다이렉트
 		if (userId == null) {
-			model.addAttribute("error", "세션이 만료되었습니다. 다시 로그인 해주세요.");
 			getTimetablePage(model, session);
+			model.addAttribute("error", "세션이 만료되었습니다. 다시 로그인 해주세요.");
 			return "login";
 		}
 
@@ -644,6 +647,7 @@ public class Contoller {
 
 		// 세션이 만료되었거나 사용자 ID가 없는 경우 로그인 페이지로 리다이렉트
 		if (userId == null) {
+			getTimetablePage(model, session);
 			model.addAttribute("error", "세션이 만료되었습니다. 다시 로그인 해주세요.");
 			return "login";
 		}
@@ -682,6 +686,7 @@ public class Contoller {
 
 		// 세션이 만료되었거나 사용자 ID가 없는 경우
 		if (userId == null) {
+			getTimetablePage(model, session);
 			model.addAttribute("error", "세션이 만료되었습니다. 다시 로그인 해주세요.");
 			return "login"; // 로그인 페이지로 리다이렉트
 		}
@@ -710,12 +715,13 @@ public class Contoller {
 
 	// 예약 리스트에서 예약 취소하는 메서드
 	@PostMapping("/cancelReservation")
-	public String cancelReservation(@RequestParam("reservNum") int reservNum, HttpSession session,
+	public String cancelReservation(@RequestParam("reservNum") int reservNum, HttpSession session, Model model,
 			RedirectAttributes redirectAttributes) {
 
 		String userId = GetId(session);
 
 		if (userId == null) {
+			getTimetablePage(model, session);
 			redirectAttributes.addFlashAttribute("error", "세션이 만료되었습니다. 다시 로그인 해주세요.");
 			return "redirect:/login";
 		}
@@ -735,12 +741,13 @@ public class Contoller {
 
 	// 예약 리스트에서 시간 변경하는 메서드
 	@PostMapping("/updateReservation")
-	public String updateReservation(@RequestParam("reservNum") int reservNum, @RequestParam("newHour") String newHour,
+	public String updateReservation(@RequestParam("reservNum") int reservNum, @RequestParam("newHour") String newHour, Model model,
 			HttpSession session, RedirectAttributes redirectAttributes) {
 
 		String userId = GetId(session);
 
 		if (userId == null) {
+			getTimetablePage(model, session);
 			redirectAttributes.addFlashAttribute("error", "세션이 만료되었습니다. 다시 로그인 해주세요.");
 			return "redirect:/login";
 		}
@@ -765,6 +772,7 @@ public class Contoller {
 		// 세션 및 사용자 ID 확인
 		String userId = GetId(session);
 		if (userId == null) {
+			getTimetablePage(model, session);
 			model.addAttribute("error", "세션이 만료되었습니다. 다시 로그인 해주세요.");
 			return "login"; // 로그인 페이지로 리다이렉트
 		}
@@ -953,6 +961,7 @@ public class Contoller {
 
 		// 세션이 만료되었으면 로그인 페이지로 리다이렉트
 		if (userId == null) {
+			getTimetablePage(model, session);
 			model.addAttribute("error", "세션이 만료되었습니다. 다시 로그인 해주세요.");
 			return "login";
 		}
