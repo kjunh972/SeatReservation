@@ -227,6 +227,13 @@
 
 					if (data.length === 0) {
 						if (!document.querySelector('.error')) {
+							// 모달 닫기
+							const modal = document.getElementById("myModal");
+							if (modal) {
+								modal.style.display = "none";
+							}
+
+							// 알람 표시
 							Swal.fire({
 								icon: 'info',
 								title: '알림',
@@ -243,7 +250,7 @@
 							if (item.reservationStatus === '예약완료' && item.reservationInfo) {
 								table += '<td>예약번호: ' + item.reservationInfo.reservNum + '</td>';
 							} else {
-								table += '<td><button onclick="reserveSeat(\'' + item.subject + '\', \'' + item.classroomName + '\', ' + item.startHour + ', ' + item.endHour + ')">좌석 예약</button></td>';
+								table += '<td><button style="font-size: 0.8rem; margin-left: 1.2rem;" onclick="reserveSeat(\'' + item.subject + '\', \'' + item.classroomName + '\', ' + item.startHour + ', ' + item.endHour + ')">좌석 예약</button></td>';
 							}
 
 							table += '</tr>';
@@ -270,11 +277,11 @@
 			if (window.sessionExpired || window.stopAjax || localStorage.getItem('sessionExpired') === 'true') return;
 
 			Swal.fire({
-				title: '좌석 예약',
-				text: `${subject} (${classroomName}) ${startHour}시 ~ ${endHour}시 수업의 좌석을 예약하시겠습니까?`,
-				icon: 'question',
+				title: '시간표로 이동',
+				html: `시간표로 이동하겠습니다.<br>해당 과목을 예약해주세요.<br><br>${subject} (${classroomName}) ${startHour}시 ~ ${endHour}시`,
+				icon: 'info',
 				showCancelButton: true,
-				confirmButtonText: '예약하기',
+				confirmButtonText: '이동하기',
 				cancelButtonText: '취소'
 			}).then((result) => {
 				if (result.isConfirmed) {
