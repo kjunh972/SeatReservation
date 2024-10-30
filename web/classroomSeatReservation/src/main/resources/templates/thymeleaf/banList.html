@@ -2,196 +2,211 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <!-- 페이지 제목 설정 -->
-    <title>좌석 예약 금지 목록</title>
-    <!-- 외부 CSS 파일 링크 -->
-    <link rel="stylesheet" href="/css/timetableStyle.css" />
-    <link rel="stylesheet" href="/css/classroomStyle.css" />
-    <link rel="stylesheet" href="/css/reserveListStyle.css" />
-    <!-- SweetAlert2 라이브러리 추가 (알림창 표시용) -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<!-- 페이지 제목 설정 -->
+	<title>좌석 예약 금지 목록</title>
+	<!-- 외부 CSS 파일 링크 -->
+	<link rel="stylesheet" href="/css/timetableStyle.css" />
+	<link rel="stylesheet" href="/css/classroomStyle.css" />
+	<link rel="stylesheet" href="/css/reserveListStyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+	<!-- SweetAlert2 라이브러리 추가 (알림창 표시용) -->
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <script>
-        // 좌석 예약 금지를 해제하는 확인 창을 띄우는 함수
-        function unbanSeat(button) {
-            var classroomName = button.getAttribute("data-classroomName");
-            var banSeat = button.getAttribute("data-banSeat");
-            var day = button.getAttribute("data-day");
+	<script>
+		// 좌석 예약 금지를 해제하는 확인 창을 띄우는 함수
+		function unbanSeat(button) {
+			var classroomName = button.getAttribute("data-classroomName");
+			var banSeat = button.getAttribute("data-banSeat");
+			var day = button.getAttribute("data-day");
 
-            var confirmMessage = "강의실 : " + classroomName + "호, 좌석 : " + banSeat + "번<br>예약 금지 해제 요일 : " + day + "<br>좌석 예약 금지를 정말 해제하시겠습니까?";
+			var confirmMessage = "강의실 : " + classroomName + "호, 좌석 : " + banSeat + "번<br>예약 금지 해제 요일 : " + day + "<br>좌석 예약 금지를 정말 해제하시겠습니까?";
 
-            Swal.fire({
-                title: '예약 금지 해제 확인',
-                html: confirmMessage,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: '네, 해제합니다',
-                cancelButtonText: '아니요, 유지합니다',
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    button.form.submit();
-                }
-            });
-        }
+			Swal.fire({
+				title: '예약 금지 해제 확인',
+				html: confirmMessage,
+				icon: 'warning',
+				showCancelButton: true,
+				confirmButtonText: '네, 해제합니다',
+				cancelButtonText: '아니요, 유지합니다',
+			}).then((result) => {
+				if (result.isConfirmed) {
+					// AJAX 요청으로 해제 요청
+					fetch('/unbanSeat', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded',
+						},
+						body: new URLSearchParams({
+							'classroomName': classroomName,
+							'banSeat': banSeat,
+							'day': day
+						})
+					})
+						.then(response => {
+							if (response.ok) {
+								// 성공적으로 해제된 경우 시간표 페이지로 이동
+								window.location.href = "/timetable";
+							} else {
+								Swal.fire({
+									icon: 'error',
+									title: '오류',
+									text: '좌석 예약 금지 해제에 실패했습니다.'
+								});
+							}
+						})
+						.catch(error => {
+							console.error('Error:', error);
+							Swal.fire({
+								icon: 'error',
+								title: '오류',
+								text: '서버와의 통신 중 오류가 발생했습니다.'
+							});
+						});
+				}
+			});
+		}
 
-        // 시간 포맷팅 함수
-        function formatBanHours(banHourString) {
-            var hours = banHourString.split(',');
-            if (hours.length > 1) {
-                var startHour = hours[0];
-                var endHour = hours[hours.length - 1];
-                return startHour + "시 ~ " + endHour + "시";
-            }
-            return banHourString;
-        }
+		// 페이지 로드 후 성공 또는 오류 메시지를 확인하여 알림창 표시
+		window.onload = function () {
+			var successElement = document.querySelector(".success");
+			var errorElement = document.querySelector(".error");
 
-        // 페이지 로드 후 성공 또는 오류 메시지를 확인하여 알림창 표시
-        window.onload = function () {
-            var successElement = document.querySelector(".success");
-            var errorElement = document.querySelector(".error");
+			if (successElement) {
+				Swal.fire({
+					icon: 'success',
+					title: '완료',
+					text: successElement.textContent
+				});
+			}
 
-            if (successElement) {
-                Swal.fire({
-                    icon: 'success',
-                    title: '완료',
-                    text: successElement.textContent
-                });
-            }
+			if (errorElement) {
+				Swal.fire({
+					icon: 'error',
+					title: '오류',
+					text: errorElement.textContent
+				});
+			}
 
-            if (errorElement) {
-                Swal.fire({
-                    icon: 'error',
-                    title: '오류',
-                    text: errorElement.textContent
-                });
-            }
+			// 모달 열기
+			var modal = document.getElementById("listModal");
+			modal.style.display = "block";
 
-            // 모달 열기
-            var modal = document.getElementById("listModal");
-            modal.style.display = "block";
-
-            // 모달 닫기 버튼
-            var closeModal = document.getElementById("closeModal");
-            closeModal.onclick = function () {
-                modal.style.display = "none";
-                window.location.href = "/timetable"; // 시간표 페이지로 이동
-            }
-
-            // 금지 시간대 포맷팅
-            var banHourElements = document.querySelectorAll(".ban-hour");
-            banHourElements.forEach(function(element) {
-                element.textContent = formatBanHours(element.textContent);
-            });
-        }
-    </script>
+			// 모달 닫기 버튼
+			var closeModal = document.getElementById("closeModal");
+			closeModal.onclick = function () {
+				modal.style.display = "none";
+				window.location.href = "/timetable"; // 시간표 페이지로 이동
+			}
+		}
+	</script>
 </head>
 
 <body>
-    <!-- 상단 메뉴 포함 (외부 HTML 파일을 삽입하여 메뉴 구성) -->
-    <header th:replace="~{/menu_admin.html}"></header>
+	<!-- 상단 메뉴 포함 (외부 HTML 파일을 삽입하여 메뉴 구성) -->
+	<header th:replace="~{/menu_admin.html}"></header>
 
-    <!-- 모달 -->
-    <div id="listModal" class="modal">
-        <div class="listModal-content">
-            <span class="close" id="closeModal">&times;</span>
-            <h1>좌석 예약 금지 목록</h1>
+	<div id="listModal" class="modal">
+		<div class="listModal-content">
+			<span class="close" id="closeModal">&times;</span>
+			<h1>좌석 예약 금지</h1>
+			<h3>좌석 예약 정보를 확인해주세요.</h3>
 
-            <div th:if="${empty}" class="empty" th:text="${empty}"></div>
-            <div th:if="${error}" class="error" th:text="${error}" style="display:none;"></div>
-            <div th:if="${success}" class="success" th:text="${success}" style="display:none;"></div>
+			<div th:if="${empty}" class="empty" th:text="${empty}"></div>
+			<div th:if="${error}" class="error" th:text="${error}" style="display:none;"></div>
+			<div th:if="${success}" class="success" th:text="${success}" style="display:none;"></div>
 
-            <table>
-                <tr th:each="entry : ${banSeatList}">
-                    <td colspan="5">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>교수</th>
-                                    <th>과목명</th>
-                                    <th>강의실 이름</th>
-                                    <th>좌석 번호</th>
-                                    <th>요일</th>
-                                    <th>금지 시간대</th>
-                                    <th>해제</th>
-                                </tr>
-                            </thead>
-                            <tbody class="centerContent">
-                                <tr th:each="banSeat : ${entry.value}">
-                                    <td th:text="${banSeat.userId}"></td>
-                                    <td th:text="${banSeat.subject}"></td>
-                                    <td th:text="${banSeat.classroomName + '호'}"></td>
-                                    <td th:text="${banSeat.banSeat + '번 좌석'}"></td>
-                                    <td th:text="${banSeat.day}"></td>
-                                    <td class="ban-hour" th:text="${banSeat.banHourString}"></td>
-                                    <td>
-                                        <form th:action="@{/unbanSeat}" method="post">
-                                            <input type="hidden" name="classroomName" th:value="${banSeat.classroomName}" />
-                                            <input type="hidden" name="banSeat" th:value="${banSeat.banSeat}" />
-                                            <input type="hidden" name="day" th:value="${banSeat.day}" />
-                                            <button type="button" th:data-classroomName="${banSeat.classroomName}"
-                                                th:data-banSeat="${banSeat.banSeat}" th:data-day="${banSeat.day}"
-                                                class="unban" onclick="unbanSeat(this)">해제</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </td>
-                </tr>
-            </table>
-        </div>
-    </div>
-    
-    <h1>시간표</h1>
-    <!-- 시간표 컨테이너 -->
-    <div class="container">
-        <!-- 시간표 테이블 -->
-        <table>
-            <thead>
-                <!-- 요일 헤더 -->
-                <tr>
-                    <th></th>
-                    <!-- 요일별 반복 -->
-                    <th th:each="day : ${days}" th:text="${day}"></th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- 시간별 반복 -->
-                <tr th:each="hour : ${hours}">
-                    <!-- 시간 표시 -->
-                    <td th:text="${hour}"></td>
-                    <!-- 요일별 시간표 -->
-                    <td th:each="day : ${days}" class="clickable" data-day="${day}" data-hour="${hour}">
-                        <div th:each="timeTable, stat : ${userTimeTable}"
-                            th:if="${timeTable.day == day and timeTable.startHour le hour and timeTable.endHour gt hour}"
-                            th:classappend="'subject-' + ${stat.index % 10}" th:attr="data-subject=${timeTable.subject}, data-classroom=${timeTable.classroomName}, 
+			<div class="centerContent">
+				<div th:if="${not #lists.isEmpty(banSeatList)}">
+					<div th:each="entry : ${banSeatList}">
+						<div th:each="banSeat : ${entry.value}">
+							<form class="reservation-form" action="/cancelReservation" method="post">
+								<div class="reservation-info">
+									<div class="info-row">
+										<p><i class="fas fa-book-open"></i> 강의명: <span
+												th:text="${banSeat.subject}"></span></p>
+										<p><i class="fas fa-school"></i> 강의실: <span
+												th:text="${banSeat.classroomName + '호'}"></span></p>
+									</div>
+									<div class="info-row">
+										<p><i class="fas fa-calendar-alt"></i> 요일: <span
+												th:text="${banSeat.day}"></span></p>
+										<p><i class="fas fa-clock"></i> 사용시간: <span
+												th:text="${banSeat.banHourString + '시'}"></span></p>
+									</div>
+									<div class="info-row">
+										<p><i class="fas fa-chair"></i> 좌석: <span
+												th:text="${banSeat.banSeat + '번'}"></span></p>
+									</div>
+									<div class="info-row">
+										<p><i class="fas fa-user"></i> 교수: <span
+												th:text="${banSeat.userId ?: '미지정'}"></span></p>
+									</div>
+								</div>
+								<input type="hidden" name="classroomName" th:value="${banSeat.classroomName}" />
+								<input type="hidden" name="banSeat" th:value="${banSeat.banSeat}" />
+								<input type="hidden" name="day" th:value="${banSeat.day}" />
+								<button type="button" class="cancel-btn" onclick="unbanSeat(this)"
+									th:data-classroomName="${banSeat.classroomName}"
+									th:data-banSeat="${banSeat.banSeat}" th:data-day="${banSeat.day}">
+									해제</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 시간표 -->
+	<h1>시간표</h1>
+	<!-- 시간표 컨테이너 -->
+	<div class="container">
+		<!-- 시간표 테이블 -->
+		<table>
+			<thead>
+				<!-- 요일 헤더 -->
+				<tr>
+					<th></th>
+					<!-- 요일별 반복 -->
+					<th th:each="day : ${days}" th:text="${day}"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<!-- 시간별 반복 -->
+				<tr th:each="hour : ${hours}">
+					<!-- 시간 표시 -->
+					<td th:text="${hour}"></td>
+					<!-- 요일별 시간표 -->
+					<td th:each="day : ${days}" class="clickable" data-day="${day}" data-hour="${hour}">
+						<div th:each="timeTable, stat : ${userTimeTable}"
+							th:if="${timeTable.day == day and timeTable.startHour le hour and timeTable.endHour gt hour}"
+							th:classappend="'subject-' + ${stat.index % 10}" th:attr="data-subject=${timeTable.subject}, data-classroom=${timeTable.classroomName}, 
                                           data-day=${timeTable.day}, data-hour=${hour}">
-                            <!-- 시간표 정보 표시 -->
-                            <span th:text="${timeTable.subject + ' (' + timeTable.classroomName + ')'}"></span><br>
-                        </div>
-                        <!-- 과목이 없는 경우에도 시간을 표시할 기본 div 추가 -->
-                        <div th:attr="data-hour=${hour}, data-day=${day}" style="display: none;"></div>
+							<!-- 시간표 정보 표시 -->
+							<span th:text="${timeTable.subject + ' (' + timeTable.classroomName + ')'}"></span><br>
+						</div>
+						<!-- 과목이 없는 경우에도 시간을 표시할 기본 div 추가 -->
+						<div th:attr="data-hour=${hour}, data-day=${day}" style="display: none;"></div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <!-- 하단 버튼 -->
-    <div class="timetable-button-container">
-        <!-- 좌석 예약 버튼 -->
-        <button th:if="${userPosition == 'student'}" id="reserve-seat-button" class="timetable-button">좌석 예약</button>
-        <!-- 좌석 관리 버튼 -->
-        <button th:if="${userPosition == 'admin' or userPosition == 'professor'}" id="manage-seat-button"
-            class="timetable-button">좌석 관리</button>
-        <!-- 시간표 추가 버튼 -->
-        <label for="modal-addCheckbox" class="timetable-button add-modal-button">시간표 추가</label>
-        <!-- 시간표 수정 버튼 -->
-        <label for="modal-checkbox" class="timetable-button edit-modal-button">시간표 수정</label>
-        <!-- 시간표 삭제 버튼 -->
-        <label for="delete-modal-checkbox" class="timetable-button delete-modal-button">시간표 삭제</label>
-    </div>
+	<!-- 하단 버튼 -->
+	<div class="timetable-button-container">
+		<!-- 좌석 예약 버튼 -->
+		<button th:if="${userPosition == 'student'}" id="reserve-seat-button" class="timetable-button">좌석 예약</button>
+		<!-- 좌석 관리 버튼 -->
+		<button th:if="${userPosition == 'admin' or userPosition == 'professor'}" id="manage-seat-button"
+			class="timetable-button">좌석 관리</button>
+		<!-- 시간표 추가 버튼 -->
+		<label for="modal-addCheckbox" class="timetable-button add-modal-button">시간표 추가</label>
+		<!-- 시간표 수정 버튼 -->
+		<label for="modal-checkbox" class="timetable-button edit-modal-button">시간표 수정</label>
+		<!-- 시간표 삭제 버튼 -->
+		<label for="delete-modal-checkbox" class="timetable-button delete-modal-button">시간표 삭제</label>
+	</div>
 </body>
 
 </html>

@@ -1,11 +1,15 @@
 #listModal h1{
 	color: black;
 	text-align: center; /* 중앙 정렬 */
+	margin-bottom: 0.5rem; /* h1과 h3 사이의 간격 줄이기 */
 }
 #listModal h3{
 	color: dimgray;
 	font-weight: normal;
 	text-align: center; /* 중앙 정렬 */
+}
+.info-row i {
+    color: #778da9; /* 아이콘 기본 색상 */
 }
 .modal {
     display: none;
