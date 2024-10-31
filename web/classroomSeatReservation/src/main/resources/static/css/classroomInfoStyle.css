@@ -8,6 +8,12 @@ h1 {
 	letter-spacing: 2px;
 }
 
+.back-button.lecture-back,
+.back-button.reservation-back {
+	display: none;
+	/* 기본적으로 모든 환경에서 숨김 */
+}
+
 /* 메인 컨테이너 레이아웃 */
 .container {
 	display: flex;
@@ -279,26 +285,33 @@ h1 {
 	/* 모바일 뒤로가기 버튼 스타일 */
 	.back-button.lecture-back,
 	.back-button.reservation-back {
-	    display: none;
-	    position: fixed;
-	    bottom: 20px;
-	    right: 20px;
-	    width: 50px;
-	    height: 50px;
-	    font-size: 1.2rem;
-	    background-color: #778da9;
-	    color: white;
-	    border-radius: 50%;
-	    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-	    border: none;  /* 테두리 제거 */
-	    outline: none; /* 아웃라인 제거 */
+		display: none;
+		position: fixed;
+		bottom: 20px;
+		right: 20px;
+		width: 50px;
+		height: 50px;
+		font-size: 1.2rem;
+		background-color: #778da9;
+		color: white;
+		border-radius: 50%;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+		border: none;
+		/* 테두리 제거 */
+		outline: none;
+		/* 아웃라인 제거 */
 
 	}
 
-	/* 모바일 뒤로가기 버튼 호버 효과 */
+	/* 모바일에서 버튼이 표시될 때만 적용되는 호버 효과 */
 	.back-button:hover {
-	    background-color: #415a77;
-	    transform: translateY(-2px);
+		background-color: #415a77;
+		transform: translateY(-2px);
+	}
+
+	/* 모바일에서 버튼이 표시될 때만 적용되는 클릭 효과 */
+	.back-button:active {
+		transform: translateY(0);
 	}
 
 	/* 모바일 예약 시간 스타일 */
