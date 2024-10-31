@@ -38,7 +38,6 @@ public class ClassroomInfoDAO {
                      "WHERE r.classroom_name = ?";
 
         try {
-            System.out.println("Query: " + sql + " | Parameter: " + classroomName);
             return jdbcTemplate.query(sql, rowMapper, classroomName);
         } catch (Exception e) {
             System.err.println("Error while fetching reservations: " + e.getMessage());
@@ -56,7 +55,6 @@ public class ClassroomInfoDAO {
                      "WHERE r.classroom_name = ? AND st.subject = ?";
 
         try {
-            System.out.println("Executing SQL: " + sql + " | Parameters: " + classroomName + ", " + subject);
             List<ReserveList> results = jdbcTemplate.query(sql, rowMapper, classroomName, subject);
 
             if (results.isEmpty()) {

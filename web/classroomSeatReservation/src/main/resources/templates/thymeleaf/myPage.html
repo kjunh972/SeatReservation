@@ -96,7 +96,7 @@
 					<input type="number" id="grade" name="grade" placeholder="학년" required>
 				</div>
 				<div>
-					 <input type="text" id="classNumber" name="classNumber" placeholder="반" required>
+					<input type="text" id="classNumber" name="classNumber" placeholder="반" required>
 				</div>
 				<div>
 					<br>
@@ -118,11 +118,17 @@
 				<input type="hidden" id="userType" name="userType"
 					th:value="${user instanceof T(com.tbfg.dto.ProfessorDTO) ? 'professor' : 'student'}">
 				<div>
-					<input type="password" id="oldPassword" name="oldPassword" placeholder="기본 비밀번호"required>
+					<input type="password" id="oldPassword" name="oldPassword" placeholder="기본 비밀번호" required>
 					<span id="oldPasswordError" class="error-message" style="display: none;"></span>
 				</div>
 				<div>
-					<input type="password" id="newPassword" name="newPassword" placeholder="새 비밀번호"required>
+					<input type="password" id="newPassword" name="newPassword" placeholder="새 비밀번호" required>
+					<span id="newPasswordError" class="error-message" style="display: none;"></span>
+				</div>
+				<div>
+				</div>
+				<div>
+					<input type="password" id="newPassword" name="newPassword" placeholder="새 비밀번호 확인" required>
 					<span id="newPasswordError" class="error-message" style="display: none;"></span>
 				</div>
 				<div>

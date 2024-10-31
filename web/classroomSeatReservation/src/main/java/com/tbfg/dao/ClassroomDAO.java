@@ -213,7 +213,6 @@ public class ClassroomDAO {
 	        String position = getUserPosition(userId);
 
 	        if (position == null) {
-	            System.out.println("User position not found for userId: " + userId);
 	            return false;
 	        }
 

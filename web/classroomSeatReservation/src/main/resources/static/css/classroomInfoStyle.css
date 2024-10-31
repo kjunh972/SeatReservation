@@ -1,0 +1,345 @@
+h1 {
+	color: #1b263b;
+	text-align: center;
+	margin: 30px 0;
+	font-size: 2.2em;
+	text-transform: uppercase;
+	letter-spacing: 2px;
+}
+
+.back-button {
+	display: none;
+	position: fixed;
+	top: 80px;
+	left: 20px;
+	padding: 10px 20px;
+	background-color: #778da9;
+	color: white;
+	border: none;
+	border-radius: 8px;
+	cursor: pointer;
+	font-size: 1em;
+	font-weight: 500;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	z-index: 1000;
+	transition: all 0.3s ease;
+}
+
+.back-button:hover {
+	background-color: #415a77;
+	transform: translateX(-3px);
+}
+
+.back-icon {
+	margin-right: 8px;
+	font-size: 1.2em;
+}
+
+.container {
+	display: flex;
+	justify-content: center;
+	gap: 40px;
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 20px;
+}
+
+.section {
+	flex: 1;
+	padding: 25px;
+	border: none;
+	border-radius: 12px;
+	background-color: #fff;
+	min-height: 300px;
+	width: 450px;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	transition: transform 0.2s ease;
+}
+
+.section:hover {
+	transform: translateY(-5px);
+}
+
+.section h2 {
+	margin: 0 0 20px 0;
+	color: #778da9;
+	font-size: 1.5em;
+	padding-bottom: 10px;
+	border-bottom: 2px solid #778da9;
+	text-align: center;
+}
+
+.section ul {
+	list-style-type: none;
+	padding: 0;
+}
+
+.section li {
+	margin-bottom: 15px;
+	padding: 15px;
+	border: 1px solid #e9ecef;
+	border-radius: 8px;
+	background-color: #fff;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.section li:hover {
+	background-color: #f8f9fa;
+	border-color: #778da9;
+	transform: translateX(5px);
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.section li.selected {
+	background-color: #778da9;
+	border-color: #778da9;
+	color: #fff;
+	transform: translateX(5px);
+}
+
+.error-message {
+	color: #dc3545;
+	font-weight: 500;
+	padding: 15px;
+	background-color: #fff3f3;
+	border-radius: 8px;
+	border: 1px solid #ffcdd2;
+	text-align: center;
+	cursor: default !important;
+}
+
+.error-message:hover {
+	transform: none !important;
+	background-color: #fff3f3 !important;
+	border-color: #ffcdd2 !important;
+}
+
+/* 예약 내역 스타일 */
+.reservation-item {
+	border: 1px solid #e9ecef;
+	background-color: #fff;
+	padding: 20px;
+	margin-bottom: 15px;
+	border-radius: 8px;
+	cursor: default !important;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.reservation-item:hover {
+	transform: none !important;
+	border-color: #778da9;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.reservation-header {
+	background-color: #f8f9fa;
+	padding: 15px;
+	border-radius: 8px;
+	margin-bottom: 15px;
+	text-align: center;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.reservation-details {
+	background-color: #f8f9fa;
+	padding: 15px;
+	border-radius: 8px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+	margin-top: 10px;
+}
+
+.subject-label {
+	font-weight: 600;
+	color: #778da9;
+	margin-right: 10px;
+	display: block;
+	margin-bottom: 5px;
+}
+
+.subject-value {
+	color: #1b263b;
+	font-size: 1.3em;
+	font-weight: 600;
+}
+
+.detail-item {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 12px;
+	padding: 8px 0;
+	border-bottom: 1px solid #e9ecef;
+}
+
+.detail-item:last-child {
+	border-bottom: none;
+}
+
+.detail-label {
+	color: #778da9;
+	font-weight: 600;
+}
+
+.detail-value {
+	color: #1b263b;
+	font-weight: 500;
+}
+
+.reservation-time {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 8px 0;
+	border-bottom: 1px solid #e9ecef;
+}
+
+.reservation-time:last-child {
+	border-bottom: none;
+}
+
+.reservation-time .detail-label {
+	color: #778da9;
+	font-weight: 600;
+}
+
+.reservation-time .detail-value {
+	color: #1b263b;
+	font-weight: 500;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+	body {
+		padding-top: 20px;
+	}
+
+	h1 {
+		font-size: 1.8em;
+		margin: 20px 0;
+	}
+
+	.container {
+		flex-direction: column;
+		padding: 0;
+		/* 패딩 제거 */
+		margin: 0;
+		/* 마진 제거 */
+		width: 100%;
+		/* 전체 너비 사용 */
+	}
+
+	.section {
+		width: auto;
+		margin: 10px;
+		min-height: auto;
+		height: auto;
+		transform: none !important;
+	}
+
+	.section:hover {
+		transform: none !important;
+	}
+
+	.section.reservations {
+		display: none;
+		animation: slideIn 0.3s ease-out;
+	}
+
+	.section.lectures {
+		animation: slideIn 0.3s ease-out;
+	}
+
+	.detail-item {
+		flex-direction: row;
+		text-align: left;
+		padding: 12px 0;
+	}
+
+	.detail-label {
+		margin-bottom: 0;
+	}
+
+	.reservation-header {
+		position: sticky;
+		top: 0;
+		background-color: #f8f9fa;
+		z-index: 10;
+		margin: -15px -15px 15px -15px;
+		padding: 15px;
+		border-radius: 8px 8px 0 0;
+	}
+
+	.back-button {
+		display: none;
+		position: fixed;
+		top: 47.7rem;
+		left : 19rem;
+		bottom: 1.3rem;
+		right: 1.3rem;
+		font-size: 1.2rem;
+		background-color: #778da9;
+		color: white;
+		border-radius: 50%;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+		z-index: 1000;
+	}
+
+	.back-button:hover {
+		background-color: #415a77;
+		transform: translateY(-2px);
+	}
+
+
+
+	.reservation-time {
+		flex-direction: row;
+		justify-content: space-between;
+		text-align: left;
+		padding: 0.8rem 0;
+	}
+}
+
+/* 애니메이션 */
+@keyframes slideIn {
+	from {
+		opacity: 0;
+		transform: translateX(30px);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+
+@keyframes slideOut {
+	from {
+		opacity: 1;
+		transform: translateX(0);
+	}
+
+	to {
+		opacity: 0;
+		transform: translateX(-30px);
+	}
+}
+
+/* 스크롤바 스타일링 */
+::-webkit-scrollbar {
+	width: 8px;
+}
+
+::-webkit-scrollbar-track {
+	background: #f1f1f1;
+	border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+	background: #778da9;
+	border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: #415a77;
+}
