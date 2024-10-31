@@ -30,6 +30,97 @@
         header a.last {
             margin-right: 20px; /* 조절할 간격 크기 */
         }
+        
+        /* 데스크탑에서는 토글 버튼 숨기기 */
+        @media (min-width: 769px) {
+            .toggle-btn {
+                display: none;
+            }
+        }
+
+        /* 모바일 스타일 (768px 이하에서 적용) */
+        @media (max-width: 768px) {
+            header {
+                display: none;
+            }
+
+            /* 모바일에서 토글 버튼 */
+            .toggle-btn {
+    		display: block !important;
+    		position: fixed !important;
+    		top: 1.25rem !important;
+    		left: 1.25rem !important;
+    		font-size: 2rem !important;
+    		color: black;
+    		width: 2rem;
+    		height: 2rem;
+    		background: none;
+    		border: none;
+    		cursor: pointer;
+    		padding: 0.625rem;
+    		z-index: 9999; /* 최상위로 설정하여 다른 콘텐츠 위에 표시 */
+		}
+
+
+        }
+
+        /* 사이드바 스타일 */
+        .sidebar {
+            width: 11rem;
+            height: 100vh;
+            background-color: #1b263b; /* 배경색 설정 */
+            position: fixed;
+            top: 0;
+            left: -12.5rem; /* 사이드바를 숨겨둠 (-200px = -12.5rem) */
+            transition: left 0.3s ease;
+            padding-top: 1rem; 
+            z-index: 10000; /* 팝업보다 높은 z-index 설정 */
+            box-sizing: border-box; /* 패딩 포함해서 높이 계산 */
+        }
+
+        .sidebar ul {
+            padding: 0;
+            margin: 0; /* 기본 마진 제거 */
+        }
+
+        .sidebar ul li {
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .sidebar ul li a {
+            display: block;
+            font-size: 1.2rem;
+            padding: 0.5rem;
+            color: white;
+            text-decoration: none;
+        }
+
+        /* 사이드바 열렸을 때 */
+        .sidebar.active {
+            left: 0;
+        }
+
+        /* 배경이 어두워지는 오버레이 */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none; /* 기본적으로 보이지 않음 */
+            z-index: 9999; /* 사이드바 바로 뒤에 배치 */
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        .content {
+            margin-left: 0;
+            padding: 1.25rem; /* 20px = 1.25rem */
+        }
     </style>
 </head>
 <body>
@@ -40,5 +131,79 @@
         <a href="classroomLike" class="rightUp last">강의실 현황</a> <!-- 강의실 링크 -->
 		<a href="timetable"class="rightUp last">시간표</a> <!-- 시간표 링크 -->
 	</header>
+	
+	<!-- 모바일에서 사이드바를 여는 버튼 -->
+    <button class="toggle-btn" id="toggle-btn">☰</button>
+
+    <!-- 모바일에서 보일 사이드바 -->
+    <div class="sidebar" id="sidebar">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="timetable">시간표</a></li>
+            <li><a href="classroomLike">강의실 현황</a></li>
+            <li><a href="reserveList">예약확인</a></li>
+            <li><a href="myPage">마이페이지</a></li>
+        </ul>
+    </div>
+
+    <!-- 배경 클릭 시 사이드바를 닫기 위한 오버레이 -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- 콘텐츠 영역 -->
+    <div class="content">
+        
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // 토글 버튼과 오버레이 요소 가져오기
+            var toggleBtn = document.getElementById("toggle-btn");
+            var sidebar = document.getElementById("sidebar");
+            var overlay = document.getElementById("overlay");
+
+            // 토글 버튼 클릭 시 사이드바와 오버레이 활성화
+            function toggleSidebar() {
+        		sidebar.classList.toggle("active");
+        		overlay.classList.toggle("active");
+
+                    // 사이드바가 활성화되면 토글 버튼 숨기기
+                    if (sidebar.classList.contains("active")) {
+                        toggleBtn.style.display = "none";
+                    } else {
+                        toggleBtn.style.display = "block";
+                    }
+            }
+            // 모바일 해상도에서만 토글 버튼에 이벤트 할당
+    function setupToggleButton() {
+        if (window.innerWidth <= 768) {
+            toggleBtn.style.display = "block";
+            toggleBtn.onclick = toggleSidebar;
+        } else {
+            // PC 해상도일 경우 토글 버튼과 사이드바 비활성화
+            toggleBtn.style.display = "none";
+            sidebar.classList.remove("active");
+            overlay.classList.remove("active");
+            toggleBtn.onclick = null; // 이벤트 해제
+        }
+    }
+
+    // 초기 로드 시 설정
+    setupToggleButton();
+
+    // 화면 크기 변경 시 설정 업데이트
+    window.addEventListener("resize", setupToggleButton);
+
+            // 오버레이 클릭 시 사이드바와 오버레이 비활성화
+            if (overlay) {
+                overlay.onclick = function () {
+                    sidebar.classList.remove("active");
+                    overlay.classList.remove("active");
+                    
+                    // 사이드바가 비활성화되면 토글 버튼 다시 보이기
+                    toggleBtn.style.display = "block";
+                };
+            }
+        });
+    </script>
 </body>
 </html>
