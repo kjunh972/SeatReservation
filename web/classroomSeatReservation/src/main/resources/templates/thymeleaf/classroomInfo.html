@@ -2,82 +2,113 @@
 <html xmlns="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="UTF-8">
-    <title th:text="${title}">강의실 정보</title>
-    <link rel="stylesheet" href="/css/classroomStyle.css" />
-    <link rel="stylesheet" href="/css/classroomInfoStyle.css" />
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const lectureItems = document.querySelectorAll('.section ul li');
-            let selectedItem = null;
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title th:text="${title}">강의실 정보</title>
+	<link rel="stylesheet" href="/css/classroomStyle.css" />
+	<link rel="stylesheet" href="/css/classroomInfoStyle.css" />
+	<!-- Font Awesome CDN을 추가 -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			const container = document.querySelector('.container');
+			const lectureSection = document.querySelector('.section.lectures');
+			const reservationSection = document.querySelector('.section.reservations');
+			const backButton = document.querySelector('.back-button');
+			const lectureItems = document.querySelectorAll('.section.lectures ul li');
+			let selectedItem = null;
 
-            lectureItems.forEach(item => {
-                if (!item.classList.contains('error-message')) {
-                    item.addEventListener('click', function () {
-                        if (this === selectedItem) {
-                            this.classList.remove('selected');
-                            selectedItem = null;
-                            resetReservations();
-                        } else {
-                            if (selectedItem) selectedItem.classList.remove('selected');
-                            this.classList.add('selected');
-                            selectedItem = this;
+			// 모바일 환경에서 초기 상태 설정
+			if (window.innerWidth <= 768) {
+				reservationSection.style.display = 'none';
+				backButton.style.display = 'none';
+			}
 
-                            const lectureName = this.getAttribute('data-lecture-name');
-                            const classroomName = document.querySelector('h1').textContent.split(" ")[0];
-                            getReservations(classroomName, lectureName);
-                        }
-                    });
-                }
-            });
-        });
+			lectureItems.forEach(item => {
+				if (!item.classList.contains('error-message')) {
+					item.addEventListener('click', function () {
+						if (window.innerWidth <= 768) {
+							lectureSection.style.display = 'none';
+							reservationSection.style.display = 'block';
+							backButton.style.display = 'block';
+						}
 
-        function resetReservations() {
-            const reservationSection = document.querySelector('.section ul.reservations');
-            reservationSection.innerHTML = '<li class="error-message">강의를 선택해 주세요.</li>';
-        }
+						if (this === selectedItem) {
+							this.classList.remove('selected');
+							selectedItem = null;
+							resetReservations();
+						} else {
+							if (selectedItem) selectedItem.classList.remove('selected');
+							this.classList.add('selected');
+							selectedItem = this;
 
-        function getReservations(classroomName, lectureName) {
-            fetch(`/reservations?classroomName=${encodeURIComponent(classroomName)}&subject=${encodeURIComponent(lectureName)}`)
-                .then(response => {
-                    const reservationSection = document.querySelector('.section ul.reservations');
-                    reservationSection.innerHTML = '';
+							const lectureName = this.getAttribute('data-lecture-name');
+							const classroomName = document.querySelector('h1').textContent.split(" ")[0];
+							getReservations(classroomName, lectureName);
+						}
+					});
+				}
+			});
 
-                    if (response.status === 204 || !response.ok) {
-                        reservationSection.innerHTML = '<li class="error-message">선택한 강의에 예약 내역이 없습니다.</li>';
-                        return;
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    const reservationSection = document.querySelector('.section ul.reservations');
+			// 뒤로가기 버튼 이벤트
+			backButton.addEventListener('click', function () {
+				reservationSection.style.display = 'none';
+				lectureSection.style.display = 'block';
+				backButton.style.display = 'none';
+				if (selectedItem) {
+					selectedItem.classList.remove('selected');
+					selectedItem = null;
+				}
+				resetReservations();
+			});
+		});
 
-                    if (!data || data.length === 0) {
-                        reservationSection.innerHTML = '<li class="error-message">선택한 강의에 예약 내역이 없습니다.</li>';
-                    } else {
-                        const filteredData = data.filter(reservation => reservation.subject === lectureName);
-                        
-                        if (filteredData.length === 0) {
-                            reservationSection.innerHTML = '<li class="error-message">선택한 강의에 예약 내역이 없습니다.</li>';
-                            return;
-                        }
+		function resetReservations() {
+			const reservationSection = document.querySelector('.section.reservations ul');
+			reservationSection.innerHTML = '<li class="error-message">강의를 선택해 주세요.</li>';
+		}
 
-                        const reservationsGrouped = {};
-                        filteredData.forEach(reservation => {
-                            const key = `${reservation.subject}_${reservation.reservNum}_${reservation.reservSeat}_${reservation.day}`;
-                            if (!reservationsGrouped[key]) {
-                                reservationsGrouped[key] = {...reservation, reservHour: []};
-                            }
-                            reservationsGrouped[key].reservHour.push(reservation.reservHour);
-                        });
+		function getReservations(classroomName, lectureName) {
+			fetch(`/reservations?classroomName=${encodeURIComponent(classroomName)}&subject=${encodeURIComponent(lectureName)}`)
+				.then(response => {
+					const reservationSection = document.querySelector('.section.reservations ul');
+					reservationSection.innerHTML = '';
 
-                        Object.values(reservationsGrouped).forEach(reservation => {
-                            const hours = reservation.reservHour.sort((a, b) => a - b);
-                            const startTime = Math.min(...hours);
-                            const endTime = Math.max(...hours) + 1;
+					if (response.status === 204 || !response.ok) {
+						reservationSection.innerHTML = '<li class="error-message">선택한 강의에 예약 내역이 없습니다.</li>';
+						return;
+					}
+					return response.json();
+				})
+				.then(data => {
+					const reservationSection = document.querySelector('.section.reservations ul');
 
-                            reservationSection.innerHTML +=
-                                `<li class="reservation-item">
+					if (!data || data.length === 0) {
+						reservationSection.innerHTML = '<li class="error-message">선택한 강의에 예약 내역이 없습니다.</li>';
+					} else {
+						const filteredData = data.filter(reservation => reservation.subject === lectureName);
+
+						if (filteredData.length === 0) {
+							reservationSection.innerHTML = '<li class="error-message">선택한 강의에 예약 내역이 없습니다.</li>';
+							return;
+						}
+
+						const reservationsGrouped = {};
+						filteredData.forEach(reservation => {
+							const key = `${reservation.subject}_${reservation.reservNum}_${reservation.reservSeat}_${reservation.day}`;
+							if (!reservationsGrouped[key]) {
+								reservationsGrouped[key] = {...reservation, reservHour: []};
+							}
+							reservationsGrouped[key].reservHour.push(reservation.reservHour);
+						});
+
+						Object.values(reservationsGrouped).forEach(reservation => {
+							const hours = reservation.reservHour.sort((a, b) => a - b);
+							const startTime = Math.min(...hours);
+							const endTime = Math.max(...hours) + 1;
+
+							reservationSection.innerHTML +=
+								`<li class="reservation-item">
                                     <div class="reservation-header">
                                         <span class="subject-label">강의명</span>
                                         <span class="subject-value">${reservation.subject}</span>
@@ -101,42 +132,46 @@
                                         </div>
                                     </div>
                                 </li>`;
-                        });
-                    }
-                })
-                .catch(error => {
-                    console.error('예약 정보를 불러오는 중 오류가 발생했습니다:', error);
-                    const reservationSection = document.querySelector('.section ul.reservations');
-                    reservationSection.innerHTML = '<li class="error-message">예약 정보를 불러오는 중 오류가 발생했습니다.</li>';
-                });
-        }
-    </script>
+						});
+					}
+				})
+				.catch(error => {
+					console.error('예약 정보를 불러오는 중 오류가 발생했습니다:', error);
+					const reservationSection = document.querySelector('.section.reservations ul');
+					reservationSection.innerHTML = '<li class="error-message">예약 정보를 불러오는 중 오류가 발생했습니다.</li>';
+				});
+		}
+	</script>
 </head>
 
 <body>
-    <header th:replace="~{/menu.html}"></header>
+	<header th:replace="~{/menu.html}"></header>
 
-    <h1 th:text="${title}">강의실 정보</h1>
+	<h1 th:text="${title}">강의실 정보</h1>
 
-    <div class="container">
-        <div class="section">
-            <h2>진행되는 강의</h2>
-            <ul>
-                <li th:each="lecture : ${lectureNames}" 
-                    th:text="|${lecture.subject} (${lecture.day})|"
-                    th:attr="data-lecture-name=${lecture.subject}">강의명</li>
-                <li th:if="${#lists.isEmpty(lectureNames)}" 
-                    class="error-message">진행되는 강의가 없습니다.</li>
-            </ul>
-        </div>
+	<div class="container">
+		<div class="section lectures">
+			<h2>진행되는 강의</h2>
+			<ul>
+				<li th:each="lecture : ${lectureNames}" th:text="|${lecture.subject} (${lecture.day})|"
+					th:attr="data-lecture-name=${lecture.subject}">강의명</li>
+				<li th:if="${#lists.isEmpty(lectureNames)}" class="error-message">진행되는 강의가 없습니다.</li>
+			</ul>
+		</div>
 
-        <div class="section">
-            <h2>예약 내역</h2>
-            <ul class="reservations">
-                <li class="error-message">강의를 선택해 주세요.</li>
-            </ul>
-        </div>
-    </div>
+		<div class="section reservations">
+			<h2>예약 내역</h2>
+			<ul>
+				<li class="error-message">강의를 선택해 주세요.</li>
+			</ul>
+		</div>
+	</div>
+
+	<!-- 뒤로가기 버튼 -->
+	<button class="back-button">
+		<i class="fas fa-arrow-left"></i>
+	</button>
+
 </body>
 
 </html>
