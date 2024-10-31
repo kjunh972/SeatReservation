@@ -2,35 +2,34 @@
 <head>
     <meta charset="UTF-8">
     <title>강의실 현황</title>
+    <!-- 반응형 웹 디자인을 위한 뷰포트 설정 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- CSS 파일 연결 -->
     <link rel="stylesheet" href="/css/classroomStyle.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" /> <!-- FontAwesome 추가 -->
-    <style>
-		form {
-			margin-top: -17px; 
-			text-align: center;
-		}
-		 h2 {
-            margin-top: 40px; /* 위 여백 설정 */
-            color: #6c757d; /* 원하는 색상 코드로 변경 */
-               }
-	</style>
+    <link rel="stylesheet" href="/css/classroomLikeStyle.css" />
+    <!-- Font Awesome 아이콘 라이브러리 연결 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 </head>
 <body>
-	<header th:replace="~{/menu.html}"></header> 
-	
+    <!-- 사용자 권한에 따른 헤더 메뉴 포함 -->
+    <header th:replace="~{${userPosition == 'student'} ? '/menu.html' : '/menu_admin.html'}"></header>
+    
+    <!-- 페이지 메인 제목 -->
     <h2>강의실 현황</h2>
+    <!-- 사용자 맞춤 메시지 -->
     <br><h4 th:text="${userName} + '님이 현재 사용하는 강의실 목록입니다'"></h4>
+    
     <span>
+        <!-- 강의실 정보 제출 폼 -->
         <form th:action="@{/classroomInfo}" method="post">
-            <!-- 즐겨찾기한 강의실 버튼 생성 -->
+            <!-- 강의실 버튼 목록을 동적으로 생성 -->
             <div th:each="classroom : ${classroomButtons}">
-                <!-- 버튼 클릭 시 선택한 강의실의 이름과 함께 classroomStatus 페이지로 이동하는 버튼 -->
+                <!-- 각 강의실별 버튼 생성 -->
+                <!-- 클릭 시 해당 강의실의 상세 정보 페이지로 이동 -->
                 <button type="submit" name="classroomName" th:value="${classroom}" 
-                th:text="${classroom} + '호'"class="classroom-button"></button>
-                
+                th:text="${classroom} + '호'" class="classroom-button"></button>
             </div>
         </form>
-        
     </span>
 </body>
 </html>
