@@ -12,18 +12,7 @@
 
 <body>
 	<!-- 헤더 포함 -->
-	<header th:if="${userPosition == 'student'}">
-		<header th:replace="~{/menu.html}"></header> <!-- 메뉴 포함 -->
-	</header>
-	<header th:if="${userPosition == 'admin'}">
-		<header th:replace="~{/menu_admin.html}"></header> <!-- 메뉴 포함 -->
-	</header>
-	<header th:if="${userPosition == 'professor'}">
-		<header th:replace="~{/menu_admin.html}"></header> <!-- 메뉴 포함 -->
-	</header>
-
-
-
+	<header th:replace="~{/menu.html}"></header>
 
 	<!-- 마이페이지 폼 시작 -->
 	<form id="mypageForm" name="mypageForm" action="/myPage" method="post"
@@ -263,18 +252,21 @@
 			event.preventDefault();
 
 			const oldPasswordInput = document.getElementById('oldPassword');
-			const newPasswordInput = document.getElementById('newPassword');
+			const newPasswordInput = document.querySelector('input[name="newPassword"]');
+			const confirmPasswordInput = document.querySelectorAll('input[name="newPassword"]')[1]; // 두 번째 newPassword 입력 필드
 
+			// 기존 비밀번호 확인
 			if (oldPasswordInput.value.trim() === '') {
 				Swal.fire({
 					icon: 'warning',
 					title: '주의',
 					text: '기존 비밀번호를 입력해주세요.'
 				});
-				clearPasswordInputs(oldPasswordInput, newPasswordInput);
+				clearPasswordInputs(oldPasswordInput, newPasswordInput, confirmPasswordInput);
 				return false;
 			}
 
+			// 새 비밀번호 유효성 검사
 			const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 			if (!passwordRegex.test(newPasswordInput.value)) {
 				Swal.fire({
@@ -283,6 +275,20 @@
 					text: '비밀번호는 최소 8자이며, 하나 이상의 문자 및 숫자를 포함해야 합니다.'
 				});
 				newPasswordInput.value = '';
+				confirmPasswordInput.value = '';
+				newPasswordInput.focus();
+				return false;
+			}
+
+			// 새 비밀번호 일치 여부 확인
+			if (newPasswordInput.value !== confirmPasswordInput.value) {
+				Swal.fire({
+					icon: 'error',
+					title: '오류',
+					text: '새 비밀번호가 일치하지 않습니다.'
+				});
+				newPasswordInput.value = '';
+				confirmPasswordInput.value = '';
 				newPasswordInput.focus();
 				return false;
 			}
@@ -309,7 +315,7 @@
 							title: '실패',
 							text: '비밀번호 변경에 실패했습니다: ' + data.message
 						});
-						clearPasswordInputs(oldPasswordInput, newPasswordInput);
+						clearPasswordInputs(oldPasswordInput, newPasswordInput, confirmPasswordInput);
 					}
 				})
 				.catch(error => {
@@ -319,19 +325,19 @@
 						title: '오류',
 						text: '비밀번호 변경 중 오류가 발생했습니다.'
 					});
-					clearPasswordInputs(oldPasswordInput, newPasswordInput);
+					clearPasswordInputs(oldPasswordInput, newPasswordInput, confirmPasswordInput);
 				});
 
 			return false;
 		}
 
-		// 비밀번호 입력 필드 초기화 함수
-		function clearPasswordInputs(oldPasswordInput, newPasswordInput) {
+		// 비밀번호 입력 필드 초기화 함수 수정
+		function clearPasswordInputs(oldPasswordInput, newPasswordInput, confirmPasswordInput) {
 			oldPasswordInput.value = '';
 			newPasswordInput.value = '';
+			confirmPasswordInput.value = '';
 			oldPasswordInput.focus();
 		}
-
 
 		// 회원탈퇴 함수
 		function confirmDelete() {

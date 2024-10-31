@@ -1,7 +1,5 @@
 package com.tbfg.controller;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +13,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.tbfg.dao.ProfessorDAO;
-import com.tbfg.dao.TimetableDAO;
 import com.tbfg.dao.UserDAO;
 import com.tbfg.dto.ProfessorDTO;
-import com.tbfg.dto.TimeTableDTO;
 import com.tbfg.dto.UserDTO;
 
 import jakarta.servlet.http.HttpSession;
@@ -40,8 +36,9 @@ public class UserController {
 	private Contoller ct = new Contoller();
 
 	public boolean isValidPassword(String password) {
-		String regex = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$";
-		return Pattern.matches(regex, password);
+	    // 최소 8자, 하나 이상의 문자, 숫자, 특수문자를 포함하는 정규식
+	    String regex = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$";
+	    return Pattern.matches(regex, password);
 	}
 
 	@GetMapping("/login")
@@ -93,7 +90,7 @@ public class UserController {
 		}
 
 		if (!isValidSchool) {
-			model.addAttribute("errorMessage", "등록되지 않은 학교입니다. 등록된 학교에서만 회원가입이 가능합니다.");
+			model.addAttribute("errorSchool", "등록되지 않은 학교입니다. 등록된 학교에서만 회원가입이 가능합니다.");
 			return "studentSignup"; // 회원가입 페이지로 다시 이동
 		}
 
