@@ -61,62 +61,82 @@ public class MyPageController {
 		return "myPage"; // 마이페이지로 이동
 	}
 
-	// 사용자 정보를 업데이트하는 메서드
 	@PostMapping("/updateUser")
-	@ResponseBody // JSON 응답을 위해 추가
-	public Map<String, Object> updateUser(@RequestParam String id, @RequestParam String oldPassword,
-			@RequestParam String newPassword, @RequestParam(required = false) String major,
-			@RequestParam(required = false) Integer grade, @RequestParam(required = false) String classNumber,
-			HttpSession session) {
+	@ResponseBody
+	public Map<String, Object> updateUser(
+	        @RequestParam String id,
+	        @RequestParam(required = false) String oldPassword,
+	        @RequestParam(required = false) String newPassword,
+	        @RequestParam(required = false) String major,
+	        @RequestParam(required = false) Integer grade,
+	        @RequestParam(required = false) String classNumber,
+	        HttpSession session) {
 
-		Map<String, Object> response = new HashMap<>();
+	    Map<String, Object> response = new HashMap<>();
 
-		try {
-			Object user = null;
-			boolean isProfessor = professorDAO.isProExists(id);
+	    try {
+	        Object user = null;
+	        boolean isProfessor = professorDAO.isProExists(id);
 
-			if (isProfessor) {
-				user = professorDAO.getProById(id);
-			} else {
-				user = userDAO.getUserById(id);
-			}
+	        if (isProfessor) {
+	            user = professorDAO.getProById(id);
+	        } else {
+	            user = userDAO.getUserById(id);
+	        }
 
-			if (user == null) {
-				response.put("success", false);
-				response.put("message", "사용자를 찾을 수 없습니다.");
-			} else if (isProfessor && !professorDAO.checkProPassword(id, oldPassword)) {
-				response.put("success", false);
-				response.put("message", "기존 비밀번호가 일치하지 않습니다.");
-			} else if (!isProfessor && !userDAO.checkPassword(id, oldPassword)) {
-				response.put("success", false);
-				response.put("message", "기존 비밀번호가 일치하지 않습니다.");
-			} else {
-				if (user instanceof UserDTO) {
-					UserDTO student = (UserDTO) user;
-					student.setPass(newPassword);
-					if (grade != null)
-						student.setGrade(grade);
-					if (classNumber != null)
-						student.setClassNumber(classNumber);
-					if (major != null)
-						student.setMajor(major);
-					userDAO.updateUser(student);
-				} else if (user instanceof ProfessorDTO) {
-					ProfessorDTO professor = (ProfessorDTO) user;
-					professor.setPass(newPassword);
-					professorDAO.updatePro(professor);
-				}
+	        if (user == null) {
+	            response.put("success", false);
+	            response.put("message", "사용자를 찾을 수 없습니다.");
+	            return response;
+	        }
 
-				session.setAttribute("loggedInUser", user);
-				response.put("success", true);
-				response.put("message", "정보가 성공적으로 수정되었습니다.");
-			}
-		} catch (Exception e) {
-			response.put("success", false);
-			response.put("message", "서버 오류가 발생했습니다: " + e.getMessage());
-		}
+	        // 비밀번호 변경 요청인 경우
+	        if (oldPassword != null && newPassword != null) {
+	            if (isProfessor && !professorDAO.checkProPassword(id, oldPassword)) {
+	                response.put("success", false);
+	                response.put("message", "기존 비밀번호가 일치하지 않습니다.");
+	                return response;
+	            } else if (!isProfessor && !userDAO.checkPassword(id, oldPassword)) {
+	                response.put("success", false);
+	                response.put("message", "기존 비밀번호가 일치하지 않습니다.");
+	                return response;
+	            }
+	        }
 
-		return response;
+	        // 사용자 정보 업데이트
+	        if (user instanceof UserDTO) {
+	            UserDTO student = (UserDTO) user;
+	            if (newPassword != null) {
+	                student.setPass(newPassword);
+	            }
+	            if (grade != null) {
+	                student.setGrade(grade);
+	            }
+	            if (classNumber != null) {
+	                student.setClassNumber(classNumber);
+	            }
+	            if (major != null) {
+	                student.setMajor(major);
+	            }
+	            userDAO.updateUser(student);
+	        } else if (user instanceof ProfessorDTO) {
+	            ProfessorDTO professor = (ProfessorDTO) user;
+	            if (newPassword != null) {
+	                professor.setPass(newPassword);
+	            }
+	            professorDAO.updatePro(professor);
+	        }
+
+	        session.setAttribute("loggedInUser", user);
+	        response.put("success", true);
+	        response.put("message", "정보가 성공적으로 수정되었습니다.");
+
+	    } catch (Exception e) {
+	        response.put("success", false);
+	        response.put("message", "서버 오류가 발생했습니다: " + e.getMessage());
+	    }
+
+	    return response;
 	}
 
 	@PostMapping("/deleteUser")

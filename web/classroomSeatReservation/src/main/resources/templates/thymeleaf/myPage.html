@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.thymeleaf.org">
 
 <head>
 	<meta charset="UTF-8">
@@ -114,11 +114,9 @@
 					<input type="password" id="newPassword" name="newPassword" placeholder="새 비밀번호" required>
 					<span id="newPasswordError" class="error-message" style="display: none;"></span>
 				</div>
-				<div>
-				</div>
-				<div>
-					<input type="password" id="newPassword" name="newPassword" placeholder="새 비밀번호 확인" required>
-					<span id="newPasswordError" class="error-message" style="display: none;"></span>
+				<div class="password-input-group">
+					<input type="password" id="confirmPassword" name="confirmPassword" placeholder="새 비밀번호 확인" required>
+					<span id="confirmPasswordError" class="error-message" style="display: none;"></span>
 				</div>
 				<div>
 					<button type="submit" class="edit-btn">수정</button>
@@ -129,6 +127,15 @@
 
 
 	<script th:inline="javascript">
+		// 공통 SweetAlert2 스타일 설정
+		const swalCustomStyle = Swal.mixin({
+			customClass: {
+				confirmButton: 'swal-button',
+				cancelButton: 'swal-button'
+			},
+			buttonsStyling: false
+		});
+
 		// 모달 관련 요소들 선택
 		const gradeClassModal = document.getElementById("gradeClassModal");
 		const editGradeClassBtn = document.getElementById("editGradeClassBtn");
@@ -191,13 +198,11 @@
 
 		// 로그아웃 함수
 		function logout() {
-			Swal.fire({
+			swalCustomStyle.fire({
 				title: '로그아웃',
 				text: "로그아웃 하시겠습니까?",
 				icon: 'warning',
 				showCancelButton: true,
-				confirmButtonColor: '#3085d6',
-				cancelButtonColor: '#d33',
 				confirmButtonText: '예',
 				cancelButtonText: '아니오'
 			}).then((result) => {
@@ -220,7 +225,7 @@
 				.then(response => response.json())
 				.then(data => {
 					if (data.success) {
-						Swal.fire({
+						swalCustomStyle.fire({
 							icon: 'success',
 							title: '성공',
 							text: data.message
@@ -228,7 +233,7 @@
 							location.reload();
 						});
 					} else {
-						Swal.fire({
+						swalCustomStyle.fire({
 							icon: 'error',
 							title: '실패',
 							text: '수정에 실패했습니다: ' + data.message
@@ -237,7 +242,7 @@
 				})
 				.catch(error => {
 					console.error('Error:', error);
-					Swal.fire({
+					swalCustomStyle.fire({
 						icon: 'error',
 						title: '오류',
 						text: '수정 중 오류가 발생했습니다.'
@@ -252,12 +257,12 @@
 			event.preventDefault();
 
 			const oldPasswordInput = document.getElementById('oldPassword');
-			const newPasswordInput = document.querySelector('input[name="newPassword"]');
-			const confirmPasswordInput = document.querySelectorAll('input[name="newPassword"]')[1]; // 두 번째 newPassword 입력 필드
+			const newPasswordInput = document.getElementById('newPassword');
+			const confirmPasswordInput = document.getElementById('confirmPassword');
 
 			// 기존 비밀번호 확인
 			if (oldPasswordInput.value.trim() === '') {
-				Swal.fire({
+				swalCustomStyle.fire({
 					icon: 'warning',
 					title: '주의',
 					text: '기존 비밀번호를 입력해주세요.'
@@ -267,12 +272,12 @@
 			}
 
 			// 새 비밀번호 유효성 검사
-			const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+			const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
 			if (!passwordRegex.test(newPasswordInput.value)) {
-				Swal.fire({
+				swalCustomStyle.fire({
 					icon: 'warning',
 					title: '주의',
-					text: '비밀번호는 최소 8자이며, 하나 이상의 문자 및 숫자를 포함해야 합니다.'
+					text: '비밀번호는 최소 8자이며, 하나 이상의 문자, 숫자, 특수문자(!@#$%^&*)를 포함해야 합니다.'
 				});
 				newPasswordInput.value = '';
 				confirmPasswordInput.value = '';
@@ -282,7 +287,7 @@
 
 			// 새 비밀번호 일치 여부 확인
 			if (newPasswordInput.value !== confirmPasswordInput.value) {
-				Swal.fire({
+				swalCustomStyle.fire({
 					icon: 'error',
 					title: '오류',
 					text: '새 비밀번호가 일치하지 않습니다.'
@@ -302,7 +307,7 @@
 				.then(response => response.json())
 				.then(data => {
 					if (data.success) {
-						Swal.fire({
+						swalCustomStyle.fire({
 							icon: 'success',
 							title: '성공',
 							text: '비밀번호가 성공적으로 변경되었습니다. 다시 로그인해주세요.'
@@ -310,7 +315,7 @@
 							window.location.href = '/logout';
 						});
 					} else {
-						Swal.fire({
+						swalCustomStyle.fire({
 							icon: 'error',
 							title: '실패',
 							text: '비밀번호 변경에 실패했습니다: ' + data.message
@@ -320,7 +325,7 @@
 				})
 				.catch(error => {
 					console.error('Error:', error);
-					Swal.fire({
+					swalCustomStyle.fire({
 						icon: 'error',
 						title: '오류',
 						text: '비밀번호 변경 중 오류가 발생했습니다.'
@@ -331,7 +336,7 @@
 			return false;
 		}
 
-		// 비밀번호 입력 필드 초기화 함수 수정
+		// 비밀번호 입력 필드 초기화 함수
 		function clearPasswordInputs(oldPasswordInput, newPasswordInput, confirmPasswordInput) {
 			oldPasswordInput.value = '';
 			newPasswordInput.value = '';
@@ -342,24 +347,22 @@
 		// 회원탈퇴 함수
 		function confirmDelete() {
 			const userId = /*[[${user.id}]]*/ 'null';
-			console.log("User ID for deletion:", userId); // 디버깅을 위한 로그
+			console.log("User ID for deletion:", userId);
 
 			if (!userId) {
-				Swal.fire({
+				swalCustomStyle.fire({
 					icon: 'error',
 					title: '오류',
-					text: '사용자 ID를 찾을 수 없습니다.',
+					text: '사용자 ID를 찾을 수 없습니다.'
 				});
 				return;
 			}
 
-			Swal.fire({
+			swalCustomStyle.fire({
 				title: '회원 탈퇴',
 				text: "정말 회원 탈퇴를 하시겠습니까?",
 				icon: 'warning',
 				showCancelButton: true,
-				confirmButtonColor: '#3085d6',
-				cancelButtonColor: '#d33',
 				confirmButtonText: '예',
 				cancelButtonText: '아니오'
 			}).then((result) => {
@@ -374,27 +377,27 @@
 						.then(response => response.json())
 						.then(data => {
 							if (data.success) {
-								Swal.fire({
+								swalCustomStyle.fire({
 									icon: 'success',
 									title: '성공',
-									text: data.message,
+									text: data.message
 								}).then(() => {
 									window.location.href = '/login';
 								});
 							} else {
-								Swal.fire({
+								swalCustomStyle.fire({
 									icon: 'error',
 									title: '실패',
-									text: data.message,
+									text: data.message
 								});
 							}
 						})
 						.catch(error => {
 							console.error('Error:', error);
-							Swal.fire({
+							swalCustomStyle.fire({
 								icon: 'error',
 								title: '오류',
-								text: '회원 탈퇴 요청 중 오류가 발생했습니다.',
+								text: '회원 탈퇴 요청 중 오류가 발생했습니다.'
 							});
 						});
 				}
