@@ -1,0 +1,332 @@
+/* 전역 스타일 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+}
+
+:root {
+    --primary-color: #778da9;
+    --primary-dark: #415a77;
+    --primary-light: #e0e7ee;
+    --text-dark: #1b263b;
+    --text-light: #fff;
+    --background: #f8f9fa;
+}
+
+body {
+    background-color: var(--background);
+    color: var(--text-dark);
+}
+
+/* 데스크탑 네비게이션 */
+.desktop-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4rem;
+    background: var(--text-light);
+    box-shadow: 0 0.1rem 0.6rem rgba(0, 0, 0, 0.1);
+    z-index: 100;
+}
+
+.nav-content {
+    max-width: 75rem;
+    margin: 0 auto;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+}
+
+.nav-logo a {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    text-decoration: none;
+    color: var(--primary-color);
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.nav-logo i {
+    font-size: 1.5rem;
+	margin-left: -10rem;
+}
+
+.nav-links {
+    display: flex;
+    gap: 1.5rem;
+	margin-right: -9rem;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-dark);
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.nav-links a:hover {
+    background: var(--primary-light);
+    color: var(--primary-dark);
+}
+
+.nav-links a i {
+    font-size: 1.1rem;
+}
+
+/* 모바일 사이드바 관련 스타일 */
+.mobile-toggle {
+    display: none;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.8rem;
+    color: black;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    z-index: 9999;
+    transition: all 0.3s ease;
+}
+
+.mobile-sidebar {
+    position: fixed;
+    top: 0;
+    left: -18.8rem;
+    width: 18.8rem;
+    height: 100%;
+    background: var(--text-light);
+    box-shadow: 0.1rem 0 0.6rem rgba(0, 0, 0, 0.1);
+    z-index: 10000;
+    transition: all 0.3s ease;
+    overflow-y: auto;
+}
+
+.mobile-sidebar.active {
+    left: 0;
+}
+
+.sidebar-header {
+    padding: 2rem;
+    background: var(--primary-light);
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.profile-avatar {
+    width: 3.8rem;
+    height: 3.8rem;
+    background: var(--primary-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-light);
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.profile-info h3 {
+    color: var(--text-dark);
+    font-size: 1.2rem;
+    margin-bottom: 0.3rem;
+}
+
+.profile-info p {
+    color: var(--primary-dark);
+    font-size: 0.9rem;
+}
+
+/* 로그인 폼 스타일 */
+.login-section {
+    padding: 2rem;
+    margin-left: -1.9rem; 
+}
+
+.login-section h2 {
+    color: var(--text-dark);
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+	margin-left: 0.5rem
+}
+
+.input-group {
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.input-group i {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--primary-color);
+}
+
+.input-group input {
+    width: 100%;
+    padding: 1rem 1rem 1rem 3rem;
+    border: 1px solid var(--primary-light);
+    border-radius: 0.8rem;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(119, 141, 169, 0.1);
+}
+
+.login-form button {
+    width: 45%;
+    padding: 0.5rem;
+    background: var(--primary-color);
+    color: var(--text-light);
+    border: none;
+    border-radius: 0.8rem;
+    font-size: 1rem; 
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 1.3rem;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    height: 2.5rem; 
+    line-height: 1.2rem; 
+}
+
+.login-form button:hover {
+    background: var(--primary-dark);
+}
+
+/* 회원가입 링크 스타일 수정 */
+.register-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    color: var(--primary-color) !important; /* 색상 고정 */
+    text-decoration: none !important; /* 밑줄 제거 */
+    font-weight: 500;
+}
+
+.register-link i {
+    font-size: 1.1rem;
+}
+
+/* hover 효과도 제거하고 싶다면 아래 스타일 추가 */
+.register-link:hover {
+    color: var(--primary-color) !important;
+    background: none !important;
+}
+
+/* 사이드바 메뉴 */
+.sidebar-menu {
+    padding: 1.5rem;
+}
+
+.sidebar-menu a {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    color: var(--text-dark);
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: 0.8rem;
+    transition: all 0.2s ease;
+    margin-bottom: 0.5rem;
+}
+
+.sidebar-menu a:hover {
+    background: var(--primary-light);
+    color: var(--primary-dark);
+}
+
+.sidebar-menu .logout-btn {
+    margin-top: 2rem;
+    color: #dc3545;
+}
+
+.sidebar-menu .logout-btn:hover {
+    background: #ffebee;
+}
+
+/* 오버레이 */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(0.3rem);
+    z-index: 9998;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+
+.overlay.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+/* 메인 콘텐츠 영역 */
+.main-content {
+    position: relative;
+    z-index: 1;
+    margin-top: 4rem;
+    padding: 2rem;
+    max-width: 75rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 48rem) {
+    .desktop-nav {
+        display: none;
+    }
+    
+    .mobile-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .main-content {
+        padding: 1rem;
+    }
+}
+
+@media (min-width: 48.1rem) {
+    .mobile-sidebar,
+    .mobile-toggle,
+    .overlay {
+        display: none;
+    }
+}

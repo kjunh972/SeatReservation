@@ -11,8 +11,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 </head>
 <body>
-    <!-- 사용자 권한에 따른 헤더 메뉴 포함 -->
-    <header th:replace="~{${userPosition == 'student'} ? '/menu.html' : '/menu_admin.html'}"></header>
+	<!-- 헤더 포함 -->
+	<header th:replace="~{${session.loggedInUser != null && (userPosition == 'admin' || userPosition == 'professor')} ? '/menu_admin.html' : '/menu.html'}"></header>
     
     <!-- 페이지 메인 제목 -->
     <h2>강의실 현황</h2>

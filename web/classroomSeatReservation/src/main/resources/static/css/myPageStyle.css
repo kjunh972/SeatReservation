@@ -1,192 +1,205 @@
+/* 메인 컨텐츠 영역 스타일링 */
 .content {
-	margin-top: -9rem;
-	/* 상단 여백 조정 */
-	padding: 3rem;
-	position: relative;
-	/* 위치 상대적으로 설정 */
+    margin-top: -9rem;    /* 상단 여백 음수값으로 조정 */
+    padding: 3rem;        /* 내부 여백 설정 */
+    position: relative;   /* 상대적 위치 설정 */
 }
 
-
+/* 페이지 제목 스타일링 */
 h2 {
-	text-align: center;
-	margin-top: 11rem;
-	margin-bottom: 4rem;
-	font-size: 2rem;
+    text-align: center;      /* 텍스트 중앙 정렬 */
+    margin-top: 11rem;       /* 상단 여백 */
+    margin-bottom: 4rem;     /* 하단 여백 */
+    font-size: 2rem;         /* 글자 크기 */
 }
 
+/* 테이블 기본 스타일링 */
 table {
-	width: 100%;
-	max-width: 56.25rem;
-	margin: auto;
-	border-collapse: collapse;
+    width: 100%;                /* 테이블 전체 너비 */
+    max-width: 56.25rem;        /* 최대 너비 제한 */
+    margin: auto;               /* 가운데 정렬 */
+    border-collapse: collapse;  /* 테이블 테두리 합치기 */
 }
 
+/* 테이블 셀 스타일링 */
 td {
-	width: 100%;
-	padding: 2rem 0;
-	border-bottom: 1px solid #ccc;
-	font-size: 1.2rem;
+    width: 100%;               /* 셀 너비 */
+    padding: 2rem 0;          /* 상하 패딩 */
+    border-bottom: 1px solid #ccc;  /* 하단 테두리 */
+    font-size: 1.2rem;        /* 글자 크기 */
 }
 
+/* 테이블 마지막 행 스타일링 */
 tr:last-child td {
-	border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;  /* 마지막 행 하단 테두리 */
 }
 
 tr:last-of-type td {
-	border-bottom: none;
+    border-bottom: none;  /* 가장 마지막 행은 테두리 없음 */
 }
 
+/* 마이페이지 폼 스타일링 */
 #mypageForm {
-	margin-top: 10rem;
-	box-shadow: 8px 4px 8px rgba(3, 4, 94, 0.4);
-	padding: 10rem 3rem 5rem 3rem;
-	/* 상단 패딩 10rem, 하단 패딩 5rem으로 증가 */
-	border-radius: 0.5rem;
-	width: 80%;
-	min-height: 55rem;
-	/* 최소 높이 추가 */
-	max-width: 70.5rem;
-	margin-left: auto;
-	margin-right: auto;
-	position: relative;
-	/* 위치 상대적으로 설정 */
+    margin-top: -1rem;
+    box-shadow: 8px 4px 8px rgba(3, 4, 94, 0.4);  /* 그림자 효과 */
+    padding: 10rem 3rem 5rem 3rem;                /* 상하좌우 패딩 */
+    border-radius: 0.5rem;                        /* 모서리 둥글게 */
+    width: 80%;                                   /* 폼 너비 */
+    min-height: 55rem;                           /* 최소 높이 */
+    max-width: 70.5rem;                          /* 최대 너비 */
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
 }
 
-
+/* 기본 버튼 스타일링 */
 .btn {
-	width: 22rem;
-	height: 3rem;
-	background-color: #778da9;
-	border: none;
-	border-radius: 1.875rem;
-	cursor: pointer;
-	color: white;
-	font-size: 1.2rem;
+    width: 22rem;
+    height: 3rem;
+    background-color: #778da9;
+    border: none;
+    border-radius: 1.875rem;
+    cursor: pointer;
+    color: white;
+    font-size: 1.2rem;
 }
 
+/* 버튼 호버 효과 */
 .btn:hover {
-	background-color: #415a77;
+    background-color: #415a77;
 }
 
+/* 수정 버튼 스타일링 */
 .edit-btn {
-	width: 5rem;
-	height: 2.2rem;
-	background-color: #778da9;
-	border: none;
-	border-radius: 0.3125rem;
-	cursor: pointer;
-	font-size: 1.1rem;
-	color: white;
-	position: absolute;
-	right: 0.5rem;
-	top: 50%;
-	transform: translateY(-50%);
+    width: 5rem;
+    height: 2.2rem;
+    background-color: #778da9;
+    border: none;
+    border-radius: 0.3125rem;
+    cursor: pointer;
+    font-size: 1.1rem;
+    color: white;
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
+/* 수정 버튼 호버 효과 */
 .edit-btn:hover {
-	background-color: #415a77;
+    background-color: #415a77;
 }
 
+/* 에러 메시지 스타일링 */
 .error-message {
-	color: #ef6351;
-	display: none;
-	font-size: 1rem;
+    color: #ef6351;
+    display: none;
+    font-size: 1rem;
 }
 
+/* 모달 기본 스타일링 */
 .modal {
-	display: none;
-	position: fixed;
-	z-index: 1001;
-	left: 0;
-	top: 0;
-	width: 100%;
-	height: 100%;
-	overflow: auto;
-	background-color: rgba(0, 0, 0, 0.4);
+    display: none;
+    position: fixed;
+    z-index: 1001;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
 }
 
+/* 모달 내용 스타일링 */
 .modal-content {
-	background-color: #fefefe;
-	margin: 15% auto;
-	padding: 3.5rem;
-	border: 1px solid #888;
-	width: 40%;
-	max-width: 31.25rem;
-	border-radius: 0.5rem;
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 3.5rem;
+    border: 1px solid #888;
+    width: 40%;
+    max-width: 31.25rem;
+    border-radius: 0.5rem;
 }
 
+/* 모달 제목 스타일링 */
 .modal-content h2 {
-	margin-top: 1rem;
-	/* 원하는 값으로 조정 */
-	margin-left: 2.5rem;
+    margin-top: 1rem;
+    margin-left: 2.5rem;
 }
 
-/* 모달 폼 버튼 컨테이너 스타일 */
+/* 모달 폼 버튼 컨테이너 스타일링 */
 .modal-content form div:last-child {
     text-align: center;
     margin-top: 2rem;
 }
 
-/* 모달 안의 수정 버튼 스타일 */
+/* 모달 내 수정 버튼 스타일링 */
 .modal-content .edit-btn {
-    position: static;  /* absolute 제거 */
-    transform: none;   /* transform 제거 */
-    width: 7rem;      /* 버튼 너비 */
-    height: 2.2rem;   /* 버튼 높이 */
-    margin: 0 auto;   /* 가운데 정렬 */
+    position: static;
+    transform: none;
+    width: 7rem;
+    height: 2.2rem;
+    margin: 0 auto;
 }
 
+/* 입력 필드 스타일링 */
 input[type="text"],
 input[type="number"],
 input[type="password"] {
-	width: calc(100% - 1.38rem);
-	padding: 1rem;
-	margin: 0.63rem 0;
-	border-radius: 0.94rem;
-	border: 1px solid grey;
-	font-size: 1.1rem;
+    width: calc(100% - 1.38rem);
+    padding: 1rem;
+    margin: 0.63rem 0;
+    border-radius: 0.94rem;
+    border: 1px solid grey;
+    font-size: 1.1rem;
 }
 
+/* 모달 닫기 버튼 스타일링 */
 .close {
-	color: black;
-	float: right;
-	font-size: 3rem;
-	font-weight: bold;
+    color: black;
+    float: right;
+    font-size: 3rem;
+    font-weight: bold;
 }
 
+/* 모달 닫기 버튼 호버 효과 */
 .close:hover,
 .close:focus {
-	color: #aaa;
-	text-decoration: none;
-	cursor: pointer;
+    color: #aaa;
+    text-decoration: none;
+    cursor: pointer;
 }
 
+/* 테이블 첫 번째 열 스타일링 */
 td:first-child {
-	width: 30%;
-	font-weight: bold;
+    width: 30%;
+    font-weight: bold;
 }
 
+/* 테이블 마지막 열 스타일링 */
 td:last-child {
-	width: 70%;
-	position: relative;
-	/* 상대 위치 설정 */
+    width: 70%;
+    position: relative;
 }
 
+/* 버튼 컨테이너 스타일링 */
 div[style*="margin-top: 20px"] {
-	text-align: center;
+    text-align: center;
 }
 
+/* 회원 탈퇴 버튼 스타일링 */
 #deleteUserBtn {
-	margin-top: 1rem;
-	font-size: 1rem;
-	transition: color 0.3s ease;
+    margin-top: 1rem;
+    font-size: 1rem;
+    transition: color 0.3s ease;
 }
 
+/* 회원 탈퇴 버튼 호버 효과 */
 #deleteUserBtn:hover {
-	color: #ef6351;
+    color: #ef6351;
 }
 
-/* SweetAlert2 버튼 스타일 */
+/* SweetAlert2 버튼 스타일링 */
 .swal-button {
     margin-top: 0.63rem;
     padding: 0.63rem 1.25rem;
@@ -197,19 +210,20 @@ div[style*="margin-top: 20px"] {
     font-size: 1rem;
     cursor: pointer;
     margin: 0 0.5rem;
-    min-width: 6rem;  /* 최소 너비 추가 */
-    width: auto;      /* 자동 너비 설정 */
-    height: 2.8rem;   /* 높이 고정 */
-    display: inline-flex;  /* Flexbox 사용 */
-    align-items: center;   /* 세로 중앙 정렬 */
-    justify-content: center; /* 가로 중앙 정렬 */
+    min-width: 6rem;
+    width: auto;
+    height: 2.8rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
+/* SweetAlert2 버튼 호버 효과 */
 .swal-button:hover {
     background-color: #415a77 !important;
 }
 
-/* SweetAlert2 버튼 컨테이너 스타일 */
+/* SweetAlert2 버튼 컨테이너 스타일링 */
 .swal2-actions {
     gap: 1rem;
     display: flex;
@@ -217,118 +231,115 @@ div[style*="margin-top: 20px"] {
     align-items: center;
 }
 
-/* SweetAlert2 컨테이너 스타일 */
+/* SweetAlert2 팝업 스타일링 */
 .swal2-popup {
     border-radius: 0.5rem;
     padding: 2rem;
 }
 
+/* SweetAlert2 제목 스타일링 */
 .swal2-title {
     font-size: 1.5rem !important;
     margin: 1rem 0 !important;
 }
 
+/* SweetAlert2 내용 스타일링 */
 .swal2-html-container {
     font-size: 1.1rem !important;
     margin: 1rem 0 !important;
 }
 
-/* 모바일 버전 */
+/* 모바일 반응형 스타일링 */
 @media screen and (max-width: 768px) {
-	.content {
-		margin-top: -4rem;
-	}
+    /* 모바일용 컨텐츠 영역 조정 */
+    .content {
+        margin-top: -4rem;
+    }
 
-	h2 {
-		font-size: 1.8rem;
-		margin-bottom: 4rem;
-		margin-top: 5rem;
-		/* 상단 여백 증가 */
-	}
+    /* 모바일용 제목 스타일 조정 */
+    h2 {
+        font-size: 1.8rem;
+        margin-bottom: 4rem;
+        margin-top: 5rem;
+    }
 
-	#mypageForm {
-		margin-top: 6.3rem;
-		padding: 4rem 3rem 4rem 3rem;
-		/* 상하 패딩 증가 */
-		width: 90%;
-		max-width: 37.5rem;
-		min-height: 45rem;
-	}
+    /* 모바일용 마이페이지 폼 조정 */
+    #mypageForm {
+        margin-top:-1.5rem;
+        padding: 4rem 3rem 4rem 3rem;
+        width: 90%;
+        max-width: 37.5rem;
+        min-height: 45rem;
+    }
 
-	table {
-		max-width: 37.5rem;
-		margin: 2rem auto;
-		/* 여백 증가 */
-	}
+    /* 모바일용 테이블 조정 */
+    table {
+        max-width: 37.5rem;
+        margin: 2rem auto;
+    }
 
-	td {
-		padding: 1.3rem 0;
-		font-size: 1.1rem;
-	}
+    /* 모바일용 테이블 셀 조정 */
+    td {
+        padding: 1.3rem 0;
+        font-size: 1.1rem;
+    }
 
-	.btn {
-		width: 18rem;
-		/* 버튼 너비 증가 */
-		height: 2.5rem;
-		/* 버튼 높이 증가 */
-		font-size: 1.1rem;
-		/* 버튼 글자 크기 증가 */
-		margin: 0.5rem 0;
-		/* 버튼 여백 추가 */
-	}
+    /* 모바일용 버튼 크기 조정 */
+    .btn {
+        width: 18rem;
+        height: 2.5rem;
+        font-size: 1.1rem;
+        margin: 0.5rem 0;
+    }
 
-	.edit-btn {
-		width: 4rem;
-		/* 수정 버튼 너비 증가 */
-		height: 1.8rem;
-		/* 수정 버튼 높이 증가 */
-		font-size: 1rem;
-		/* 수정 버튼 글자 크기 증가 */
-	}
+    /* 모바일용 수정 버튼 조정 */
+    .edit-btn {
+        width: 4rem;
+        height: 1.8rem;
+        font-size: 1rem;
+    }
 
-	.modal-content {
-		width: 75%;
-		max-width: 25rem;
-		padding: 2.5rem;
-		margin: 45% auto;
-		/* 15%에서 35%로 증가하여 모달을 아래로 내림 */
-	}
+    /* 모바일용 모달 조정 */
+    .modal-content {
+        width: 75%;
+        max-width: 25rem;
+        padding: 2.5rem;
+        margin: 45% auto;
+    }
 
-	.modal-content h2 {
-		margin-left: 1.5rem;
-	}
+    /* 모바일용 모달 제목 조정 */
+    .modal-content h2 {
+        margin-left: 1.5rem;
+    }
 
-	input[type="text"],
-	input[type="number"],
-	input[type="password"] {
-		padding: 0.8rem;
-		/* 입력창 패딩 증가 */
-		font-size: 1.1rem;
-		/* 입력창 글자 크기 증가 */
-		margin: 0.8rem 0;
-		/* 입력창 여백 증가 */
-	}
+    /* 모바일용 입력 필드 조정 */
+    input[type="text"],
+    input[type="number"],
+    input[type="password"] {
+        padding: 0.8rem;
+        font-size: 1.1rem;
+        margin: 0.8rem 0;
+    }
 
-	.error-message {
-		font-size: 1rem;
-		/* 에러 메시지 글자 크기 증가 */
-	}
+    /* 모바일용 에러 메시지 조정 */
+    .error-message {
+        font-size: 1rem;
+    }
 
-	#deleteUserBtn {
-		font-size: 1.1rem;
-		/* 회원탈퇴 버튼 글자 크기 증가 */
-		margin-top: 1.5rem;
-		/* 여백 증가 */
-	}
+    /* 모바일용 회원탈퇴 버튼 조정 */
+    #deleteUserBtn {
+        font-size: 1.1rem;
+        margin-top: 1.5rem;
+    }
 
-	/* 테이블 첫 번째 열 글자 크기 조정 */
-	td:first-child {
-		font-size: 1.1rem;
-	}
+    /* 모바일용 테이블 첫 번째 열 조정 */
+    td:first-child {
+        font-size: 1.1rem;
+    }
 
-	/* 로그아웃 버튼 컨테이너 여백 조정 */
-	div[style*="margin-top: 20px"] {
-		margin-top: 3rem !important;
-		margin-bottom: -2.5rem;
-	}
+    /* 모바일용 로그아웃 버튼 컨테이너 조정 */
+    div[style*="margin-top: 20px"] {
+        margin-top: 3rem !important;
+        margin-bottom: -2.5rem;
+    }
 }
