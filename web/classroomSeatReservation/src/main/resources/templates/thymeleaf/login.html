@@ -22,26 +22,81 @@
 	<header th:if="${userPosition == 'student'}">
 		<header th:replace="~{/menu.html}"></header> <!-- 메뉴 포함 -->
 	</header>
-	<header th:if="${userPosition == 'admin'}">
-		<header th:replace="~{/menu_admin.html}"></header> <!-- 메뉴 포함 -->
-	</header>
-	<header th:if="${userPosition == 'professor'}">
+	<header th:if="${userPosition == 'admin' or userPosition == 'professor'}">
 		<header th:replace="~{/menu_admin.html}"></header> <!-- 메뉴 포함 -->
 	</header>
 	<!-- 헤더 끝 -->
 
 	<!-- 버튼으로 포지션 선택 -->
 	<div class="button-container" th:if="${userPosition == 'admin' or userPosition == 'professor'}">
-		<a href="/classroomSet"><button><i class="fas fa-chair"></i></button></a> <!-- 강의실 템플릿 (좌석 아이콘) -->
-		<a href="/admin"><button><i class="fas fa-school"></i></button></a> <!-- 관리자 대시보드 (교실 아이콘) -->
-		<a href="/banList"><button><i class="fas fa-ban"></i></button></a> <!-- 예약 금지 좌석 확인 (금지 아이콘) -->
-		<a href="/myPage"><button><i class="fas fa-user"></i></button></a> <!-- 마이페이지 -->
+		<a href="/timetable">
+			<div class="button-wrapper">
+				<button>
+					<i class="fas fa-calendar-check"></i> <!-- 시간표 관리: 시간표 관련 아이콘으로 변경 -->
+				</button>
+				<span class="button-text">시간표관리</span>
+			</div>
+		</a>
+		<a href="/admin">
+			<div class="button-wrapper">
+				<button>
+					<i class="fas fa-university"></i> <!-- 관리실 목록: 관리 설정 아이콘으로 변경 -->
+				</button>
+				<span class="button-text">강의실목록</span>
+			</div>
+		</a>
+
+		<a href="/classroomSet">
+			<div class="button-wrapper">
+				<button>
+					<i class="fas fa-chalkboard-teacher"></i> <!-- 강의실 생성: 강의실 설정 아이콘으로 변경 -->
+				</button>
+				<span class="button-text">강의실생성</span>
+			</div>
+		</a>
+		<a href="/myPage">
+			<div class="button-wrapper">
+				<button>
+					<i class="fas fa-user-cog"></i> <!-- 마이페이지: 사용자 설정 아이콘으로 변경 -->
+				</button>
+				<span class="button-text">마이페이지</span>
+			</div>
+		</a>
 	</div>
+
 	<div class="button-container" th:unless="${userPosition == 'admin' or userPosition == 'professor'}">
-		<a href="/classroomLike"><button><i class="fas fa-star"></i></button></a> <!-- 강의실 현황 -->
-		<a href="/timetable"><button><i class="fas fa-calendar-alt"></i></button></a> <!-- 시간표 -->
-		<a href="/reserveList"><button><i class="fas fa-bell"></i></button></a> <!-- 예약확인 -->
-		<a href="/myPage"><button><i class="fas fa-user"></i></button></a> <!-- 마이페이지 -->
+		<a href="/timetable">
+			<div class="button-wrapper">
+				<button>
+					<i class="fas fa-calendar-check"></i> <!-- 시간표: 달력 아이콘 유지 -->
+				</button>
+				<span class="button-text">시간표관리</span>
+			</div>
+		</a><a href="/classroomLike">
+			<div class="button-wrapper">
+				<button>
+					<i class="fas fa-chalkboard-teacher"></i> <!-- 강의실 현황: 강의 관련 아이콘으로 변경 -->
+				</button>
+				<span class="button-text">강의실현황</span>
+			</div>
+		</a>
+
+		<a href="/reserveList">
+			<div class="button-wrapper">
+				<button>
+					<i class="fas fa-bell"></i> <!-- 예약확인: 목록 확인 아이콘으로 변경 -->
+				</button>
+				<span class="button-text">예약확인</span>
+			</div>
+		</a>
+		<a href="/myPage">
+			<div class="button-wrapper">
+				<button>
+					<i class="fas fa-user-cog"></i> <!-- 마이페이지: 사용자 아이콘 유지 -->
+				</button>
+				<span class="button-text">마이페이지</span>
+			</div>
+		</a>
 	</div>
 
 	<!-- 학생 계정일 때만 모달을 렌더링 -->
@@ -280,6 +335,7 @@
 				}
 			});
 		}
+
 		// 좌석 예약을 처리하는 함수
 		function reserveSeat(subject, classroomName, startHour, endHour) {
 			if (window.sessionExpired || window.stopAjax || localStorage.getItem('sessionExpired') === 'true') return;
