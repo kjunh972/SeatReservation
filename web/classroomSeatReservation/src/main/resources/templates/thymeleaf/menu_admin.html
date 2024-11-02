@@ -5,91 +5,158 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Admin Menu</title>
+
+	<!-- CSS 파일 연결 -->
 	<link rel="stylesheet" href="/css/menuStyle.css">
-	<!-- Font Awesome CDN -->
+	<!-- Font Awesome 아이콘 라이브러리 -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-	<!-- SweetAlert2 CSS -->
+	<!-- SweetAlert2 라이브러리 (모달창) -->
 	<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
-	<!-- SweetAlert2 JS -->
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
-	<!-- 데스크탑 메뉴 -->
+	<!-- 데스크탑용 상단 네비게이션 바 -->
 	<nav class="desktop-nav">
 		<div class="nav-content">
+			<!-- 로고 영역 -->
 			<div class="nav-logo">
 				<a href="login">
 					<i class="fas fa-graduation-cap"></i>
 					<span>Home</span>
 				</a>
 			</div>
+			<!-- 관리자용 네비게이션 링크 -->
 			<div class="nav-links">
-				<a href="timetable"><i class="far fa-calendar-alt"></i> 시간표 및 관리</a>
-				<a href="classroomSet"><i class="fas fa-chalkboard"></i> 강의실 생성</a>
-				<a href="admin"><i class="fas fa-list"></i> 강의실 목록</a>
-				<a href="myPage"><i class="far fa-user"></i> 마이페이지</a>
+				<a href="timetable"><i class="fas fa-calendar-check"></i> 시간표 및 관리</a>
+				<a href="admin"><i class="fas fa-university"></i> 강의실 목록</a>
+				<a href="classroomSet"><i class="button-text"></i> 강의실 생성</a>
+				<a href="myPage"><i class="fas fa-user-cog"></i> 마이페이지</a>
 			</div>
 		</div>
 	</nav>
 
-	<!-- 모바일 토글 버튼 -->
+	<!-- 모바일용 메뉴 토글 버튼 -->
 	<button class="mobile-toggle" id="mobile-toggle">
 		<i class="fas fa-bars"></i>
 	</button>
 
-	<!-- 모바일 사이드바 -->
+	<!-- 모바일용 사이드바 -->
 	<div class="mobile-sidebar" id="mobile-sidebar">
+		<!-- 사이드바 헤더 영역 - 관리자 프로필 -->
 		<div class="sidebar-header">
-			<div class="user-profile">
+			<div class="user-profile" onclick="location.href='myPage'" style="cursor: pointer;">
 				<div class="profile-avatar">
 					<i class="fas fa-user-shield"></i>
 				</div>
-				<div class="profile-info">
-					<h3>관리자</h3>
+				<!-- 조건부 렌더링으로 프로필 정보 표시 -->
+				<div class="profile-info" th:if="${userPosition == 'professor'}">
+					<h3 th:text="${session.loggedInUser.name}"></h3>
+					<p>Professor Dashboard</p>
+				</div>
+				<div class="profile-info" th:if="${userPosition == 'admin'}">
+					<h3>Admin (관리자)</h3>
 					<p>Admin Dashboard</p>
 				</div>
 			</div>
 		</div>
 
+
+		<!-- 사이드바 메뉴 영역 -->
 		<div class="sidebar-menu">
 			<a href="login"><i class="fas fa-home"></i> Home</a>
-			<a href="timetable"><i class="far fa-calendar-alt"></i> 시간표 및 관리</a>
-			<a href="classroomSet"><i class="fas fa-chalkboard"></i> 강의실 생성</a>
-			<a href="admin"><i class="fas fa-list"></i> 강의실 목록</a>
-			<a href="myPage"><i class="far fa-user"></i> 마이페이지</a>
-			<a href="javascript:void(0)" onclick="confirmLogout()" class="logout-btn">
-			    <i class="fas fa-sign-out-alt"></i> 로그아웃
-			</a>>
+			<a href="timetable"><i class="fas fa-calendar-check"></i> 시간표 및 관리</a>
+			<a href="admin"><i class="fas fa-university"></i> 강의실 목록</a>
+			<a href="classroomSet"><i class="fas fa-chalkboard-teacher"></i> 강의실 생성</a>
+			<a href="myPage"><i class="fas fa-user-cog"></i> 마이페이지</a>
+			<a href="javascript:void(0)" class="logout-btn">
+				<i class="fas fa-sign-out-alt"></i> 로그아웃
+			</a>
 		</div>
 	</div>
 
-	<!-- 오버레이 -->
+	<!-- 사이드바 활성화시 배경 오버레이 -->
 	<div class="overlay" id="overlay"></div>
 
 	<!-- 메인 콘텐츠 영역 -->
 	<main class="main-content">
-		<!-- 페이지 콘텐츠 -->
+		<!-- 페이지별 콘텐츠가 들어갈 영역 -->
 	</main>
 
+	<!-- JavaScript 코드 -->
 	<script>
+		// DOM이 로드된 후 실행
 		document.addEventListener('DOMContentLoaded', function () {
+			// 필요한 DOM 요소 선택
 			const mobileToggle = document.getElementById('mobile-toggle');
 			const mobileSidebar = document.getElementById('mobile-sidebar');
 			const overlay = document.getElementById('overlay');
+			const logoutBtn = document.querySelector('.logout-btn');
 
+			// 사이드바 토글 함수
 			function toggleSidebar() {
 				mobileSidebar.classList.toggle('active');
 				overlay.classList.toggle('active');
+
+				// 토글 버튼 회전 효과
+				if (mobileSidebar.classList.contains('active')) {
+					mobileToggle.style.transform = 'rotate(90deg)';
+				} else {
+					mobileToggle.style.transform = 'rotate(0deg)';
+				}
 			}
 
+			// 토글 버튼 클릭 이벤트
 			mobileToggle.addEventListener('click', toggleSidebar);
-			overlay.addEventListener('click', toggleSidebar);
 
-			window.addEventListener('resize', function () {
-				if (window.innerWidth > 768) { // rem 단위를 픽셀로 변경
+			// 오버레이 클릭시 사이드바 닫기
+			overlay.addEventListener('click', function () {
+				mobileSidebar.classList.remove('active');
+				overlay.classList.remove('active');
+				mobileToggle.style.transform = 'rotate(0deg)';
+			});
+
+			// 로그아웃 버튼 이벤트 처리
+			if (logoutBtn) {
+				logoutBtn.addEventListener('click', function (e) {
+					e.preventDefault();
+
+					// 사이드바 닫기
 					mobileSidebar.classList.remove('active');
 					overlay.classList.remove('active');
+					mobileToggle.style.transform = 'rotate(0deg)';
+
+					// 로그아웃 확인 모달 표시
+					Swal.fire({
+						title: '로그아웃',
+						text: '정말 로그아웃 하시겠습니까?',
+						icon: 'question',
+						showCancelButton: true,
+						confirmButtonColor: '#778da9',
+						cancelButtonColor: '#888',
+						confirmButtonText: '로그아웃',
+						cancelButtonText: '취소',
+						reverseButtons: false,
+						customClass: {
+							popup: 'logout-popup',
+							confirmButton: 'logout-confirm',
+							cancelButton: 'logout-cancel'
+						}
+					}).then((result) => {
+						if (result.isConfirmed) {
+							window.location.href = '/logout';
+						}
+					});
+				});
+			}
+
+			// 화면 크기 변경 감지
+			window.addEventListener('resize', function () {
+				// 데스크탑 크기일 때 사이드바 닫기
+				if (window.innerWidth > 768) {
+					mobileSidebar.classList.remove('active');
+					overlay.classList.remove('active');
+					mobileToggle.style.transform = 'rotate(0deg)';
 				}
 			});
 		});

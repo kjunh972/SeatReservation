@@ -62,6 +62,47 @@ li {
 	/* 호버 시 배경색 어둡게 변경 */
 }
 
+/* 시간표 알람 스타일 */
+.timetable-popup {
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif !important;
+    padding: 2rem !important;
+    width: 24em !important;
+}
+
+.timetable-confirm {
+    width: 6rem !important;          /* 버튼 너비 */
+    height: 2.5rem !important;       /* 버튼 높이 */
+    padding: 0.5rem 1rem !important;
+    font-size: 1rem !important;
+    font-weight: 500 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 0.5rem !important;
+    background-color: #778da9 !important;
+    color: white !important;
+    transition: background-color 0.3s ease !important;
+}
+
+.timetable-confirm:hover {
+    background-color: #415a77 !important;
+}
+
+/* 모바일 대응 */
+@media (max-width: 48rem) {
+    .timetable-popup {
+        width: 20em !important;
+        padding: 1.5rem !important;
+    }
+
+    .timetable-confirm {
+        width: 5rem !important;
+        height: 2.3rem !important;
+        font-size: 0.9rem !important;
+        padding: 0.4rem 0.8rem !important;
+    }
+}
+
 /* 버튼 컨테이너 스타일 */
 .button-container {
 	display: flex;

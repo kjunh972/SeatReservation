@@ -2,396 +2,415 @@
 <html xmlns="http://www.thymeleaf.org">
 
 <head>
-	<meta charset="UTF-8">
-	<title>로그인 및 시간표</title>
-	<link rel="stylesheet" href="/css/loginStyle.css" />
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-	<!-- jQuery 로드 -->
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	<!-- SweetAlert2 추가 -->
-	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <meta charset="UTF-8">
+    <title>로그인 및 시간표</title>
+    <link rel="stylesheet" href="/css/loginStyle.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
-	<!-- 에러 메시지를 위한 div 추가 -->
-	<div th:if="${error}" class="error" th:text="${error}" style="display: none;"></div>
-	<div th:if="${userNull}" data-user-null style="display: none;"></div>
-	<div th:if="${fromIndex}" data-from-index style="display: none;"></div>
+    <div th:if="${error}" class="error" th:text="${error}" style="display: none;"></div>
+    <div th:if="${userNull}" data-user-null style="display: none;"></div>
+    <div th:if="${fromIndex}" data-from-index style="display: none;"></div>
 
-	<!-- 헤더 시작 -->
-	<header th:if="${userPosition == 'student'}">
-		<header th:replace="~{/menu.html}"></header> <!-- 메뉴 포함 -->
-	</header>
-	<header th:if="${userPosition == 'admin' or userPosition == 'professor'}">
-		<header th:replace="~{/menu_admin.html}"></header> <!-- 메뉴 포함 -->
-	</header>
-	<!-- 헤더 끝 -->
+    <header th:replace="~{${session.loggedInUser != null && (userPosition == 'admin' || userPosition == 'professor')} ? '/menu_admin.html' : '/menu.html'}">
+    </header>
 
-	<!-- 버튼으로 포지션 선택 -->
-	<div class="button-container" th:if="${userPosition == 'admin' or userPosition == 'professor'}">
-		<a href="/timetable">
-			<div class="button-wrapper">
-				<button>
-					<i class="fas fa-calendar-check"></i> <!-- 시간표 관리: 시간표 관련 아이콘으로 변경 -->
-				</button>
-				<span class="button-text">시간표관리</span>
-			</div>
-		</a>
-		<a href="/admin">
-			<div class="button-wrapper">
-				<button>
-					<i class="fas fa-university"></i> <!-- 관리실 목록: 관리 설정 아이콘으로 변경 -->
-				</button>
-				<span class="button-text">강의실목록</span>
-			</div>
-		</a>
+    <div class="button-container" th:if="${userPosition == 'admin' or userPosition == 'professor'}">
+        <a href="/timetable">
+            <div class="button-wrapper">
+                <button>
+                    <i class="fas fa-calendar-check"></i>
+                </button>
+                <span class="button-text">시간표관리</span>
+            </div>
+        </a>
+        <a href="/admin">
+            <div class="button-wrapper">
+                <button>
+                    <i class="fas fa-university"></i>
+                </button>
+                <span class="button-text">강의실목록</span>
+            </div>
+        </a>
+        <a href="/classroomSet">
+            <div class="button-wrapper">
+                <button>
+                    <i class="fas fa-chalkboard-teacher"></i>
+                </button>
+                <span class="button-text">강의실생성</span>
+            </div>
+        </a>
+        <a href="/myPage">
+            <div class="button-wrapper">
+                <button>
+                    <i class="fas fa-user-cog"></i>
+                </button>
+                <span class="button-text">마이페이지</span>
+            </div>
+        </a>
+    </div>
 
-		<a href="/classroomSet">
-			<div class="button-wrapper">
-				<button>
-					<i class="fas fa-chalkboard-teacher"></i> <!-- 강의실 생성: 강의실 설정 아이콘으로 변경 -->
-				</button>
-				<span class="button-text">강의실생성</span>
-			</div>
-		</a>
-		<a href="/myPage">
-			<div class="button-wrapper">
-				<button>
-					<i class="fas fa-user-cog"></i> <!-- 마이페이지: 사용자 설정 아이콘으로 변경 -->
-				</button>
-				<span class="button-text">마이페이지</span>
-			</div>
-		</a>
-	</div>
+    <div class="button-container" th:unless="${userPosition == 'admin' or userPosition == 'professor'}">
+        <a href="/timetable">
+            <div class="button-wrapper">
+                <button>
+                    <i class="fas fa-calendar-check"></i>
+                </button>
+                <span class="button-text">시간표관리</span>
+            </div>
+        </a>
+        <a href="/classroomLike">
+            <div class="button-wrapper">
+                <button>
+                    <i class="fas fa-chalkboard-teacher"></i>
+                </button>
+                <span class="button-text">강의실현황</span>
+            </div>
+        </a>
+        <a href="/reserveList">
+            <div class="button-wrapper">
+                <button>
+                    <i class="fas fa-bell"></i>
+                </button>
+                <span class="button-text">예약확인</span>
+            </div>
+        </a>
+        <a href="/myPage">
+            <div class="button-wrapper">
+                <button>
+                    <i class="fas fa-user-cog"></i>
+                </button>
+                <span class="button-text">마이페이지</span>
+            </div>
+        </a>
+    </div>
 
-	<div class="button-container" th:unless="${userPosition == 'admin' or userPosition == 'professor'}">
-		<a href="/timetable">
-			<div class="button-wrapper">
-				<button>
-					<i class="fas fa-calendar-check"></i> <!-- 시간표: 달력 아이콘 유지 -->
-				</button>
-				<span class="button-text">시간표관리</span>
-			</div>
-		</a><a href="/classroomLike">
-			<div class="button-wrapper">
-				<button>
-					<i class="fas fa-chalkboard-teacher"></i> <!-- 강의실 현황: 강의 관련 아이콘으로 변경 -->
-				</button>
-				<span class="button-text">강의실현황</span>
-			</div>
-		</a>
+    <div th:if="${session.isStudent}">
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>오늘의 시간표</h2>
+                <div id="scheduleContent">
+                </div>
+            </div>
+        </div>
+    </div>
 
-		<a href="/reserveList">
-			<div class="button-wrapper">
-				<button>
-					<i class="fas fa-bell"></i> <!-- 예약확인: 목록 확인 아이콘으로 변경 -->
-				</button>
-				<span class="button-text">예약확인</span>
-			</div>
-		</a>
-		<a href="/myPage">
-			<div class="button-wrapper">
-				<button>
-					<i class="fas fa-user-cog"></i> <!-- 마이페이지: 사용자 아이콘 유지 -->
-				</button>
-				<span class="button-text">마이페이지</span>
-			</div>
-		</a>
-	</div>
-
-	<!-- 학생 계정일 때만 모달을 렌더링 -->
-	<div th:if="${session.isStudent}">
-		<!-- 팝업창 구조 -->
-		<div id="myModal" class="modal">
-			<div class="modal-content">
-				<span class="close">&times;</span>
-				<h2>오늘의 시간표</h2>
-				<div id="scheduleContent">
-					<!-- AJAX로 불러온 오늘의 시간표가 표시될 부분 -->
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<!-- 메인 컨텐츠 영역 -->
-	<div class="main-container">
-		<!-- 시간표 섹션 시작 -->
-		<div class="timetable-section">
-			<div class="container">
-				<table>
-					<thead>
-						<tr>
-							<th></th>
-							<th th:each="day : ${days}" th:text="${day}"></th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr th:each="hour : ${hours}">
-							<td th:text="${hour}"></td>
-							<td th:each="day : ${days}">
-								<span th:each="timeTable : ${userTimeTable}" th:if="${timeTable.day == day 
+    <div class="main-container">
+        <div class="timetable-section">
+            <div class="container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th th:each="day : ${days}" th:text="${day}"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="hour : ${hours}">
+                            <td th:text="${hour}"></td>
+                            <td th:each="day : ${days}">
+                                <span th:each="timeTable : ${userTimeTable}" th:if="${timeTable.day == day 
                                             and timeTable.startHour le hour
                                             and timeTable.endHour gt hour}">
-									<span
-										th:text="${timeTable.subject + ' (' + timeTable.classroomName + ')'}"></span><br>
-								</span>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</div>
-		<!-- 시간표 섹션 끝 -->
+                                    <span th:text="${timeTable.subject + ' (' + timeTable.classroomName + ')'}"></span><br>
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-		<!-- 로그인 폼을 오른쪽에 배치 -->
-		<div class="login-container">
-			<div class="login-box">
-				<h2>로그인</h2>
-				<!-- 로그인 전 폼 -->
-				<form th:if="${session.loggedInUser == null}" action="/login" method="post">
-					<div>
-						<input type="text" id="id" name="id" placeholder="ID" required>
-					</div>
-					<div>
-						<input type="password" id="password" name="password" placeholder="Password" required>
-					</div>
+        <div class="login-container">
+            <div class="login-box">
+                <h2>로그인</h2>
+                <form th:if="${session.loggedInUser == null}" action="/login" method="post">
+                    <div>
+                        <input type="text" id="id" name="id" placeholder="ID" required>
+                    </div>
+                    <div>
+                        <input type="password" id="password" name="password" placeholder="Password" required>
+                    </div>
+                    <br>
+                    <div>
+                        <input type="submit" value="로그인" class="btn">
+                    </div>
+                    <div class="selectPosition" style="margin-top: 10px;">
+                        <a href="selectPosition">회원가입</a>
+                    </div>
+                </form>
 
-					<br>
-					<div>
-						<input type="submit" value="로그인" class="btn">
-					</div>
+                <div th:if="${session.loggedInUser != null}">
+                    <p>ID: <span th:text="${session.loggedInUser.id}"></span></p>
+                    <p>이름: <span th:text="${session.loggedInUser.name}"></span></p>
+                    <form action="/logout" method="get">
+                        <div>
+                            <input type="submit" value="로그아웃" class="btn">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
-					<div class="selectPosition" style="margin-top: 10px;">
-						<a href="selectPosition">회원가입</a>
-					</div>
-				</form>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const errorMessage = document.querySelector('.error');
+            const modal = document.getElementById("myModal");
+            const modalContainer = modal ? modal.parentElement : null;
 
-				<!-- 로그인 후 정보 표시 -->
-				<div th:if="${session.loggedInUser != null}">
-					<p>ID: <span th:text="${session.loggedInUser.id}"></span></p>
-					<p>이름: <span th:text="${session.loggedInUser.name}"></span></p>
-					<form action="/logout" method="get">
-						<div>
-							<input type="submit" value="로그아웃" class="btn">
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
-	<script>
-		// 로그인 세션 만료 됐을때 error 가지고 와서 세션 만료 알람 표시
-		document.addEventListener('DOMContentLoaded', function () {
-			const errorMessage = document.querySelector('.error');
-			const modal = document.getElementById("myModal");
-			const modalContainer = modal ? modal.parentElement : null;
+            if (errorMessage && errorMessage.textContent.trim()) {
+                localStorage.setItem('sessionExpired', 'true');
 
-			// 세션 만료 체크 및 처리
-			if (errorMessage && errorMessage.textContent.trim()) {
-				// localStorage에 세션 만료 상태 저장
-				localStorage.setItem('sessionExpired', 'true');
+                if (modalContainer) {
+                    modalContainer.remove();
+                }
+                if (modal) {
+                    modal.remove();
+                }
 
-				// 즉시 모달과 관련된 모든 요소 제거
-				if (modalContainer) {
-					modalContainer.remove();
-				}
-				if (modal) {
-					modal.remove();
-				}
+                window.sessionExpired = true;
+                window.stopAjax = true;
 
-				// 전역 플래그 설정
-				window.sessionExpired = true;
-				window.stopAjax = true;
+                Swal.fire({
+                    icon: 'error',
+                    title: '알림',
+                    text: errorMessage.textContent,
+                    confirmButtonText: '확인',
+                    allowOutsideClick: false,
+                    focusConfirm: true,
+                    customClass: {
+                        popup: 'session-error-popup',
+                        confirmButton: 'session-error-confirm'
+                    },
+                    didOpen: () => {
+                        const confirmButton = Swal.getConfirmButton();
+                        if (confirmButton) {
+                            confirmButton.focus();
+                        }
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.replace('/login');
+                    }
+                });
 
-				// 세션 만료 알림만 표시
-				Swal.fire({
-					icon: 'error',
-					title: '알림',
-					text: errorMessage.textContent,
-					confirmButtonText: '확인',
-					allowOutsideClick: false,
-					customClass: {
-						confirmButton: 'swal-confirm-button'
-					},
-					didOpen: () => {
-						if (window.onkeydown) window.onkeydown = null;
-						if (window.onclick) window.onclick = null;
-					}
-				}).then((result) => {
-					if (result.isConfirmed) {
-						window.location.replace('/login');
-					}
-				});
+                return false;
+            }
 
-				return false;
-			}
+            const isSessionExpired = localStorage.getItem('sessionExpired') === 'true';
 
-			// localStorage에서 세션 만료 상태 확인
-			const isSessionExpired = localStorage.getItem('sessionExpired') === 'true';
+            if (isSessionExpired) {
+                if (modalContainer) modalContainer.remove();
+                if (modal) modal.remove();
+                return false;
+            }
 
-			// 세션이 만료되었거나 만료된 적이 있으면 모달 초기화 중단
-			if (isSessionExpired) {
-				if (modalContainer) modalContainer.remove();
-				if (modal) modal.remove();
-				return false;
-			}
+            if (modal && !errorMessage && !window.sessionExpired && !window.stopAjax) {
+                const closeBtn = document.getElementsByClassName("close")[0];
 
-			// 세션이 유효하고 모달이 존재하며 에러가 없을 때만 시간표 관련 기능 초기화
-			if (modal && !errorMessage && !window.sessionExpired && !window.stopAjax) {
-				const closeBtn = document.getElementsByClassName("close")[0];
+                if (closeBtn) {
+                    closeBtn.onclick = function () {
+                        modal.style.display = "none";
+                    }
+                }
 
-				if (closeBtn) {
-					closeBtn.onclick = function () {
-						modal.style.display = "none";
-					}
-				}
+                window.onclick = function (event) {
+                    if (event.target == modal) {
+                        modal.style.display = "none";
+                    }
+                }
 
-				window.onclick = function (event) {
-					if (event.target == modal) {
-						modal.style.display = "none";
-					}
-				}
+                document.addEventListener('keydown', function (event) {
+                    if (event.key === 'Escape' && modal.style.display !== "none") {
+                        modal.style.display = "none";
+                    }
+                });
 
-				document.addEventListener('keydown', function (event) {
-					if (event.key === 'Escape' && modal.style.display !== "none") {
-						modal.style.display = "none";
-					}
-				});
+                loadTodaySchedule();
+            }
+        });
 
-				loadTodaySchedule();
-			}
-		});
+        function loadTodaySchedule() {
+            if (window.sessionExpired || window.stopAjax || localStorage.getItem('sessionExpired') === 'true') {
+                return;
+            }
 
-		// AJAX 함수 수정
-		function loadTodaySchedule() {
-			// 세션 만료나 AJAX 중단 플래그 체크
-			if (window.sessionExpired || window.stopAjax || localStorage.getItem('sessionExpired') === 'true') {
-				return;
-			}
+            $.ajax({
+                url: '/api/today-schedule',
+                method: 'GET',
+                success: function (data) {
+                    if (window.sessionExpired || window.stopAjax || localStorage.getItem('sessionExpired') === 'true') {
+                        return;
+                    }
 
-			$.ajax({
-				url: '/api/today-schedule',
-				method: 'GET',
-				success: function (data) {
-					// 세션 만료 체크
-					if (window.sessionExpired || window.stopAjax || localStorage.getItem('sessionExpired') === 'true') {
-						return;
-					}
+                    var scheduleContent = $('#scheduleContent');
+                    if (!scheduleContent.length) return;
 
-					var scheduleContent = $('#scheduleContent');
-					if (!scheduleContent.length) return;
+                    scheduleContent.empty();
 
-					scheduleContent.empty();
+                    if (data.length === 0) {
+                        if (!document.querySelector('.error')) {
+                            const modal = document.getElementById("myModal");
+                            if (modal) {
+                                modal.style.display = "none";
+                            }
 
-					if (data.length === 0) {
-						if (!document.querySelector('.error')) {
-							// 모달 닫기
-							const modal = document.getElementById("myModal");
-							if (modal) {
-								modal.style.display = "none";
-							}
+                            Swal.fire({
+                                icon: 'info',
+                                title: '알림',
+                                text: '오늘의 시간표가 없습니다.',
+                                confirmButtonText: '확인',
+                                confirmButtonColor: '#778da9',
+                                showCancelButton: false,
+                                focusConfirm: true,
+                                allowOutsideClick: true,
+                                customClass: {
+                                    popup: 'timetable-popup',
+                                    confirmButton: 'timetable-confirm'
+                                },
+                                didOpen: () => {
+                                    const confirmButton = Swal.getConfirmButton();
+                                    if (confirmButton) {
+                                        confirmButton.focus();
+                                    }
+                                }
+                            });
+                        }
+                    } else {
+                        var table = '<table><thead><tr><th>과목</th><th>강의실</th><th>시작 시간</th><th>종료 시간</th><th>예약 상태</th><th>예약</th></tr></thead><tbody>';
+                        $.each(data, function (index, item) {
+                            table += '<tr><td>' + item.subject + '</td><td>' + item.classroomName + '</td><td>' + item.startHour + "시" + '</td><td>' + item.endHour + "시" + '</td>';
+                            table += '<td>' + item.reservationStatus + '</td>';
 
-							// 알람 표시
-							Swal.fire({
-								icon: 'info',
-								title: '알림',
-								text: '오늘의 시간표가 없습니다.',
-								confirmButtonText: '확인',
-								customClass: {
-									confirmButton: 'swal-confirm-button',
-								}
-							});
-						}
-					} else {
-						var table = '<table><thead><tr><th>과목</th><th>강의실</th><th>시작 시간</th><th>종료 시간</th><th>예약 상태</th><th>예약</th></tr></thead><tbody>';
-						$.each(data, function (index, item) {
-							table += '<tr><td>' + item.subject + '</td><td>' + item.classroomName + '</td><td>' + item.startHour + "시" + '</td><td>' + item.endHour + "시" + '</td>';
-							table += '<td>' + item.reservationStatus + '</td>';
+                            if (item.reservationStatus === '예약완료' && item.reservationInfo) {
+                                table += '<td>예약번호: ' + item.reservationInfo.reservNum + '</td>';
+                            } else {
+                                table += '<td><button style="font-size: 0.8rem; margin-left: 1.2rem;" onclick="reserveSeat(\'' + item.subject + '\', \'' + item.classroomName + '\', ' + item.startHour + ', ' + item.endHour + ')">좌석 예약</button></td>';
+                            }
 
-							if (item.reservationStatus === '예약완료' && item.reservationInfo) {
-								table += '<td>예약번호: ' + item.reservationInfo.reservNum + '</td>';
-							} else {
-								table += '<td><button style="font-size: 0.8rem; margin-left: 1.2rem;" onclick="reserveSeat(\'' + item.subject + '\', \'' + item.classroomName + '\', ' + item.startHour + ', ' + item.endHour + ')">좌석 예약</button></td>';
-							}
+                            table += '</tr>';
+                        });
+                        table += '</tbody></table>';
+                        scheduleContent.append(table);
+                    }
+                },
+                error: function () {
+                    if (!window.sessionExpired && !window.stopAjax && localStorage.getItem('sessionExpired') !== 'true') {
+                        Swal.fire({
+                            icon: 'error',
+                            title: '오류',
+                            text: '시간표를 불러오는 중 오류가 발생했습니다.',
+                            confirmButtonText: '확인',
+                            focusConfirm: true,
+                            allowOutsideClick: true,
+                            customClass: {
+                                popup: 'schedule-error-popup',
+                                confirmButton: 'schedule-error-confirm'
+                            },
+                            didOpen: () => {
+                                const confirmButton = Swal.getConfirmButton();
+                                if (confirmButton) {
+                                    confirmButton.focus();
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        }
 
-							table += '</tr>';
-						});
-						table += '</tbody></table>';
-						scheduleContent.append(table);
-					}
-				},
-				error: function () {
-					if (!window.sessionExpired && !window.stopAjax && localStorage.getItem('sessionExpired') !== 'true') {
-						Swal.fire({
-							icon: 'error',
-							title: '오류',
-							text: '시간표를 불러오는 중 오류가 발생했습니다.',
-							confirmButtonText: '확인',
-							customClass: {
-								confirmButton: 'swal-confirm-button',
-							}
-						});
-					}
-				}
-			});
-		}
+        function reserveSeat(subject, classroomName, startHour, endHour) {
+            if (window.sessionExpired || window.stopAjax || localStorage.getItem('sessionExpired') === 'true') return;
 
-		// 좌석 예약을 처리하는 함수
-		function reserveSeat(subject, classroomName, startHour, endHour) {
-			if (window.sessionExpired || window.stopAjax || localStorage.getItem('sessionExpired') === 'true') return;
+            Swal.fire({
+                title: '시간표로 이동',
+                html: `시간표로 이동하겠습니다.<br>해당 과목을 예약해주세요.<br><br>${subject} (${classroomName}) ${startHour}시 ~ ${endHour}시`,
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonText: '이동하기',
+                cancelButtonText: '취소',
+                focusConfirm: true,
+                allowOutsideClick: true,
+                customClass: {
+                    popup: 'reserve-popup',
+                    confirmButton: 'reserve-confirm',
+                    cancelButton: 'reserve-cancel'
+                },
+                didOpen: () => {
+                    const confirmButton = Swal.getConfirmButton();
+                    if (confirmButton) {
+                        confirmButton.focus();
+                    }
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '/timetable';
+                }
+            });
+        }
 
-			Swal.fire({
-				title: '시간표로 이동',
-				html: `시간표로 이동하겠습니다.<br>해당 과목을 예약해주세요.<br><br>${subject} (${classroomName}) ${startHour}시 ~ ${endHour}시`,
-				icon: 'info',
-				showCancelButton: true,
-				confirmButtonText: '이동하기',
-				cancelButtonText: '취소',
-				customClass: {
-					confirmButton: 'swal-confirm-button',
-					cancelButton: 'swal-cancel-button'
-				}
-			}).then((result) => {
-				if (result.isConfirmed) {
-					window.location.href = '/timetable';
-				}
-			});
-		}
+        $(document).ready(function () {
+            $('form[action="/login"]').on('submit', function (e) {
+                e.preventDefault();
 
-		// 로그인 실패 시 에러 메시지 처리
-		$(document).ready(function () {
-			$('form[action="/login"]').on('submit', function (e) {
-				e.preventDefault();
-
-				$.ajax({
-					url: '/login',
-					method: 'POST',
-					data: $(this).serialize(),
-					success: function (response) {
-						if (response.error) {
-							Swal.fire({
-								icon: 'error',
-								title: '로그인 실패',
-								text: response.error,
-								confirmButtonText: '확인'
-							});
-						} else {
-							localStorage.removeItem('sessionExpired'); // 로그인 성공 시 세션 만료 상태 제거
-							window.location.reload();
-						}
-					},
-					error: function () {
-						Swal.fire({
-							icon: 'error',
-							title: '오류',
-							text: '로그인 처리 중 오류가 발생했습니다.',
-							confirmButtonText: '확인'
-						});
-					}
-				});
-			});
-		});
-	</script>
+                $.ajax({
+                    url: '/login',
+                    method: 'POST',
+                    data: $(this).serialize(),
+                    success: function (response) {
+                        if (response.error) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: '로그인 실패',
+                                text: response.error,
+                                confirmButtonText: '확인',
+                                focusConfirm: true,
+                                allowOutsideClick: true,
+                                customClass: {
+                                    popup: 'login-error-popup',
+                                    confirmButton: 'login-error-confirm'
+                                },
+                                didOpen: () => {
+                                    const confirmButton = Swal.getConfirmButton();
+                                    if (confirmButton) {
+                                        confirmButton.focus();
+                                    }
+                                }
+                            });
+                        } else {
+                            localStorage.removeItem('sessionExpired');
+                            window.location.reload();
+                        }
+                    },
+                    error: function () {
+                        Swal.fire({
+                            icon: 'error',
+                            title: '오류',
+                            text: '로그인 처리 중 오류가 발생했습니다.',
+                            confirmButtonText: '확인',
+                            focusConfirm: true,
+                            allowOutsideClick: true,
+                            customClass: {
+                                popup: 'login-error-popup',
+                                confirmButton: 'login-error-confirm'
+                            },
+                            didOpen: () => {
+                                const confirmButton = Swal.getConfirmButton();
+                                if (confirmButton) {
+                                    confirmButton.focus();
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>

@@ -1,4 +1,4 @@
-/* 전역 스타일 */
+/* 모든 요소에 대한 기본 스타일 초기화 및 기본 폰트 설정 */
 * {
     margin: 0;
     padding: 0;
@@ -6,32 +6,35 @@
     font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
 }
 
+/* 전역 CSS 변수 정의 - 색상 테마 */
 :root {
-    --primary-color: #778da9;
-    --primary-dark: #415a77;
-    --primary-light: #e0e7ee;
-    --text-dark: #1b263b;
-    --text-light: #fff;
-    --background: #f8f9fa;
+    --primary-color: #778da9;    /* 주요 색상 */
+    --primary-dark: #415a77;     /* 어두운 주요 색상 */
+    --primary-light: #e0e7ee;    /* 밝은 주요 색상 */
+    --text-dark: #1b263b;        /* 어두운 텍스트 색상 */
+    --text-light: #fff;          /* 밝은 텍스트 색상 */
+    --background: #f8f9fa;       /* 배경 색상 */
 }
 
+/* 기본 body 스타일 */
 body {
     background-color: var(--background);
     color: var(--text-dark);
 }
 
-/* 데스크탑 네비게이션 */
+/* 데스크탑 상단 네비게이션 바 스타일 */
 .desktop-nav {
-    position: fixed;
+    position: fixed;             /* 화면 상단에 고정 */
     top: 0;
     left: 0;
     right: 0;
     height: 4rem;
     background: var(--text-light);
     box-shadow: 0 0.1rem 0.6rem rgba(0, 0, 0, 0.1);
-    z-index: 100;
+    z-index: 100;               /* 다른 요소들 위에 표시 */
 }
 
+/* 네비게이션 바 내부 컨텐츠 정렬 */
 .nav-content {
     max-width: 75rem;
     margin: 0 auto;
@@ -42,6 +45,7 @@ body {
     padding: 0 2rem;
 }
 
+/* 로고 링크 스타일 */
 .nav-logo a {
     display: flex;
     align-items: center;
@@ -52,17 +56,20 @@ body {
     font-weight: 600;
 }
 
+/* 로고 아이콘 스타일 */
 .nav-logo i {
     font-size: 1.5rem;
-	margin-left: -10rem;
+    margin-left: -10rem;
 }
 
+/* 네비게이션 링크 컨테이너 */
 .nav-links {
     display: flex;
     gap: 1.5rem;
-	margin-right: -9rem;
+    margin-right: -9rem;
 }
 
+/* 네비게이션 링크 개별 스타일 */
 .nav-links a {
     text-decoration: none;
     color: var(--text-dark);
@@ -76,18 +83,20 @@ body {
     gap: 0.5rem;
 }
 
+/* 네비게이션 링크 호버 효과 */
 .nav-links a:hover {
     background: var(--primary-light);
     color: var(--primary-dark);
 }
 
+/* 네비게이션 링크 아이콘 스타일 */
 .nav-links a i {
     font-size: 1.1rem;
 }
 
-/* 모바일 사이드바 관련 스타일 */
+/* 모바일 메뉴 토글 버튼 */
 .mobile-toggle {
-    display: none;
+    display: none;              /* 기본적으로 숨김 */
     position: fixed;
     top: 1rem;
     left: 1rem;
@@ -103,10 +112,11 @@ body {
     transition: all 0.3s ease;
 }
 
+/* 모바일 사이드바 기본 스타일 */
 .mobile-sidebar {
     position: fixed;
     top: 0;
-    left: -18.8rem;
+    left: -18.8rem;            /* 기본적으로 화면 밖에 위치 */
     width: 18.8rem;
     height: 100%;
     background: var(--text-light);
@@ -116,21 +126,53 @@ body {
     overflow-y: auto;
 }
 
+/* 모바일 사이드바 활성화 상태 */
 .mobile-sidebar.active {
-    left: 0;
+    left: 0;                   /* 화면 안으로 이동 */
 }
 
+/* 사이드바 헤더 영역 */
 .sidebar-header {
     padding: 2rem;
     background: var(--primary-light);
 }
 
+/* 사용자 프로필 컨테이너 */
 .user-profile {
+    transition: background-color 0.3s ease;
     display: flex;
     align-items: center;
     gap: 1rem;
 }
 
+/* 프로필 호버 효과 */
+.user-profile:hover {
+    background-color: var(--primary-light);
+}
+
+/* 프로필 정보 텍스트 스타일 */
+.profile-info {
+    transition: color 0.3s ease;
+}
+
+/* 프로필 호버시 텍스트 색상 변경 */
+.user-profile:hover .profile-info h3,
+.user-profile:hover .profile-info p {
+    color: var(--primary-dark);
+}
+
+/* 관리자 아이콘 기본 스타일 */
+.user-profile .fa-user-shield {
+    font-size: 1.5rem;
+    color: var(--text-light);
+}
+
+/* 관리자 아이콘 호버 효과 */
+.user-profile:hover .fa-user-shield {
+    color: var(--primary-dark);
+}
+
+/* 프로필 아바타 스타일 */
 .profile-avatar {
     width: 3.8rem;
     height: 3.8rem;
@@ -144,35 +186,105 @@ body {
     font-weight: 600;
 }
 
+/* 프로필 정보 제목 스타일 */
 .profile-info h3 {
     color: var(--text-dark);
     font-size: 1.2rem;
     margin-bottom: 0.3rem;
 }
 
+/* 프로필 정보 부제목 스타일 */
 .profile-info p {
     color: var(--primary-dark);
     font-size: 0.9rem;
 }
 
-/* 로그인 폼 스타일 */
+/* 로그인 섹션 컨테이너 */
 .login-section {
     padding: 2rem;
-    margin-left: -1.9rem; 
+    margin-left: -1.9rem;
 }
 
+/* 로그인 섹션 제목 */
 .login-section h2 {
     color: var(--text-dark);
     margin-bottom: 1.5rem;
     font-size: 1.5rem;
-	margin-left: 0.5rem
+    margin-left: 0.5rem
 }
 
+/* 로그아웃 확인 팝업 스타일 */
+.logout-popup {
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif !important;
+    padding: 2rem !important;
+    width: 24em !important;
+}
+
+/* 로그아웃 확인 버튼 스타일 */
+.logout-confirm {
+    width: 7rem !important;
+    height: 2.8rem !important;
+    padding: 0.5rem 1rem !important;
+    font-size: 1rem !important;
+    font-weight: 500 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 0.5rem !important;
+    background-color: #778da9 !important;
+    color: white !important;
+    transition: background-color 0.3s ease !important;
+}
+
+/* 로그아웃 확인 버튼 호버 효과 */
+.logout-confirm:hover {
+    background-color: #415a77 !important;
+}
+
+/* 로그아웃 취소 버튼 스타일 */
+.logout-cancel {
+    width: 7rem !important;
+    height: 2.8rem !important;
+    padding: 0.5rem 1rem !important;
+    font-size: 1rem !important;
+    font-weight: 500 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 0.5rem !important;
+    background-color: #888 !important;
+    color: white !important;
+    transition: background-color 0.3s ease !important;
+}
+
+/* 로그아웃 취소 버튼 호버 효과 */
+.logout-cancel:hover {
+    background-color: #666 !important;
+}
+
+/* 모바일 화면에서의 로그아웃 팝업 조정 */
+@media (max-width: 48rem) {
+    .logout-popup {
+        width: 20em !important;
+        padding: 1.5rem !important;
+    }
+
+    .logout-confirm,
+    .logout-cancel {
+        width: 6rem !important;
+        height: 2.5rem !important;
+        font-size: 0.9rem !important;
+        padding: 0.4rem 0.8rem !important;
+    }
+}
+
+/* 입력 필드 그룹 컨테이너 */
 .input-group {
     position: relative;
     margin-bottom: 1rem;
 }
 
+/* 입력 필드 아이콘 스타일 */
 .input-group i {
     position: absolute;
     left: 1rem;
@@ -181,6 +293,7 @@ body {
     color: var(--primary-color);
 }
 
+/* 입력 필드 스타일 */
 .input-group input {
     width: 100%;
     padding: 1rem 1rem 1rem 3rem;
@@ -190,12 +303,14 @@ body {
     transition: all 0.2s ease;
 }
 
+/* 입력 필드 포커스 효과 */
 .input-group input:focus {
     outline: none;
     border-color: var(--primary-color);
     box-shadow: 0 0 0 0.2rem rgba(119, 141, 169, 0.1);
 }
 
+/* 로그인 폼 버튼 스타일 */
 .login-form button {
     width: 45%;
     padding: 0.5rem;
@@ -203,7 +318,7 @@ body {
     color: var(--text-light);
     border: none;
     border-radius: 0.8rem;
-    font-size: 1rem; 
+    font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -211,40 +326,43 @@ body {
     display: block;
     margin-left: auto;
     margin-right: auto;
-    height: 2.5rem; 
-    line-height: 1.2rem; 
+    height: 2.5rem;
+    line-height: 1.2rem;
 }
 
+/* 로그인 폼 버튼 호버 효과 */
 .login-form button:hover {
     background: var(--primary-dark);
 }
 
-/* 회원가입 링크 스타일 수정 */
+/* 회원가입 링크 스타일 */
 .register-link {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    color: var(--primary-color) !important; /* 색상 고정 */
-    text-decoration: none !important; /* 밑줄 제거 */
+    color: var(--primary-color) !important;
+    text-decoration: none !important;
     font-weight: 500;
 }
 
+/* 회원가입 링크 아이콘 */
 .register-link i {
     font-size: 1.1rem;
 }
 
-/* hover 효과도 제거하고 싶다면 아래 스타일 추가 */
+/* 회원가입 링크 호버 효과 */
 .register-link:hover {
     color: var(--primary-color) !important;
     background: none !important;
 }
 
-/* 사이드바 메뉴 */
+/* 사이드바 메뉴 컨테이너 */
 .sidebar-menu {
     padding: 1.5rem;
 }
 
+/* 사이드바 메뉴 링크 스타일 */
 .sidebar-menu a {
     display: flex;
     align-items: center;
@@ -259,21 +377,24 @@ body {
     margin-bottom: 0.5rem;
 }
 
+/* 사이드바 메뉴 링크 호버 효과 */
 .sidebar-menu a:hover {
     background: var(--primary-light);
     color: var(--primary-dark);
 }
 
+/* 로그아웃 버튼 스타일 */
 .sidebar-menu .logout-btn {
     margin-top: 2rem;
     color: #dc3545;
 }
 
+/* 로그아웃 버튼 호버 효과 */
 .sidebar-menu .logout-btn:hover {
     background: #ffebee;
 }
 
-/* 오버레이 */
+/* 오버레이 기본 스타일 */
 .overlay {
     position: fixed;
     top: 0;
@@ -289,13 +410,14 @@ body {
     pointer-events: none;
 }
 
+/* 오버레이 활성화 상태 */
 .overlay.active {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
 }
 
-/* 메인 콘텐츠 영역 */
+/* 메인 콘텐츠 영역 스타일 */
 .main-content {
     position: relative;
     z-index: 1;
@@ -306,23 +428,24 @@ body {
     margin-right: auto;
 }
 
-/* 반응형 스타일 */
+/* 모바일 화면 대응 스타일 */
 @media (max-width: 48rem) {
     .desktop-nav {
-        display: none;
+        display: none; /* 데스크탑 네비게이션 숨김 */
     }
-    
+
     .mobile-toggle {
-        display: flex;
+        display: flex; /* 모바일 토글 버튼 표시 */
         align-items: center;
         justify-content: center;
     }
-    
+
     .main-content {
-        padding: 1rem;
+        padding: 1rem; /* 패딩 축소 */
     }
 }
 
+/* 데스크탑 화면에서 모바일 요소 숨김 */
 @media (min-width: 48.1rem) {
     .mobile-sidebar,
     .mobile-toggle,
