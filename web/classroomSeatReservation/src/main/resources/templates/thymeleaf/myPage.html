@@ -11,8 +11,11 @@
 </head>
 
 <body>
-	<!-- 헤더 포함 -->
-	<header th:replace="~{/menu.html}"></header>
+	<!-- 헤더 시작 -->
+
+	<header th:replace="~{${userPosition == 'student'} ? '/menu.html' : '/menu_admin.html'}"></header>
+
+	<!-- 헤더 끝 -->
 
 	<!-- 마이페이지 폼 시작 -->
 	<form id="mypageForm" name="mypageForm" action="/myPage" method="post"
@@ -204,7 +207,11 @@
 				icon: 'warning',
 				showCancelButton: true,
 				confirmButtonText: '예',
-				cancelButtonText: '아니오'
+				cancelButtonText: '아니오',
+				customClass: {
+        		confirmButton: 'swal-button',        // 기본 confirm 버튼 스타일 그대로 사용
+        		cancelButton: 'swal-button swal-cancel-button'   // cancel 버튼에만 커스텀 클래스 추가
+    		}
 			}).then((result) => {
 				if (result.isConfirmed) {
 					window.location.href = '/logout';

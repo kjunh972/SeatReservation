@@ -223,6 +223,17 @@ div[style*="margin-top: 20px"] {
     background-color: #415a77 !important;
 }
 
+/* cancel 버튼의 추가 스타일 */
+.swal-cancel-button {
+    background-color:#a9afb4 !important;  /* 아니오 버튼 배경색 */
+    color: white !important;
+}
+
+.swal-cancel-button:hover {
+    background-color:#c4c9cd !important;  /* 아니오 버튼 호버 시 색상 */
+}
+
+
 /* SweetAlert2 버튼 컨테이너 스타일링 */
 .swal2-actions {
     gap: 1rem;
@@ -258,7 +269,7 @@ div[style*="margin-top: 20px"] {
 
     /* 모바일용 제목 스타일 조정 */
     h2 {
-        font-size: 1.8rem;
+        font-size: 1.5rem;
         margin-bottom: 4rem;
         margin-top: 5rem;
     }
@@ -304,7 +315,8 @@ div[style*="margin-top: 20px"] {
         width: 75%;
         max-width: 25rem;
         padding: 2.5rem;
-        margin: 45% auto;
+        margin: 25% auto;
+        position: relative; /* 닫기 버튼 위치 조정을 위한 상대 위치 설정 */
     }
 
     /* 모바일용 모달 제목 조정 */
@@ -341,5 +353,15 @@ div[style*="margin-top: 20px"] {
     div[style*="margin-top: 20px"] {
         margin-top: 3rem !important;
         margin-bottom: -2.5rem;
+    }
+    
+     /* 모바일용 닫기 버튼 조정 */
+    .close {
+        color: black;
+        font-size: 2rem; /* 닫기 버튼 크기 조정 */
+        font-weight: bold;
+        position: absolute; /* 모달 내에서 절대 위치 */
+        top: 0.5rem; /* 닫기 버튼의 위쪽 위치 조정 */
+        right: 1rem; /* 닫기 버튼의 오른쪽 위치 조정 */
     }
 }

@@ -27,18 +27,24 @@
     margin: 5% auto;
     padding: 20px;
     border-radius: 10px;
-    width: 80%;
+    width: 90%;
     max-width: 800px;
     max-height: 80vh;
     overflow-y: auto;
     position: relative;
+   
 }
+.info-row p .label {
+        white-space: nowrap; /* 라벨 텍스트는 한 줄로 유지 */
+        font-weight: normal !important; /* 라벨의 기본 굵기 유지 */
+    }
 
 .close {
     position: absolute;
     right: 20px;
     top: 10px;
-    font-size: 28px;
+    font-size: 3rem; 
+    font-weight: bold;
     font-weight: bold;
     cursor: pointer;
 }
@@ -126,4 +132,111 @@
     background-color: #d4edda;
     border: 1px solid #c3e6cb;
     color: #155724;
+}
+
+.swal2-confirm-btn-custom {
+    background-color:  #778da9;
+}
+
+
+/* 모바일 전용 스타일 (768px 이하 화면 크기에서만 적용) */
+@media (max-width: 768px) {
+    #listModal h1 {
+        font-size: 1.5rem; /* 폰트 크기 조정 */
+    }
+
+    #listModal h3 {
+        font-size: 1rem; /* 폰트 크기 조정 */
+    }
+    
+    .info-row {
+    	display: flex;
+    	justify-content: space-between;
+    	align-items: flex-start; /* 아이콘과 텍스트의 상단을 맞추기 */
+    	margin-bottom: 8px;
+        font-size: 0.85rem; /* 전체 내용의 폰트 크기 줄이기 */
+    	align-items: baseline; /* 라벨과 내용의 기준선을 맞추기 */
+	}
+    
+    .info-row p {
+
+    	display: flex;
+    	align-items: center; /* 아이콘과 텍스트가 수평 정렬되도록 설정 */
+    	margin: 0;
+    	flex: 1;
+    	min-width: 0; /* 텍스트가 아이콘 옆에서 줄바꿈될 때 잘리지 않도록 설정 */
+    	padding: 0.3rem;
+        font-size: 0.85rem; /* 개별 항목 폰트 크기 조정 */
+    	align-items: baseline; /* 라벨과 내용의 기준선을 맞추기 */
+	}
+	
+	/* 강의명, 강의실, 요일 등의 라벨 텍스트에 줄바꿈 방지 */
+    .info-row p .label {
+        white-space: nowrap; /* 라벨 텍스트는 한 줄로 유지 */
+        font-weight: normal !important; /* 라벨의 기본 굵기 유지 */
+    }
+
+    .info-row i {
+        font-size: 0.8rem; /* 아이콘 크기 조정 */
+    }
+    
+  
+
+    .listModal-content {
+        padding: 1rem !important;
+        width: 90% !important; /* 모바일에서 90% 너비를 강제 적용 */
+        max-width: 400px; /* 최대 너비 제한 */
+        max-height: 80vh; /* 화면 높이에 맞게 제한 */
+        transform: translateY(4.2rem); /* 토글 버튼 위치 피하기 위해 아래로 이동 */
+        margin: 0 auto;
+    	box-sizing: border-box !important; /* 패딩과 너비를 포함하여 계산 */
+    	overflow-x: hidden !important; /* 수평 스크롤 방지 */
+    	font-size: 0.9rem; /* 모달 전체 폰트 크기 조정 */
+    }
+
+    .close {
+        right: 1rem;
+        top: 0.5rem;
+        font-size: 2rem; /* 닫기 버튼 크기 조정 */
+    }
+
+    .reservation-form {
+        font-size: 0.9rem; /* 폰트 크기 조정 */
+    }
+
+    .cancel-btn, .add-reservation-btn {
+        font-size: 0.8rem; /* 버튼 폰트 크기 조정 */
+        padding: 0.4rem 1rem; /* 버튼 패딩 조정 */
+    }
+
+    .empty, .error, .success {
+        font-size: 0.8rem; /* 메시지 폰트 크기 조정 */
+    }
+    .swal2-custom-width {
+        width: 80% !important; /* 모바일에서 너비 95%로 조정 */
+        max-width: 350px; /* 최대 너비 제한 */
+    }
+    
+    /* SweetAlert2 제목 폰트 크기 조정 */
+.swal2-title-custom {
+    font-size: 1.2rem; /* 제목 폰트 크기 조정 */
+}
+
+/* SweetAlert2 본문 폰트 크기 조정 */
+.swal2-html-custom {
+    font-size: 0.6rem; /* 본문 폰트 크기 조정 */
+}
+
+/* SweetAlert2 확인 버튼 크기 조정 */
+.swal2-confirm-btn-custom {
+    font-size: 0.85rem; /* 버튼 폰트 크기 조정 */
+    padding: 0.4rem 0.8rem; /* 버튼 패딩 조정 */
+}
+
+/* SweetAlert2 취소 버튼 크기 조정 */
+.swal2-cancel-btn-custom {
+    font-size: 0.85rem; /* 버튼 폰트 크기 조정 */
+    padding: 0.4rem 0.8rem; /* 버튼 패딩 조정 */
+}
+
 }
