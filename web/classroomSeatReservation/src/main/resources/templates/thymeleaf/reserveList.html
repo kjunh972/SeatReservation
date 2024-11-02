@@ -3,6 +3,7 @@
 
 <head>
     <title>예약 확인 페이지</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- 뷰포트 메타 태그 추가 -->
     <link rel="stylesheet" href="/css/timetableStyle.css" />
     <link rel="stylesheet" href="/css/classroomStyle.css" />
     <link rel="stylesheet" href="/css/reserveListStyle.css" />
@@ -24,6 +25,13 @@
 				showCancelButton: true,
 				confirmButtonText: '네, 취소합니다',
 				cancelButtonText: '아니요, 유지합니다',
+				customClass: {
+				popup: 'swal2-custom-width',
+        		title: 'swal2-title-custom', // 제목 폰트 크기 조정
+        		htmlContainer: 'swal2-html-custom', // 본문 폰트 크기 조정
+        		confirmButton: 'swal2-confirm-btn-custom', // 확인 버튼 스타일
+        		cancelButton: 'swal2-cancel-btn-custom' // 취소 버튼 스타일
+    		}
 			}).then((result) => {
 				if (result.isConfirmed) {
 					button.form.submit();
@@ -83,6 +91,7 @@
 					icon: 'success',
 					title: '완료',
 					text: successElement.textContent
+					
 				});
 			}
 
@@ -134,16 +143,10 @@
 
 <body>
 	<!-- 헤더 시작 -->
-		<header th:if="${userPosition == 'student'}">
-			<header th:replace="~{/menu.html}"></header> <!-- 메뉴 포함 -->
-		</header>
-		<header th:if="${userPosition == 'admin'}">
-			<header th:replace="~{/menu_admin.html}"></header> <!-- 메뉴 포함 -->
-		</header>
-		<header th:if="${userPosition == 'professor'}">
-			<header th:replace="~{/menu_admin.html}"></header> <!-- 메뉴 포함 -->
-		</header>
-		<!-- 헤더 끝 -->
+
+	<header th:replace="~{${userPosition == 'student'} ? '/menu.html' : '/menu_admin.html'}"></header>
+
+	<!-- 헤더 끝 -->
 
     <div id="listModal" class="modal">
         <div class="listModal-content">
@@ -161,16 +164,16 @@
                         <form class="reservation-form" action="/cancelReservation" method="post">
                             <div class="reservation-info">
 								<div class="info-row">
-								    <p><i class="fas fa-book-open"></i> 강의명: <span th:text="${reservation.subject}"></span></p> <!-- 펼쳐진 책 아이콘 -->
-								    <p><i class="fas fa-school"></i> 강의실: <span th:text="${reservation.classroomName + '호'}"></span></p> <!-- 학교 아이콘 -->
+								    <p><i class="fas fa-book-open"></i> <span class="label">강의명:</span> <span th:text="${reservation.subject}"></span></p> <!-- 펼쳐진 책 아이콘 -->
+								    <p><i class="fas fa-school"></i><span class="label"> 강의실:</span> <span th:text="${reservation.classroomName + '호'}"></span></p> <!-- 학교 아이콘 -->
 								</div>
 								<div class="info-row">
-								    <p><i class="fas fa-calendar-alt"></i> 요일: <span th:text="${reservation.day}"></span></p> <!-- 다른 스타일의 캘린더 아이콘 -->
-								    <p><i class="fas fa-clock"></i> 사용시간: <span th:text="${reservation.reservHourString + '시'}"></span></p>
+								    <p><i class="fas fa-calendar-alt"></i> <span class="label">요일:</span> <span th:text="${reservation.day}"></span></p> <!-- 다른 스타일의 캘린더 아이콘 -->
+								    <p><i class="fas fa-clock"></i> <span class="label">사용시간: </span><span th:text="${reservation.reservHourString + '시'}"></span></p>
 								</div>
 								<div class="info-row">
-								    <p><i class="fas fa-chair"></i> 좌석: <span th:text="${reservation.reservSeat + '번'}"></span></p>
-								    <p><i class="fas fa-hashtag"></i> 예약 번호: <span th:text="${reservation.reservNum + '번'}"></span></p> <!-- # 아이콘 -->
+								    <p><i class="fas fa-chair"></i> <span class="label">좌석: </span><span th:text="${reservation.reservSeat + '번'}"></span></p>
+								    <p><i class="fas fa-hashtag"></i> <span class="label">예약 번호: </span><span th:text="${reservation.reservNum + '번'}"></span></p> <!-- # 아이콘 -->
 								</div>
 								<div class="info-row">
 								    <p><i class="fas fa-user"></i> 아이디: <span th:text="${reservation.userId}"></span></p>
