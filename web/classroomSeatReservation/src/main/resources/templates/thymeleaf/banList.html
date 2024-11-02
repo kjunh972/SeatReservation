@@ -4,6 +4,7 @@
 <head>
 	<!-- 페이지 제목 설정 -->
 	<title>좌석 예약 금지 목록</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<!-- 외부 CSS 파일 링크 -->
 	<link rel="stylesheet" href="/css/timetableStyle.css" />
 	<link rel="stylesheet" href="/css/classroomStyle.css" />
@@ -28,6 +29,13 @@
 				showCancelButton: true,
 				confirmButtonText: '네, 해제합니다',
 				cancelButtonText: '아니요, 유지합니다',
+				customClass: {
+				popup: 'swal2-custom-width',
+        		title: 'swal2-title-custom', // 제목 폰트 크기 조정
+        		htmlContainer: 'swal2-html-custom', // 본문 폰트 크기 조정
+        		confirmButton: 'swal2-confirm-btn-custom', // 확인 버튼 스타일
+        		cancelButton: 'swal2-cancel-btn-custom' // 취소 버튼 스타일
+    		}
 			}).then((result) => {
 				if (result.isConfirmed) {
 					// AJAX 요청으로 해제 요청
