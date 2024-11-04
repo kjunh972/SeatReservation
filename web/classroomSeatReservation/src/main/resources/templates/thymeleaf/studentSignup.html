@@ -4,6 +4,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>학생 회원가입</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<header th:replace="/menu.html"></header>
 
 	<link rel="stylesheet" href="/css/classroomStyle.css" />
@@ -199,7 +200,7 @@
 	<form id="studentSignupForm" action="/signupCheck" method="post" onsubmit="handleFormSubmit(event)">
 		<div class="form-group">
 			<label for="id">ID</label>
-			<input type="text" id="id" name="id" placeholder="사용자 아이디" required>
+			<input type="text" id="id" name="id" placeholder="사용자 아이디"required>
 			<button type="button" onclick="checkId()">아이디 중복확인</button>
 			<span class="error-message" id="idError" th:text="${idError}"></span>
 		</div>
