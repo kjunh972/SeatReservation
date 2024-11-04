@@ -73,7 +73,8 @@ tr:last-child td { /* 마지막 행 셀 스타일 */
 }
 
 .selected { /* 선택된 셀 스타일 */
-  outline: 2px solid #778da9; /* 외곽선 설정 */
+    outline: 2px solid #778da9; /* 외곽선 설정 */
+    background-color: rgba(119, 141, 169, 0.3); /* 선택된 셀 배경색 추가 */
 }
 
 /* 과목 색상 스타일 */
@@ -92,56 +93,73 @@ tr:last-child td { /* 마지막 행 셀 스타일 */
 .button-container {
     display: flex; /* 플렉스 레이아웃 사용 */
     flex-direction: row; /* 수평 정렬 */
-    justify-content: flex-start; /* 왼쪽 정렬 */
     align-items: flex-start; /* 상단 정렬 */
-    
 }
 
-/* 버튼 그룹 스타일 */
-.timetable-button-container {
+/* 관리자 버튼 컨테이너 */
+.admin-button-container {
     display: flex; /* 플렉스 레이아웃 사용 */
-    flex-direction: column; /* 세로 정렬 */
-    justify-content: flex-start; /* 상단 정렬 */
-    position: relative; /* 상대 위치 */
-    width: 80px; /* 버튼 컨테이너 너비 고정 */
-	margin-top: 20px; /* 상단 여백 */
-
+    flex-direction: row; /* 수평 정렬 */
+    margin-left: 20px; /* 왼쪽 여백 추가 */
 }
 
+/* 세로 정렬을 위한 버튼 그룹 */
+.timetable-button-container,
+.admin-buttons,
+.admin-action-container {
+    display: flex;
+    flex-direction: column; /* 세로 정렬 */
+}
+
+/* 관리자 버튼 그룹과 액션 버튼 그룹 사이의 간격 조정 */
+.admin-button-container > .admin-buttons {
+    margin-right: 30px; /* 오른쪽 여백 추가 */
+}
 /* 버튼 스타일 */
-.timetable-button,
-.timetable-button-container label.timetable-button,
+.timetable-button {
+    background-color: #778da9;
+    color: white;
+    border: none;
+    display: block;
+    padding: 10px;
+    margin: 15px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    width: 100%;
+    text-align: center;
+}
+
+/* 관리자 버튼 스타일 */ 
 .admin-button {
-    background-color: #778da9; /* 배경색 */
-    color: white; /* 글자색 */
-    border: none; /* 테두리 없음 */
-    padding: 10px; /* 안쪽 여백 */
-    margin: 15px 0; /* 위아래 여백 */
-    border-radius: 5px; /* 테두리 둥글게 */
-    cursor: pointer; /* 포인터 커서 */
-    transition: background-color 0.3s ease, transform 0.2s ease; /* 전환 효과 */
-    width: 100%; /* 버튼 너비 100%로 설정 */
-    text-align: center; /* 텍스트 가운데 정렬 */
-    display: block; /* 블록 요소 */
+	background-color: #778da9;
+	color: white;
+	border: none;
+	display: block;
+	padding: 10px;
+	margin: 15px;
+	font-size: 1rem;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: background-color 0.3s ease, transform 0.2s ease;
+	width: 100%;
+	text-align: center;
+	text-decoration: none;
 }
 
 .timetable-button:hover,
-.timetable-button-container label.timetable-button:hover,
 .admin-button:hover {
-    background-color: #5a6f89; /* 배경색 변경 */
-    transform: scale(1.05); /* 크기 확대 */
+    background-color: #5a6f89;
+    transform: scale(1.05);
 }
 
-/* 관리자 버튼 스타일 */
-.admin-button {
-    margin-top: 15px;
-    margin-left: 100px;
-    display: block; /* 블록 요소 */
-    text-align: center; /* 텍스트 가운데 정렬 */
-    text-decoration: none; /* 밑줄 제거 */
-    width: 100%; /* 버튼 너비 100%로 설정 */
+/* 좌석 예약 및 좌석 관리 버튼 크기 조정 */
+#reserve-seat-button,
+#manage-seat-button {
+    width: 115%; /* 기본 너비로 설정 */
+    flex: 1; /* 버튼이 가능한 공간을 차지하도록 설정 */
 }
-
 /* 모달 스타일 */
 .modal { /* 모달 창 */
   display: none; /* 기본으로 숨김 */
@@ -194,7 +212,7 @@ tr:last-child td { /* 마지막 행 셀 스타일 */
 .modal-content form input[type="submit"] { /* 텍스트 입력, 선택, 제출 버튼 */
   padding: 0.5rem; /* 안쪽 여백 */
   border: 1px solid #778da9; /* 테두리 색상 */
-  border-radius: 4px; /* 테두리 둥글게 */
+  border-radius: 4px; /* 요소 모서리를 둥글게 만듭니다. */
 }
 
 .modal-content input[type="submit"] { /* 제출 버튼 */
@@ -207,6 +225,7 @@ tr:last-child td { /* 마지막 행 셀 스타일 */
   background-color: #5a6f89; /* 배경색 변경 */
 }
 
+/* 닫기 버튼 스타일 */
 .close { /* 닫기 버튼 */
   color: #aaa; /* 색상 */
   font-size: 28px; /* 폰트 크기 */
@@ -219,10 +238,6 @@ tr:last-child td { /* 마지막 행 셀 스타일 */
 
 .close:hover, .close:focus { /* 닫기 버튼 호버 및 포커스 */
   color: black; /* 색상 변경 */
-}
-.close:hover, /* 닫기 버튼 호버 */
-.close:focus { /* 닫기 버튼 포커스 */
-  color:  black; /* 색상 변경 */
 }
 
 /* 오류 메시지 스타일 */
