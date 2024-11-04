@@ -21,8 +21,8 @@ h1 { /* 제목 스타일 */
     justify-content: flex-start; /* 왼쪽 정렬 */
     align-items: flex-start; /* 상단 정렬 */
     position: fixed; /* 화면에 고정 */
-    left: 0; /* 왼쪽 정렬 */
-    top: 24.3%; /* 상단에서 29% 위치 */
+    left: 0.5%; /* 왼쪽 정렬 */
+    top: 25.8%; /* 상단에서 29% 위치 */
     padding-left: 9rem; /* 왼쪽 여백 설정 */
 }
 
