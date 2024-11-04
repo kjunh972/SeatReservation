@@ -17,17 +17,17 @@
 
 <body>
 	<!-- 데스크탑용 상단 네비게이션 바 -->
-	<nav class="desktop-nav">
-		<div class="nav-content">
+	<nav class="menu-desktop-nav">
+		<div class="menu-nav-content">
 			<!-- 로고 영역 -->
-			<div class="nav-logo">
+			<div class="menu-nav-logo">
 				<a href="login">
 					<i class="fas fa-graduation-cap"></i>
 					<span>Home</span>
 				</a>
 			</div>
 			<!-- 관리자용 네비게이션 링크 -->
-			<div class="nav-links">
+			<div class="menu-nav-links">
 				<a href="timetable"><i class="fas fa-calendar-check"></i> 시간표 및 관리</a>
 				<a href="admin"><i class="fas fa-university"></i> 강의실 목록</a>
 				<a href="classroomSet"><i class="button-text"></i> 강의실 생성</a>
@@ -37,96 +37,81 @@
 	</nav>
 
 	<!-- 모바일용 메뉴 토글 버튼 -->
-	<button class="mobile-toggle" id="mobile-toggle">
+	<button class="menu-mobile-toggle" id="menu-mobile-toggle">
 		<i class="fas fa-bars"></i>
 	</button>
 
 	<!-- 모바일용 사이드바 -->
-	<div class="mobile-sidebar" id="mobile-sidebar">
+	<div class="menu-mobile-sidebar" id="menu-mobile-sidebar">
 		<!-- 사이드바 헤더 영역 - 관리자 프로필 -->
-		<div class="sidebar-header">
-			<div class="user-profile" onclick="location.href='myPage'" style="cursor: pointer;">
-				<div class="profile-avatar">
+		<div class="menu-sidebar-header">
+			<div class="menu-user-profile" onclick="location.href='myPage'" style="cursor: pointer;">
+				<div class="menu-profile-avatar">
 					<i class="fas fa-user-shield"></i>
 				</div>
 				<!-- 조건부 렌더링으로 프로필 정보 표시 -->
-				<div class="profile-info" th:if="${userPosition == 'professor'}">
+				<div class="menu-profile-info" th:if="${userPosition == 'professor'}">
 					<h3 th:text="${session.loggedInUser.name}"></h3>
 					<p>Professor Dashboard</p>
 				</div>
-				<div class="profile-info" th:if="${userPosition == 'admin'}">
+				<div class="menu-profile-info" th:if="${userPosition == 'admin'}">
 					<h3>Admin (관리자)</h3>
 					<p>Admin Dashboard</p>
 				</div>
 			</div>
 		</div>
 
-
 		<!-- 사이드바 메뉴 영역 -->
-		<div class="sidebar-menu">
+		<div class="menu-sidebar-menu">
 			<a href="login"><i class="fas fa-home"></i> Home</a>
 			<a href="timetable"><i class="fas fa-calendar-check"></i> 시간표 및 관리</a>
 			<a href="admin"><i class="fas fa-university"></i> 강의실 목록</a>
 			<a href="classroomSet"><i class="fas fa-chalkboard-teacher"></i> 강의실 생성</a>
 			<a href="myPage"><i class="fas fa-user-cog"></i> 마이페이지</a>
-			<a href="javascript:void(0)" class="logout-btn">
+			<a href="javascript:void(0)" class="menu-logout-btn">
 				<i class="fas fa-sign-out-alt"></i> 로그아웃
 			</a>
 		</div>
 	</div>
 
 	<!-- 사이드바 활성화시 배경 오버레이 -->
-	<div class="overlay" id="overlay"></div>
+	<div class="menu-overlay" id="menu-overlay"></div>
 
 	<!-- 메인 콘텐츠 영역 -->
-	<main class="main-content">
+	<main class="menu-main-content">
 		<!-- 페이지별 콘텐츠가 들어갈 영역 -->
 	</main>
 
 	<!-- JavaScript 코드 -->
 	<script>
-		// DOM이 로드된 후 실행
 		document.addEventListener('DOMContentLoaded', function () {
-			// 필요한 DOM 요소 선택
-			const mobileToggle = document.getElementById('mobile-toggle');
-			const mobileSidebar = document.getElementById('mobile-sidebar');
-			const overlay = document.getElementById('overlay');
-			const logoutBtn = document.querySelector('.logout-btn');
+			const mobileToggle = document.getElementById('menu-mobile-toggle');
+			const mobileSidebar = document.getElementById('menu-mobile-sidebar');
+			const overlay = document.getElementById('menu-overlay');
+			const logoutBtn = document.querySelector('.menu-logout-btn');
 
-			// 사이드바 토글 함수
 			function toggleSidebar() {
 				mobileSidebar.classList.toggle('active');
 				overlay.classList.toggle('active');
-
-				// 토글 버튼 회전 효과
-				if (mobileSidebar.classList.contains('active')) {
-					mobileToggle.style.transform = 'rotate(90deg)';
-				} else {
-					mobileToggle.style.transform = 'rotate(0deg)';
-				}
+				mobileToggle.style.transform = mobileSidebar.classList.contains('active') ?
+					'rotate(90deg)' : 'rotate(0deg)';
 			}
 
-			// 토글 버튼 클릭 이벤트
 			mobileToggle.addEventListener('click', toggleSidebar);
 
-			// 오버레이 클릭시 사이드바 닫기
 			overlay.addEventListener('click', function () {
 				mobileSidebar.classList.remove('active');
 				overlay.classList.remove('active');
 				mobileToggle.style.transform = 'rotate(0deg)';
 			});
 
-			// 로그아웃 버튼 이벤트 처리
 			if (logoutBtn) {
 				logoutBtn.addEventListener('click', function (e) {
 					e.preventDefault();
-
-					// 사이드바 닫기
 					mobileSidebar.classList.remove('active');
 					overlay.classList.remove('active');
 					mobileToggle.style.transform = 'rotate(0deg)';
 
-					// 로그아웃 확인 모달 표시
 					Swal.fire({
 						title: '로그아웃',
 						text: '정말 로그아웃 하시겠습니까?',
@@ -138,9 +123,9 @@
 						cancelButtonText: '취소',
 						reverseButtons: false,
 						customClass: {
-							popup: 'logout-popup',
-							confirmButton: 'logout-confirm',
-							cancelButton: 'logout-cancel'
+							popup: 'menu-logout-popup',
+							confirmButton: 'menu-logout-confirm',
+							cancelButton: 'menu-logout-cancel'
 						}
 					}).then((result) => {
 						if (result.isConfirmed) {
@@ -150,9 +135,7 @@
 				});
 			}
 
-			// 화면 크기 변경 감지
 			window.addEventListener('resize', function () {
-				// 데스크탑 크기일 때 사이드바 닫기
 				if (window.innerWidth > 768) {
 					mobileSidebar.classList.remove('active');
 					overlay.classList.remove('active');

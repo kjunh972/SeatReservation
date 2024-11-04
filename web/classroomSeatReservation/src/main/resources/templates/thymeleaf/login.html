@@ -2,415 +2,436 @@
 <html xmlns="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="UTF-8">
-    <title>로그인 및 시간표</title>
-    <link rel="stylesheet" href="/css/loginStyle.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>로그인 및 시간표</title>
+	<link rel="stylesheet" href="/css/loginStyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
-    <div th:if="${error}" class="error" th:text="${error}" style="display: none;"></div>
-    <div th:if="${userNull}" data-user-null style="display: none;"></div>
-    <div th:if="${fromIndex}" data-from-index style="display: none;"></div>
+	<div th:if="${error}" class="error" th:text="${error}" style="display: none;"></div>
+	<div th:if="${userNull}" data-user-null style="display: none;"></div>
+	<div th:if="${fromIndex}" data-from-index style="display: none;"></div>
 
-    <header th:replace="~{${session.loggedInUser != null && (userPosition == 'admin' || userPosition == 'professor')} ? '/menu_admin.html' : '/menu.html'}">
-    </header>
+	<header
+		th:replace="~{${session.loggedInUser != null && (userPosition == 'admin' || userPosition == 'professor')} ? '/menu_admin.html' : '/menu.html'}">
+	</header>
 
-    <div class="button-container" th:if="${userPosition == 'admin' or userPosition == 'professor'}">
-        <a href="/timetable">
-            <div class="button-wrapper">
-                <button>
-                    <i class="fas fa-calendar-check"></i>
-                </button>
-                <span class="button-text">시간표관리</span>
-            </div>
-        </a>
-        <a href="/admin">
-            <div class="button-wrapper">
-                <button>
-                    <i class="fas fa-university"></i>
-                </button>
-                <span class="button-text">강의실목록</span>
-            </div>
-        </a>
-        <a href="/classroomSet">
-            <div class="button-wrapper">
-                <button>
-                    <i class="fas fa-chalkboard-teacher"></i>
-                </button>
-                <span class="button-text">강의실생성</span>
-            </div>
-        </a>
-        <a href="/myPage">
-            <div class="button-wrapper">
-                <button>
-                    <i class="fas fa-user-cog"></i>
-                </button>
-                <span class="button-text">마이페이지</span>
-            </div>
-        </a>
-    </div>
+	<!-- 데스크탑 전용 컨텐츠 -->
+	<div class="desktop-only">
+		<div class="button-container" th:if="${userPosition == 'admin' or userPosition == 'professor'}">
+			<!-- 관리자/교수 버튼들 -->
+			<a href="/timetable">
+				<div class="button-wrapper">
+					<button><i class="fas fa-calendar-check"></i></button>
+					<span class="button-text">시간표관리</span>
+				</div>
+			</a>
+			<a href="/admin">
+				<div class="button-wrapper">
+					<button><i class="fas fa-university"></i></button>
+					<span class="button-text">강의실목록</span>
+				</div>
+			</a>
+			<a href="/classroomSet">
+				<div class="button-wrapper">
+					<button><i class="fas fa-chalkboard-teacher"></i></button>
+					<span class="button-text">강의실생성</span>
+				</div>
+			</a>
+			<a href="/myPage">
+				<div class="button-wrapper">
+					<button><i class="fas fa-user-cog"></i></button>
+					<span class="button-text">마이페이지</span>
+				</div>
+			</a>
+		</div>
 
-    <div class="button-container" th:unless="${userPosition == 'admin' or userPosition == 'professor'}">
-        <a href="/timetable">
-            <div class="button-wrapper">
-                <button>
-                    <i class="fas fa-calendar-check"></i>
-                </button>
-                <span class="button-text">시간표관리</span>
-            </div>
-        </a>
-        <a href="/classroomLike">
-            <div class="button-wrapper">
-                <button>
-                    <i class="fas fa-chalkboard-teacher"></i>
-                </button>
-                <span class="button-text">강의실현황</span>
-            </div>
-        </a>
-        <a href="/reserveList">
-            <div class="button-wrapper">
-                <button>
-                    <i class="fas fa-bell"></i>
-                </button>
-                <span class="button-text">예약확인</span>
-            </div>
-        </a>
-        <a href="/myPage">
-            <div class="button-wrapper">
-                <button>
-                    <i class="fas fa-user-cog"></i>
-                </button>
-                <span class="button-text">마이페이지</span>
-            </div>
-        </a>
-    </div>
+		<div class="button-container" th:unless="${userPosition == 'admin' or userPosition == 'professor'}">
+			<!-- 학생 버튼들 -->
+			<a href="/timetable">
+				<div class="button-wrapper">
+					<button><i class="fas fa-calendar-check"></i></button>
+					<span class="button-text">시간표관리</span>
+				</div>
+			</a>
+			<a href="/classroomLike">
+				<div class="button-wrapper">
+					<button><i class="fas fa-chalkboard-teacher"></i></button>
+					<span class="button-text">강의실현황</span>
+				</div>
+			</a>
+			<a href="/reserveList">
+				<div class="button-wrapper">
+					<button><i class="fas fa-bell"></i></button>
+					<span class="button-text">예약확인</span>
+				</div>
+			</a>
+			<a href="/myPage">
+				<div class="button-wrapper">
+					<button><i class="fas fa-user-cog"></i></button>
+					<span class="button-text">마이페이지</span>
+				</div>
+			</a>
+		</div>
 
-    <div th:if="${session.isStudent}">
-        <div id="myModal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <h2>오늘의 시간표</h2>
-                <div id="scheduleContent">
-                </div>
-            </div>
-        </div>
-    </div>
+		<div class="main-container">
+			<div class="timetable-section">
+				<!-- 시간표 -->
+				<div class="container">
+					<table>
+						<thead>
+							<tr>
+								<th></th>
+								<th th:each="day : ${days}" th:text="${day}"></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="hour : ${hours}">
+								<td th:text="${hour}"></td>
+								<td th:each="day : ${days}">
+									<span th:each="timeTable : ${userTimeTable}"
+										th:if="${timeTable.day == day and timeTable.startHour le hour and timeTable.endHour gt hour}">
+										<span
+											th:text="${timeTable.subject + ' (' + timeTable.classroomName + ')'}"></span><br>
+									</span>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
 
-    <div class="main-container">
-        <div class="timetable-section">
-            <div class="container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th th:each="day : ${days}" th:text="${day}"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="hour : ${hours}">
-                            <td th:text="${hour}"></td>
-                            <td th:each="day : ${days}">
-                                <span th:each="timeTable : ${userTimeTable}" th:if="${timeTable.day == day 
-                                            and timeTable.startHour le hour
-                                            and timeTable.endHour gt hour}">
-                                    <span th:text="${timeTable.subject + ' (' + timeTable.classroomName + ')'}"></span><br>
-                                </span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+			<div class="login-container">
+				<div class="login-box">
+					<!-- 로그인 폼 -->
+					<form th:if="${session.loggedInUser == null}" action="/login" method="post">
+						<h2>로그인</h2>
+						<div class="input-group">
+							<input type="text" id="id" name="id" placeholder="ID" required>
+						</div>
+						<div class="input-group">
+							<input type="password" id="password" name="password" placeholder="Password" required>
+						</div>
+						<div class="button-group">
+							<input type="submit" value="로그인" class="btn">
+						</div>
+						<div class="selectPosition">
+							<a href="selectPosition">회원가입</a>
+						</div>
+					</form>
 
-        <div class="login-container">
-            <div class="login-box">
-                <h2>로그인</h2>
-                <form th:if="${session.loggedInUser == null}" action="/login" method="post">
-                    <div>
-                        <input type="text" id="id" name="id" placeholder="ID" required>
-                    </div>
-                    <div>
-                        <input type="password" id="password" name="password" placeholder="Password" required>
-                    </div>
-                    <br>
-                    <div>
-                        <input type="submit" value="로그인" class="btn">
-                    </div>
-                    <div class="selectPosition" style="margin-top: 10px;">
-                        <a href="selectPosition">회원가입</a>
-                    </div>
-                </form>
+					<!-- 로그인 후 프로필 -->
+					<div th:if="${session.loggedInUser != null}" class="profile-content">
+						<div class="profile-avatar">
+							<span th:text="${#strings.substring(session.loggedInUser.name, 0, 1)}">K</span>
+						</div>
+						<div class="profile-info">
+						    <h3 class="user-name">
+						        <span th:text="${session.loggedInUser.name}">김준형</span>
+						        <!-- 학생인 경우에만 학번 표시 -->
+						        <span class="user-number" 
+						            th:if="${userPosition == 'student'}"
+						            th:text="'(' + ${session.loggedInUser.studentId} + ')'">
+						        </span>
+						    </h3>
+						    <p class="user-id" th:text="${session.loggedInUser.id}">kjunh972</p>
+						</div>
+						<div class="profile-divider"></div>
+						<div class="logout-container">
+							<form action="/logout" method="get">
+								<button type="submit" class="logout-btn">로그아웃</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
 
-                <div th:if="${session.loggedInUser != null}">
-                    <p>ID: <span th:text="${session.loggedInUser.id}"></span></p>
-                    <p>이름: <span th:text="${session.loggedInUser.name}"></span></p>
-                    <form action="/logout" method="get">
-                        <div>
-                            <input type="submit" value="로그아웃" class="btn">
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+	<!-- 모바일 전용 컨텐츠 -->
+	<div class="mobile-only">
+		<div class="app-introduction">
+			<h2>강의실 좌석 예약 시스템</h2>
+			<div class="feature-list">
+				<div class="feature-item">
+					<i class="fas fa-calendar-check"></i>
+					<h3>실시간 좌석 예약</h3>
+					<p>원하는 시간에 원하는 좌석을 실시간으로 예약하세요.</p>
+				</div>
+				<div class="feature-item">
+					<i class="fas fa-clock"></i>
+					<h3>시간표 연동</h3>
+					<p>수업 시간표와 연동되어 더욱 편리한 예약이 가능합니다.</p>
+				</div>
+				<div class="feature-item">
+					<i class="fas fa-mobile-alt"></i>
+					<h3>모바일 최적화</h3>
+					<p>언제 어디서나 모바일로 간편하게 이용하세요.</p>
+				</div>
+			</div>
+		</div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const errorMessage = document.querySelector('.error');
-            const modal = document.getElementById("myModal");
-            const modalContainer = modal ? modal.parentElement : null;
+		<script>
+			document.addEventListener('DOMContentLoaded', function () {
+				const errorMessage = document.querySelector('.error');
+				const modal = document.getElementById("myModal");
+				const modalContainer = modal ? modal.parentElement : null;
 
-            if (errorMessage && errorMessage.textContent.trim()) {
-                localStorage.setItem('sessionExpired', 'true');
+				if (errorMessage && errorMessage.textContent.trim()) {
+					localStorage.setItem('sessionExpired', 'true');
 
-                if (modalContainer) {
-                    modalContainer.remove();
-                }
-                if (modal) {
-                    modal.remove();
-                }
+					if (modalContainer) {
+						modalContainer.remove();
+					}
+					if (modal) {
+						modal.remove();
+					}
 
-                window.sessionExpired = true;
-                window.stopAjax = true;
+					window.sessionExpired = true;
+					window.stopAjax = true;
 
-                Swal.fire({
-                    icon: 'error',
-                    title: '알림',
-                    text: errorMessage.textContent,
-                    confirmButtonText: '확인',
-                    allowOutsideClick: false,
-                    focusConfirm: true,
-                    customClass: {
-                        popup: 'session-error-popup',
-                        confirmButton: 'session-error-confirm'
-                    },
-                    didOpen: () => {
-                        const confirmButton = Swal.getConfirmButton();
-                        if (confirmButton) {
-                            confirmButton.focus();
-                        }
-                    }
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.replace('/login');
-                    }
-                });
+					Swal.fire({
+						icon: 'error',
+						title: '알림',
+						text: errorMessage.textContent,
+						confirmButtonText: '확인',
+						allowOutsideClick: false,
+						focusConfirm: true,
+						customClass: {
+							popup: 'timetable-popup',
+							confirmButton: 'timetable-confirm'
+						},
+						didOpen: () => {
+							const confirmButton = Swal.getConfirmButton();
+							if (confirmButton) {
+								confirmButton.focus();
+							}
+						}
+					}).then((result) => {
+						if (result.isConfirmed) {
+							// localStorage에 사이드바 열기 플래그 설정
+							localStorage.setItem('openSidebar', 'true');
+							window.location.replace('/login');
+						}
+					});
 
-                return false;
-            }
+					return false;
+				}
 
-            const isSessionExpired = localStorage.getItem('sessionExpired') === 'true';
+				const isSessionExpired = localStorage.getItem('sessionExpired') === 'true';
 
-            if (isSessionExpired) {
-                if (modalContainer) modalContainer.remove();
-                if (modal) modal.remove();
-                return false;
-            }
+				if (isSessionExpired) {
+					if (modalContainer) modalContainer.remove();
+					if (modal) modal.remove();
+					return false;
+				}
 
-            if (modal && !errorMessage && !window.sessionExpired && !window.stopAjax) {
-                const closeBtn = document.getElementsByClassName("close")[0];
+				if (modal && !errorMessage && !window.sessionExpired && !window.stopAjax) {
+					const closeBtn = document.getElementsByClassName("close")[0];
 
-                if (closeBtn) {
-                    closeBtn.onclick = function () {
-                        modal.style.display = "none";
-                    }
-                }
+					if (closeBtn) {
+						closeBtn.onclick = function () {
+							modal.style.display = "none";
+						}
+					}
 
-                window.onclick = function (event) {
-                    if (event.target == modal) {
-                        modal.style.display = "none";
-                    }
-                }
+					window.onclick = function (event) {
+						if (event.target == modal) {
+							modal.style.display = "none";
+						}
+					}
 
-                document.addEventListener('keydown', function (event) {
-                    if (event.key === 'Escape' && modal.style.display !== "none") {
-                        modal.style.display = "none";
-                    }
-                });
+					document.addEventListener('keydown', function (event) {
+						if (event.key === 'Escape' && modal.style.display !== "none") {
+							modal.style.display = "none";
+						}
+					});
 
-                loadTodaySchedule();
-            }
-        });
+					loadTodaySchedule();
+				}
+			});
 
-        function loadTodaySchedule() {
-            if (window.sessionExpired || window.stopAjax || localStorage.getItem('sessionExpired') === 'true') {
-                return;
-            }
+			function loadTodaySchedule() {
+				if (window.sessionExpired || window.stopAjax || localStorage.getItem('sessionExpired') === 'true') {
+					return;
+				}
 
-            $.ajax({
-                url: '/api/today-schedule',
-                method: 'GET',
-                success: function (data) {
-                    if (window.sessionExpired || window.stopAjax || localStorage.getItem('sessionExpired') === 'true') {
-                        return;
-                    }
+				$.ajax({
+					url: '/api/today-schedule',
+					method: 'GET',
+					success: function (data) {
+						if (window.sessionExpired || window.stopAjax || localStorage.getItem('sessionExpired') === 'true') {
+							return;
+						}
 
-                    var scheduleContent = $('#scheduleContent');
-                    if (!scheduleContent.length) return;
+						var scheduleContent = $('#scheduleContent');
+						if (!scheduleContent.length) return;
 
-                    scheduleContent.empty();
+						scheduleContent.empty();
 
-                    if (data.length === 0) {
-                        if (!document.querySelector('.error')) {
-                            const modal = document.getElementById("myModal");
-                            if (modal) {
-                                modal.style.display = "none";
-                            }
+						if (data.length === 0) {
+							if (!document.querySelector('.error')) {
+								const modal = document.getElementById("myModal");
+								if (modal) {
+									modal.style.display = "none";
+								}
 
-                            Swal.fire({
-                                icon: 'info',
-                                title: '알림',
-                                text: '오늘의 시간표가 없습니다.',
-                                confirmButtonText: '확인',
-                                confirmButtonColor: '#778da9',
-                                showCancelButton: false,
-                                focusConfirm: true,
-                                allowOutsideClick: true,
-                                customClass: {
-                                    popup: 'timetable-popup',
-                                    confirmButton: 'timetable-confirm'
-                                },
-                                didOpen: () => {
-                                    const confirmButton = Swal.getConfirmButton();
-                                    if (confirmButton) {
-                                        confirmButton.focus();
-                                    }
-                                }
-                            });
-                        }
-                    } else {
-                        var table = '<table><thead><tr><th>과목</th><th>강의실</th><th>시작 시간</th><th>종료 시간</th><th>예약 상태</th><th>예약</th></tr></thead><tbody>';
-                        $.each(data, function (index, item) {
-                            table += '<tr><td>' + item.subject + '</td><td>' + item.classroomName + '</td><td>' + item.startHour + "시" + '</td><td>' + item.endHour + "시" + '</td>';
-                            table += '<td>' + item.reservationStatus + '</td>';
+								Swal.fire({
+									icon: 'info',
+									title: '알림',
+									text: '오늘의 시간표가 없습니다.',
+									confirmButtonText: '확인',
+									confirmButtonColor: '#778da9',
+									showCancelButton: false,
+									focusConfirm: true,
+									allowOutsideClick: true,
+									customClass: {
+										popup: 'timetable-popup',
+										confirmButton: 'timetable-confirm'
+									},
+									didOpen: () => {
+										const confirmButton = Swal.getConfirmButton();
+										if (confirmButton) {
+											confirmButton.focus();
+										}
+									}
+								});
+							}
+						} else {
+							var table = '<table><thead><tr><th>과목</th><th>강의실</th><th>시작 시간</th><th>종료 시간</th><th>예약 상태</th><th>예약</th></tr></thead><tbody>';
+							$.each(data, function (index, item) {
+								table += '<tr><td>' + item.subject + '</td><td>' + item.classroomName + '</td><td>' + item.startHour + "시" + '</td><td>' + item.endHour + "시" + '</td>';
+								table += '<td>' + item.reservationStatus + '</td>';
 
-                            if (item.reservationStatus === '예약완료' && item.reservationInfo) {
-                                table += '<td>예약번호: ' + item.reservationInfo.reservNum + '</td>';
-                            } else {
-                                table += '<td><button style="font-size: 0.8rem; margin-left: 1.2rem;" onclick="reserveSeat(\'' + item.subject + '\', \'' + item.classroomName + '\', ' + item.startHour + ', ' + item.endHour + ')">좌석 예약</button></td>';
-                            }
+								if (item.reservationStatus === '예약완료' && item.reservationInfo) {
+									table += '<td>예약번호: ' + item.reservationInfo.reservNum + '</td>';
+								} else {
+									table += '<td><button style="font-size: 0.8rem; margin-left: 1.2rem;" onclick="reserveSeat(\'' + item.subject + '\', \'' + item.classroomName + '\', ' + item.startHour + ', ' + item.endHour + ')">좌석 예약</button></td>';
+								}
 
-                            table += '</tr>';
-                        });
-                        table += '</tbody></table>';
-                        scheduleContent.append(table);
-                    }
-                },
-                error: function () {
-                    if (!window.sessionExpired && !window.stopAjax && localStorage.getItem('sessionExpired') !== 'true') {
-                        Swal.fire({
-                            icon: 'error',
-                            title: '오류',
-                            text: '시간표를 불러오는 중 오류가 발생했습니다.',
-                            confirmButtonText: '확인',
-                            focusConfirm: true,
-                            allowOutsideClick: true,
-                            customClass: {
-                                popup: 'schedule-error-popup',
-                                confirmButton: 'schedule-error-confirm'
-                            },
-                            didOpen: () => {
-                                const confirmButton = Swal.getConfirmButton();
-                                if (confirmButton) {
-                                    confirmButton.focus();
-                                }
-                            }
-                        });
-                    }
-                }
-            });
-        }
+								table += '</tr>';
+							});
+							table += '</tbody></table>';
+							scheduleContent.append(table);
+						}
+					},
+					error: function () {
+						if (!window.sessionExpired && !window.stopAjax && localStorage.getItem('sessionExpired') !== 'true') {
+							Swal.fire({
+								icon: 'error',
+								title: '오류',
+								text: '시간표를 불러오는 중 오류가 발생했습니다.',
+								confirmButtonText: '확인',
+								focusConfirm: true,
+								allowOutsideClick: true,
+								customClass: {
+									popup: 'schedule-error-popup',
+									confirmButton: 'schedule-error-confirm'
+								},
+								didOpen: () => {
+									const confirmButton = Swal.getConfirmButton();
+									if (confirmButton) {
+										confirmButton.focus();
+									}
+								}
+							});
+						}
+					}
+				});
+			}
 
-        function reserveSeat(subject, classroomName, startHour, endHour) {
-            if (window.sessionExpired || window.stopAjax || localStorage.getItem('sessionExpired') === 'true') return;
+			function reserveSeat(subject, classroomName, startHour, endHour) {
+				if (window.sessionExpired || window.stopAjax || localStorage.getItem('sessionExpired') === 'true') return;
 
-            Swal.fire({
-                title: '시간표로 이동',
-                html: `시간표로 이동하겠습니다.<br>해당 과목을 예약해주세요.<br><br>${subject} (${classroomName}) ${startHour}시 ~ ${endHour}시`,
-                icon: 'info',
-                showCancelButton: true,
-                confirmButtonText: '이동하기',
-                cancelButtonText: '취소',
-                focusConfirm: true,
-                allowOutsideClick: true,
-                customClass: {
-                    popup: 'reserve-popup',
-                    confirmButton: 'reserve-confirm',
-                    cancelButton: 'reserve-cancel'
-                },
-                didOpen: () => {
-                    const confirmButton = Swal.getConfirmButton();
-                    if (confirmButton) {
-                        confirmButton.focus();
-                    }
-                }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href = '/timetable';
-                }
-            });
-        }
+				Swal.fire({
+					title: '시간표로 이동',
+					html: `시간표로 이동하겠습니다.<br>해당 과목을 예약해주세요.<br><br>${subject} (${classroomName}) ${startHour}시 ~ ${endHour}시`,
+					icon: 'info',
+					showCancelButton: true,
+					confirmButtonText: '이동하기',
+					cancelButtonText: '취소',
+					focusConfirm: true,
+					allowOutsideClick: true,
+					customClass: {
+						popup: 'reserve-popup',
+						confirmButton: 'reserve-confirm',
+						cancelButton: 'reserve-cancel'
+					},
+					didOpen: () => {
+						const confirmButton = Swal.getConfirmButton();
+						if (confirmButton) {
+							confirmButton.focus();
+						}
+					}
+				}).then((result) => {
+					if (result.isConfirmed) {
+						window.location.href = '/timetable';
+					}
+				});
+			}
 
-        $(document).ready(function () {
-            $('form[action="/login"]').on('submit', function (e) {
-                e.preventDefault();
+			$(document).ready(function () {
+				$('form[action="/login"]').on('submit', function (e) {
+					e.preventDefault();
 
-                $.ajax({
-                    url: '/login',
-                    method: 'POST',
-                    data: $(this).serialize(),
-                    success: function (response) {
-                        if (response.error) {
-                            Swal.fire({
-                                icon: 'error',
-                                title: '로그인 실패',
-                                text: response.error,
-                                confirmButtonText: '확인',
-                                focusConfirm: true,
-                                allowOutsideClick: true,
-                                customClass: {
-                                    popup: 'login-error-popup',
-                                    confirmButton: 'login-error-confirm'
-                                },
-                                didOpen: () => {
-                                    const confirmButton = Swal.getConfirmButton();
-                                    if (confirmButton) {
-                                        confirmButton.focus();
-                                    }
-                                }
-                            });
-                        } else {
-                            localStorage.removeItem('sessionExpired');
-                            window.location.reload();
-                        }
-                    },
-                    error: function () {
-                        Swal.fire({
-                            icon: 'error',
-                            title: '오류',
-                            text: '로그인 처리 중 오류가 발생했습니다.',
-                            confirmButtonText: '확인',
-                            focusConfirm: true,
-                            allowOutsideClick: true,
-                            customClass: {
-                                popup: 'login-error-popup',
-                                confirmButton: 'login-error-confirm'
-                            },
-                            didOpen: () => {
-                                const confirmButton = Swal.getConfirmButton();
-                                if (confirmButton) {
-                                    confirmButton.focus();
-                                }
-                            }
-                        });
-                    }
-                });
-            });
-        });
-    </script>
+					$.ajax({
+						url: '/login',
+						method: 'POST',
+						data: $(this).serialize(),
+						success: function (response) {
+							if (response.error) {
+								Swal.fire({
+									icon: 'error',
+									title: '로그인 실패',
+									text: response.error,
+									confirmButtonText: '확인',
+									focusConfirm: true,
+									allowOutsideClick: true,
+									customClass: {
+										popup: 'login-error-popup',
+										confirmButton: 'login-error-confirm'
+									},
+									didOpen: () => {
+										const confirmButton = Swal.getConfirmButton();
+										if (confirmButton) {
+											confirmButton.focus();
+										}
+									}
+								});
+							} else {
+								localStorage.removeItem('sessionExpired');
+								window.location.reload();
+							}
+						},
+						error: function () {
+							Swal.fire({
+								icon: 'error',
+								title: '오류',
+								text: '로그인 처리 중 오류가 발생했습니다.',
+								confirmButtonText: '확인',
+								focusConfirm: true,
+								allowOutsideClick: true,
+								customClass: {
+									popup: 'login-error-popup',
+									confirmButton: 'login-error-confirm'
+								},
+								didOpen: () => {
+									const confirmButton = Swal.getConfirmButton();
+									if (confirmButton) {
+										confirmButton.focus();
+									}
+								}
+							});
+						}
+					});
+				});
+			});
+		</script>
 </body>
 
 </html>
