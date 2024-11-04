@@ -2,6 +2,7 @@
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
@@ -70,7 +71,7 @@ namespace lockScreen
         private Button submitButton; // 확인 버튼
 
         // 데이터베이스 연결 설정
-        string connectionString = "server=yuhandb.clu0u0yy2ir8.ap-northeast-2.rds.amazonaws.com;database=YuhanDB;uid=root;pwd=rootroot;";
+        string connectionString = "server=localhost;database=YuhanDB;uid=root;pwd=root;";
 
         // 컴퓨터 이름 및 좌석 번호를 추출합니다.
         private static string computerName = SystemInformation.ComputerName;
@@ -88,25 +89,70 @@ namespace lockScreen
             this.TopMost = true; // 폼을 항상 최상위로 설정
 
             // 배경 이미지 설정
-            string imagePath = @"..\..\..\Images\yuhan.png"; // 이미지 파일 경로 설정
-            this.BackgroundImage = Image.FromFile(imagePath); // 배경 이미지 로드
-            this.BackgroundImageLayout = ImageLayout.Stretch; // 배경 이미지가 폼 전체에 맞도록 조정
+            try
+            {
+                // 현재 실행 파일의 디렉토리를 기준으로 이미지 경로 설정
+                string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+                string imagePath = Path.Combine(baseDirectory, $@"..\..\..\Images\yuhan{seat}.png");
 
-            // 좌석 예약 번호 입력 상자 생성 및 설정
-            this.numTextBox = CreatePlaceholderTextBox("좌석 예약 번호", new Point((this.ClientSize.Width - 200) * 10, (this.ClientSize.Height - 110) * 3));
+                // 디버그용 메시지
+                Console.WriteLine($"이미지 경로: {imagePath}");
+
+                if (File.Exists(imagePath))
+                {
+                    using (var stream = new FileStream(imagePath, FileMode.Open, FileAccess.Read))
+                    {
+                        this.BackgroundImage = Image.FromStream(stream);
+                    }
+                    this.BackgroundImageLayout = ImageLayout.Stretch;
+                }
+                else
+                {
+                    MessageBox.Show($"좌석 {seat}에 해당하는 이미지를 찾을 수 없습니다.\n경로: {imagePath}");
+                    // 기본 이미지 설정이 필요한 경우 여기에 추가
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"이미지 로드 중 오류 발생: {ex.Message}");
+            }
+
             // 학생 이름 입력 상자 생성 및 설정
             this.nameTextBox = CreatePlaceholderTextBox("학생 이름", new Point((this.ClientSize.Width - 200) * 10, (this.ClientSize.Height - 150) * 3));
 
             // 학번 입력 상자 생성 및 설정
             this.studentIdTextBox = CreatePlaceholderTextBox("학번", new Point((this.ClientSize.Width - 200) * 10, (this.ClientSize.Height - 70) * 3));
 
+            // 좌석 예약 번호 입력 상자 생성 및 설정
+            this.numTextBox = CreatePlaceholderTextBox("좌석 예약 번호", new Point((this.ClientSize.Width - 200) * 10, (this.ClientSize.Height - 110) * 3));
+
+            //학생 이름 입력 상자 위치 조정
+            this.nameTextBox.Location = new Point((this.ClientSize.Width - 193) * 10, (this.ClientSize.Height - 3) * 3);
+
+            //학번 입력 상자 위치 조정
+            this.studentIdTextBox.Location = new Point((this.ClientSize.Width - 193) * 10, (this.ClientSize.Height + 20) * 3);
+
             // 좌석 예약 번호 입력 상자 위치 조정
-            this.numTextBox.Location = new Point((this.ClientSize.Width - 200) * 10, (this.ClientSize.Height + 10) * 3);
+            this.numTextBox.Location = new Point((this.ClientSize.Width - 193) * 10, (this.ClientSize.Height + 43) * 3);
+
 
             // 레이블 생성 및 추가
-            this.Controls.Add(CreateLabel("학생 이름", new Point((this.ClientSize.Width - 195) * 8, (this.ClientSize.Height - 150) * 3)));
-            this.Controls.Add(CreateLabel("학번", new Point((this.ClientSize.Width - 195) * 8, (this.ClientSize.Height - 70) * 3)));
-            this.Controls.Add(CreateLabel("좌석 예약 번호", new Point((this.ClientSize.Width - 195) * 8, (this.ClientSize.Height + 10) * 3)));
+            Label nameLabel = CreateLabel("학생 이름", new Point((this.ClientSize.Width + 1315) / 2, (this.ClientSize.Height - 3) * 3));
+            nameLabel.TextAlign = ContentAlignment.MiddleRight; // 텍스트 오른쪽 정렬
+            nameLabel.BackColor = Color.White; // 배경색 설정
+            this.Controls.Add(nameLabel);
+
+            Label studentIdLabel = CreateLabel("학번", new Point((this.ClientSize.Width + 1315) / 2, (this.ClientSize.Height + 20) * 3));
+            studentIdLabel.TextAlign = ContentAlignment.MiddleRight; // 텍스트 오른쪽 정렬
+            studentIdLabel.BackColor = Color.White; // 배경색 설정
+            this.Controls.Add(studentIdLabel);
+
+            Label reservationNumberLabel = CreateLabel("좌석 예약 번호", new Point((this.ClientSize.Width + 1315) / 2, (this.ClientSize.Height + 43) * 3));
+            reservationNumberLabel.TextAlign = ContentAlignment.MiddleRight; // 텍스트 오른쪽 정렬
+            reservationNumberLabel.BackColor = Color.White; // 배경색 설정
+            this.Controls.Add(reservationNumberLabel);
+
+
 
             // 폼에 새로운 입력 상자 추가
             this.Controls.Add(this.nameTextBox);
@@ -117,8 +163,8 @@ namespace lockScreen
             submitButton = new Button
             {
                 Text = "확인", // 버튼 텍스트
-                Size = new Size(100, 40), // 버튼 크기
-                Location = new Point((this.ClientSize.Width * 3), (this.ClientSize.Height * 2)) // 버튼 위치
+                Size = new Size(90, 90), // 버튼 크기
+                Location = new Point((int)(this.ClientSize.Width * 4.25), (int)(this.ClientSize.Height * 3.1)) // 버튼 위치
             };
             submitButton.Click += SubmitButton_Click; // 버튼 클릭 시 이벤트 핸들러 추가
 
@@ -371,17 +417,6 @@ namespace lockScreen
                 {
                     localConnection.Close();
                 }
-            }
-        }
-
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            base.OnPaint(e);
-            using (SolidBrush brush = new SolidBrush(Color.FromArgb(170, Color.White)))
-            {
-                // 폼의 중앙에 반투명 흰색 사각형 그리기
-                Rectangle squareOp = new Rectangle(645, 400, this.ClientSize.Width / 4, 200);
-                e.Graphics.FillRectangle(brush, squareOp);
             }
         }
 
