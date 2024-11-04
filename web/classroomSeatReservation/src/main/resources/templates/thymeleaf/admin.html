@@ -21,7 +21,7 @@
             <h2>5호관</h2>
             <ul>
                 <li th:each="classroom : ${group5}">
-                    <form action="/timeSelect" method="post">
+                    <form action="/classroomInfo" method="post">
                         <input type="hidden" name="classroomName" th:value="${classroom}" />
                         <button class="button" type="submit" th:text="${classroom}"></button>
                     </form>
@@ -34,7 +34,7 @@
             <h2>7호관</h2>
             <ul>
                 <li th:each="classroom : ${group7}">
-                    <form action="/timeSelect" method="post">
+                    <form action="/classroomInfo" method="post">
                         <input type="hidden" name="classroomName" th:value="${classroom}" />
                         <button class="button" type="submit" th:text="${classroom}"></button>
                     </form>
