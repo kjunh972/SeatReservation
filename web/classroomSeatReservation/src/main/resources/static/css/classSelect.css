@@ -9,6 +9,7 @@ form {
     display: flex; /* 가로로 나열 */
     justify-content: center; /* 중앙 정렬 */
     gap: 1rem; /* 버튼 사이 간격 설정 */
+    flex-wrap: wrap; /* 버튼이 화면 너비에 맞춰 자동 줄바꿈 */
 }
 
 h1 {
@@ -16,7 +17,7 @@ h1 {
     color: #6c757d; /* 원하는 색상 코드로 변경 */
 }
 
-button {
+form button {
     display: flex; /* 아이콘과 텍스트를 세로로 배치 */
     flex-direction: column;
     align-items: center; /* 아이콘과 텍스트 중앙 정렬 */
@@ -32,11 +33,11 @@ button {
     background-color: #778da9; /* 배경색 설정 */
 }
 
-button:hover {
+form button:hover {
     background-color: #415a77; /* 마우스 버튼 위에 올라갔을 때 배경색 변경 */
 }
 
-button i {
+form button i {
     font-size: 3rem; /* 아이콘 크기 설정 */
     margin-bottom: 0.5rem; /* 아이콘과 텍스트 사이 여백 추가 */
 }
@@ -44,28 +45,25 @@ button i {
 
 
 
-
-
-
 /* 미디어 쿼리 추가: 모바일 화면에서 버튼 크기 조정 */
 @media (max-width: 48rem) {
-    h2 {
+    h1 {
         font-size: 1.5rem; /* 모바일에서 제목 폰트 크기 조정 */
     }
 
-    button {
-        width: 80%;
-        height: 80%;
-        font-size: 1rem;
-        margin-right: 0;
+    form button {
+        width: 6rem; /* 모바일에서 버튼 너비 조정 */
+        height: 6rem; /* 모바일에서 버튼 높이 조정 */
+        font-size: 0.9rem;
     }
-     /* 헤더에서 모바일 버전에서 메뉴 바와 앱 이름 중앙 정렬 */
-    header, nav, .app-name {
-        text-align: center;
-        line-height: 5rem; /* 헤더 텍스트 세로 가운데 정렬 */
+     
+
+form {
+        gap: 0.5rem; /* 버튼 간격 축소 */
+        padding: 0.5rem; /* 폼 내부 여백 */
     }
-
-
-
- 
+    form button i {
+        font-size: 1.2rem; /* 아이콘 크기 조정 */
+        margin-bottom: 0.3rem; /* 아이콘과 텍스트 사이 여백 조정 */
+    }
 }
