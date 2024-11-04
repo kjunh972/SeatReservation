@@ -3,14 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>관리자 페이지</title>
+    <!-- 반응형 웹 디자인을 위한 뷰포트 설정 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="/css/classroomStyle.css" />
 	<link rel="stylesheet" href="/css/adminStyle.css" />
+	<!-- Font Awesome 아이콘 라이브러리 연결 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 </head>
 <body>
     <!-- 공통 메뉴를 포함 -->
     <header th:replace="~{/menu_admin.html}"></header> 
     
-    <h1>전체 강의실</h1>
+    <h2>전체 강의실</h2>
     <br><h4>관리중인 강의실 목록입니다</h4>
     
     <!-- Grid 컨테이너 시작 -->
@@ -23,7 +27,7 @@
                 <li th:each="classroom : ${group5}">
                     <form action="/classroomInfo" method="post">
                         <input type="hidden" name="classroomName" th:value="${classroom}" />
-                        <button class="button" type="submit" th:text="${classroom}"></button>
+                        <button type="submit" th:text="${classroom} + '호'" class="classroom-button"></button>
                     </form>
                 </li>
             </ul>
@@ -36,7 +40,7 @@
                 <li th:each="classroom : ${group7}">
                     <form action="/classroomInfo" method="post">
                         <input type="hidden" name="classroomName" th:value="${classroom}" />
-                        <button class="button" type="submit" th:text="${classroom}"></button>
+                        <button type="submit" th:text="${classroom} + '호'" class="classroom-button"></button>
                     </form>
                 </li>
             </ul>
