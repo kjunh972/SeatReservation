@@ -579,7 +579,7 @@ public class ClassroomDAO {
 	
 	
 	// 오늘의 시간표 메서드
-		public List<Integer> getReservedSeats(String classroomName, List<Integer> hours, String day, String subject) {
+		public List<Integer> getReservedSeats2(String classroomName, List<Integer> hours, String day, String subject) {
 		    if (hours == null || hours.isEmpty()) {
 		        return List.of(); // 빈 리스트 반환
 		    }
