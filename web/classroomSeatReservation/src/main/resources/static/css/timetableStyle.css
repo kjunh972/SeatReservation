@@ -3,6 +3,7 @@ body, ul, li {
     margin: 0;
     padding: 0;
     list-style: none;
+    overflow: auto; /* 기본적으로 스크롤 가능하게 설정 */
 }
 
 /* 타이포그래피 설정 */
@@ -249,115 +250,142 @@ tr:last-child td { /* 마지막 행 셀 스타일 */
   color: #f44336; /* 글자색 빨간색 */
 }
 
-/* 반응형 스타일 */
-@media (max-width: 48rem) { /* 최대 화면 너비가 48rem일 때 적용 */
-  .button-container {
-    display: none; /* 버튼 컨테이너 숨김 */
-  }
 
-  .login-container {
-    position: fixed; /* 고정 위치 */
-    top: 4.5rem; /* 상단 위치 */
-    right: 1rem; /* 오른쪽 위치 */
-    width: 90%; /* 너비 90% */
-    padding: 0; /* 패딩 없음 */
-    background-color: transparent; /* 배경 투명 */
-    z-index: 100; /* 우선순위 100 */
-    display: flex; /* 플렉스 박스 사용 */
-    justify-content: center; /* 중앙 정렬 */
-    align-items: flex-start; /* 위쪽 정렬 */
-  }
+/* 모바일 환경에서의 버튼 스타일 */
+@media (max-width: 768px) {
+	body {
+        margin-top: 0; /* 전체 페이지 상단 여백 제거 */
+        padding-top: 0; /* 패딩 제거 */
+        
+    }
+	/* 테이블 폰트 크기 조절 */
+    table {
+        font-size: 0.6rem; /* 폰트 크기 축소 */
+        width: 100%; /* 테이블 너비를 화면 너비에 맞추기 */
+    }
 
-  .login-box {
-    width: 75%; /* 너비 75% */
-    height: 50%; /* 높이 50% */
-    padding: 0.2rem; /* 안쪽 여백 */
-    margin: 0 auto; /* 가운데 정렬 */
-    background-color: #fff; /* 배경 흰색 */
-    border-radius: 0.3rem; /* 모서리 둥글게 */
-    box-shadow: 0 0 0.3rem rgba(0, 0, 0, 0.1); /* 그림자 */
-  }
+    th, td {
+        padding: 0.2rem; /* 셀의 여백 축소 */
+    }
+	
+	.main-container {
+		display: flex; /* 부모 컨테이너를 플렉스로 설정 */
+        flex-direction: column; /* 자식 요소들을 세로로 배치 */
+        position: relative; /* 모바일에서 고정된 위치 해제 */
+        top: 0; /* 상단으로 이동 */
+        left: 0; /* 왼쪽 위치 초기화 */
+        padding: 0; /* 패딩 제거 */
+        margin-top: 0; /* 메인 컨테이너 상단 여백 제거 */
+    }
+    
+         /* 시간표 섹션 */
+    .timetable-section {
+		position: relative; /* 상대 위치를 설정하여 조정 가능 */
+        top: 0; /* 상단으로 이동 */
+        margin-top: 0; /* 여백 제거 */
+        margin-right: 0; /* 버튼과의 간격 제거 */
+        width: 100%; /* 전체 너비 사용 */
+        margin-top: 10px; /* 테이블 위의 여백을 줄이기 위해 설정 */
+        padding-top: 0; /* 테이블 섹션 상단 패딩 제거 */
+        margin-bottom: 20px; /* 테이블 아래에 여백 추가 */
+    }
+    
+    .button-container{
+		display: flex;
+		width: 100%; /* 전체 너비 사용 */
+		margin-bottom: 10px;
+	}
+    
+    
+    .timetable-button-container {
+        display: flex;
+        flex-direction: row; /* 가로 정렬 */
+        justify-content: space-around; /* 버튼들을 균등하게 분배하여 중앙 정렬 */
+        gap: 10px; /* 버튼 간의 간격 */
+        flex-wrap: wrap; /* 필요 시 줄바꿈 */
+        width: 100%; /* 버튼 컨테이너의 너비를 화면에 맞게 설정 */
+    }
 
-  input[type="text"], /* 텍스트 입력 필드 */
-  input[type="password"], /* 비밀번호 입력 필드 */
-  input[type="submit"] { /* 제출 버튼 */
-    padding: 0.5rem; /* 안쪽 여백 */
-    margin: 0.3rem; /* 바깥 여백 */
-    font-size: 0.5rem; /* 글자 크기 */
-  }
+    .timetable-button {
+		font-size: 0.7rem; /* 버튼 폰트 크기 축소 */
+        padding: 8px; /* 버튼 패딩 축소 */
+        flex: 1; /* 각 버튼의 너비를 균등하게 */
+        margin: 5px 0; /* 위아래 여백 */
+        text-align: center; /* 텍스트 가운데 정렬 */
+    }
+    
+ 
+    
 
-  h2 {
-    font-size: 1rem; /* 제목 글자 크기 */
-  }
+    .admin-action-container {
+        display: flex;
+        flex-direction: row; /* 가로 정렬 */
+        justify-content: space-between; /* 공간을 균등하게 분배 */
+        gap: 10px; /* 버튼 간의 간격 */
+        flex-wrap: wrap;
+        width: 100%; /* 버튼 컨테이너의 너비 */
+        margin-top: 10px; /* timetable-button과의 간격 */
+        margin-bottom: 0; /* 필요 시 추가 간격 조정 */
+    }
+    
 
-  input[type="checkbox"] + span { /* 체크박스와 연결된 텍스트 */
-    width: 0.8rem; /* 너비 */
-    height: 0.8rem; /* 높이 */
-    transform: scale(0.8); /* 크기 축소 */
-    margin-right: 0.3rem; /* 오른쪽 여백 */
-    padding: 0.63rem; /* 안쪽 여백 */
-    margin: 0; /* 바깥 여백 */
-    font-size: 0.8rem; /* 글자 크기 */
-  }
 
-  input[type="submit"] {
-    width: 90%; /* 제출 버튼 너비 */
-    margin-top: 0; /* 상단 여백 제거 */
-  }
+    .admin-button {
+        font-size: 0.7rem; /* 버튼 폰트 크기 축소 */
+        padding: 8px; /* 버튼 패딩 축소 */
+        flex: 1; /* 각 버튼의 너비를 균등하게 */
+        margin: 5px 0; /* 위아래 여백 */
+        text-align: center; /* 텍스트 가운데 정렬 */
+    }
+    
+    
+    
+    
+    
+    
+    
+    /* 모달 창 스타일 조정 */
+    .modal-content {
+        width: 90%; /* 모달 창 너비를 화면 너비의 90%로 조정 */
+        max-width: 400px; /* 최대 너비 설정 */
+        padding: 15px; /* 내부 여백 */
+        top: 10%; /* 창의 상단 위치 조정하여 토글 버튼과 겹치지 않게 */
+        margin: auto; /* 가로 중앙 정렬 */
+    }
 
-  a {
-    margin: 0.2rem; /* 링크 바깥 여백 */
-  }
+    /* 제목 폰트 크기 조정 */
+    .modal-content h2 {
+        font-size: 1rem; /* 제목의 폰트 크기 축소 */
+        margin-bottom: 10px; /* 제목 하단 여백 */
+    }
 
-  .timetable-section {
-    margin-top: 12rem; /* 상단 여백 */
-    margin-left: 0; /* 왼쪽 여백 제거 */
-    width: 100%; /* 전체 너비 */
-    display: flex; /* 플렉스 박스 사용 */
-    justify-content: center; /* 중앙 정렬 */
-    align-items: center; /* 세로 중앙 정렬 */
-  }
+    /* 폼 내 요소 폰트 크기 및 패딩 조정 */
+    .modal-content form label {
+        font-size: 0.8rem; /* 라벨 폰트 크기 축소 */
+        margin-bottom: 5px; /* 라벨과 입력 요소 사이 여백 */
+    }
 
-  table {
-    font-size: 0.625rem; /* 테이블 글자 크기 */
-    width: 100%; /* 테이블 전체 너비 */
-  }
+    .modal-content form input[type="text"],
+    .modal-content form select {
+        font-size: 0.8rem; /* 입력 요소의 폰트 크기 축소 */
+        padding: 6px; /* 패딩 조정 */
+    }
 
-  th, td {
-    padding: 0.313rem; /* 셀 안쪽 여백 */
-    width: auto; /* 셀 너비 자동 조정 */
-  }
+    .modal-content form input[type="submit"] {
+        font-size: 0.9rem; /* 제출 버튼의 폰트 크기 조정 */
+        padding: 8px; /* 제출 버튼의 패딩 조정 */
+    }
 
-  .main-container {
-    padding-top: 6rem; /* 상단 패딩 */
-    margin: 5%; /* 바깥 여백 */
-  }
+    /* 버튼 크기 조정 */
+    .timetable-button,
+    .admin-button {
+        font-size: 0.8rem; /* 버튼 폰트 크기 축소 */
+        padding: 8px; /* 버튼 패딩 조정 */
+        margin: 5px 0; /* 버튼 간의 여백 조정 */
+    }
 
-  header, nav, .app-name {
-    text-align: center; /* 텍스트 중앙 정렬 */
-    line-height: 5rem; /* 줄 높이 */
-  }
-
-  .sidebar {
-    position: fixed; /* 고정 위치 */
-    top: 3.5rem; /* 상단 위치 */
-    left: 0; /* 왼쪽 위치 */
-    width: 200px; /* 너비 */
-    background-color: #1b263b; /* 배경색 */
-    height: 100vh; /* 전체 화면 높이 */
-    z-index: 101; /* 우선순위 */
-    transition: transform 0.3s ease; /* 전환 애니메이션 */
-  }
-
-  .toggle-btn {
-    position: fixed; /* 고정 위치 */
-    top: 1rem; /* 상단 위치 */
-    left: 1rem; /* 왼쪽 위치 */
-    font-size: 1.5rem; /* 글자 크기 */
-    background-color: transparent; /* 배경 투명 */
-    border: none; /* 테두리 없음 */
-    color: #000; /* 글자 색상 */
-    cursor: pointer; /* 커서 모양 */
-    z-index: 102; /* 우선순위 */
-  }
+    /* 폼의 버튼 컨테이너 */
+    .modal-content form .input-container:last-child {
+        margin-top: 10px; /* 버튼 상단 여백 조정 */
+    }
 }
