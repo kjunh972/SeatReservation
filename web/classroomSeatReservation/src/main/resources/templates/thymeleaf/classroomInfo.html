@@ -23,6 +23,10 @@
 			const reservationBackButton = document.querySelector('.back-button.reservation-back');
 			const lectureItems = document.querySelectorAll('.section.lectures ul li');
 			let selectedItem = null;
+			// hidden input에서 사용자 권한 정보 가져오기
+			const userPosition = document.getElementById('userPositionInput').value;
+			console.log("userPosition : ", userPosition);
+
 
 			// 모바일 환경 초기 설정
 			if (window.innerWidth <= 768) {
@@ -66,7 +70,13 @@
 
 			// 강의실 목록으로 돌아가는 버튼 이벤트
 			lectureBackButton.addEventListener('click', function () {
-				window.location.href = '/classroomLike';
+				// 사용자 권한에 따라 다른 페이지로 이동
+				if (userPosition === 'student') {
+					window.location.href = '/classroomLike';
+				} else {
+					// professor나 admin인 경우
+					window.location.href = '/admin';
+				}
 			});
 
 			// 강의 목록으로 돌아가는 버튼 이벤트
@@ -174,6 +184,9 @@
 <body>
 	<!-- 헤더 시작 -->
 	<header th:replace="~{${userPosition == 'student'} ? '/menu.html' : '/menu_admin.html'}"></header>
+
+	<!-- 사용자 권한 정보를 hidden input으로 추가 -->
+	<input type="hidden" id="userPositionInput" th:value="${userPosition}">
 
 	<!-- 페이지 제목 -->
 	<h1 th:text="${title}">강의실 정보</h1>

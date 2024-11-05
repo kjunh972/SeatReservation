@@ -151,12 +151,12 @@ public class Contoller {
 		String userId = GetId(session);
 
 		// 로그인 세션이 만료 된 경우
-	    if (userId == null) {
-	    	getTimetablePage(model, session);
-	        model.addAttribute("error", "세션이 만료되었습니다. 다시 로그인 해주세요.");
-	        return "login";
-	    }
-	    
+		if (userId == null) {
+			getTimetablePage(model, session);
+			model.addAttribute("error", "세션이 만료되었습니다. 다시 로그인 해주세요.");
+			return "login";
+		}
+
 		return "redirect:/login";
 	}
 
@@ -741,8 +741,8 @@ public class Contoller {
 
 	// 예약 리스트에서 시간 변경하는 메서드
 	@PostMapping("/updateReservation")
-	public String updateReservation(@RequestParam("reservNum") int reservNum, @RequestParam("newHour") String newHour, Model model,
-			HttpSession session, RedirectAttributes redirectAttributes) {
+	public String updateReservation(@RequestParam("reservNum") int reservNum, @RequestParam("newHour") String newHour,
+			Model model, HttpSession session, RedirectAttributes redirectAttributes) {
 
 		String userId = GetId(session);
 
@@ -771,6 +771,9 @@ public class Contoller {
 			@RequestParam(required = false) String selectedSubject, Model model, HttpSession session) {
 		// 세션 및 사용자 ID 확인
 		String userId = GetId(session);
+		// 사용자 직책을 가져와 모델에 추가
+		String userPosition = GetPosition(session);
+
 		if (userId == null) {
 			getTimetablePage(model, session);
 			model.addAttribute("error", "세션이 만료되었습니다. 다시 로그인 해주세요.");
@@ -791,6 +794,10 @@ public class Contoller {
 			model.addAttribute("subjectReservations", subjectReservations);
 			model.addAttribute("selectedSubject", selectedSubject);
 		}
+		
+		System.out.println("userPosition : "+userPosition);
+
+		model.addAttribute("userPosition", userPosition);
 
 		model.addAttribute("title", classroomName + " 강의실 정보");
 		return "classroomInfo";

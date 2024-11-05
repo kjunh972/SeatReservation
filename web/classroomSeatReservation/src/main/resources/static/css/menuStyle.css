@@ -148,8 +148,26 @@
 
 /* 로그인 섹션 */
 .menu-login-section {
-    padding: 2rem;
+    padding: 2rem 2rem 2rem 1.3rem; /* 오른쪽 패딩 줄임 */
     margin-left: -1.9rem;
+    width: 100%; /* 전체 너비를 95%로 제한 */
+}
+
+/* 입력 필드 그룹 */
+.menu-input-group {
+    position: relative;
+    margin-bottom: 1rem;
+    width: 90%; /* 입력 필드 너비를 95%로 제한 */
+    margin-right: 1rem; /* 오른쪽 여백 추가 */
+}
+
+.menu-input-group input {
+    width: 90%; /* 입력 필드 자체의 너비도 95%로 제한 */
+    padding: 1rem 1rem 1rem 3rem;
+    border: 1px solid var(--menu-primary-light);
+    border-radius: 0.8rem;
+    font-size: 1rem;
+    transition: all 0.2s ease;
 }
 
 .menu-login-section h2 {
@@ -157,12 +175,7 @@
     margin-bottom: 1.5rem;
     font-size: 1.5rem;
     margin-left: 0.5rem;
-}
-
-/* 입력 필드 그룹 */
-.menu-input-group {
-    position: relative;
-    margin-bottom: 1rem;
+	text-align: center; /* 제목 중앙 정렬 */
 }
 
 .menu-input-group i {
@@ -171,15 +184,6 @@
     top: 50%;
     transform: translateY(-50%);
     color: var(--menu-primary);
-}
-
-.menu-input-group input {
-    width: 100%;
-    padding: 1rem 1rem 1rem 3rem;
-    border: 1px solid var(--menu-primary-light);
-    border-radius: 0.8rem;
-    font-size: 1rem;
-    transition: all 0.2s ease;
 }
 
 .menu-input-group input:focus {
