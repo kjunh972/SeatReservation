@@ -157,46 +157,6 @@
     transition: background-color 0.3s ease; /* 배경색 전환 효과 */
 }
 
-/* 커스텀 셀렉트 박스 컨테이너 스타일 */
-#attModal .att-custom-select {
-    position: relative; /* 상대 위치 지정 */
-    display: inline-block; /* 인라인 블록 표시 */
-    width: 120px; /* 너비 */
-}
-
-/* 커스텀 셀렉트 박스 스타일 */
-#attModal .att-custom-select select {
-    appearance: none; /* 기본 스타일 제거 */
-    -webkit-appearance: none; /* 웹킷 브라우저용 */
-    -moz-appearance: none; /* 파이어폭스용 */
-    width: 100%; /* 전체 너비 */
-    padding: 8px 12px; /* 내부 여백 */
-    border: 1px solid #ced4da; /* 테두리 */
-    border-radius: 4px; /* 모서리 둥글게 */
-    background-color: #fff; /* 배경색 흰색 */
-    color: #495057; /* 글자색 */
-    cursor: pointer; /* 커서 모양 변경 */
-    transition: all 0.3s ease; /* 전환 효과 */
-}
-
-/* 커스텀 셀렉트 박스 포커스 스타일 */
-#attModal .att-custom-select select:focus {
-    outline: none; /* 기본 아웃라인 제거 */
-    box-shadow: 0 0 0 2px rgba(119, 141, 169, 0.3); /* 포커스 시 그림자 효과 */
-    border-color: #778da9; /* 테두리 색상 변경 */
-}
-
-/* 커스텀 셀렉트 박스 화살표 아이콘 */
-#attModal .att-custom-select::after {
-    content: '\25BC'; /* 아래쪽 화살표 유니코드 */
-    position: absolute; /* 절대 위치 지정 */
-    top: 50%; /* 상단에서 50% 위치 */
-    right: 12px; /* 우측에서 12px 위치 */
-    transform: translateY(-50%); /* 세로 중앙 정렬 */
-    pointer-events: none; /* 포인터 이벤트 무시 */
-    color: #778da9; /* 아이콘 색상 */
-}
-
 /* 새로고침 버튼 스타일 */
 #attModal .att-refresh-button {
     position: fixed; /* 고정 위치 */
@@ -254,72 +214,228 @@
     background-color: rgba(0,0,0,0.4); /* 반투명 배경 */
 }
 
-/* 모달 닫기 버튼 스타일 */
-#attModal .close {
-    color: #aaa; /* 글자색 */
-    float: right; /* 우측 정렬 */
-    font-size: 28px; /* 글자 크기 */
-    font-weight: bold; /* 글자 두께 */
+
+/* 출석 테이블 스타일 */
+#attModal .att-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 30px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: visible;
+    position: relative;
+    z-index: 1;
 }
 
-/* 모달 닫기 버튼 호버 및 포커스 효과 */
-#attModal .close:hover,
-#attModal .close:focus {
-    color: black; /* 글자색 변경 */
-    text-decoration: none; /* 텍스트 장식 제거 */
-    cursor: pointer; /* 커서 모양 변경 */
+/* 테이블 셀 스타일 */
+#attModal .att-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #e9ecef;
+    position: relative;
+    overflow: visible;
 }
 
-/* 커스텀 셀렉트 박스 선택된 항목 스타일 */
-#attModal .select-selected {
-    background-color: #fff; /* 배경색 흰색 */
+/* 커스텀 셀렉트 컨테이너 */
+.att-custom-select {
+    position: relative;
+    width: 120px;
+    margin: 0 auto;
+    font-family: 'Noto Sans KR', sans-serif;
+    z-index: 1000;
 }
 
-/* 커스텀 셀렉트 박스 화살표 스타일 */
-#attModal .select-selected:after {
-    position: absolute; /* 절대 위치 지정 */
-    content: ""; /* 내용 없음 */
-    top: 14px; /* 상단에서 14px 위치 */
-    right: 10px; /* 우측에서 10px 위치 */
-    width: 0;
-    height: 0;
-    border: 6px solid transparent; /* 투명한 테두리 */
-    border-color: #778da9 transparent transparent transparent; /* 아래쪽 화살표 모양 */
+/* 선택된 항목 */
+.select-selected {
+    padding: 10px 35px 10px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: white;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    position: relative;
+    transition: all 0.2s ease;
 }
 
-/* 커스텀 셀렉트 박스 활성화 시 화살표 스타일 */
-#attModal .select-selected.select-arrow-active:after {
-    border-color: transparent transparent #778da9 transparent; /* 위쪽 화살표 모양 */
-    top: 7px; /* 상단에서 7px 위치 */
-}
-
-/* 커스텀 셀렉트 박스 항목 스타일 */
-#attModal .select-items div,
-#attModal .select-selected {
-    color: #495057; /* 글자색 */
-    padding: 8px 16px; /* 내부 여백 */
-    border: 1px solid transparent; /* 투명한 테두리 */
-    border-color: transparent transparent rgba(0, 0, 0, 0.1) transparent; /* 하단 테두리만 표시 */
-    cursor: pointer; /* 커서 모양 변경 */
-}
-
-/* 커스텀 셀렉트 박스 항목 목록 스타일 */
-#attModal .select-items {
-    position: absolute; /* 절대 위치 지정 */
-    background-color: #fff; /* 배경색 흰색 */
-    top: 100%; /* 선택된 항목 바로 아래에 위치 */
+/* 드롭다운 메뉴 */
+.select-items {
+    position: absolute;
+    top: 100%;
     left: 0;
     right: 0;
-    z-index: 99; /* 다른 요소 위에 표시 */
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 1001;
 }
 
-/* 커스텀 셀렉트 박스 숨김 클래스 */
-#attModal .select-hide {
-    display: none; /* 숨김 처리 */
+.select-items.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(5px);
 }
 
-/* 커스텀 셀렉트 박스 항목 호버 및 선택 효과 */
-#attModal .select-items div:hover,
-#attModal .same-as-selected {
-    background-color: rgba(0, 0, 0, 0.1); /* 배경색 변경 */
+/* 드롭다운 옵션 */
+.select-option {
+    padding: 12px 15px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* 출석 옵션 */
+.select-option[data-value="true"] {
+    color: #2E7D32;
+    background-color: #F1F8E9;
+    border-left: 4px solid #4CAF50;
+}
+
+/* 결석 옵션 */
+.select-option[data-value="false"] {
+    color: #C62828;
+    background-color: #FFEBEE;
+    border-left: 4px solid #f44336;
+}
+
+/* 상태 스타일 */
+.select-selected.status-present {
+    color: #2E7D32;
+    border-color: #4CAF50;
+    background-color: #F1F8E9;
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.1);
+}
+
+.select-selected.status-absent {
+    color: #C62828;
+    border-color: #f44336;
+    background-color: #FFEBEE;
+    box-shadow: 0 2px 8px rgba(244, 67, 54, 0.1);
+}
+
+/* 화살표 아이콘 */
+.select-selected:after {
+    content: '';
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid #666;
+    transition: transform 0.2s ease;
+}
+
+.select-selected.active:after {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+/* 모바일 반응형 스타일 (768px) */
+@media screen and (max-width: 768px) {
+    /* 모달 컨테이너 */
+    .attModal-content {
+        background: #f8f9fa;
+        padding: 20px;
+        height: 100vh;
+        overflow-y: auto;
+    }
+
+    /* 모달 헤더 */
+    .att-container h1 {
+        font-size: 1.5rem;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    /* 날짜 시간 패널 */
+    .att-info-panel {
+        background: white;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+    }
+
+    /* 학생 정보 카드 */
+    #attendanceTableBody tr {
+        background: white;
+        border-radius: 12px;
+        margin-bottom: 15px;
+        padding: 15px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        display: block;
+    }
+
+    /* 테이블 헤더 숨기기 */
+    #attModal .att-table thead {
+        display: none;
+    }
+
+    /* 셀 스타일 재정의 */
+    #attModal .att-table td {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 15px;
+        border-bottom: 1px solid #eee;
+        text-align: left;
+    }
+
+    #attModal .att-table td:before {
+        content: attr(data-label);
+        font-weight: 500;
+        color: #778da9;
+        margin-right: 10px;
+    }
+
+    /* 출석 상태 셀렉트 */
+    .att-custom-select {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .select-selected {
+        width: 100%;
+        padding: 10px;
+        border-radius: 6px;
+        text-align: center;
+        font-weight: 500;
+    }
+
+    .select-selected.status-present {
+        background: #e8f5e9;
+        border: 1px solid #4caf50;
+        color: #2e7d32;
+    }
+
+    .select-selected.status-absent {
+        background: #ffebee;
+        border: 1px solid #ef5350;
+        color: #c62828;
+    }
+
+    /* 새로고침 버튼 */
+    .att-refresh-button {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: #415A77;
+        color: white;
+        border: none;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 }

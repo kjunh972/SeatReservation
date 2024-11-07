@@ -1,14 +1,25 @@
 package com.tbfg.dto;
 
 public class AttendanceDTO {
-	private String userId;
+	 /** 사용자 ID */
+    private String userId; 
+    /** 사용자 이름 */
     private String userName;
+    /** 학번 */
     private int studentId;
+    /** 과목명 */
     private String subject;
+    /** 강의실명 */
     private String classroomName;
+    /** 수업 시작 시간 */
     private int startHour;
+    /** 수업 종료 시간 */
     private int endHour;
+    /** 출석 상태 문자열 (출석/결석) */
     private String status;
+    /** 출석 여부 (true: 출석, false: 결석) */
+    private boolean attended;
+    
 	public String getUserId() {
 		return userId;
 	}
@@ -57,6 +68,11 @@ public class AttendanceDTO {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-    
+	public boolean isAttended() {
+        return attended;
+    }
+    public void setAttended(boolean attended) {
+        this.attended = attended;
+    }
     
 }

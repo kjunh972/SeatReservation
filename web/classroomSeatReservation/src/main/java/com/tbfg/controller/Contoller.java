@@ -85,14 +85,14 @@ public class Contoller {
 		return userID; // 사용자 ID 반환
 	}
 
-	// 컨트롤러 클래스 내에 새로운 메소드 추가
+	// 시간표 정보 보여주는 메서드
 	public void getTimetablePage(Model model, HttpSession session) {
 		// 사용자의 모든 시간표를 가져옴.
 		List<TimeTableDTO> userTimeTable = timetableDAO.getTimetable(GetId(session));
 
 		// 요일과 시간 목록을 생성하여 모델에 추가
 		List<String> days = Arrays.asList("월요일", "화요일", "수요일", "목요일", "금요일");
-		List<Integer> hours = Arrays.asList(9, 10, 11, 12, 13, 14, 15, 16);
+		List<Integer> hours = Arrays.asList(9, 10, 11, 12, 13, 14, 15, 16,17,18,19,20,21);
 
 		// 모델에 사용자의 시간표 정보를 추가합니다.
 		model.addAttribute("userTimeTable", userTimeTable);
@@ -794,8 +794,8 @@ public class Contoller {
 			model.addAttribute("subjectReservations", subjectReservations);
 			model.addAttribute("selectedSubject", selectedSubject);
 		}
-		
-		System.out.println("userPosition : "+userPosition);
+
+		System.out.println("userPosition : " + userPosition);
 
 		model.addAttribute("userPosition", userPosition);
 
@@ -863,15 +863,11 @@ public class Contoller {
 			return "login"; // 로그인 페이지로 리다이렉트
 		}
 
+		// 시간표 정보를 모델에 추가
+		getTimetablePage(model, session);
+
 		// classroomDTO 초기화
 		this.classroomDTO = new ClassroomDTO();
-
-		// 사용자의 모든 시간표를 가져옴
-		List<TimeTableDTO> userTimeTable = timetableDAO.getTimetable(GetId(session));
-
-		// 요일과 시간 목록을 생성
-		List<String> days = Arrays.asList("월요일", "화요일", "수요일", "목요일", "금요일");
-		List<Integer> hours = Arrays.asList(9, 10, 11, 12, 13, 14, 15, 16);
 
 		// classroomDTO의 상태를 1로 설정
 		classroomDTO.setClassroomNull(1);
@@ -883,10 +879,6 @@ public class Contoller {
 		// 사용자 직책을 가져와 모델에 추가
 		String userPosition = GetPosition(session);
 		model.addAttribute("userPosition", userPosition);
-
-		model.addAttribute("userTimeTable", userTimeTable);
-		model.addAttribute("days", days);
-		model.addAttribute("hours", hours);
 
 		return "timetable";
 	}
@@ -931,17 +923,8 @@ public class Contoller {
 			System.out.println("오류 : " + e.getMessage());
 		}
 
-		// 사용자의 모든 시간표를 다시 가져옴
-		List<TimeTableDTO> userTimeTable = timetableDAO.getTimetable(GetId(session));
-
-		// 요일과 시간 목록 생성
-		List<String> days = Arrays.asList("월요일", "화요일", "수요일", "목요일", "금요일");
-		List<Integer> hours = Arrays.asList(9, 10, 11, 12, 13, 14, 15, 16);
-
-		// 모델에 시간표 정보, 요일 목록, 시간 목록을 추가
-		model.addAttribute("userTimeTable", userTimeTable);
-		model.addAttribute("days", days);
-		model.addAttribute("hours", hours);
+		// 시간표 정보를 모델에 추가
+		getTimetablePage(model, session);
 
 		return "redirect:/timetable";
 	}
@@ -961,100 +944,89 @@ public class Contoller {
 
 	// 출석 체크 페이지를 보여주는 메서드
 	@GetMapping("/attendanceCheck")
-    public String attendanceCheck(Model model, HttpSession session) {
-        // 세션에서 사용자 ID와 직책을 가져옴
-        String userId = GetId(session);
-        String userPosition = GetPosition(session);
+	public String attendanceCheck(Model model, HttpSession session) {
+		// 세션에서 사용자 ID와 직책을 가져옴
+		String userId = GetId(session);
+		String userPosition = GetPosition(session);
 
-        // 세션이 만료되었으면 로그인 페이지로 리다이렉트
-        if (userId == null) {
-            model.addAttribute("error", "세션이 만료되었습니다. 다시 로그인 해주세요.");
-            return "redirect:/login";
-        }
+		// 세션이 만료되었으면 로그인 페이지로 리다이렉트
+		if (userId == null) {
+			model.addAttribute("error", "세션이 만료되었습니다. 다시 로그인 해주세요.");
+			return "redirect:/login";
+		}
 
-        // 교수나 관리자가 아니면 접근 제한
-        if (!classroomDAO.isProfessorOrAdmin(userId)) {
-            return "redirect:/timetable";
-        }
+		// 교수나 관리자가 아니면 접근 제한
+		if (!classroomDAO.isProfessorOrAdmin(userId)) {
+			return "redirect:/timetable";
+		}
 
-        // 현재 날짜/시간 정보
-        LocalDateTime now = LocalDateTime.now();
-        String koreanDayOfWeek = convertWeek(now.getDayOfWeek());
-        int currentHour = now.getHour();
+		// 현재 날짜/시간 정보
+		LocalDateTime now = LocalDateTime.now();
+		String koreanDayOfWeek = convertWeek(now.getDayOfWeek());
+		int currentHour = now.getHour();
 
-        // 오늘의 출석 정보를 가져옴
-        List<AttendanceDTO> attendanceList = classroomDAO.getTodayAttendance(userId, koreanDayOfWeek, currentHour);
+		// 오늘의 출석 정보를 가져옴
+		List<AttendanceDTO> attendanceList = classroomDAO.getTodayAttendance(userId, koreanDayOfWeek, currentHour);
 
-        // 모델에 데이터를 추가
-        model.addAttribute("userPosition", userPosition);
-        model.addAttribute("attendanceList", attendanceList);
-        model.addAttribute("currentDate", now.toLocalDate());
-        model.addAttribute("currentTime", now.toLocalTime());
-        model.addAttribute("userId", userId);
-        model.addAttribute("currentDay", koreanDayOfWeek);
-        model.addAttribute("currentHour", currentHour);
+		// 모델에 데이터를 추가
+		model.addAttribute("userPosition", userPosition);
+		model.addAttribute("attendanceList", attendanceList);
+		model.addAttribute("currentDate", now.toLocalDate());
+		model.addAttribute("currentTime", now.toLocalTime());
+		model.addAttribute("userId", userId);
+		model.addAttribute("currentDay", koreanDayOfWeek);
+		model.addAttribute("currentHour", currentHour);
 
-        // 시간표 정보를 모델에 추가
-        getTimetablePage(model, session);
+		// 시간표 정보를 모델에 추가
+		getTimetablePage(model, session);
 
-        return "attendanceCheck";
-    }
+		return "attendanceCheck";
+	}
 
-    @PostMapping("/updateAttendance")
-    @ResponseBody
-    public ResponseEntity<Map<String, String>> updateAttendance(
-            @RequestParam String userId,
-            @RequestParam String day,
-            @RequestParam int startHour,
-            @RequestParam String subject,
-            @RequestParam boolean isAttended,
-            HttpSession session) {
-        
-        // 세션 체크
-        String professorId = GetId(session);
-        if (professorId == null || !classroomDAO.isProfessorOrAdmin(professorId)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(Map.of("message", "권한이 없습니다."));
-        }
+	@PostMapping("/updateAttendance")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> updateAttendance(@RequestBody Map<String, Object> payload) {
+		try {
+			String userId = (String) payload.get("userId");
+			String day = (String) payload.get("day");
+			int startHour = Integer.parseInt(payload.get("startHour").toString());
+			String subject = (String) payload.get("subject");
+			boolean isAttended = (boolean) payload.get("isAttended");
 
-        try {
-            classroomDAO.updateAttendance(userId, day, startHour, subject, isAttended);
-            return ResponseEntity.ok(Map.of("message", "Success"));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(Map.of("message", "Error: " + e.getMessage()));
-        }
-    }
+			// StuTimetable의 attendance 필드만 업데이트
+			classroomDAO.updateAttendance(userId, day, startHour, subject, isAttended);
 
-    @GetMapping("/api/today-schedule")
-    @ResponseBody
-    public ResponseEntity<List<TimeTableDTO>> getTodaySchedule(HttpSession session) {
-        String userId = GetId(session);
-        if (userId == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(Collections.emptyList());
-        }
+			return ResponseEntity.ok(Map.of("success", true, "message", "출석 상태가 성공적으로 업데이트되었습니다."));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(Map.of("success", false, "message", e.getMessage()));
+		}
+	}
 
-        try {
-            LocalDateTime now = LocalDateTime.now();
-            String koreanDay = convertWeek(now.getDayOfWeek());
-            
-            List<TimeTableDTO> todayTimetable = timetableDAO.getTodayTimetableWithReservation(userId, koreanDay);
-            
-            // 예약 정보 추가
-            todayTimetable.forEach(timeTable -> {
-                ReserveList reserveInfo = classroomDAO.getReservationInfo(
-                    timeTable.getClassroomName(), 
-                    userId,
-                    timeTable.getStartHour()
-                );
-                timeTable.setReservationInfo(reserveInfo);
-            });
+	@GetMapping("/api/today-schedule")
+	@ResponseBody
+	public ResponseEntity<List<TimeTableDTO>> getTodaySchedule(HttpSession session) {
+		String userId = GetId(session);
+		if (userId == null) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.emptyList());
+		}
 
-            return ResponseEntity.ok(todayTimetable);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(Collections.emptyList());
-        }
-    }
+		try {
+			LocalDateTime now = LocalDateTime.now();
+			String koreanDay = convertWeek(now.getDayOfWeek());
+
+			List<TimeTableDTO> todayTimetable = timetableDAO.getTodayTimetableWithReservation(userId, koreanDay);
+
+			// 예약 정보 추가
+			todayTimetable.forEach(timeTable -> {
+				ReserveList reserveInfo = classroomDAO.getReservationInfo(timeTable.getClassroomName(), userId,
+						timeTable.getStartHour());
+				timeTable.setReservationInfo(reserveInfo);
+			});
+
+			return ResponseEntity.ok(todayTimetable);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.emptyList());
+		}
+	}
 }

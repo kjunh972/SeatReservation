@@ -467,7 +467,7 @@ public class ClassroomDAO {
 	                 "AND st1.start_hour <= ? " +
 	                 "AND st1.end_hour > ? " +
 	                 "AND s.position = 'student' " +
-	                 "AND st2.user_id = ? " +  // 교수/관리자 ID 추가
+	                 "AND st2.user_id = ? " +  
 	                 "ORDER BY st1.start_hour, s.name";
 
 	    return jdbcTemplate.query(
@@ -488,38 +488,18 @@ public class ClassroomDAO {
 	    );
 	}
 
-	public void updateAttendance(String userId, String day, int startHour, String subject, boolean isAttended) {
-	    if (isAttended) {
-	        // 출석 처리: 예약 정보 추가
-	        String insertReservationSql = "INSERT INTO Reservation (user_id, classroom_name, subject, day, reservSeat) " +
-	                                    "SELECT ?, classroomName, ?, ?, 1 " +
-	                                    "FROM StuTimetable " +  
-	                                    "WHERE user_id = ? AND day = ? AND start_hour = ? AND subject = ?";  
-	        
-	        jdbcTemplate.update(insertReservationSql, 
-	            userId, subject, day, userId, day, startHour, subject);
-	            
-	        // 예약 시간 추가
-	        String insertReservHourSql = "INSERT INTO ReservationHour (reservNum, reservHour) " +
-	                                   "SELECT LAST_INSERT_ID(), ?";
-	        
-	        jdbcTemplate.update(insertReservHourSql, startHour);
-	    } else {
-	        // 결석 처리: 예약 정보 삭제
-	        String deleteReservHourSql = "DELETE rh FROM ReservationHour rh " +
-	                                   "JOIN Reservation r ON rh.reservNum = r.reservNum " +
-	                                   "WHERE r.user_id = ? AND r.day = ? AND rh.reservHour = ? AND r.subject = ?";
-	        
-	        jdbcTemplate.update(deleteReservHourSql, 
-	            userId, day, startHour, subject);
-	            
-	        String deleteReservationSql = "DELETE FROM Reservation " +
-	                                    "WHERE user_id = ? AND day = ? AND subject = ?";
-	        
-	        jdbcTemplate.update(deleteReservationSql, 
-	            userId, day, subject);
-	    }
-	}
+	// 출석 상태를 업데이트하는 메서드
+		public void updateAttendance(String userId, String day, int startHour, String subject, boolean isAttended) {
+		    // SQL 업데이트 쿼리 문자열 정의
+		    String sql = "UPDATE StuTimetable SET attendance = ? " +
+		                 "WHERE user_id = ? AND day = ? AND start_hour = ? AND subject = ?";
+		    
+		    // 출석 여부를 정수값으로 변환 (출석: 1, 결석: 0)
+		    int attendanceValue = isAttended ? 1 : 0;
+		    
+		    // 쿼리 실행
+		    jdbcTemplate.update(sql, attendanceValue, userId, day, startHour, subject);
+		}
 
 	// 사용자가 교수 또는 관리자인지 확인하는 메서드
 	public boolean isProfessorOrAdmin(String userId) {
