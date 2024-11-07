@@ -1,221 +1,103 @@
-/* 출석 모달의 컨테이너 스타일 */
+/* 출석 모달의 메인 컨테이너 */
 #attModal .att-container {
-    max-width: 1200px; /* 최대 너비 설정 */
-    margin: 2rem auto 0; /* 상단 여백과 중앙 정렬 */
-    background-color: #fff; /* 배경색 흰색 */
-    padding: 20px; /* 내부 여백 */
-    border-radius: 8px; /* 모서리 둥글게 */
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+    max-width: 1200px;
+    margin: 2rem auto 0;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
 }
 
-/* 학생이 없을 때 표시되는 메시지 스타일 */
+/* 학생 없음 메시지 컨테이너 */
 #attModal .att-no-students-message {
-    display: none; /* 기본적으로 숨김 */
+    display: none;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 60px 40px; /* 상하 여백 증가 */
+    padding: 60px 40px;
     background-color: #f8f9fa;
-    border-radius: 12px; /* 모서리 더 둥글게 */
-    margin: 40px auto; /* 상하 여백 증가 및 중앙 정렬 */
-    max-width: 400px; /* 최대 너비 설정 */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* 미묘한 그림자 */
-    border: 1px solid #e9ecef; /* 미묘한 테두리 */
-    transition: all 0.3s ease; /* 부드러운 전환 효과 */
+    border-radius: 12px;
+    margin: 40px auto;
+    max-width: 400px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e9ecef;
+    transition: all 0.3s ease;
 }
 
-/* 학생 없음 메시지의 아이콘 스타일 */
+/* 메시지 아이콘 */
 #attModal .att-no-students-message i {
-    font-size: 64px; /* 아이콘 크기 증가 */
-    color: #778da9; /* 기존 색상 유지 */
-    margin-bottom: 24px; /* 여백 증가 */
-    opacity: 0.8; /* 약간 투명하게 */
-    transform: translateY(0); /* 애니메이션 시작 위치 */
-    animation: float 3s ease-in-out infinite; /* 부드러운 떠있는 효과 */
+    font-size: 64px;
+    color: #778da9;
+    margin-bottom: 24px;
+    opacity: 0.8;
+    transform: translateY(0);
+    animation: float 3s ease-in-out infinite;
 }
 
-/* 학생 없음 메시지의 텍스트 스타일 */
+/* 메시지 텍스트 */
 #attModal .att-no-students-message p {
-    font-size: 20px; /* 글자 크기 증가 */
+    font-size: 20px;
     color: #495057;
-    font-weight: 500; /* 약간 더 두껍게 */
+    font-weight: 500;
     margin: 0;
     text-align: center;
     line-height: 1.5;
 }
 
-/* 떠있는 효과를 위한 키프레임 애니메이션 */
+/* 떠있는 애니메이션 */
 @keyframes float {
-    0% {
-        transform: translateY(0px);
-    }
-    50% {
-        transform: translateY(-10px);
-    }
-    100% {
-        transform: translateY(0px);
-    }
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
 }
 
-/* 메시지가 표시될 때의 스타일 */
-#attModal .att-no-students-message[style*="display: flex"] {
-    animation: fadeIn 0.5s ease-out; /* 페이드인 효과 */
-}
-
-/* 페이드인 효과를 위한 키프레임 */
+/* 페이드인 애니메이션 */
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-/* 호버 효과 */
+/* 메시지 호버 효과 */
 #attModal .att-no-students-message:hover {
     transform: translateY(-5px);
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
 }
 
-/* 모달 내용 컨테이너 스타일 */
+/* 모달 컨텐츠 컨테이너 */
 .attModal-content {
-    background-color: #fefefe; /* 배경색 흰색 */
-    margin: 2vh auto; /* 상하 여백과 중앙 정렬 */
-    padding: 30px; /* 내부 여백 */
-    border: none; /* 테두리 없음 */
-    width: 95%; /* 너비 */
-    max-width: 95vw; /* 최대 너비 */
-    height: 90vh; /* 높이 */
-    overflow-y: auto; /* 세로 스크롤 허용 */
-    position: relative; /* 상대 위치 지정 */
-    border-radius: 12px; /* 모서리 둥글게 */
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+    background-color: #fefefe;
+    margin: 2vh auto;
+    padding: 30px;
+    border: none;
+    width: 95%;
+    max-width: 95vw;
+    height: 90vh;
+    overflow: visible; 
+    position: relative;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
-/* 정보 패널 스타일 */
+/* 정보 패널 */
 #attModal .att-info-panel {
-    background-color: #778da9; /* 배경색 */
-    color: #fff; /* 글자색 흰색 */
-    padding: 20px; /* 내부 여백 */
-    border-radius: 8px; /* 모서리 둥글게 */
-    margin-bottom: 30px; /* 하단 여백 */
-    display: flex; /* 플렉스 박스 사용 */
-    justify-content: space-between; /* 내부 요소 간격 균등 분배 */
-    align-items: center; /* 세로 중앙 정렬 */
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+    background-color: #778da9;
+    color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* 정보 패널 내 텍스트 스타일 */
+/* 패널 텍스트 */
 #attModal .att-info-panel span {
-    font-size: 1.2em; /* 글자 크기 */
-    font-weight: 500; /* 글자 두께 */
+    font-size: 1.2em;
+    font-weight: 500;
 }
 
-/* 출석 테이블 스타일 */
-#attModal .att-table {
-    width: 100%; /* 전체 너비 */
-    border-collapse: separate; /* 테두리 분리 */
-    border-spacing: 0; /* 셀 간격 없음 */
-    margin-top: 30px; /* 상단 여백 */
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
-    border-radius: 8px; /* 모서리 둥글게 */
-    overflow: hidden; /* 내용 넘침 숨김 */
-}
-
-/* 테이블 헤더와 셀 스타일 */
-#attModal .att-table th,
-#attModal .att-table td {
-    padding: 15px; /* 내부 여백 */
-    text-align: left; /* 왼쪽 정렬 */
-    border-bottom: 1px solid #e9ecef; /* 하단 테두리 */
-}
-
-/* 테이블 헤더 스타일 */
-#attModal .att-table th {
-    background-color: #778da9; /* 배경색 */
-    color: #fff; /* 글자색 흰색 */
-    font-weight: 600; /* 글자 두께 */
-    text-transform: uppercase; /* 대문자 변환 */
-}
-
-/* 테이블 마지막 행 셀 스타일 */
-#attModal .att-table tr:last-child td {
-    border-bottom: none; /* 하단 테두리 없음 */
-}
-
-/* 테이블 짝수 행 스타일 */
-#attModal .att-table tr:nth-child(even) {
-    background-color: #f8f9fa; /* 배경색 연한 회색 */
-}
-
-/* 테이블 행 호버 효과 */
-#attModal .att-table tr:hover {
-    background-color: #e9ecef; /* 호버 시 배경색 */
-    transition: background-color 0.3s ease; /* 배경색 전환 효과 */
-}
-
-/* 새로고침 버튼 스타일 */
-#attModal .att-refresh-button {
-    position: fixed; /* 고정 위치 */
-    bottom: 30px; /* 하단에서 30px 위치 */
-    right: 30px; /* 우측에서 30px 위치 */
-    background-color: #778da9; /* 배경색 */
-    color: white; /* 글자색 흰색 */
-    border: none; /* 테두리 없음 */
-    border-radius: 50%; /* 원형 모양 */
-    width: 70px; /* 너비 */
-    height: 70px; /* 높이 */
-    font-size: 28px; /* 글자 크기 */
-    cursor: pointer; /* 커서 모양 변경 */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* 그림자 효과 */
-    transition: all 0.3s ease; /* 전환 효과 */
-    display: flex; /* 플렉스 박스 사용 */
-    align-items: center; /* 세로 중앙 정렬 */
-    justify-content: center; /* 가로 중앙 정렬 */
-}
-
-/* 새로고침 버튼 호버 효과 */
-#attModal .att-refresh-button:hover {
-    background-color: #8a9eb5; /* 호버 시 배경색 */
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2); /* 그림자 효과 강화 */
-    transform: translateY(-3px); /* 위로 3px 이동 */
-}
-
-/* 새로고침 버튼 클릭 효과 */
-#attModal .att-refresh-button:active {
-    transform: translateY(0); /* 원래 위치로 복귀 */
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* 그림자 효과 감소 */
-}
-
-/* 회전 애니메이션 키프레임 정의 */
-@keyframes att-spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-/* 회전 애니메이션 적용 클래스 */
-#attModal .att-refresh-button.spinning {
-    animation: att-spin 1s linear infinite; /* 1초 동안 무한 반복 회전 */
-}
-
-/* 모달 기본 스타일 */
-#attModal.modal {
-    display: none; /* 초기에는 숨김 */
-    position: fixed; /* 고정 위치 */
-    z-index: 1; /* 최상위 레이어 */
-    left: 0;
-    top: 0;
-    width: 100%; /* 전체 너비 */
-    height: 100%; /* 전체 높이 */
-    overflow: auto; /* 스크롤 허용 */
-    background-color: rgba(0,0,0,0.4); /* 반투명 배경 */
-}
-
-
-/* 출석 테이블 스타일 */
+/* 출석 테이블 */
 #attModal .att-table {
     width: 100%;
     border-collapse: separate;
@@ -223,30 +105,115 @@
     margin-top: 30px;
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
-    overflow: visible;
-    position: relative;
-    z-index: 1;
+	position: relative;
+	z-index: 1;
 }
 
-/* 테이블 셀 스타일 */
+/* 테이블 셀 공통 */
+#attModal .att-table th,
 #attModal .att-table td {
     padding: 15px;
     text-align: left;
     border-bottom: 1px solid #e9ecef;
-    position: relative;
-    overflow: visible;
 }
 
-/* 커스텀 셀렉트 컨테이너 */
+/* 테이블 헤더 */
+#attModal .att-table th {
+    background-color: #778da9;
+    color: #fff;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+/* 테이블 마지막 행 */
+#attModal .att-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* 테이블 짝수 행 */
+#attModal .att-table tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+/* 테이블 행 호버 */
+#attModal .att-table tr:hover {
+    background-color: #e9ecef;
+    transition: background-color 0.3s ease;
+}
+
+/* 새로고침 버튼 */
+#attModal .att-refresh-button {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background-color: #778da9;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 70px;
+    height: 70px;
+    font-size: 28px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 새로고침 버튼 호버 */
+#attModal .att-refresh-button:hover {
+    background-color: #8a9eb5;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    transform: translateY(-3px);
+}
+
+/* 새로고침 버튼 클릭 */
+#attModal .att-refresh-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 회전 애니메이션 */
+@keyframes att-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* 회전 애니메이션 적용 */
+#attModal .att-refresh-button.spinning {
+    animation: att-spin 1s linear infinite;
+}
+
+/* 모달 기본 */
+#attModal.modal {
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible !important;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* 테이블 셀 */
+#attModal .att-table td {
+    position: relative;
+    overflow: visible !important;
+    z-index: 9999;
+}
+
+/* 커스텀 셀렉트 */
 .att-custom-select {
     position: relative;
     width: 120px;
     margin: 0 auto;
     font-family: 'Noto Sans KR', sans-serif;
-    z-index: 1000;
+    z-index: 10000;
 }
 
-/* 선택된 항목 */
+/* 셀렉트 선택항목 */
 .select-selected {
     padding: 10px 35px 10px 15px;
     border: 2px solid #e0e0e0;
@@ -259,33 +226,30 @@
     transition: all 0.2s ease;
 }
 
-/* 드롭다운 메뉴 */
+/* 셀렉트 드롭다운 */
 .select-items {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
+    position: fixed; 
+    top: auto; 
+    left: auto; 
     background: white;
     border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     opacity: 0;
     visibility: hidden;
     transform: translateY(-10px);
     transition: all 0.3s ease;
-    z-index: 1001;
+    z-index: 100000;
 }
 
+/* 드롭다운 표시 */
 .select-items.show {
     opacity: 1;
     visibility: visible;
     transform: translateY(5px);
-}
-
-/* 드롭다운 옵션 */
-.select-option {
-    padding: 12px 15px;
-    cursor: pointer;
-    transition: all 0.2s ease;
+    position: absolute; 
+    top: 100%;
+    left: 0;
+    right: 0;
 }
 
 /* 출석 옵션 */
@@ -302,7 +266,7 @@
     border-left: 4px solid #f44336;
 }
 
-/* 상태 스타일 */
+/* 출석 상태 */
 .select-selected.status-present {
     color: #2E7D32;
     border-color: #4CAF50;
@@ -310,6 +274,7 @@
     box-shadow: 0 2px 8px rgba(76, 175, 80, 0.1);
 }
 
+/* 결석 상태 */
 .select-selected.status-absent {
     color: #C62828;
     border-color: #f44336;
@@ -332,21 +297,26 @@
     transition: transform 0.2s ease;
 }
 
+/* 화살표 활성화 */
 .select-selected.active:after {
     transform: translateY(-50%) rotate(180deg);
 }
 
-/* 모바일 반응형 스타일 (768px) */
+/* 모바일 스타일 */
 @media screen and (max-width: 768px) {
     /* 모달 컨테이너 */
     .attModal-content {
         background: #f8f9fa;
         padding: 20px;
-        height: 100vh;
+        height: 80vh;
         overflow-y: auto;
+        width: 90%;
+        max-width: 500px;
+        margin: 0 auto;
+        margin-top: 5rem;
     }
 
-    /* 모달 헤더 */
+    /* 모달 제목 */
     .att-container h1 {
         font-size: 1.5rem;
         text-align: center;
@@ -359,70 +329,76 @@
         padding: 15px;
         border-radius: 10px;
         margin-bottom: 20px;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
         display: flex;
         justify-content: space-around;
         align-items: center;
     }
 
-    /* 학생 정보 카드 */
+    /* 테이블 행 */
     #attendanceTableBody tr {
         background: white;
-        border-radius: 12px;
-        margin-bottom: 15px;
-        padding: 15px;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-        display: block;
+        margin: 0 auto;
+        padding: 10px;
+        box-shadow: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 90%;
+        max-width: 350px;
     }
 
-    /* 테이블 헤더 숨기기 */
+    /* 테이블 헤더 */
     #attModal .att-table thead {
         display: none;
     }
 
-    /* 셀 스타일 재정의 */
+    /* 테이블 셀 */
     #attModal .att-table td {
         display: flex;
         justify-content: space-between;
-        padding: 8px 15px;
+        align-items: center;
+        padding: 8px 10px;
         border-bottom: 1px solid #eee;
         text-align: left;
+        font-size: 1.1rem;
+        width: 100%;
+        margin: 0 auto;
+        box-sizing: border-box;
     }
 
+    /* 셀 라벨 */
     #attModal .att-table td:before {
         content: attr(data-label);
         font-weight: 500;
-        color: #778da9;
         margin-right: 10px;
+        display: flex;
+        align-items: center;
+        height: 100%;
+        min-width: 70px;
+        flex-shrink: 0;
     }
 
-    /* 출석 상태 셀렉트 */
+    /* 모바일 셀렉트 */
     .att-custom-select {
-        width: 100%;
-        margin-top: 10px;
+        width: 6rem;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        flex-shrink: 0;
     }
 
+    /* 모바일 셀렉트 선택항목 */
     .select-selected {
         width: 100%;
-        padding: 10px;
+        padding: 8px;
         border-radius: 6px;
         text-align: center;
         font-weight: 500;
+        font-size: 0.9rem;
     }
 
-    .select-selected.status-present {
-        background: #e8f5e9;
-        border: 1px solid #4caf50;
-        color: #2e7d32;
-    }
-
-    .select-selected.status-absent {
-        background: #ffebee;
-        border: 1px solid #ef5350;
-        color: #c62828;
-    }
-
-    /* 새로고침 버튼 */
+    /* 모바일 새로고침 버튼 */
     .att-refresh-button {
         position: fixed;
         bottom: 20px;
@@ -433,9 +409,10 @@
         background: #415A77;
         color: white;
         border: none;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         display: flex;
         align-items: center;
         justify-content: center;
+        z-index: 1000;
     }
 }
