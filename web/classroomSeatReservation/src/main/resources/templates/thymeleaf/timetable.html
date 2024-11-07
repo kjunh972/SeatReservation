@@ -627,224 +627,230 @@
 			</div>
 		</div>
 		<!-- 시간표 섹션 끝 -->
-		<!-- 버튼 컨테이너 오른쪽에 배치 -->
+		<!-- 버튼 컨테이너 -->
 		<div class="button-container">
-			<!-- 유저 전용 버튼 -->
 			<div class="timetable-button-container">
-				<button th:if="${userPosition == 'student'}" id="reserve-seat-button" class="timetable-button">좌석
-					예약</button>
-				<label th:if="${userPosition == 'student'}" class="timetable-button add-modal-button">시간표 추가</label>
-				<label th:if="${userPosition == 'student'}" class="timetable-button edit-modal-button">시간표 수정</label>
-				<label th:if="${userPosition == 'student'}" class="timetable-button delete-modal-button">시간표 삭제</label>
-			</div>
-			<!-- 관리자 전용 버튼 -->
-			<div th:if="${userPosition == 'admin' or userPosition == 'professor'}" class="admin-button-container">
-				<div class="admin-buttons"> <!-- 관리자 버튼 그룹 -->
-					<button id="manage-seat-button" class="timetable-button">좌석 관리</button>
-					<label class="timetable-button add-modal-button">시간표 추가</label>
-					<label class="timetable-button edit-modal-button">시간표 수정</label>
-					<label class="timetable-button delete-modal-button">시간표 삭제</label>
-				</div>
-				<div class="admin-action-container"> <!-- 관리자 액션 버튼 그룹 -->
-					<a href="reserveList" class="admin-button">예약 목록</a>
-					<a href="attendanceCheck" class="admin-button">출석 확인</a>
-					<a href="banList" class="admin-button">예약금지 좌석 확인</a>
-				</div>
-			</div>
-		</div>
-		<!-- 좌석 예약 폼 -->
-		<form id="reserve-seat-form" action="/classroomStatus" method="POST" style="display: none;">
-			<input type="hidden" id="classroomName" name="classroomName">
-			<input type="hidden" id="subject" name="subject">
-			<input type="hidden" id="day" name="day">
-			<input type="hidden" id="selectHours" name="selectHours">
-			<input type="submit" value="예약하기">
-		</form>
+				<!-- 사용자 구분에 따른 첫 번째 버튼 -->
+				<button th:if="${userPosition == 'student'}" id="reserve-seat-button" class="timetable-button">
+					<span class="button-label">좌석 예약</span>
+				</button>
+				<button th:if="${userPosition == 'admin' or userPosition == 'professor'}" id="manage-seat-button"
+					class="timetable-button">
+					<span class="button-label">좌석 관리</span>
+				</button>
 
-		<!-- 좌석 관리 폼 -->
-		<form id="manage-seat-form" action="/classroomSeat" method="POST" style="display: none;">
-			<input type="hidden" id="manage-classroomName" name="classroomName">
-			<input type="hidden" id="manage-subject" name="subject">
-			<input type="hidden" id="manage-day" name="day">
-			<input type="hidden" id="manage-selectHours" name="selectHours">
-		</form>
-
-		<!-- 시간표 추가 모달 -->
-		<div id="add-modal" class="modal">
-			<div class="modal-content">
-				<span class="close">&times;</span>
-				<h2>시간표 추가</h2>
-				<!-- 시간표 추가 폼 -->
-				<form action="/timetable" method="POST" style="width: 100%;">
-					<!-- 강의명 입력 -->
-					<div class="input-container">
-						<label for="add_subject">강의명:</label>
-						<input type="text" id="add_subject" name="subject" style="width: calc(100% - 120px);">
-					</div>
-					<!-- 강의실 선택 -->
-					<div class="input-container">
-						<label for="add_classroomName">강의실:</label>
-						<select id="add_classroomName" name="classroomName" style="width: calc(100% - 120px);" required>
-							<option value="">강의실을 선택하세요</option>
-							<option th:each="classroom : ${classrooms}" th:value="${classroom}" th:text="${classroom}">
-							</option>
-						</select>
-					</div>
-					<!-- 요일 선택 -->
-					<div class="input-container">
-						<label for="add_day">요일:</label>
-						<select id="add_day" name="day" style="width: calc(100% - 120px);">
-							<option value="월요일">월요일</option>
-							<option value="화요일">화요일</option>
-							<option value="수요일">수요일</option>
-							<option value="목요일">목요일</option>
-							<option value="금요일">금요일</option>
-						</select>
-					</div>
-					<!-- 시작 시간 선택 -->
-					<div class="input-container">
-						<label for="add_startHour">시작 시간:</label>
-						<select id="add_startHour" name="startHour" style="width: calc(100% - 120px);">
-							<option value="9">9시</option>
-							<option value="10">10시</option>
-							<option value="11">11시</option>
-							<option value="12">12시</option>
-							<option value="13">13시</option>
-							<option value="14">14시</option>
-							<option value="15">15시</option>
-							<option value="16">16시</option>
-							<option value="17">17시</option>
-							<option value="18">18시</option>
-						</select>
-					</div>
-					<!-- 종료 시간 선택 -->
-					<div class="input-container">
-						<label for="add_endHour">종료 시간:</label>
-						<select id="add_endHour" name="endHour" style="width: calc(100% - 120px);">
-							<option value="10">10시</option>
-							<option value="11">11시</option>
-							<option value="12">12시</option>
-							<option value="13">13시</option>
-							<option value="14">14시</option>
-							<option value="15">15시</option>
-							<option value="16">16시</option>
-							<option value="17">17시</option>
-							<option value="18">18시</option>
-						</select>
-					</div>
-					<!-- 저장 버튼 -->
-					<div style="margin-top: 10px;">
-						<input type="submit" value="저장" style="width: 100%;">
-					</div>
-				</form>
+				<!-- 공통 버튼들 -->
+				<label id="timetable-plus-button" class="timetable-button add-modal-button">
+					<span class="button-label">시간표 추가</span>
+				</label>
+				<label id="timetable-adjustment-button" class="timetable-button edit-modal-button">
+					<span class="button-label">시간표 수정</span>
+				</label>
+				<label id="timetable-delete-button" class="timetable-button delete-modal-button">
+					<span class="button-label">시간표 삭제</span>
+				</label>
 			</div>
 		</div>
-
-		<!-- 시간표 수정 모달 -->
-		<div id="edit-modal" class="modal">
-			<div class="modal-content">
-				<span class="close">&times;</span>
-				<h2>시간표 수정</h2>
-				<!-- 시간표 수정 폼 -->
-				<form action="/timetable" method="POST" style="width: 100%;">
-					<!-- 강의명 입력 -->
-					<div class="input-container">
-						<label for="edit_subject">강의명:</label>
-						<input type="text" id="edit_subject" name="subject" style="width: calc(100% - 120px);" readonly>
-					</div>
-					<!-- 강의실 선택 -->
-					<div class="input-container">
-						<label for="edit_classroomName">강의실:</label>
-						<select id="edit_classroomName" name="classroomName" style="width: calc(100% - 120px);"
-							required>
-							<option value="">강의실을 선택하세요</option>
-							<option th:each="classroom : ${classrooms}" th:value="${classroom}" th:text="${classroom}">
-							</option>
-						</select>
-					</div>
-					<!-- 요일 선택 -->
-					<div class="input-container">
-						<label for="edit_day">요일:</label>
-						<select id="edit_day" name="day" style="width: calc(100% - 120px);">
-							<option value="월요일">월요일</option>
-							<option value="화요일">화요일</option>
-							<option value="수요일">수요일</option>
-							<option value="목요일">목요일</option>
-							<option value="금요일">금요일</option>
-						</select>
-					</div>
-					<!-- 시작 시간 선택 -->
-					<div class="input-container">
-						<label for="edit_startHour">시작 시간:</label>
-						<select id="edit_startHour" name="startHour" style="width: calc(100% - 120px);">
-							<option value="9">9시</option>
-							<option value="10">10시</option>
-							<option value="11">11시</option>
-							<option value="12">12시</option>
-							<option value="13">13시</option>
-							<option value="14">14시</option>
-							<option value="15">15시</option>
-							<option value="16">16시</option>
-							<option value="17">17시</option>
-							<option value="18">18시</option>
-						</select>
-					</div>
-					<!-- 종료 시간 선택 -->
-					<div class="input-container">
-						<label for="edit_endHour">종료 시간:</label>
-						<select id="edit_endHour" name="endHour" style="width: calc(100% - 120px);">
-							<option value="10">10시</option>
-							<option value="11">11시</option>
-							<option value="12">12시</option>
-							<option value="13">13시</option>
-							<option value="14">14시</option>
-							<option value="15">15시</option>
-							<option value="16">16시</option>
-							<option value="17">17시</option>
-							<option value="18">18시</option>
-							<option value="19">19시</option>
-							<option value="20">20시</option>
-							<option value="21">21시</option>
-							<option value="22">22시</option>
-						</select>
-					</div>
-					<!-- 저장 버튼 -->
-					<div style="margin-top: 10px;">
-						<input type="submit" value="저장" style="width: 100%;">
-					</div>
-				</form>
-			</div>
+		<!-- 관리자 액션 버튼 그룹 -->
+		<div th:if="${userPosition == 'admin' or userPosition == 'professor'}" class="admin-action-container">
+		    <a href="reserveList" class="admin-button">예약 목록</a>
+		    <a href="attendanceCheck" class="admin-button">출석 확인</a>
+		    <a href="banList" class="admin-button">예약금지좌석 확인</a>
 		</div>
+	</div>
+	</div>
+	<!-- 좌석 예약 폼 -->
+	<form id="reserve-seat-form" action="/classroomStatus" method="POST" style="display: none;">
+		<input type="hidden" id="classroomName" name="classroomName">
+		<input type="hidden" id="subject" name="subject">
+		<input type="hidden" id="day" name="day">
+		<input type="hidden" id="selectHours" name="selectHours">
+		<input type="submit" value="예약하기">
+	</form>
 
-		<!-- 모달 HTML -->
-		<div id="inputModal" class="modal" style="display: none;">
-			<div class="modal-content">
-				<span class="close" onclick="closeInputModal()">&times;</span>
-				<div class="modal-header">
-					<h2>추가 예약 정보 입력</h2>
+	<!-- 좌석 관리 폼 -->
+	<form id="manage-seat-form" action="/classroomSeat" method="POST" style="display: none;">
+		<input type="hidden" id="manage-classroomName" name="classroomName">
+		<input type="hidden" id="manage-subject" name="subject">
+		<input type="hidden" id="manage-day" name="day">
+		<input type="hidden" id="manage-selectHours" name="selectHours">
+	</form>
+
+	<!-- 시간표 추가 모달 -->
+	<div id="add-modal" class="modal">
+		<div class="modal-content">
+			<span class="close">&times;</span>
+			<h2>시간표 추가</h2>
+			<!-- 시간표 추가 폼 -->
+			<form action="/timetable" method="POST" style="width: 100%;">
+				<!-- 강의명 입력 -->
+				<div class="input-container">
+					<label for="add_subject">강의명:</label>
+					<input type="text" id="add_subject" name="subject" style="width: calc(100% - 120px);">
 				</div>
-				<label for="modalClassroom" style="margin-bottom: 10px;">강의실: </label>
-				<div class="input-group" style="margin-top: 10px;">
-					<select id="modalClassroom" required style="width: calc(100% - 120px);">
+				<!-- 강의실 선택 -->
+				<div class="input-container">
+					<label for="add_classroomName">강의실:</label>
+					<select id="add_classroomName" name="classroomName" style="width: calc(100% - 120px);" required>
 						<option value="">강의실을 선택하세요</option>
-						<option th:each="classroom : ${classrooms}" th:value="${classroom}"
-							th:text="${classroom + ' 호'}"></option>
+						<option th:each="classroom : ${classrooms}" th:value="${classroom}" th:text="${classroom}">
+						</option>
 					</select>
 				</div>
-				<br>
+				<!-- 요일 선택 -->
 				<div class="input-container">
-					<label for="modalSubject">강의실 예약하는 목적:</label>
-					<input type="text" id="modalSubject" required style="width: calc(100% - 120px); margin-top: 10px;">
+					<label for="add_day">요일:</label>
+					<select id="add_day" name="day" style="width: calc(100% - 120px);">
+						<option value="월요일">월요일</option>
+						<option value="화요일">화요일</option>
+						<option value="수요일">수요일</option>
+						<option value="목요일">목요일</option>
+						<option value="금요일">금요일</option>
+					</select>
 				</div>
-				<br>
-				<!-- 버튼을 가운데 정렬하고 가로로 배치 -->
-				<div style="display: flex; justify-content: center;">
-					<button type="button" id="submitInput" style="width: 100%;">
-						제출
-					</button>
+				<!-- 시작 시간 선택 -->
+				<div class="input-container">
+					<label for="add_startHour">시작 시간:</label>
+					<select id="add_startHour" name="startHour" style="width: calc(100% - 120px);">
+						<option value="9">9시</option>
+						<option value="10">10시</option>
+						<option value="11">11시</option>
+						<option value="12">12시</option>
+						<option value="13">13시</option>
+						<option value="14">14시</option>
+						<option value="15">15시</option>
+						<option value="16">16시</option>
+						<option value="17">17시</option>
+						<option value="18">18시</option>
+					</select>
 				</div>
+				<!-- 종료 시간 선택 -->
+				<div class="input-container">
+					<label for="add_endHour">종료 시간:</label>
+					<select id="add_endHour" name="endHour" style="width: calc(100% - 120px);">
+						<option value="10">10시</option>
+						<option value="11">11시</option>
+						<option value="12">12시</option>
+						<option value="13">13시</option>
+						<option value="14">14시</option>
+						<option value="15">15시</option>
+						<option value="16">16시</option>
+						<option value="17">17시</option>
+						<option value="18">18시</option>
+					</select>
+				</div>
+				<!-- 저장 버튼 -->
+				<div style="margin-top: 10px;">
+					<input type="submit" value="저장" style="width: 100%;">
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<!-- 시간표 수정 모달 -->
+	<div id="edit-modal" class="modal">
+		<div class="modal-content">
+			<span class="close">&times;</span>
+			<h2>시간표 수정</h2>
+			<!-- 시간표 수정 폼 -->
+			<form action="/timetable" method="POST" style="width: 100%;">
+				<!-- 강의명 입력 -->
+				<div class="input-container">
+					<label for="edit_subject">강의명:</label>
+					<input type="text" id="edit_subject" name="subject" style="width: calc(100% - 120px);" readonly>
+				</div>
+				<!-- 강의실 선택 -->
+				<div class="input-container">
+					<label for="edit_classroomName">강의실:</label>
+					<select id="edit_classroomName" name="classroomName" style="width: calc(100% - 120px);" required>
+						<option value="">강의실을 선택하세요</option>
+						<option th:each="classroom : ${classrooms}" th:value="${classroom}" th:text="${classroom}">
+						</option>
+					</select>
+				</div>
+				<!-- 요일 선택 -->
+				<div class="input-container">
+					<label for="edit_day">요일:</label>
+					<select id="edit_day" name="day" style="width: calc(100% - 120px);">
+						<option value="월요일">월요일</option>
+						<option value="화요일">화요일</option>
+						<option value="수요일">수요일</option>
+						<option value="목요일">목요일</option>
+						<option value="금요일">금요일</option>
+					</select>
+				</div>
+				<!-- 시작 시간 선택 -->
+				<div class="input-container">
+					<label for="edit_startHour">시작 시간:</label>
+					<select id="edit_startHour" name="startHour" style="width: calc(100% - 120px);">
+						<option value="9">9시</option>
+						<option value="10">10시</option>
+						<option value="11">11시</option>
+						<option value="12">12시</option>
+						<option value="13">13시</option>
+						<option value="14">14시</option>
+						<option value="15">15시</option>
+						<option value="16">16시</option>
+						<option value="17">17시</option>
+						<option value="18">18시</option>
+					</select>
+				</div>
+				<!-- 종료 시간 선택 -->
+				<div class="input-container">
+					<label for="edit_endHour">종료 시간:</label>
+					<select id="edit_endHour" name="endHour" style="width: calc(100% - 120px);">
+						<option value="10">10시</option>
+						<option value="11">11시</option>
+						<option value="12">12시</option>
+						<option value="13">13시</option>
+						<option value="14">14시</option>
+						<option value="15">15시</option>
+						<option value="16">16시</option>
+						<option value="17">17시</option>
+						<option value="18">18시</option>
+						<option value="19">19시</option>
+						<option value="20">20시</option>
+						<option value="21">21시</option>
+						<option value="22">22시</option>
+					</select>
+				</div>
+				<!-- 저장 버튼 -->
+				<div style="margin-top: 10px;">
+					<input type="submit" value="저장" style="width: 100%;">
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<!-- 모달 HTML -->
+	<div id="inputModal" class="modal" style="display: none;">
+		<div class="modal-content">
+			<span class="close" onclick="closeInputModal()">&times;</span>
+			<div class="modal-header">
+				<h2>추가 예약 정보 입력</h2>
+			</div>
+			<label for="modalClassroom" style="margin-bottom: 10px;">강의실: </label>
+			<div class="input-group" style="margin-top: 10px;">
+				<select id="modalClassroom" required style="width: calc(100% - 120px);">
+					<option value="">강의실을 선택하세요</option>
+					<option th:each="classroom : ${classrooms}" th:value="${classroom}" th:text="${classroom + ' 호'}">
+					</option>
+				</select>
+			</div>
+			<br>
+			<div class="input-container">
+				<label for="modalSubject">강의실 예약하는 목적:</label>
+				<input type="text" id="modalSubject" required style="width: calc(100% - 120px); margin-top: 10px;">
+			</div>
+			<br>
+			<!-- 버튼을 가운데 정렬하고 가로로 배치 -->
+			<div style="display: flex; justify-content: center;">
+				<button type="button" id="submitInput" style="width: 100%;">
+					제출
+				</button>
 			</div>
 		</div>
+	</div>
 
 </body>
 
