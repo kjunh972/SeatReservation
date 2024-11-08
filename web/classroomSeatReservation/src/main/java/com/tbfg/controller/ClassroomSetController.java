@@ -34,6 +34,8 @@ public class ClassroomSetController {
 			model.addAttribute("error", "세션이 만료되었습니다. 다시 로그인 해주세요.");
 			return "login"; // 로그인 페이지로 리다이렉트
 		}
+		
+		ct.getTimetablePage(model, session);
         model.addAttribute("predefinedLayouts", getPredefinedLayouts());
         return "classroomSet"; // 'classroomSet.html'이라는 이름의 뷰를 반환합니다.
     }
