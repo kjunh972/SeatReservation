@@ -110,119 +110,73 @@ li {
 /* 버튼 컨테이너 스타일 */
 .button-container {
 	display: flex;
-	/* Flexbox 레이아웃 사용 */
 	align-items: center;
-	/* 버튼과 텍스트를 아래쪽으로 정렬 */
 	flex-direction: row;
-	/* 버튼들을 가로로 정렬 */
 	margin-top: 1rem;
-	/* 위쪽 여백 설정 */
 	margin-left: 9rem;
-	/* 왼쪽으로 이동 */
 }
 
-/* 버튼 스타일 - 정사각형 */
+/* 버튼 스타일 */
 button {
 	width: 4rem;
-	/* 버튼의 너비 설정 */
 	height: 4rem;
-	/* 버튼의 높이 설정 */
 	font-size: 1.2rem;
-	/* 글씨 크기 설정 */
 	background-color: #778da9;
-	/* 배경색 설정 */
 	color: white;
-	/* 글씨 색상 설정 */
 	border: none;
-	/* 테두리 제거 */
 	border-radius: 1.25rem;
-	/* 둥근 테두리 설정 */
 	cursor: pointer;
-	/* 포인터 커서 설정 */
 	margin-right: 1.25rem;
-	/* 버튼 간격 설정 */
 	transition: background-color 0.3s ease, transform 0.2s ease;
-	/* 부드러운 전환 효과 */
 	text-align: center;
-	/* 텍스트 가운데 정렬 */
 	line-height: 4rem;
-	/* 버튼 높이와 동일하게 설정 */
 }
 
 button:hover {
 	background-color: #415a77;
-	/* 호버 시 배경색 변경 */
 	transform: scale(1.05);
-	/* 호버 시 크기 약간 확대 */
 }
 
 .button-wrapper {
 	display: flex;
-	/* Flexbox 레이아웃 사용 */
 	flex-direction: column;
-	/* 세로 정렬 */
 	align-items: center;
-	/* 가운데 정렬 */
 	position: relative;
-	/* 상대 위치 설정 */
 	width: 5.63rem;
-	/* 버튼과 텍스트 포함 너비 */
 }
 
 .button-text {
 	display: none;
-	/* 기본적으로 텍스트 숨김 */
 	font-size: 0.9rem;
-	/* 글씨 크기 설정 */
 	color: black;
-	/* 글씨 색상 설정 */
 	font-weight: 600;
-	/* 글씨 두께 설정 */
 	position: absolute;
-	/* 절대 위치 설정 */
 	top: 100%;
-	/* 수직 중앙 정렬 */
 	right: 20%;
 	left: -2%;
-	/* 왼쪽으로 이동 (조정 가능) */
 	transform: translateY(-50%);
-	/* 수직으로 가운데 정렬 */
 	text-align: center;
-	/* 가운데 정렬 */
 	white-space: nowrap;
-	/* 줄바꿈 방지 */
 	overflow: hidden;
-	/* 넘치는 부분 숨김 */
 	text-overflow: ellipsis;
-	/* 넘치는 텍스트 말줄임표 처리 */
 	margin-top: 0.5rem;
-	/* 간격 설정 */
 }
 
 .button-container a {
 	display: flex;
-	/* Flexbox 사용 */
 	flex-direction: column;
-	/* 세로 정렬 */
 	align-items: center;
-	/* 가운데 정렬 */
-
 	text-decoration: none;
-	/* 밑줄 제거 */
 	margin: 0 1rem;
-	/* 간격 설정 */
 }
 
 .button-container a:hover .button-text {
 	display: block;
-	/* 호버 시 텍스트 표시 */
 }
 
 .button-container a:hover button {
 	transform: translateY(-0.63rem);
-	/* 호버 시 버튼 위로 이동 */
 	transition: transform 0.2s ease;
-	/* 부드러운 이동 효과 */
 }
 
 .main-container {
@@ -231,8 +185,8 @@ button:hover {
 	gap: 2rem;
 	padding: 2rem;
 	padding: 2rem;
-	margin-top: 1rem;
-	margin-left: -1.5rem;
+	margin-top: 1.6rem;
+	margin-left: -1.4rem;
 
 }
 

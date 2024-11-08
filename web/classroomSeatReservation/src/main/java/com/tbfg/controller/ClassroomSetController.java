@@ -24,6 +24,7 @@ public class ClassroomSetController {
     @Autowired
     private ClassroomDAO classroomDAO;
     private ClassroomDTO classroomDTO = new ClassroomDTO();
+    @Autowired
     private Contoller ct = new Contoller();
 
     @GetMapping("/classroomSet")
