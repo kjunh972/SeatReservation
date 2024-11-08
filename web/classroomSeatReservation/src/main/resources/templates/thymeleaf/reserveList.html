@@ -164,25 +164,25 @@
 						<form class="reservation-form" action="/cancelReservation" method="post">
 							<div class="reservation-info">
 								<div class="info-row">
-									<p><i class="fas fa-book-open"></i> <span class="label">강의명:</span> <span
+									<p><i class="fas fa-book-open"></i> <span class="label">강의명 :</span> <span
 											th:text="${reservation.subject}"></span></p> <!-- 펼쳐진 책 아이콘 -->
-									<p><i class="fas fa-school"></i><span class="label"> 강의실:</span> <span
+									<p><i class="fas fa-school"></i><span class="label"> 강의실 :</span> <span
 											th:text="${reservation.classroomName + '호'}"></span></p> <!-- 학교 아이콘 -->
 								</div>
 								<div class="info-row">
-									<p><i class="fas fa-calendar-alt"></i> <span class="label">요일:</span> <span
+									<p><i class="fas fa-calendar-alt"></i> <span class="label">요일 :</span> <span
 											th:text="${reservation.day}"></span></p> <!-- 다른 스타일의 캘린더 아이콘 -->
-									<p><i class="fas fa-clock"></i> <span class="label">사용시간: </span><span
+									<p><i class="fas fa-clock"></i> <span class="label">사용시간 : </span><span
 											th:text="${reservation.reservHourString + '시'}"></span></p>
 								</div>
 								<div class="info-row">
-									<p><i class="fas fa-chair"></i> <span class="label">좌석: </span><span
+									<p><i class="fas fa-chair"></i> <span class="label">좌석 : </span><span
 											th:text="${reservation.reservSeat + '번'}"></span></p>
-									<p><i class="fas fa-hashtag"></i> <span class="label">예약 번호: </span><span
+									<p><i class="fas fa-hashtag"></i> <span class="label">예약 번호 : </span><span
 											th:text="${reservation.reservNum + '번'}"></span></p> <!-- # 아이콘 -->
 								</div>
 								<div class="info-row">
-									<p><i class="fas fa-user"></i> 아이디: <span th:text="${reservation.userId}"></span>
+									<p><i class="fas fa-user"></i> 아이디 : <span th:text="${reservation.userId}"></span>
 									</p>
 								</div>
 
