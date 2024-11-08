@@ -1,8 +1,11 @@
 package com.tbfg.controller;
 
+import java.util.Collections;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -112,42 +115,37 @@ public class UserController {
 		return "redirect:/login"; // 회원가입 후 로그인 페이지로 리다이렉트
 	}
 
-	// 로그인 처리를 위한 메서드
 	@PostMapping("/login")
-	public String login(@RequestParam("id") String id, @RequestParam("password") String password, HttpSession session,
-			Model model) {
-		// DAO에서 비밀번호를 가져옴
-		String storedPassword = userDAO.getPasswordFromTables(id);
+	public ResponseEntity<?> login(@RequestParam("id") String id, @RequestParam("password") String password, HttpSession session) {
+	    // DAO에서 비밀번호를 가져옴
+	    String storedPassword = userDAO.getPasswordFromTables(id);
 
-		// 비밀번호 확인
-		if (storedPassword != null && storedPassword.equals(password)) {
-			// 사용자 정보를 DAO에서 가져옴
-			if (userDAO.isUserExists(id)) {
-				userDTO = userDAO.getUserById(id);
-				// 세션에 사용자 정보 저장
-				session.setAttribute("loggedInUser", userDTO);
-				model.addAttribute("userDTO", userDTO);
+	    // 비밀번호 확인
+	    if (storedPassword != null && storedPassword.equals(password)) {
+	        // 사용자 정보를 DAO에서 가져옴
+	        if (userDAO.isUserExists(id)) {
+	            userDTO = userDAO.getUserById(id);
+	            // 세션에 사용자 정보 저장
+	            session.setAttribute("loggedInUser", userDTO);
 
-				// 학생 여부를 세션에 저장
-				session.setAttribute("isStudent", true);
+	            // 학생 여부를 세션에 저장
+	            session.setAttribute("isStudent", true);
+	        } else if (proDAO.isProExists(id)) {
+	            proDTO = proDAO.getProById(id);
+	            // 세션에 교수 정보 저장
+	            session.setAttribute("loggedInUser", proDTO);
 
-			} else if (proDAO.isProExists(id)) {
-				proDTO = proDAO.getProById(id);
-				// 세션에 교수 정보 저장
-				session.setAttribute("loggedInUser", proDTO);
-				model.addAttribute("userDTO", proDTO);
+	            // 교수이므로 학생 여부를 false로 설정
+	            session.setAttribute("isStudent", false);
+	        }
 
-				// 교수이므로 학생 여부를 false로 설정
-				session.setAttribute("isStudent", false);
-			}
+	        return ResponseEntity.ok().build();  // 로그인 성공
+	    }
 
-			return "redirect:/index.html";
-		}
-
-		// 로그인 실패 시 에러 메시지 추가
-		model.addAttribute("error", "아이디 또는 비밀번호가 잘못되었습니다.");
-		return "login"; // 로그인 페이지로 다시 이동
+	    // 로그인 실패 시 JSON 형식으로 에러 메시지 반환
+	    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("error", "아이디 또는 비밀번호가 잘못되었습니다."));
 	}
+
 
 	// 학생 회원가입 폼을 보여주는 메서드
 	@GetMapping("/studentSignup")

@@ -13,10 +13,10 @@
 
 <body>
 	<header th:if="${userPosition == 'admin' or userPosition == 'professor'}">
-	    <header th:replace="~{/menu_admin.html}"></header> <!-- 메뉴 포함 -->
+		<header th:replace="~{/menu_admin.html}"></header> <!-- 메뉴 포함 -->
 	</header>
 	<header th:unless="${userPosition == 'admin' or userPosition == 'professor'}">
-	    <header th:replace="~{/menu.html}"></header> <!-- 메뉴 포함 -->
+		<header th:replace="~{/menu.html}"></header> <!-- 메뉴 포함 -->
 	</header>
 
 	<!-- 좌석 예약 현황 모달 -->
@@ -129,60 +129,67 @@
 	</div>
 
 	<!-- 메인 컨텐츠 영역 -->
-	   <div class="main-container">
-	       <!-- 시간표 섹션 시작 -->
-	       <div class="timetable-section">
-	           <div class="container">
-	               <table>
-	                   <thead>
-	                       <tr>
-	                           <th></th>
-	                           <th th:each="day : ${days}" th:text="${day}"></th>
-	                       </tr>
-	                   </thead>
-	                   <tbody>
-	                       <tr th:each="hour : ${hours}">
-	                           <td th:text="${hour}"></td>
-	                           <td th:each="day : ${days}" class="clickable" data-day="${day}" data-hour="${hour}">
-	                               <div th:each="timeTable : ${userTimeTable}" th:if="${timeTable.day == day 
-	                                           and timeTable.startHour le hour
-	                                           and timeTable.endHour gt hour}"
-	                                   th:attr="data-subject=${timeTable.subject}, data-classroom=${timeTable.classroomName}, 
-	                                           data-day=${timeTable.day}, data-hour=${hour}">
-	                                   <span th:text="${timeTable.subject + ' (' + timeTable.classroomName + ')'}"></span><br>
-	                               </div>
-	                               <div th:attr="data-hour=${hour}, data-day=${day}" style="display: none;"></div>
-	                           </td>
-	                       </tr>
-	                   </tbody>
-	               </table>
-	           </div>
-	       </div>
-	       <!-- 시간표 섹션 끝 -->
-		<!-- 버튼 컨테이너 오른쪽에 배치 -->
-		<div class="button-container">
-		    <!-- 유저 전용 버튼 -->
-		    <div class="timetable-button-container">
-		        <button th:if="${userPosition == 'student'}" id="reserve-seat-button" class="timetable-button">좌석 예약</button>
-		        <label th:if="${userPosition == 'student'}" class="timetable-button add-modal-button">시간표 추가</label>
-		        <label th:if="${userPosition == 'student'}" class="timetable-button edit-modal-button">시간표 수정</label>
-		        <label th:if="${userPosition == 'student'}" class="timetable-button delete-modal-button">시간표 삭제</label>
-		    </div>
-		    <!-- 관리자 전용 버튼 -->
-		    <div th:if="${userPosition == 'admin' or userPosition == 'professor'}" class="admin-button-container">
-		        <div class="admin-buttons"> <!-- 관리자 버튼 그룹 -->
-		            <button id="manage-seat-button" class="timetable-button">좌석 관리</button>
-		            <label class="timetable-button add-modal-button">시간표 추가</label>
-		            <label class="timetable-button edit-modal-button">시간표 수정</label>
-		            <label class="timetable-button delete-modal-button">시간표 삭제</label>
-		        </div>
-		        <div class="admin-action-container"> <!-- 관리자 액션 버튼 그룹 -->
-		            <a href="reserveList" class="admin-button">예약 목록</a>
-		            <a href="attendanceCheck" class="admin-button">출석 확인</a>
-		            <a href="banList" class="admin-button">예약금지 좌석 확인</a>
-		        </div>
-		    </div>
+	<div class="main-container">
+		<!-- 시간표 섹션 시작 -->
+		<div class="timetable-section">
+			<div class="container">
+				<table>
+					<thead>
+						<tr>
+							<th></th>
+							<th th:each="day : ${days}" th:text="${day}"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="hour : ${hours}">
+							<td th:text="${hour}"></td>
+							<td th:each="day : ${days}" class="clickable" data-day="${day}" data-hour="${hour}">
+								<div th:each="timeTable : ${userTimeTable}" th:if="${timeTable.day == day 
+	                                            and timeTable.startHour le hour
+	                                            and timeTable.endHour gt hour}" th:attr="data-subject=${timeTable.subject}, data-classroom=${timeTable.classroomName}, 
+	                                            data-day=${timeTable.day}, data-hour=${hour}">
+									<span
+										th:text="${timeTable.subject + ' (' + timeTable.classroomName + ')'}"></span><br>
+								</div>
+								<div th:attr="data-hour=${hour}, data-day=${day}" style="display: none;"></div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
 		</div>
+		<!-- 시간표 섹션 끝 -->
+		<!-- 버튼 컨테이너 -->
+		<div class="button-container">
+			<div class="timetable-button-container">
+				<!-- 사용자 구분에 따른 첫 번째 버튼 -->
+				<button th:if="${userPosition == 'student'}" id="reserve-seat-button" class="timetable-button">
+					<span class="button-label">좌석 예약</span>
+				</button>
+				<button th:if="${userPosition == 'admin' or userPosition == 'professor'}" id="manage-seat-button"
+					class="timetable-button">
+					<span class="button-label">좌석 관리</span>
+				</button>
+
+				<!-- 공통 버튼들 -->
+				<label id="timetable-plus-button" class="timetable-button add-modal-button">
+					<span class="button-label">시간표 추가</span>
+				</label>
+				<label id="timetable-adjustment-button" class="timetable-button edit-modal-button">
+					<span class="button-label">시간표 수정</span>
+				</label>
+				<label id="timetable-delete-button" class="timetable-button delete-modal-button">
+					<span class="button-label">시간표 삭제</span>
+				</label>
+			</div>
+		</div>
+		<!-- 관리자 액션 버튼 그룹 -->
+		<div th:if="${userPosition == 'admin' or userPosition == 'professor'}" class="admin-action-container">
+			<a href="reserveList" class="admin-button">예약 목록</a>
+			<a href="attendanceCheck" class="admin-button">출석 확인</a>
+			<a href="banList" class="admin-button">예약금지좌석 확인</a>
+		</div>
+	</div>
 	<script th:inline="javascript">
 		// 선택된 좌석과 강의실 정보를 저장할 변수
 		let selectedSeat, selectedClassroom;
@@ -277,44 +284,44 @@
 			});
 
 			function createSeatButton(number, classroomName) {
-			    const seatStatus = seatArray[number - 1]; // 좌석 상태 확인
-			    let seat = document.createElement('button');
-			    seat.classList.add('seat-button'); // seat-button 클래스 추가
+				const seatStatus = seatArray[number - 1]; // 좌석 상태 확인
+				let seat = document.createElement('button');
+				seat.classList.add('seat-button'); // seat-button 클래스 추가
 
-			    // 7202호에 대한 특별 처리
-			    if (classroomName === '7202') {
-			        if (number === 19 || number === 20) {
-			            // 19번과 20번 좌석은 빈 공간으로 처리
-			            seat.style.visibility = 'hidden';
-			            seat.style.pointerEvents = 'none';
-			        } else if (number > 20) {
-			            // 21번 이상의 좌석은 번호를 2 줄여서 표시
-			            let adjustedNumber = number - 2;
-			            seat.textContent = adjustedNumber;
-			            seat.dataset.seat = adjustedNumber;
-			        } else {
-			            // 나머지 좌석은 기존 번호 사용
-			            seat.textContent = number;
-			            seat.dataset.seat = number;
-			        }
-			    } else {
-			        // 7202호가 아닌 경우 기존 번호 사용
-			        seat.textContent = number;
-			        seat.dataset.seat = number;
-			    }
+				// 7202호에 대한 특별 처리
+				if (classroomName === '7202') {
+					if (number === 19 || number === 20) {
+						// 19번과 20번 좌석은 빈 공간으로 처리
+						seat.style.visibility = 'hidden';
+						seat.style.pointerEvents = 'none';
+					} else if (number > 20) {
+						// 21번 이상의 좌석은 번호를 2 줄여서 표시
+						let adjustedNumber = number - 2;
+						seat.textContent = adjustedNumber;
+						seat.dataset.seat = adjustedNumber;
+					} else {
+						// 나머지 좌석은 기존 번호 사용
+						seat.textContent = number;
+						seat.dataset.seat = number;
+					}
+				} else {
+					// 7202호가 아닌 경우 기존 번호 사용
+					seat.textContent = number;
+					seat.dataset.seat = number;
+				}
 
-			    if (seatStatus === true) {
-			        seat.classList.add('reserved'); // 예약된 좌석 스타일
-			    } else if (seatStatus === 'banned') {
-			        seat.classList.add('banned'); // 금지된 좌석 스타일
-			        seat.disabled = true; // 클릭 불가능하게 설정
-			    } else {
-			        seat.classList.add('empty'); // 빈 좌석 스타일
-			    }
+				if (seatStatus === true) {
+					seat.classList.add('reserved'); // 예약된 좌석 스타일
+				} else if (seatStatus === 'banned') {
+					seat.classList.add('banned'); // 금지된 좌석 스타일
+					seat.disabled = true; // 클릭 불가능하게 설정
+				} else {
+					seat.classList.add('empty'); // 빈 좌석 스타일
+				}
 
-			    seat.dataset.classroom = classroomName; // 강의실 이름 데이터 추가
-			    seat.onclick = () => openModal(seat); // 클릭 이벤트 핸들러 추가
-			    return seat;
+				seat.dataset.classroom = classroomName; // 강의실 이름 데이터 추가
+				seat.onclick = () => openModal(seat); // 클릭 이벤트 핸들러 추가
+				return seat;
 			}
 
 			// 좌석 배치를 생성하는 함수

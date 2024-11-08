@@ -2,14 +2,14 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <title>예약 확인 페이지</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- 뷰포트 메타 태그 추가 -->
-    <link rel="stylesheet" href="/css/timetableStyle.css" />
-    <link rel="stylesheet" href="/css/classroomStyle.css" />
-    <link rel="stylesheet" href="/css/reserveListStyle.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script th:inline="javascript">
+	<title>예약 확인 페이지</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- 뷰포트 메타 태그 추가 -->
+	<link rel="stylesheet" href="/css/timetableStyle.css" />
+	<link rel="stylesheet" href="/css/classroomStyle.css" />
+	<link rel="stylesheet" href="/css/reserveListStyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<script th:inline="javascript">
 		// 예약 취소 확인 창을 띄우는 함수
 		function cancelHour(button) {
 			var reservNum = button.getAttribute("data-reservNum");
@@ -26,12 +26,12 @@
 				confirmButtonText: '네, 취소합니다',
 				cancelButtonText: '아니요, 유지합니다',
 				customClass: {
-				popup: 'swal2-custom-width',
-        		title: 'swal2-title-custom', // 제목 폰트 크기 조정
-        		htmlContainer: 'swal2-html-custom', // 본문 폰트 크기 조정
-        		confirmButton: 'swal2-confirm-btn-custom', // 확인 버튼 스타일
-        		cancelButton: 'swal2-cancel-btn-custom' // 취소 버튼 스타일
-    		}
+					popup: 'swal2-custom-width',
+					title: 'swal2-title-custom', // 제목 폰트 크기 조정
+					htmlContainer: 'swal2-html-custom', // 본문 폰트 크기 조정
+					confirmButton: 'swal2-confirm-btn-custom', // 확인 버튼 스타일
+					cancelButton: 'swal2-cancel-btn-custom' // 취소 버튼 스타일
+				}
 			}).then((result) => {
 				if (result.isConfirmed) {
 					button.form.submit();
@@ -91,7 +91,7 @@
 					icon: 'success',
 					title: '완료',
 					text: successElement.textContent
-					
+
 				});
 			}
 
@@ -148,110 +148,123 @@
 
 	<!-- 헤더 끝 -->
 
-    <div id="listModal" class="modal">
-        <div class="listModal-content">
-            <span class="close" id="closeModal">&times;</span>
-            <h1>예약 확인</h1>
-            <h3>아래 예약 정보를 확인해주세요.</h3>
-            
-            <div th:if="${empty}" class="empty" th:text="${empty}"></div>
-            <div th:if="${error}" class="error" th:text="${error}" style="display:none;"></div>
-            <div th:if="${success}" class="success" th:text="${success}" style="display:none;"></div>
+	<div id="listModal" class="modal">
+		<div class="listModal-content">
+			<span class="close" id="closeModal">&times;</span>
+			<h1>예약 확인</h1>
+			<h3>아래 예약 정보를 확인해주세요.</h3>
 
-            <div class="reservations-container">
-                <div th:each="classroom : ${reserveList}">
-                    <div th:each="reservation : ${classroom.value}">
-                        <form class="reservation-form" action="/cancelReservation" method="post">
-                            <div class="reservation-info">
+			<div th:if="${empty}" class="empty" th:text="${empty}"></div>
+			<div th:if="${error}" class="error" th:text="${error}" style="display:none;"></div>
+			<div th:if="${success}" class="success" th:text="${success}" style="display:none;"></div>
+
+			<div class="reservations-container">
+				<div th:each="classroom : ${reserveList}">
+					<div th:each="reservation : ${classroom.value}">
+						<form class="reservation-form" action="/cancelReservation" method="post">
+							<div class="reservation-info">
 								<div class="info-row">
-								    <p><i class="fas fa-book-open"></i> <span class="label">강의명:</span> <span th:text="${reservation.subject}"></span></p> <!-- 펼쳐진 책 아이콘 -->
-								    <p><i class="fas fa-school"></i><span class="label"> 강의실:</span> <span th:text="${reservation.classroomName + '호'}"></span></p> <!-- 학교 아이콘 -->
+									<p><i class="fas fa-book-open"></i> <span class="label">강의명:</span> <span
+											th:text="${reservation.subject}"></span></p> <!-- 펼쳐진 책 아이콘 -->
+									<p><i class="fas fa-school"></i><span class="label"> 강의실:</span> <span
+											th:text="${reservation.classroomName + '호'}"></span></p> <!-- 학교 아이콘 -->
 								</div>
 								<div class="info-row">
-								    <p><i class="fas fa-calendar-alt"></i> <span class="label">요일:</span> <span th:text="${reservation.day}"></span></p> <!-- 다른 스타일의 캘린더 아이콘 -->
-								    <p><i class="fas fa-clock"></i> <span class="label">사용시간: </span><span th:text="${reservation.reservHourString + '시'}"></span></p>
+									<p><i class="fas fa-calendar-alt"></i> <span class="label">요일:</span> <span
+											th:text="${reservation.day}"></span></p> <!-- 다른 스타일의 캘린더 아이콘 -->
+									<p><i class="fas fa-clock"></i> <span class="label">사용시간: </span><span
+											th:text="${reservation.reservHourString + '시'}"></span></p>
 								</div>
 								<div class="info-row">
-								    <p><i class="fas fa-chair"></i> <span class="label">좌석: </span><span th:text="${reservation.reservSeat + '번'}"></span></p>
-								    <p><i class="fas fa-hashtag"></i> <span class="label">예약 번호: </span><span th:text="${reservation.reservNum + '번'}"></span></p> <!-- # 아이콘 -->
+									<p><i class="fas fa-chair"></i> <span class="label">좌석: </span><span
+											th:text="${reservation.reservSeat + '번'}"></span></p>
+									<p><i class="fas fa-hashtag"></i> <span class="label">예약 번호: </span><span
+											th:text="${reservation.reservNum + '번'}"></span></p> <!-- # 아이콘 -->
 								</div>
 								<div class="info-row">
-								    <p><i class="fas fa-user"></i> 아이디: <span th:text="${reservation.userId}"></span></p>
+									<p><i class="fas fa-user"></i> 아이디: <span th:text="${reservation.userId}"></span>
+									</p>
 								</div>
 
-                            </div>
-                            <input type="hidden" name="reservNum" th:value="${reservation.reservNum}">
-                            <input type="hidden" name="classroomName" th:value="${reservation.classroomName}">
-                            <input type="hidden" name="reservSeat" th:value="${reservation.reservSeat}">
-                            <button type="button" class="cancel-btn" onclick="cancelHour(this)"
-                                th:attr="data-reservNum=${reservation.reservNum},
+							</div>
+							<input type="hidden" name="reservNum" th:value="${reservation.reservNum}">
+							<input type="hidden" name="classroomName" th:value="${reservation.classroomName}">
+							<input type="hidden" name="reservSeat" th:value="${reservation.reservSeat}">
+							<button type="button" class="cancel-btn" onclick="cancelHour(this)" th:attr="data-reservNum=${reservation.reservNum},
                                          data-classroomName=${reservation.classroomName},
                                          data-reservSeat=${reservation.reservSeat}">
-                                예약 취소
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-            <button class="add-reservation-btn" onclick="window.location.href='/timetable'">예약 추가하기</button>
-        </div>
-    </div>
-	<!-- 메인 컨텐츠 영역 -->
-		   <div class="main-container">
-		       <!-- 시간표 섹션 시작 -->
-		       <div class="timetable-section">
-		           <div class="container">
-		               <table>
-		                   <thead>
-		                       <tr>
-		                           <th></th>
-		                           <th th:each="day : ${days}" th:text="${day}"></th>
-		                       </tr>
-		                   </thead>
-		                   <tbody>
-		                       <tr th:each="hour : ${hours}">
-		                           <td th:text="${hour}"></td>
-		                           <td th:each="day : ${days}" class="clickable" data-day="${day}" data-hour="${hour}">
-		                               <div th:each="timeTable : ${userTimeTable}" th:if="${timeTable.day == day 
-		                                           and timeTable.startHour le hour
-		                                           and timeTable.endHour gt hour}"
-		                                   th:attr="data-subject=${timeTable.subject}, data-classroom=${timeTable.classroomName}, 
-		                                           data-day=${timeTable.day}, data-hour=${hour}">
-		                                   <span th:text="${timeTable.subject + ' (' + timeTable.classroomName + ')'}"></span><br>
-		                               </div>
-		                               <div th:attr="data-hour=${hour}, data-day=${day}" style="display: none;"></div>
-		                           </td>
-		                       </tr>
-		                   </tbody>
-		               </table>
-		           </div>
-		       </div>
-		       <!-- 시간표 섹션 끝 -->
-			<!-- 버튼 컨테이너 오른쪽에 배치 -->
-			<div class="button-container">
-			    <!-- 유저 전용 버튼 -->
-			    <div class="timetable-button-container">
-			        <button th:if="${userPosition == 'student'}" id="reserve-seat-button" class="timetable-button">좌석 예약</button>
-			        <label th:if="${userPosition == 'student'}" class="timetable-button add-modal-button">시간표 추가</label>
-			        <label th:if="${userPosition == 'student'}" class="timetable-button edit-modal-button">시간표 수정</label>
-			        <label th:if="${userPosition == 'student'}" class="timetable-button delete-modal-button">시간표 삭제</label>
-			    </div>
-			    <!-- 관리자 전용 버튼 -->
-			    <div th:if="${userPosition == 'admin' or userPosition == 'professor'}" class="admin-button-container">
-			        <div class="admin-buttons"> <!-- 관리자 버튼 그룹 -->
-			            <button id="manage-seat-button" class="timetable-button">좌석 관리</button>
-			            <label class="timetable-button add-modal-button">시간표 추가</label>
-			            <label class="timetable-button edit-modal-button">시간표 수정</label>
-			            <label class="timetable-button delete-modal-button">시간표 삭제</label>
-			        </div>
-			        <div class="admin-action-container"> <!-- 관리자 액션 버튼 그룹 -->
-			            <a href="reserveList" class="admin-button">예약 목록</a>
-			            <a href="attendanceCheck" class="admin-button">출석 확인</a>
-			            <a href="banList" class="admin-button">예약금지 좌석 확인</a>
-			        </div>
-			    </div>
+								예약 취소
+							</button>
+						</form>
+					</div>
+				</div>
 			</div>
+
+			<button class="add-reservation-btn" onclick="window.location.href='/timetable'">예약 추가하기</button>
+		</div>
+	</div>
+	<!-- 메인 컨텐츠 영역 -->
+	<div class="main-container">
+		<!-- 시간표 섹션 시작 -->
+		<div class="timetable-section">
+			<div class="container">
+				<table>
+					<thead>
+						<tr>
+							<th></th>
+							<th th:each="day : ${days}" th:text="${day}"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="hour : ${hours}">
+							<td th:text="${hour}"></td>
+							<td th:each="day : ${days}" class="clickable" data-day="${day}" data-hour="${hour}">
+								<div th:each="timeTable : ${userTimeTable}" th:if="${timeTable.day == day 
+	                                            and timeTable.startHour le hour
+	                                            and timeTable.endHour gt hour}" th:attr="data-subject=${timeTable.subject}, data-classroom=${timeTable.classroomName}, 
+	                                            data-day=${timeTable.day}, data-hour=${hour}">
+									<span
+										th:text="${timeTable.subject + ' (' + timeTable.classroomName + ')'}"></span><br>
+								</div>
+								<div th:attr="data-hour=${hour}, data-day=${day}" style="display: none;"></div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<!-- 시간표 섹션 끝 -->
+		<!-- 버튼 컨테이너 -->
+		<div class="button-container">
+			<div class="timetable-button-container">
+				<!-- 사용자 구분에 따른 첫 번째 버튼 -->
+				<button th:if="${userPosition == 'student'}" id="reserve-seat-button" class="timetable-button">
+					<span class="button-label">좌석 예약</span>
+				</button>
+				<button th:if="${userPosition == 'admin' or userPosition == 'professor'}" id="manage-seat-button"
+					class="timetable-button">
+					<span class="button-label">좌석 관리</span>
+				</button>
+
+				<!-- 공통 버튼들 -->
+				<label id="timetable-plus-button" class="timetable-button add-modal-button">
+					<span class="button-label">시간표 추가</span>
+				</label>
+				<label id="timetable-adjustment-button" class="timetable-button edit-modal-button">
+					<span class="button-label">시간표 수정</span>
+				</label>
+				<label id="timetable-delete-button" class="timetable-button delete-modal-button">
+					<span class="button-label">시간표 삭제</span>
+				</label>
+			</div>
+		</div>
+		<!-- 관리자 액션 버튼 그룹 -->
+		<div th:if="${userPosition == 'admin' or userPosition == 'professor'}" class="admin-action-container">
+			<a href="reserveList" class="admin-button">예약 목록</a>
+			<a href="attendanceCheck" class="admin-button">출석 확인</a>
+			<a href="banList" class="admin-button">예약금지좌석 확인</a>
+		</div>
+	</div>
 </body>
 
 </html>
