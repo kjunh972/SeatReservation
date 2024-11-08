@@ -1,15 +1,18 @@
-#listModal h1{
-	color: black;
-	text-align: center; /* 중앙 정렬 */
-	margin-bottom: 0.5rem; /* h1과 h3 사이의 간격 줄이기 */
+#listModal h1 {
+    color: black;
+    text-align: center; /* 중앙 정렬 */
+    margin-bottom: 0.31rem; /* h1과 h3 사이의 간격 줄이기 */
 }
-#listModal h3{
-	color: dimgray;
-	font-weight: normal;
-	text-align: center; /* 중앙 정렬 */
+#listModal h3 {
+    color: dimgray;
+    font-weight: normal;
+    text-align: center; /* 중앙 정렬 */
 }
 .info-row i {
     color: #778da9; /* 아이콘 기본 색상 */
+    margin-right: 0.31rem; /* 아이콘과 텍스트 사이의 간격 추가 */
+    margin-top: 0.25rem; /* 아이콘 위쪽 간격 추가 */
+    margin-bottom: 0.25rem; /* 아이콘 아래쪽 간격 추가 */
 }
 .modal {
     display: none;
@@ -19,46 +22,45 @@
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
 .listModal-content {
     background-color: #fefefe;
     margin: 5% auto;
-    padding: 20px;
-    border-radius: 10px;
+    padding: 1.25rem; /* 패딩 */
+    border-radius: 0.63rem; /* 테두리 둥글게 */
     width: 90%;
-    max-width: 800px;
+    max-width: 50rem; /* 최대 너비 */
     max-height: 80vh;
     overflow-y: auto;
     position: relative;
-   
 }
+
 .info-row p .label {
-        white-space: nowrap; /* 라벨 텍스트는 한 줄로 유지 */
-        font-weight: normal !important; /* 라벨의 기본 굵기 유지 */
-    }
+    white-space: nowrap; /* 라벨 텍스트는 한 줄로 유지 */
+    font-weight: normal !important; /* 라벨의 기본 굵기 유지 */
+}
 
 .close {
     position: absolute;
-    right: 20px;
-    top: 10px;
-    font-size: 3rem; 
-    font-weight: bold;
+    right: 1.25rem; /* 오른쪽 여백 */
+    top: 0.63rem; /* 위쪽 여백 */
+    font-size: 1.88rem; /* 글자 크기 */
     font-weight: bold;
     cursor: pointer;
 }
 
 .reservations-container {
-    margin: 20px 0;
+    margin: 1.25rem 0; /* 위아래 여백 */
 }
 
 .reservation-form {
     background-color: #f8f9fa;
-    border: 1px solid #dee2e6;
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 15px;
+    border: 0.06rem solid #dee2e6; /* 테두리 두께 */
+    border-radius: 0.5rem; /* 테두리 둥글게 */
+    padding: 1.25rem; /* 패딩 */
+    margin-bottom: 0.94rem; /* 아래 여백 */
 }
 
 .reservation-info {
@@ -68,7 +70,9 @@
 .info-row {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 10px;
+    margin-bottom: 1.25rem; /* 아래 여백 */
+    padding-left: 6rem; /* 왼쪽 여백 */
+    gap: 5.6rem; /* 간격 */
 }
 
 .info-row p {
@@ -78,69 +82,69 @@
 
 .info-row span {
     font-weight: bold;
-    margin-left: 5px;
+    margin-left: 0.31rem; /* 왼쪽 여백 */
 }
 
 .cancel-btn {
-    background-color: #dc3545;
+    background-color: #da5552;
     color: white;
     border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
+    padding: 0.5rem 1rem; /* 패딩 */
+    border-radius: 0.25rem; /* 테두리 둥글게 */
     cursor: pointer;
     float: right;
-    margin-top: 10px;
+    margin-top: 0.63rem; /* 위 여백 */
+    margin-right: 1.25rem; /* 오른쪽 여백 */
 }
 
 .cancel-btn:hover {
-    background-color: #c82333;
+    background-color: #cc444b;
 }
 
 .add-reservation-btn {
-    background-color: #007bff;
+    background-color: #778da9;
     color: white;
     border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
+    padding: 0.63rem 1.25rem; /* 패딩 */
+    border-radius: 0.25rem; /* 테두리 둥글게 */
     cursor: pointer;
-    margin-top: 20px;
+	margin-left: 1rem;
 }
 
 .add-reservation-btn:hover {
-    background-color: #0056b3;
+    background-color: #5a6f89;
 }
 
 .empty, .error, .success {
-    padding: 15px;
-    margin: 10px 0;
-    border-radius: 4px;
+    padding: 0.94rem; /* 패딩 */
+    margin: 0.63rem 0; /* 위아래 여백 */
+    border-radius: 0.25rem; /* 테두리 둥글게 */
     text-align: center;
 }
 
 .empty {
     background-color: #f8f9fa;
-    border: 1px solid #dee2e6;
+    border: 0.06rem solid #dee2e6; /* 테두리 두께 */
 }
 
 .error {
     background-color: #f8d7da;
-    border: 1px solid #f5c6cb;
+    border: 0.06rem solid #f5c6cb;
     color: #721c24;
 }
 
 .success {
     background-color: #d4edda;
-    border: 1px solid #c3e6cb;
+    border: 0.06rem solid #c3e6cb;
     color: #155724;
 }
 
 .swal2-confirm-btn-custom {
-    background-color:  #778da9;
+    background-color: #778da9;
 }
 
-
 /* 모바일 전용 스타일 (768px 이하 화면 크기에서만 적용) */
-@media (max-width: 768px) {
+@media (max-width: 48rem) {
     #listModal h1 {
         font-size: 1.5rem; /* 폰트 크기 조정 */
     }
@@ -148,56 +152,52 @@
     #listModal h3 {
         font-size: 1rem; /* 폰트 크기 조정 */
     }
-    
-    .info-row {
-    	display: flex;
-    	justify-content: space-between;
-    	align-items: flex-start; /* 아이콘과 텍스트의 상단을 맞추기 */
-    	margin-bottom: 8px;
-        font-size: 0.85rem; /* 전체 내용의 폰트 크기 줄이기 */
-    	align-items: baseline; /* 라벨과 내용의 기준선을 맞추기 */
-	}
-    
-    .info-row p {
 
-    	display: flex;
-    	align-items: center; /* 아이콘과 텍스트가 수평 정렬되도록 설정 */
-    	margin: 0;
-    	flex: 1;
-    	min-width: 0; /* 텍스트가 아이콘 옆에서 줄바꿈될 때 잘리지 않도록 설정 */
-    	padding: 0.3rem;
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start; /* 아이콘과 텍스트의 상단을 맞추기 */
+        margin-bottom: 0.5rem; /* 아래 여백 */
+        font-size: 0.85rem; /* 전체 내용의 폰트 크기 줄이기 */
+        align-items: baseline; /* 라벨과 내용의 기준선을 맞추기 */
+    }
+
+    .info-row p {
+        display: flex;
+        align-items: center; /* 아이콘과 텍스트가 수평 정렬되도록 설정 */
+        margin: 0;
+        flex: 1;
+        min-width: 0; /* 텍스트가 아이콘 옆에서 줄바꿈될 때 잘리지 않도록 설정 */
+        padding: 0.19rem; /* 패딩 */
         font-size: 0.85rem; /* 개별 항목 폰트 크기 조정 */
-    	align-items: baseline; /* 라벨과 내용의 기준선을 맞추기 */
-	}
-	
-	/* 강의명, 강의실, 요일 등의 라벨 텍스트에 줄바꿈 방지 */
+        align-items: baseline; /* 라벨과 내용의 기준선을 맞추기 */
+    }
+
     .info-row p .label {
         white-space: nowrap; /* 라벨 텍스트는 한 줄로 유지 */
         font-weight: normal !important; /* 라벨의 기본 굵기 유지 */
     }
 
     .info-row i {
-        font-size: 0.8rem; /* 아이콘 크기 조정 */
+        font-size: 0.5rem; /* 아이콘 크기 조정 */
     }
-    
-  
 
     .listModal-content {
-        padding: 1rem !important;
+        padding: 0.63rem !important; /* 패딩 */
         width: 90% !important; /* 모바일에서 90% 너비를 강제 적용 */
-        max-width: 400px; /* 최대 너비 제한 */
+        max-width: 25rem; /* 최대 너비 제한 */
         max-height: 80vh; /* 화면 높이에 맞게 제한 */
-        transform: translateY(4.2rem); /* 토글 버튼 위치 피하기 위해 아래로 이동 */
+        transform: translateY(2.63rem); /* 토글 버튼 위치 피하기 위해 아래로 이동 */
         margin: 0 auto;
-    	box-sizing: border-box !important; /* 패딩과 너비를 포함하여 계산 */
-    	overflow-x: hidden !important; /* 수평 스크롤 방지 */
-    	font-size: 0.9rem; /* 모달 전체 폰트 크기 조정 */
+        box-sizing: border-box !important; /* 패딩과 너비를 포함하여 계산 */
+        overflow-x: hidden !important; /* 수평 스크롤 방지 */
+        font-size: 0.9rem; /* 모달 전체 폰트 크기 조정 */
     }
 
     .close {
-        right: 1rem;
-        top: 0.5rem;
-        font-size: 2rem; /* 닫기 버튼 크기 조정 */
+        right: 0.63rem; /* 오른쪽 여백 */
+        top: 0.31rem; /* 위쪽 여백 */
+        font-size: 1.25rem; /* 닫기 버튼 크기 조정 */
     }
 
     .reservation-form {
@@ -205,38 +205,38 @@
     }
 
     .cancel-btn, .add-reservation-btn {
-        font-size: 0.8rem; /* 버튼 폰트 크기 조정 */
-        padding: 0.4rem 1rem; /* 버튼 패딩 조정 */
+        font-size: 0.5rem; /* 버튼 폰트 크기 조정 */
+        padding: 0.25rem 0.63rem; /* 버튼 패딩 조정 */
     }
 
     .empty, .error, .success {
-        font-size: 0.8rem; /* 메시지 폰트 크기 조정 */
+        font-size: 0.5rem; /* 메시지 폰트 크기 조정 */
     }
+
     .swal2-custom-width {
         width: 80% !important; /* 모바일에서 너비 95%로 조정 */
-        max-width: 350px; /* 최대 너비 제한 */
+        max-width: 21.88rem; /* 최대 너비 제한 */
     }
-    
+
     /* SweetAlert2 제목 폰트 크기 조정 */
-.swal2-title-custom {
-    font-size: 1.2rem; /* 제목 폰트 크기 조정 */
-}
+    .swal2-title-custom {
+        font-size: 1.2rem; /* 제목 폰트 크기 조정 */
+    }
 
-/* SweetAlert2 본문 폰트 크기 조정 */
-.swal2-html-custom {
-    font-size: 0.6rem; /* 본문 폰트 크기 조정 */
-}
+    /* SweetAlert2 본문 폰트 크기 조정 */
+    .swal2-html-custom {
+        font-size: 0.38rem; /* 본문 폰트 크기 조정 */
+    }
 
-/* SweetAlert2 확인 버튼 크기 조정 */
-.swal2-confirm-btn-custom {
-    font-size: 0.85rem; /* 버튼 폰트 크기 조정 */
-    padding: 0.4rem 0.8rem; /* 버튼 패딩 조정 */
-}
+    /* SweetAlert2 확인 버튼 크기 조정 */
+    .swal2-confirm-btn-custom {
+        font-size: 0.53rem; /* 버튼 폰트 크기 조정 */
+        padding: 0.25rem 0.5rem; /* 버튼 패딩 조정 */
+    }
 
-/* SweetAlert2 취소 버튼 크기 조정 */
-.swal2-cancel-btn-custom {
-    font-size: 0.85rem; /* 버튼 폰트 크기 조정 */
-    padding: 0.4rem 0.8rem; /* 버튼 패딩 조정 */
-}
-
+    /* SweetAlert2 취소 버튼 크기 조정 */
+    .swal2-cancel-btn-custom {
+        font-size: 0.53rem; /* 버튼 폰트 크기 조정 */
+        padding: 0.25rem 0.5rem; /* 버튼 패딩 조정 */
+    }
 }

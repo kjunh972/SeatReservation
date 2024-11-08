@@ -130,23 +130,23 @@
 							<form class="reservation-form" action="/cancelReservation" method="post">
 								<div class="reservation-info">
 									<div class="info-row">
-										<p><i class="fas fa-book-open"></i> 강의명: <span
+										<p><i class="fas fa-book-open"></i> 강의명 : <span
 												th:text="${banSeat.subject}"></span></p>
-										<p><i class="fas fa-school"></i> 강의실: <span
+										<p><i class="fas fa-school"></i> 강의실 : <span
 												th:text="${banSeat.classroomName + '호'}"></span></p>
 									</div>
 									<div class="info-row">
-										<p><i class="fas fa-calendar-alt"></i> 요일: <span
+										<p><i class="fas fa-calendar-alt"></i> 요일 : <span
 												th:text="${banSeat.day}"></span></p>
-										<p><i class="fas fa-clock"></i> 사용시간: <span
+										<p><i class="fas fa-clock"></i> 사용시간 : <span
 												th:text="${banSeat.banHourString + '시'}"></span></p>
 									</div>
 									<div class="info-row">
-										<p><i class="fas fa-chair"></i> 좌석: <span
+										<p><i class="fas fa-chair"></i> 좌석 : <span
 												th:text="${banSeat.banSeat + '번'}"></span></p>
 									</div>
 									<div class="info-row">
-										<p><i class="fas fa-user"></i> 교수: <span
+										<p><i class="fas fa-user"></i> 교수 : <span
 												th:text="${banSeat.userId ?: '미지정'}"></span></p>
 									</div>
 								</div>
@@ -162,6 +162,7 @@
 					</div>
 				</div>
 			</div>
+			<button class="add-reservation-btn" onclick="window.location.href='/timetable'">좌석예약 금지 추가</button>
 		</div>
 	</div>
 	<!-- 메인 컨텐츠 영역 -->
