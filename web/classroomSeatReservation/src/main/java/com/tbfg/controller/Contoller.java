@@ -92,7 +92,7 @@ public class Contoller {
 
 		// 요일과 시간 목록을 생성하여 모델에 추가
 		List<String> days = Arrays.asList("월요일", "화요일", "수요일", "목요일", "금요일");
-		List<Integer> hours = Arrays.asList(9, 10, 11, 12, 13, 14, 15, 16,17,18,19,20,21);
+		List<Integer> hours = Arrays.asList(9, 10, 11, 12, 13, 14, 15, 16, 17);
 
 		// 모델에 사용자의 시간표 정보를 추가합니다.
 		model.addAttribute("userTimeTable", userTimeTable);
