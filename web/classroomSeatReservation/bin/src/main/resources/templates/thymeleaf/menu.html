@@ -1,43 +1,184 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <meta charset="UTF-8">
-    <title>Menu</title>
-    
-    <style>
-        /* 헤더 스타일 */
-        header {
-            background-color: #4CAF50; /* 배경색 설정 */
-            font-size: 15pt; /* 폰트 크기 */
-            height: 40px; /* 높이 설정 */
-            line-height: 40px; /* 텍스트를 수직으로 가운데 정렬 */
-            width: 100%; /* 넓이를 100%로 설정 */
-        }
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Menu</title>
 
-        /* 헤더 내 링크 스타일 */
-        header a {
-            text-decoration: none; /* 밑줄 제거 */
-            color: white; /* 텍스트 색상 */
-            margin-right: 10px; /* 오른쪽 마진 설정 */
-        }
-
-        /* 오른쪽으로 정렬된 링크 스타일 */
-        header a.rightUp {
-            float: right; /* 오른쪽 정렬 */
-        }
-
-        /* 마지막 링크의 오른쪽 마진 설정 */
-        header a.last {
-            margin-right: 20px; /* 조절할 간격 크기 */
-        }
-    </style>
+	<!-- CSS 파일 연결 -->
+	<link rel="stylesheet" href="/css/menuStyle.css">
+	<!-- Font Awesome 아이콘 라이브러리 -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+	<!-- SweetAlert2 라이브러리 (모달창) -->
+	<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.min.css" rel="stylesheet">
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.all.min.js"></script>
 </head>
+
 <body>
-    <header class="header"> <!-- 헤더 부분 -->
-        <a href="index.html">Home</a> <!-- 홈 링크 -->
-        <a href="myPage" class="rightUp">마이페이지 </a> <!-- 마이페이지 링크 -->
-        <a href="reserveList" class="rightUp last">예약확인</a> <!-- 예약확인 링크 -->
-        <a href="classroomLike" class="rightUp last">즐겨찾기한 강의실</a> <!-- 시간표 링크 -->
-    </header>
+    <!-- 데스크탑용 상단 네비게이션 바 -->
+    <nav class="menu-desktop-nav">
+        <div class="menu-nav-content">
+            <!-- 로고 영역 -->
+            <div class="menu-nav-logo">
+                <a href="index.html">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Home</span>
+                </a>
+            </div>
+            <!-- 네비게이션 링크 -->
+            <div class="menu-nav-links">
+                <!-- 로그인된 사용자에게만 보이는 메뉴 -->
+                <th:block th:if="${session.loggedInUser != null}">
+                    <a href="timetable"><i class="fas fa-calendar-check"></i> 시간표</a>
+                    <a href="classroomLike"><i class="fas fa-chalkboard-teacher"></i> 강의실</a>
+                    <a href="reserveList"><i class="fas fa-bell"></i> 예약확인</a>
+                    <a href="myPage"><i class="fas fa-user-cog"></i> 마이페이지</a>
+                </th:block>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 모바일용 메뉴 토글 버튼 -->
+    <button class="menu-mobile-toggle" id="menu-mobile-toggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- 모바일용 사이드바 -->
+    <div class="menu-mobile-sidebar" id="menu-mobile-sidebar">
+        <div class="menu-sidebar-header">
+            <!-- 로그인된 사용자 프로필 표시 -->
+            <th:block th:if="${session.loggedInUser != null}">
+                <div class="menu-user-profile" onclick="location.href='login'" style="cursor: pointer;">
+                    <div class="menu-profile-avatar">
+                        <span th:text="${#strings.substring(session.loggedInUser.name, 0, 1)}"></span>
+                    </div>
+                    <div class="menu-profile-info">
+                        <h3 th:text="${session.loggedInUser.name}"></h3>
+                        <p th:text="${session.loggedInUser.id}"></p>
+                    </div>
+                </div>
+            </th:block>
+
+            <!-- 비로그인 상태일 때 로그인 폼 표시 -->
+            <th:block th:if="${session.loggedInUser == null}">
+                <div class="menu-login-section">
+                    <h2>로그인</h2>
+                    <form action="/login" method="post" class="menu-login-form">
+                        <div class="menu-input-group">
+                            <i class="far fa-user"></i>
+                            <input type="text" name="id" placeholder="아이디" required>
+                        </div>
+                        <div class="menu-input-group">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" name="password" placeholder="비밀번호" required>
+                        </div>
+                        <button type="submit">로그인</button>
+                        <a href="selectPosition" class="menu-register-link">
+                            <i class="fas fa-user-plus"></i> 회원가입
+                        </a>
+                    </form>
+                </div>
+            </th:block>
+        </div>
+
+        <!-- 사이드바 메뉴 영역 -->
+        <div class="menu-sidebar-menu">
+            <!-- 로그인된 사용자용 메뉴 -->
+            <th:block th:if="${session.loggedInUser != null}">
+                <a href="timetable"><i class="fas fa-calendar-check"></i> 시간표</a>
+                <a href="classroomLike"><i class="fas fa-chalkboard-teacher"></i> 강의실</a>
+                <a href="reserveList"><i class="fas fa-bell"></i> 예약확인</a>
+                <a href="myPage"><i class="fas fa-user-cog"></i> 마이페이지</a>
+                <a href="/logout" class="menu-logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> 로그아웃
+                </a>
+            </th:block>
+            <!-- 비로그인 사용자용 메뉴 -->
+            <th:block th:if="${session.loggedInUser == null}">
+                <a href="index.html"><i class="fas fa-home"></i> 홈</a>
+                <a href="selectPosition"><i class="fas fa-user-plus"></i> 회원가입</a>
+            </th:block>
+        </div>
+    </div>
+
+    <!-- 사이드바 활성화시 배경 오버레이 -->
+    <div class="menu-overlay" id="menu-overlay"></div>
+
+    <!-- 메인 콘텐츠 영역 -->
+    <main class="menu-main-content">
+        <!-- 페이지별 콘텐츠가 들어갈 영역 -->
+    </main>
+
+    <!-- JavaScript 코드 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const mobileToggle = document.getElementById('menu-mobile-toggle');
+            const mobileSidebar = document.getElementById('menu-mobile-sidebar');
+            const overlay = document.getElementById('menu-overlay');
+            const logoutBtn = document.querySelector('.menu-logout-btn');
+
+            const shouldOpenSidebar = localStorage.getItem('openSidebar');
+            if (shouldOpenSidebar === 'true' && window.innerWidth <= 768) {
+                mobileSidebar.classList.add('active');
+                overlay.classList.add('active');
+                mobileToggle.style.transform = 'rotate(90deg)';
+                localStorage.removeItem('openSidebar');
+            }
+
+            function toggleSidebar() {
+                mobileSidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+                mobileToggle.style.transform = mobileSidebar.classList.contains('active') ? 
+                    'rotate(90deg)' : 'rotate(0deg)';
+            }
+
+            mobileToggle.addEventListener('click', toggleSidebar);
+
+            overlay.addEventListener('click', function () {
+                mobileSidebar.classList.remove('active');
+                overlay.classList.remove('active');
+                mobileToggle.style.transform = 'rotate(0deg)';
+            });
+
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    mobileSidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                    mobileToggle.style.transform = 'rotate(0deg)';
+
+                    Swal.fire({
+                        title: '로그아웃',
+                        text: '정말 로그아웃 하시겠습니까?',
+                        icon: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#778da9',
+                        cancelButtonColor: '#888',
+                        confirmButtonText: '로그아웃',
+                        cancelButtonText: '취소',
+                        reverseButtons: false,
+                        customClass: {
+                            popup: 'menu-logout-popup',
+                            confirmButton: 'menu-logout-confirm',
+                            cancelButton: 'menu-logout-cancel'
+                        }
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '/logout';
+                        }
+                    });
+                });
+            }
+
+            window.addEventListener('resize', function () {
+                if (window.innerWidth > 768) {
+                    mobileSidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                    mobileToggle.style.transform = 'rotate(0deg)';
+                }
+            });
+        });
+    </script>
 </body>
 </html>

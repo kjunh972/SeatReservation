@@ -1,0 +1,372 @@
+/* 메인 제목 스타일링 */
+h1 {
+	color: #1b263b;
+	text-align: center;
+	margin: 30px 0;
+	font-size: 2.2em;
+	text-transform: uppercase;
+	letter-spacing: 2px;
+}
+
+.back-button.lecture-back,
+.back-button.reservation-back {
+	display: none;
+	/* 기본적으로 모든 환경에서 숨김 */
+}
+
+/* 메인 컨테이너 레이아웃 */
+.container {
+	display: flex;
+	justify-content: center;
+	gap: 40px;
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 20px;
+}
+
+/* 섹션 공통 스타일 */
+.section {
+	flex: 1;
+	padding: 25px;
+	border: none;
+	border-radius: 12px;
+	background-color: #fff;
+	min-height: 300px;
+	width: 450px;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	transition: transform 0.2s ease;
+}
+
+/* 섹션 호버 효과 */
+.section:hover {
+	transform: translateY(-5px);
+}
+
+/* 섹션 제목 스타일 */
+.section h2 {
+	margin: 0 0 20px 0;
+	color: #778da9;
+	font-size: 1.5em;
+	padding-bottom: 10px;
+	border-bottom: 2px solid #778da9;
+	text-align: center;
+}
+
+/* 섹션 리스트 기본 스타일 */
+.section ul {
+	list-style-type: none;
+	padding: 0;
+}
+
+/* 섹션 리스트 아이템 스타일 */
+.section li {
+	margin-bottom: 15px;
+	padding: 15px;
+	border: 1px solid #e9ecef;
+	border-radius: 8px;
+	background-color: #fff;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* 리스트 아이템 호버 효과 */
+.section li:hover {
+	background-color: #f8f9fa;
+	border-color: #778da9;
+	transform: translateX(5px);
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 선택된 리스트 아이템 스타일 */
+.section li.selected {
+	background-color: #778da9;
+	border-color: #778da9;
+	color: #fff;
+	transform: translateX(5px);
+}
+
+/* 에러 메시지 스타일 */
+.error-message {
+	color: #dc3545;
+	font-weight: 500;
+	padding: 15px;
+	background-color: #fff3f3;
+	border-radius: 8px;
+	border: 1px solid #ffcdd2;
+	text-align: center;
+	cursor: default !important;
+}
+
+/* 에러 메시지 호버 효과 제거 */
+.error-message:hover {
+	transform: none !important;
+	background-color: #fff3f3 !important;
+	border-color: #ffcdd2 !important;
+}
+
+/* 예약 아이템 컨테이너 스타일 */
+.reservation-item {
+	border: 1px solid #e9ecef;
+	background-color: #fff;
+	padding: 20px;
+	margin-bottom: 15px;
+	border-radius: 8px;
+	cursor: default !important;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* 예약 아이템 호버 효과 */
+.reservation-item:hover {
+	transform: none !important;
+	border-color: #778da9;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 예약 헤더 스타일 */
+.reservation-header {
+	background-color: #f8f9fa;
+	padding: 15px;
+	border-radius: 8px;
+	margin-bottom: 15px;
+	text-align: center;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* 예약 상세 정보 컨테이너 */
+.reservation-details {
+	background-color: #f8f9fa;
+	padding: 15px;
+	border-radius: 8px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+	margin-top: 10px;
+}
+
+/* 과목 라벨 스타일 */
+.subject-label {
+	font-weight: 600;
+	color: #778da9;
+	margin-right: 10px;
+	display: block;
+	margin-bottom: 5px;
+}
+
+/* 과목 값 스타일 */
+.subject-value {
+	color: #1b263b;
+	font-size: 1.3em;
+	font-weight: 600;
+}
+
+/* 상세 정보 아이템 스타일 */
+.detail-item {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 12px;
+	padding: 8px 0;
+	border-bottom: 1px solid #e9ecef;
+}
+
+/* 마지막 상세 정보 아이템 테두리 제거 */
+.detail-item:last-child {
+	border-bottom: none;
+}
+
+/* 상세 정보 라벨 스타일 */
+.detail-label {
+	color: #778da9;
+	font-weight: 600;
+}
+
+/* 상세 정보 값 스타일 */
+.detail-value {
+	color: #1b263b;
+	font-weight: 500;
+}
+
+/* 예약 시간 컨테이너 스타일 */
+.reservation-time {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 8px 0;
+	border-bottom: 1px solid #e9ecef;
+}
+
+/* 마지막 예약 시간 테두리 제거 */
+.reservation-time:last-child {
+	border-bottom: none;
+}
+
+/* 예약 시간 라벨 스타일 */
+.reservation-time .detail-label {
+	color: #778da9;
+	font-weight: 600;
+}
+
+/* 예약 시간 값 스타일 */
+.reservation-time .detail-value {
+	color: #1b263b;
+	font-weight: 500;
+}
+
+/* 모바일 반응형 스타일 */
+@media (max-width: 768px) {
+
+	/* 모바일 기본 바디 스타일 */
+	body {
+		padding-top: 20px;
+	}
+
+	/* 모바일 제목 스타일 */
+	h1 {
+		font-size: 1.3em;
+		margin: 20px 0;
+		margin-top: -1.7rem;
+		margin-bottom: 4.5rem;
+	}
+
+	/* 모바일 컨테이너 스타일 */
+	.container {
+		flex-direction: column;
+		padding: 0;
+		margin: 0;
+		width: 100%;
+	}
+
+	/* 모바일 섹션 스타일 */
+	.section {
+		width: auto;
+		margin: 10px;
+		min-height: auto;
+		height: auto;
+		transform: none !important;
+	}
+
+	/* 모바일 섹션 호버 효과 제거 */
+	.section:hover {
+		transform: none !important;
+	}
+
+	/* 모바일 예약 섹션 스타일 */
+	.section.reservations {
+		display: none;
+		animation: slideIn 0.3s ease-out;
+	}
+
+	/* 모바일 강의 섹션 스타일 */
+	.section.lectures {
+		animation: slideIn 0.3s ease-out;
+	}
+
+	/* 모바일 상세 정보 아이템 스타일 */
+	.detail-item {
+		flex-direction: row;
+		text-align: left;
+		padding: 12px 0;
+	}
+
+	/* 모바일 상세 정보 라벨 스타일 */
+	.detail-label {
+		margin-bottom: 0;
+	}
+
+	/* 모바일 예약 헤더 스타일 */
+	.reservation-header {
+		position: sticky;
+		top: 0;
+		background-color: #f8f9fa;
+		z-index: 10;
+		margin: -15px -15px 15px -15px;
+		padding: 15px;
+		border-radius: 8px 8px 0 0;
+	}
+
+	/* 모바일 뒤로가기 버튼 스타일 */
+	.back-button.lecture-back,
+	.back-button.reservation-back {
+		display: none;
+		position: fixed;
+		bottom: 20px;
+		right: 20px;
+		width: 50px;
+		height: 50px;
+		font-size: 1.2rem;
+		background-color: #778da9;
+		color: white;
+		border-radius: 50%;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+		border: none;
+		/* 테두리 제거 */
+		outline: none;
+		/* 아웃라인 제거 */
+
+	}
+
+	/* 모바일에서 버튼이 표시될 때만 적용되는 호버 효과 */
+	.back-button:hover {
+		background-color: #415a77;
+		transform: translateY(-2px);
+	}
+
+	/* 모바일에서 버튼이 표시될 때만 적용되는 클릭 효과 */
+	.back-button:active {
+		transform: translateY(0);
+	}
+
+	/* 모바일 예약 시간 스타일 */
+	.reservation-time {
+		flex-direction: row;
+		justify-content: space-between;
+		text-align: left;
+		padding: 0.8rem 0;
+	}
+}
+
+/* 슬라이드 인 애니메이션 */
+@keyframes slideIn {
+	from {
+		opacity: 0;
+		transform: translateX(30px);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+
+/* 슬라이드 아웃 애니메이션 */
+@keyframes slideOut {
+	from {
+		opacity: 1;
+		transform: translateX(0);
+	}
+
+	to {
+		opacity: 0;
+		transform: translateX(-30px);
+	}
+}
+
+/* 스크롤바 스타일 */
+::-webkit-scrollbar {
+	width: 8px;
+}
+
+/* 스크롤바 트랙 스타일 */
+::-webkit-scrollbar-track {
+	background: #f1f1f1;
+	border-radius: 4px;
+}
+
+/* 스크롤바 썸네일 스타일 */
+::-webkit-scrollbar-thumb {
+	background: #778da9;
+	border-radius: 4px;
+}
+
+/* 스크롤바 썸네일 호버 효과 */
+::-webkit-scrollbar-thumb:hover {
+	background: #415a77;
+}
