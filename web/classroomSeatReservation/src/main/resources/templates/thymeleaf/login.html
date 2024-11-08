@@ -78,9 +78,6 @@
 			</a>
 		</div>
 
-		<!-- 메인 컨텐츠 영역 -->
-
-
 		<div class="login-container">
 			<div class="login-box">
 				<!-- 로그인 폼 -->
@@ -125,37 +122,39 @@
 				</div>
 			</div>
 		</div>
-	</div>
 
-	<div class="main-container">
-		<!-- 시간표 섹션 시작 -->
-		<div class="timetable-section">
-			<div class="container">
-				<table>
-					<thead>
-						<tr>
-							<th></th>
-							<th th:each="day : ${days}" th:text="${day}"></th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr th:each="hour : ${hours}">
-							<td th:text="${hour}"></td>
-							<td th:each="day : ${days}" class="clickable" data-day="${day}" data-hour="${hour}">
-								<div th:each="timeTable : ${userTimeTable}" th:if="${timeTable.day == day 
+		<!-- 메인 컨텐츠 영역 -->
+		<div class="main-container">
+			<!-- 시간표 섹션 시작 -->
+			<div class="timetable-section">
+				<div class="container">
+					<table>
+						<thead>
+							<tr>
+								<th></th>
+								<th th:each="day : ${days}" th:text="${day}"></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="hour : ${hours}">
+								<td th:text="${hour}"></td>
+								<td th:each="day : ${days}" class="clickable" data-day="${day}" data-hour="${hour}">
+									<div th:each="timeTable : ${userTimeTable}" th:if="${timeTable.day == day 
 			                                            and timeTable.startHour le hour
 			                                            and timeTable.endHour gt hour}" th:attr="data-subject=${timeTable.subject}, data-classroom=${timeTable.classroomName}, 
 			                                            data-day=${timeTable.day}, data-hour=${hour}">
-									<span
-										th:text="${timeTable.subject + ' (' + timeTable.classroomName + ')'}"></span><br>
-								</div>
-								<div th:attr="data-hour=${hour}, data-day=${day}" style="display: none;"></div>
-							</td>
-						</tr>
-					</tbody>
-				</table>
+										<span
+											th:text="${timeTable.subject + ' (' + timeTable.classroomName + ')'}"></span><br>
+									</div>
+									<div th:attr="data-hour=${hour}, data-day=${day}" style="display: none;"></div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 			</div>
 		</div>
+
 	</div>
 
 	<!-- 모바일 전용 컨텐츠 -->
