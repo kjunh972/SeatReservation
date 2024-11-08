@@ -1,24 +1,14 @@
 <!DOCTYPE html>
 <html xmlns="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <title>강의실 자리 예약 프로그램 교수 회원가입</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <header th:replace="/menu_admin.html"></header>
     <link rel="stylesheet" href="/css/classroomStyle.css" />
-    <style>
-        .autocomplete-list {
-            position: absolute;
-            background-color: #f1f1f1;
-            border: 1px solid #ccc;
-            max-height: 150px;
-            overflow-y: auto;
-            z-index: 999;
-            width: 100%;
-        }
-        .error-message {
-            color: red;
-            font-size: 0.9em;
-        }
-    </style>
+    <link rel="stylesheet" href="/css/professorSignupStyle.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         let isIdChecked = false;
 
@@ -28,7 +18,7 @@
             filter = input.value.toUpperCase();
             select = document.getElementById('schoolList');
             option = select.getElementsByTagName('option');
-            
+
             for (i = 0; i < option.length; i++) {
                 txtValue = option[i].text;
                 if (txtValue.toUpperCase().indexOf(filter) > -1) {
@@ -47,22 +37,34 @@
 
         function validateForm() {
             var selectedSchool = document.getElementById('schoolInput').value;
-            var allowedSchools = ['대학교1', '대학교2', '대학교3'];
+            var allowedSchools = ['가톨릭대학교', '고려대학교', '동양미래대학교', '서울대학교', '성공회대학교', '연세대학교', '유한대학교', '중앙대학교'];
             var password = document.getElementById('password').value;
             var confirmPassword = document.getElementById('confirmPass').value;
 
             if (!allowedSchools.includes(selectedSchool)) {
-                alert('등록되지 않은 학교입니다. 등록된 학교에서만 회원가입이 가능합니다.');
+                Swal.fire({
+                    icon: 'warning',
+                    title: '학교 선택 오류',
+                    text: '등록되지 않은 학교입니다. 등록된 학교에서만 회원가입이 가능합니다.'
+                });
                 return false;
             }
 
             if (!isValidPassword(password)) {
-                alert('비밀번호는 최소 8자이며, 하나 이상의 문자 및 숫자를 포함해야 합니다.');
+                Swal.fire({
+                    icon: 'warning',
+                    title: '비밀번호 형식 오류',
+                    text: '비밀번호는 최소 8자이며, 하나 이상의 문자, 숫자, 특수문자(!@#$%^&*)를 포함해야 합니다.'
+                });
                 return false;
             }
 
             if (password !== confirmPassword) {
-                alert('비밀번호가 일치하지 않습니다.');
+                Swal.fire({
+                    icon: 'error',
+                    title: '비밀번호 불일치',
+                    text: '비밀번호가 일치하지 않습니다.'
+                });
                 return false;
             }
 
@@ -70,14 +72,18 @@
         }
 
         function isValidPassword(password) {
-            var re = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+            var re = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
             return re.test(password);
         }
 
         function checkId() {
             var id = document.getElementById('id').value;
             if (id === "") {
-                alert("아이디를 입력하세요.");
+                Swal.fire({
+                    icon: 'warning',
+                    title: '입력 오류',
+                    text: '아이디를 입력하세요.'
+                });
                 return;
             }
 
@@ -88,9 +94,19 @@
                     var isExists = xhr.responseText === 'true';
                     var idErrorSpan = document.getElementById('idError');
                     if (isExists) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: '아이디 중복',
+                            text: '이미 사용 중인 아이디입니다.'
+                        });
                         idErrorSpan.textContent = "이미 사용 중인 아이디입니다.";
                         isIdChecked = false;
                     } else {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '사용 가능',
+                            text: '사용 가능한 아이디입니다.'
+                        });
                         idErrorSpan.textContent = "사용 가능한 아이디입니다.";
                         isIdChecked = true;
                     }
@@ -100,58 +116,80 @@
         }
 
         function handleFormSubmit(event) {
+            event.preventDefault();
+            
             if (!isIdChecked) {
-                alert('아이디 중복확인을 해주세요.');
-                event.preventDefault();
+                Swal.fire({
+                    icon: 'warning',
+                    title: '아이디 확인 필요',
+                    text: '아이디 중복확인을 해주세요.'
+                });
                 return;
             }
 
             if (!validateForm()) {
-                event.preventDefault();
                 return;
             }
 
-            alert('회원가입이 완료되었습니다.');
+            Swal.fire({
+                icon: 'success',
+                title: '회원가입 완료',
+                text: '회원가입이 완료되었습니다.',
+                showConfirmButton: true,
+                confirmButtonText: '확인'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('professorSignupForm').submit();
+                }
+            });
         }
     </script>
 </head>
+
 <body>
     <h2>강의실 자리 예약 프로그램 교수 회원가입</h2>
     <form id="professorSignupForm" action="/professorSignUpCheck" method="post" onsubmit="handleFormSubmit(event)">
-        <div>
-            <label for="id">사용자 아이디:</label>
-            <input type="text" id="id" name="id" required>
+        <div class="form-group">
+            <label for="id">ID</label>
+            <input type="text" id="id" name="id" placeholder="사용자 아이디" required>
             <button type="button" onclick="checkId()">아이디 중복확인</button>
             <span class="error-message" id="idError"></span>
         </div>
-        <div>
-            <label for="password">비밀번호:</label>
-            <input type="password" id="password" name="password" required>
-            <span class="error-message">비밀번호는 최소 8자이며, 하나 이상의 문자 및 숫자를 포함해야 합니다.</span>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="비밀번호" required>
+            <span class="error-message">비밀번호는 최소 8자이며, 하나 이상의 문자, 숫자, 특수문자(!@#$%^&*)를 포함해야 합니다.</span>
         </div>
-        <div>
-            <label for="confirmPass">비밀번호 확인:</label>
-            <input type="password" id="confirmPass" name="confirmPass" required>
+        <div class="form-group">
+            <label for="confirmPass">Verify password</label>
+            <input type="password" id="confirmPass" name="confirmPass" placeholder="비밀번호 확인" required>
         </div>
-        <div>
-            <label for="schoolInput">학교:</label>
-            <input type="text" id="schoolInput" name="school" onkeyup="filterSchools()" onclick="filterSchools()" placeholder="학교 검색" required>
+        <div class="form-group">
+            <label for="schoolInput">University</label>
+            <input type="text" id="schoolInput" name="school" onkeyup="filterSchools()" onclick="filterSchools()"
+                placeholder="학교 검색" required>
             <div id="schoolList" class="autocomplete-list" style="display: none;">
                 <option value="">학교 선택</option>
-                <option value="대학교1" onclick="fillSchool('대학교1')">대학교1</option>
-                <option value="대학교2" onclick="fillSchool('대학교2')">대학교2</option>
-                <option value="대학교3" onclick="fillSchool('대학교3')">대학교3</option>
+                <option value="가톨릭대학교" onclick="fillSchool('가톨릭대학교')">가톨릭대학교</option>
+                <option value="고려대학교" onclick="fillSchool('고려대학교')">고려대학교</option>
+                <option value="동양미래대학교" onclick="fillSchool('동양미래대학교')">동양미래대학교</option>
+                <option value="서울대학교" onclick="fillSchool('서울대학교')">서울대학교</option>
+                <option value="성공회대학교" onclick="fillSchool('성공회대학교')">성공회대학교</option>
+                <option value="연세대학교" onclick="fillSchool('연세대학교')">연세대학교</option>
+                <option value="유한대학교" onclick="fillSchool('유한대학교')">유한대학교</option>
+                <option value="중앙대학교" onclick="fillSchool('중앙대학교')">중앙대학교</option>
             </div>
         </div>
-        <div>
-            <label for="major">전공:</label>
-            <input type="text" id="major" name="major" required>
+        <div class="form-group">
+            <label for="major">Specialty</label>
+            <input type="text" id="major" name="major" placeholder="전공" required>
         </div>
-        <div>
-            <label for="name">이름:</label>
-            <input type="text" id="name" name="name" required>
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" placeholder="이름" required>
         </div>
         <button type="submit">가입완료하기</button>
     </form>
 </body>
+
 </html>

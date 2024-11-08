@@ -1,172 +1,437 @@
-/* 전체 컨테이너 스타일 */
-.container {
-    margin-top: -30px; /* 시간표 위로의 여백을 설정합니다. */
-    margin-bottom: 50px; /* 시간표와 버튼 사이의 여백을 설정합니다. */
+/* 기본 스타일 초기화 */
+body, ul, li {
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }
 
-/* 클릭 가능한 셀을 스타일링하는 CSS */
-.clickable {
-    cursor: pointer;
-    border: 1px solid transparent;
-    transition: border 0.2s;
+/* 타이포그래피 설정 */
+h1 { /* 제목 스타일 */
+  color: #778da9; /* 제목 색상 설정 */
+  text-align: center; /* 텍스트 가운데 정렬 */
+  font-size: 2rem; /* 폰트 크기 설정 */
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.1); /* 텍스트 그림자 설정 */
+  margin: 10px 0 5px; /* 상단, 하단 여백 설정 */
 }
 
-.clickable:hover {
-    border: 1px solid #000; /* 마우스를 올렸을 때 테두리 강조 */
+/* 레이아웃 설정 */
+.main-container {
+    display: flex; /* 플렉스 레이아웃 사용 */
+    flex-direction: row; /* 수평 정렬 */
+    justify-content: flex-start; /* 왼쪽 정렬 */
+    align-items: flex-start; /* 상단 정렬 */
+    position: fixed; /* 화면에 고정 */
+    left: 0.5%; /* 왼쪽 정렬 */
+    top: 25.8%; /* 상단에서 29% 위치 */
+    padding-left: 9rem; /* 왼쪽 여백 설정 */
 }
 
-.selected {
-    outline: 2px solid #000; /* 선택된 셀은 테두리로 강조 */
+.timetable-section {
+    flex: 1; /* 시간표가 가능한 공간을 차지하도록 설정 */
+    margin-right: 20px; /* 버튼과의 간격 설정 */
 }
-
-/* 과목별 배경색 지정 */
-.subject-0 { background-color: #ffcccc; } /* 연한 빨간색 */
-.subject-1 { background-color: #ccffcc; } /* 연한 초록색 */
-.subject-2 { background-color: #ccccff; } /* 연한 파란색 */
-.subject-3 { background-color: #ffcc99; } /* 연한 주황색 */
-.subject-4 { background-color: #ffff99; } /* 연한 노란색 */
-.subject-5 { background-color: #99ccff; } /* 연한 하늘색 */
-.subject-6 { background-color: #ff99ff; } /* 연한 핑크색 */
-.subject-7 { background-color: #ccff99; } /* 연한 연두색 */
-.subject-8 { background-color: #ff9966; } /* 연한 코랄색 */
-.subject-9 { background-color: #66ccff; } /* 연한 청록색 */
+.timetable-wrapper { /* 시간표 래퍼 스타일 */
+  display: flex; /* 플렉스 레이아웃 */
+  justify-content: center; /* 수평 가운데 정렬 */
+  align-items: flex-start; /* 상단 정렬 */
+  gap: 50px; /* 요소 간 간격 설정 */
+  padding-left: 100px; /* 왼쪽 여백 설정 */
+}
 
 /* 테이블 스타일 */
-table {
-    border-collapse: collapse; /* 테이블 테두리를 합칩니다. */
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); /* 그림자 효과를 추가합니다. */
+table { /* 테이블 스타일 */
+  border-collapse: collapse; /* 테두리 중첩 */
+  box-shadow: 0 0 1.25rem rgba(0, 0, 0, 0.1); /* 그림자 설정 */
 }
 
-th, td {
-    padding: 10px; /* 셀 안의 여백을 설정합니다. */
-    text-align: center; /* 셀 안의 텍스트를 가운데 정렬합니다. */
-    border: 1px solid #ddd; /* 테이블 셀 테두리 스타일을 설정합니다. */
-    width: 130px; /* 셀의 너비를 고정합니다. */
+th, td { /* 테이블 헤더와 데이터 셀 스타일 */
+  padding: 0.63rem; /* 안쪽 여백 설정 */
+  text-align: center; /* 텍스트 가운데 정렬 */
+  border: 0.06rem solid #ddd; /* 테두리 설정 */
+  width: 8.13rem; /* 셀 너비 설정 */
 }
 
-/* 테이블 헤더 스타일 */
-th {
-    background-color: #4CAF50; /* 배경색을 설정합니다. */
-    color: #fff; /* 텍스트 색상을 설정합니다. */
+th { /* 테이블 헤더 스타일 */
+  background-color: #778da9; /* 배경색 설정 */
+  color: #fff; /* 글자색 설정 */
 }
 
-tbody tr:nth-child(even) {
-    background-color: #f2f2f2; /* 짝수 번째 행의 배경색을 설정합니다. */
+tbody tr:nth-child(even) { /* 테이블 짝수 행 배경색 */
+  background-color: #f2f2f2; /* 짝수 행 배경색 설정 */
 }
 
-/* 모달 제목 스타일 */
-h2 {
-    margin-top: -35px; /* 모달 제목의 상단 여백을 조정합니다. */
-    margin-bottom: -5px; /* 모달 제목의 하단 여백을 조정합니다. */
+td:first-child { /* 첫 번째 열 스타일 */
+  border-right: 2px solid #e0e0e0; /* 오른쪽 테두리 두께 설정 */
 }
 
-/* 모달 컨테이너 스타일 */
-.modal-container {
-    display: none; /* 모달을 숨깁니다. */
-    position: fixed; /* 고정 위치로 설정합니다. */
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.4); /* 어둡게 배경색을 설정합니다. */
+tr:last-child td { /* 마지막 행 셀 스타일 */
+  border-bottom: none; /* 아래 테두리 제거 */
 }
 
-/* 모달 콘텐츠 스타일 */
-.modal-content {
-    background-color: #fefefe; /* 배경색을 설정합니다. */
-    margin: 15% auto; /* 모달을 수직 가운데로 정렬합니다. */
-    padding: 20px; /* 내부 여백을 설정합니다. */
-    width: 25%; /* 모달 창의 너비를 설정합니다. */
-    display: flex; /* Flexbox 레이아웃을 사용합니다. */
-    flex-direction: column; /* 세로 방향으로 정렬합니다. */
-    align-items: center; /* 가운데 정렬합니다. */
+.clickable:hover { /* 클릭 가능한 셀 호버 스타일 */
+  background-color: rgba(119, 141, 169, 0.1); /* 배경색 변경 */
 }
 
-/* 모달 닫기 버튼 스타일 */
-.close {
-    color: #aaa; /* 글자 색상을 설정합니다. */
-    align-self: flex-end; /* 오른쪽 정렬합니다. */
-    font-size: 28px; /* 글꼴 크기를 설정합니다. */
-    font-weight: bold; /* 글꼴 두껍게 설정합니다. */
-    cursor: pointer; /* 마우스 커서를 포인터로 변경합니다. */
+.selected { /* 선택된 셀 스타일 */
+    outline: 2px solid #778da9; /* 외곽선 설정 */
+    background-color: rgba(119, 141, 169, 0.3); /* 선택된 셀 배경색 추가 */
 }
 
-.close:hover,
-.close:focus {
-    color: black; /* 호버 또는 포커스 시 글자 색상을 변경합니다. */
+/* 과목 색상 스타일 */
+.subject-0 { background-color: #ffe6e6; } /* 과목 0 배경색 */
+.subject-1 { background-color: #e6ffe6; } /* 과목 1 배경색 */
+.subject-2 { background-color: #e6e6ff; } /* 과목 2 배경색 */
+.subject-3 { background-color: #ffe6cc; } /* 과목 3 배경색 */
+.subject-4 { background-color: #ffffe6; } /* 과목 4 배경색 */
+.subject-5 { background-color: #cce6ff; } /* 과목 5 배경색 */
+.subject-6 { background-color: #ffe6ff; } /* 과목 6 배경색 */
+.subject-7 { background-color: #e6ffcc; } /* 과목 7 배경색 */
+.subject-8 { background-color: #ffe6d1; } /* 과목 8 배경색 */
+.subject-9 { background-color: #d1f0ff; } /* 과목 9 배경색 */
+
+/* 버튼 컨테이너 기본 스타일 */
+.button-container {
+    display: flex; /* 플렉스 레이아웃 사용 */
+    flex-direction: column; /* 세로 방향 정렬 */
+    align-items: flex-start; /* 왼쪽 정렬 */
+    margin-left: 1.3rem; /* 좌측 여백 (20px) */
+    width: 9.4rem; /* 버튼 컨테이너 너비 (150px) */
 }
 
-/* 모달 체크박스 */
-.modal-checkbox {
-    display: none; /* 체크박스를 숨깁니다. */
+/* 시간표 버튼 컨테이너 */
+.timetable-button-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
-/* 체크박스가 선택되면 모달을 표시합니다. */
-.modal-checkbox:checked + .modal-container {
-    display: block;
+/* 관리자 액션 컨테이너 스타일 */
+.admin-action-container {
+    display: flex; 
+    flex-direction: column; 
+    gap: 1.5rem; 
+	margin-left: 3.1rem;
+    margin-top: 0; 
+    width: 9.4rem; 
 }
 
 /* 버튼 스타일 */
-.add-modal-button, .edit-modal-button, .delete-modal-button {
-    background-color: #4CAF50; /* 배경색을 설정합니다. */
-    color: white; /* 텍스트 색상을 설정합니다. */
-    padding: 15px 32px; /* 내부 여백을 설정합니다. */
-    cursor: pointer; /* 마우스 커서를 포인터로 변경합니다. */
-    border-radius: 8px; /* 버튼의 모서리를 둥글게 만듭니다. */
-    margin: 4px 25px; /* 버튼의 여백을 설정합니다. */
-}
-
-/* 버튼 컨테이너 스타일 */
-.button-container {
-    padding: 10px 70px; /* 좌우 여백을 추가합니다. */
-}
-
-/* 폼 스타일 */
-.modal-content form {
-    display: grid; /* 그리드 레이아웃을 사용합니다. */
-    gap: 10px; /* 그리드 사이의 간격을 설정합니다. */
-}
-
-/* 입력 컨테이너 스타일 */
-.modal-content form .input-container {
-    display: flex; /* Flexbox를 사용하여 내부 요소를 수평으로 정렬합니다. */
-    align-items: center; /* 세로 중앙 정렬합니다. */
-}
-
-/* 입력 레이블 스타일 */
-.modal-content form label {
-    font-weight: bold; /* 글꼴을 두껍게 설정합니다. */
-    width: 30%; /* 레이블 너비를 설정합니다. */
-    margin-right: 10px; /* 오른쪽 여백을 추가합니다. */
-}
-
-/* 입력 필드 및 셀렉트 박스 스타일 */
-.modal-content form input[type="text"],
-.modal-content form select {
-    padding: 8px; /* 내부 여백을 설정합니다. */
-    border: 1px solid #ccc; /* 테두리 스타일을 설정합니다. */
-    border-radius: 4px; /* 요소 모서리를 둥글게 만듭니다. */
-}
-
-/* 제출 버튼 스타일 */
-.modal-content form input[type="submit"] {
-    background-color: #4CAF50; /* 배경색을 설정합니다. */
-    color: white; /* 텍스트 색상을 설정합니다. */
-    padding: 12px 20px; /* 내부 여백을 설정합니다. */
-    margin-bottom: -15px;
-    border: none; /* 테두리를 없앱니다. */
-    border-radius: 4px; /* 요소 모서리를 둥글게 만듭니다. */
-    cursor: pointer; /* 마우스 커서를 포인터로 변경합니다. */
-}
-
-/* 제출 버튼 호버 스타일 */
-.modal-content form input[type="submit"]:hover {
-    background-color: #45a049; /* 호버 시 배경색을 변경합니다. */
-}
-
-/* 에러 */
-.error {
-    color: red;
+.timetable-button {
+    background-color: #778da9;
+    color: white;
+    border: none;
+    display: block;
+    padding: 10px;
+    margin: 15px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    width: 100%;
     text-align: center;
-    margin-top: 10px;
-    margin-bottom: -30px;
+}
+
+/* 관리자 버튼 스타일 */ 
+.admin-button {
+   background-color: #778da9;
+   color: white;
+   border: none;
+   display: block;
+   padding: 10px;
+   margin: 15px;
+   font-size: 1rem;
+   border-radius: 5px;
+   cursor: pointer;
+   transition: background-color 0.3s ease, transform 0.2s ease;
+   width: 100%;
+   text-align: center;
+   text-decoration: none;
+}
+
+.timetable-button:hover,
+.admin-button:hover {
+    background-color: #5a6f89;
+    transform: scale(1.05);
+}
+
+/* 좌석 예약 및 좌석 관리 버튼 크기 조정 */
+#reserve-seat-button,
+#manage-seat-button {
+    width: 115%; /* 기본 너비로 설정 */
+    flex: 1; /* 버튼이 가능한 공간을 차지하도록 설정 */
+}
+/* 모달 스타일 */
+.modal { /* 모달 창 */
+  display: none; /* 기본으로 숨김 */
+  position: fixed; /* 화면 고정 */
+  z-index: 1000; /* z-인덱스 */
+  left: 0; /* 왼쪽 정렬 */
+  top: 0; /* 상단 정렬 */
+  width: 100%; /* 전체 너비 */
+  height: 100%; /* 전체 높이 */
+  overflow: auto; /* 스크롤 */
+  background-color: rgba(0,0,0,0.4); /* 반투명 배경 */
+}
+
+.modal-content { /* 모달 내용 */
+  background-color: #f8f9fa; /* 배경색 */
+  margin: 5% auto; /* 중앙 정렬 */
+  padding: 30px 40px; /* 안쪽 여백 */
+  border-radius: 10px; /* 테두리 둥글게 */
+  width: 100%; /* 전체 너비 */
+  max-width: 700px; /* 최대 너비 */
+  max-height: 80vh; /* 최대 높이 */
+  overflow-y: auto; /* 세로 스크롤 */
+  position: relative; /* 상대 위치 */
+}
+
+.modal-content h2 { /* 모달 제목 */
+  color: #778da9; /* 색상 */
+  border-bottom: 2px solid #778da9; /* 하단 테두리 */
+  padding-bottom: 10px; /* 하단 여백 */
+}
+
+.modal-content form { /* 모달 폼 레이아웃 */
+  display: grid; /* 그리드 레이아웃 */
+  gap: 0.63rem; /* 그리드 간격 */
+}
+
+.modal-content form .input-container { /* 입력 컨테이너 */
+  display: flex; /* 플렉스 */
+  align-items: center; /* 가운데 정렬 */
+}
+
+.modal-content form label { /* 입력 라벨 */
+  font-weight: bold; /* 폰트 굵게 */
+  width: 30%; /* 라벨 너비 */
+  margin-right: 0.63rem; /* 오른쪽 여백 */
+}
+
+.modal-content form input[type="text"],
+.modal-content form select,
+.modal-content form input[type="submit"] { /* 텍스트 입력, 선택, 제출 버튼 */
+  padding: 0.5rem; /* 안쪽 여백 */
+  border: 1px solid #778da9; /* 테두리 색상 */
+  border-radius: 4px; /* 요소 모서리를 둥글게 만듭니다. */
+}
+
+.modal-content input[type="submit"] { /* 제출 버튼 */
+  background-color: #778da9; /* 배경색 */
+  color: white; /* 글자색 */
+  cursor: pointer; /* 포인터 커서 */
+}
+
+.modal-content input[type="submit"]:hover { /* 제출 버튼 호버 */
+  background-color: #5a6f89; /* 배경색 변경 */
+}
+
+/* 닫기 버튼 스타일 */
+.close { /* 닫기 버튼 */
+  color: #aaa; /* 색상 */
+  font-size: 28px; /* 폰트 크기 */
+  font-weight: bold; /* 폰트 굵게 */
+  position: absolute; /* 절대 위치 */
+  right: 10px; /* 오른쪽 위치 */
+  top: 5px; /* 상단 위치 */
+  cursor: pointer; /* 포인터 커서 */
+}
+
+.close:hover, .close:focus { /* 닫기 버튼 호버 및 포커스 */
+  color: black; /* 색상 변경 */
+}
+
+/* 오류 메시지 스타일 */
+.error {
+  background-color: #ffdddd; /* 배경색 빨간색 계열 */
+  border-left: 6px solid #f44336; /* 왼쪽 테두리 빨간색 */
+  margin-bottom: 15px; /* 하단 여백 */
+  padding: 10px; /* 내부 여백 */
+  color: #f44336; /* 글자색 빨간색 */
+}
+
+/* 모바일 환경에서의 버튼 스타일 */
+@media (max-width: 768px) {
+    /* 기본 레이아웃 설정 */
+    body {
+        margin-top: 0;
+        padding-top: 0;
+    }
+
+    .main-container {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        width: 100%;
+        padding: 0.6rem;
+        margin: 0;
+    }
+
+    /* 테이블 스타일 */
+    table {
+        font-size: 0.6rem;
+        min-width: 100%;
+        margin: 40 auto;
+		
+    }
+
+    th, td {
+        padding: 0.2rem;
+        min-width: 3rem;
+    }
+
+    /* 버튼 컨테이너 스타일 */
+    .timetable-button-container {
+        position: fixed;
+        top: 11rem;
+        right: 2rem;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        gap: 0.6rem;
+        width: auto;
+        z-index: 100;
+    }
+
+	.admin-action-container {
+	    display: flex;
+	    flex-direction: row;
+	    justify-content: center; /* 가로 중앙 정렬 */
+	    align-items: center; /* 세로 중앙 정렬 */
+	    gap: 1rem;
+	    width: 100%; /* 전체 너비 사용 */
+	    margin: 1rem auto; /* 상하 여백 추가하고 좌우 자동 마진으로 중앙 정렬 */
+	    position: relative;
+	    z-index: 100;
+
+	}
+
+    /* 공통 버튼 스타일 */
+    #reserve-seat-button,
+    #manage-seat-button,
+    .timetable-button,
+    .admin-button {
+        flex: none;
+        font-size: 0;
+        padding: 0;
+        background-color: #778da9;
+        color: transparent;
+        border-radius: 0.4rem;
+        transition: background-color 0.3s;
+        position: relative;
+        margin: 0;
+    }
+
+	
+    /* 상단 버튼 크기 */
+    #reserve-seat-button,
+    #manage-seat-button,
+    .timetable-button {
+        width: 2.5rem;
+        height: 2.5rem;
+    }
+
+    /* 하단 버튼 크기 */
+    .admin-button {
+        width: 7rem;
+        height: 2.5rem;
+		text-align: center; /* 텍스트를 가운데 정렬 */
+	    display: flex; /* 플렉스를 사용하여 정렬 */
+	    justify-content: center;
+	    align-items: center;
+		font-weight: 700;
+		color: white;
+		font-size: 0.75rem;
+    }
+
+    /* 아이콘 스타일 */
+    #reserve-seat-button::before,
+    #manage-seat-button::before,
+    .timetable-button::before,
+    .admin-button::before {
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        font-size: 1.2rem;
+    }
+
+    /* 버튼별 아이콘 */
+    #reserve-seat-button::before, 
+    #manage-seat-button::before {
+        content: "\f6c0";
+    }
+    #timetable-plus-button::before {
+        content: "\f067";
+    }
+    #timetable-adjustment-button::before {
+        content: "\f044";
+    }
+    #timetable-delete-button::before {
+        content: "\f1f8";
+    }
+
+    /* 버튼 라벨 */
+    .button-label {
+        font-size: 0.5rem;
+        color: black;
+        text-align: center;
+        display: inline-block;
+        margin-top: 3.1rem;
+        position: relative;
+        width: 100%;
+        white-space: nowrap;
+    }
+
+    /* 호버 효과 */
+    #reserve-seat-button:hover,
+    #manage-seat-button:hover,
+    .timetable-button:hover,
+    .admin-button:hover {
+        background-color: #5a6f89;
+    }
+
+    /* 시간표 섹션 */
+    .timetable-section {
+        position: relative;
+        width: 100%;
+        overflow-x: auto;
+		margin-top: -6rem; /*시간표 위아래로 수정 */
+    }
+
+    /* 모달 스타일 */
+    .modal-content {
+        width: 90%;
+        max-width: 400px;
+        padding: 0.9rem;
+        top: 10%;
+        margin: auto;
+    }
+
+    .modal-content h2 {
+        font-size: 1rem;
+        margin-bottom: 0.6rem;
+    }
+
+    .modal-content form label {
+        font-size: 0.8rem;
+        margin-bottom: 0.3rem;
+    }
+
+    .modal-content form input[type="text"],
+    .modal-content form select {
+        font-size: 0.8rem;
+        padding: 0.4rem;
+    }
+
+    .modal-content form input[type="submit"] {
+        font-size: 0.9rem;
+        padding: 0.5rem;
+    }
+
+    .modal-content form .input-container:last-child {
+        margin-top: 0.6rem;
+    }
 }

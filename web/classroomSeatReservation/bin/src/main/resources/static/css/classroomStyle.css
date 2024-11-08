@@ -9,20 +9,101 @@ h1 {
     margin-bottom: 70px; /* 아래 여백 설정 */
 }
 
-form {
-    margin-top: 20px; /* 위 여백 설정 */
+
+h2 {
+    margin-top: 2.5rem; /* 위 여백 설정 */
+    color: #6c757d; /* 텍스트 색상 설정 */
+}
+h4{
+	margin-top: 1rem; /* 위 여백 설정 */
+	   color: #6c757d; /* 텍스트 색상 설정 */
 }
 
-button {
-    padding: 10px 20px; /* 안쪽 여백 설정 */
-    margin-top: 35px; /* 위 여백 설정 */
+form {
+    display: flex; /* flexbox 레이아웃 사용 */
+    flex-direction: column; /* 자식 요소를 세로 방향으로 배치 */
+    align-items: center; /* 자식 요소들을 수평 중앙 정렬 */
+    margin-top: 1.25rem; /* 위 여백 설정  */
+}
+
+.classroom-button {
+    padding: 0.63rem 27rem; /* 안쪽 여백 설정 */
+    margin-top: 2.19rem; /* 위 여백 설정 */
     border: none; /* 테두리 제거 */
-    border-radius: 5px; /* 테두리 둥글게 설정 */
-    background-color: #4CAF50; /* 배경색 설정 */
+    border-radius: 1.25rem; /* 테두리 둥글게 설정 */
+    background-color: #778da9; /* 배경색 설정 */
     color: white; /* 글자색 설정 */
-    font-size: 16px; /* 글자 크기 설정 */
+    font-size: 2.5rem; /* 글자 크기 설정 */
+    font-weight: bold; /* 글자 굵기 설정 */
+    box-shadow: none; /* 그림자 제거 */
+}
+
+.classroom-button:hover {
+    background-color: #415a77; /* 마우스 버튼 위에 올라갔을 때 배경색 변경 */
+}
+
+.plus-button {
+    padding: 0.63rem 0.63rem; /* 안쪽 여백 설정 */
+    margin-top: 2.18rem; /* 위 여백 설정 */
+    border: none; /* 테두리 제거 */
+    border-radius: 50%; /* 원형으로 만들기 위한 설정 */
+    background-color: #778da9; /* 배경색 설정 */
+    color: white; /* 글자색 설정 */
+    font-size: 2.5rem; /* 글자 크기 설정 */
+    font-weight: bold; /* 글자 굵기 설정 */
+    width: 4rem; /* 너비 설정 */
+    height: 4rem; /* 높이 설정 */
+    text-align: center; /* 텍스트 가운데 정렬 */
+}
+
+.plus-button:hover {
+    background-color: #415a77; /* 마우스 버튼 위에 올라갔을 때 배경색 변경 */
+}
+
+
+
+
+
+
+/* 미디어 쿼리 추가: 모바일 화면에서 버튼 크기 조정 */
+@media (max-width: 48rem) {
+    h2 {
+        font-size: 1.5rem; /* 모바일에서 제목 폰트 크기 조정 */
+    }
+
+    .classroom-button {
+        padding: 0.5rem 10rem; /* 모바일에서 버튼 패딩 줄임 */
+        font-size: 1.75rem; /* 모바일에서 버튼 폰트 크기 줄임 */
+        margin-top: 1.25rem; /* 위 여백 줄임 */
+    }
+
+    .plus-button {
+        width: 3rem; /* 모바일에서 플러스 버튼 너비 조정 */
+        height: 3rem; /* 모바일에서 플러스 버튼 높이 조정 */
+        font-size: 2rem; /* 모바일에서 플러스 버튼 폰트 크기 줄임 */
+    }
+}
+
+
+
+
+
+
+
+
+
+
+/*button {
+    padding: 10px 20px;  안쪽 여백 설정 
+    margin-top: 35px;  위 여백 설정 
+    border: none;  테두리 제거 
+    border-radius: 5px;  테두리 둥글게 설정 
+    background-color: #4CAF50;  배경색 설정 
+    color: white;  글자색 설정 
+    font-size: 16px;  글자 크기 설정 
 }
 
 button:hover {
-    background-color: #45a049; /* 마우스 버튼위에 올라갔을때 배경색 변경 */
+    background-color: #45a049;  마우스 버튼위에 올라갔을때 배경색 변경 
 }
+*/

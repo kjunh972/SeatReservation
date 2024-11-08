@@ -1,112 +1,242 @@
-/* 메인 제목 스타일 설정 */
-h1 {
-    margin-top: 4rem; /* 위쪽에 여백 추가 */
-    text-align: center; /* 제목 가운데 정렬 */
-    font-size: 1.9rem; /* 폰트 크기 설정 */
+#listModal h1{
+	color: black;
+	text-align: center; /* 중앙 정렬 */
+	margin-bottom: 0.5rem; /* h1과 h3 사이의 간격 줄이기 */
+}
+#listModal h3{
+	color: dimgray;
+	font-weight: normal;
+	text-align: center; /* 중앙 정렬 */
+}
+.info-row i {
+    color: #778da9; /* 아이콘 기본 색상 */
+}
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
 }
 
-/* 에러 메시지 스타일 설정 */
+.listModal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 800px;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+   
+}
+.info-row p .label {
+        white-space: nowrap; /* 라벨 텍스트는 한 줄로 유지 */
+        font-weight: normal !important; /* 라벨의 기본 굵기 유지 */
+    }
+
+.close {
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    font-size: 3rem; 
+    font-weight: bold;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.reservations-container {
+    margin: 20px 0;
+}
+
+.reservation-form {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 15px;
+}
+
+.reservation-info {
+    width: 100%;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.info-row p {
+    margin: 0;
+    flex: 1;
+}
+
+.info-row span {
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+.cancel-btn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    float: right;
+    margin-top: 10px;
+}
+
+.cancel-btn:hover {
+    background-color: #c82333;
+}
+
+.add-reservation-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.add-reservation-btn:hover {
+    background-color: #0056b3;
+}
+
+.empty, .error, .success {
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 4px;
+    text-align: center;
+}
+
 .empty {
-    font-size: 1rem; /* 폰트 크기 설정 */
-    color: red; /* 텍스트 색상 빨간색으로 설정 */
-    text-align: center; /* 텍스트 가운데 정렬 */
-    font-weight: bold; /* 텍스트를 굵게 설정 */
-    margin-top: 5rem; /* 위쪽에 여백 추가 */
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
 }
 
-/* 테이블 스타일 설정 */
-table {
-    width: 100%; /* 테이블 너비를 100%로 설정하여 부모 요소에 맞게 확장 */
-    margin-top: 1.3rem; /* 테이블 위쪽에 여백 추가 */
-    background-color: #fff; /* 테이블 배경색을 흰색으로 설정 */
-    border-radius: 0.5rem; /* 테이블 모서리를 둥글게 설정 */
-    box-shadow: 0 0.1rem 0.2rem rgba(0, 0, 0, 0.1); /* 테이블에 그림자 추가 */
+.error {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
 }
 
-/* 테이블 셀 스타일 설정 */
-th, td {
-    padding: 0.8rem; /* 셀 내부에 여백 추가 */
-    text-align: center; /* 셀 내의 텍스트를 가운데 정렬 */
-    border-bottom: 0.1rem solid #ddd; /* 셀 하단에 회색 경계선 추가 */
-    font-size: 1rem; /* 폰트 크기 설정 */
-    font-weight: bold; /* 텍스트를 굵게 설정 */
+.success {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
 }
 
-/* 테이블 헤더 스타일 설정 */
-th {
-    background-color: #4CAF50; /* 헤더 셀 배경색을 초록색으로 설정 */
-    color: white; /* 헤더 셀의 텍스트 색상을 흰색으로 설정 */
-    font-weight: bold; /* 텍스트를 굵게 설정 */
-    font-size: 1.2rem; /* 폰트 크기 설정 */
+.swal2-confirm-btn-custom {
+    background-color:  #778da9;
 }
 
-/* 테이블 행 마우스 호버 시 스타일 */
-tr:hover {
-    background-color: #f1f1f1; /* 행에 마우스를 올릴 때 배경색을 연한 회색으로 변경 */
+
+/* 모바일 전용 스타일 (768px 이하 화면 크기에서만 적용) */
+@media (max-width: 768px) {
+    #listModal h1 {
+        font-size: 1.5rem; /* 폰트 크기 조정 */
+    }
+
+    #listModal h3 {
+        font-size: 1rem; /* 폰트 크기 조정 */
+    }
+    
+    .info-row {
+    	display: flex;
+    	justify-content: space-between;
+    	align-items: flex-start; /* 아이콘과 텍스트의 상단을 맞추기 */
+    	margin-bottom: 8px;
+        font-size: 0.85rem; /* 전체 내용의 폰트 크기 줄이기 */
+    	align-items: baseline; /* 라벨과 내용의 기준선을 맞추기 */
+	}
+    
+    .info-row p {
+
+    	display: flex;
+    	align-items: center; /* 아이콘과 텍스트가 수평 정렬되도록 설정 */
+    	margin: 0;
+    	flex: 1;
+    	min-width: 0; /* 텍스트가 아이콘 옆에서 줄바꿈될 때 잘리지 않도록 설정 */
+    	padding: 0.3rem;
+        font-size: 0.85rem; /* 개별 항목 폰트 크기 조정 */
+    	align-items: baseline; /* 라벨과 내용의 기준선을 맞추기 */
+	}
+	
+	/* 강의명, 강의실, 요일 등의 라벨 텍스트에 줄바꿈 방지 */
+    .info-row p .label {
+        white-space: nowrap; /* 라벨 텍스트는 한 줄로 유지 */
+        font-weight: normal !important; /* 라벨의 기본 굵기 유지 */
+    }
+
+    .info-row i {
+        font-size: 0.8rem; /* 아이콘 크기 조정 */
+    }
+    
+  
+
+    .listModal-content {
+        padding: 1rem !important;
+        width: 90% !important; /* 모바일에서 90% 너비를 강제 적용 */
+        max-width: 400px; /* 최대 너비 제한 */
+        max-height: 80vh; /* 화면 높이에 맞게 제한 */
+        transform: translateY(4.2rem); /* 토글 버튼 위치 피하기 위해 아래로 이동 */
+        margin: 0 auto;
+    	box-sizing: border-box !important; /* 패딩과 너비를 포함하여 계산 */
+    	overflow-x: hidden !important; /* 수평 스크롤 방지 */
+    	font-size: 0.9rem; /* 모달 전체 폰트 크기 조정 */
+    }
+
+    .close {
+        right: 1rem;
+        top: 0.5rem;
+        font-size: 2rem; /* 닫기 버튼 크기 조정 */
+    }
+
+    .reservation-form {
+        font-size: 0.9rem; /* 폰트 크기 조정 */
+    }
+
+    .cancel-btn, .add-reservation-btn {
+        font-size: 0.8rem; /* 버튼 폰트 크기 조정 */
+        padding: 0.4rem 1rem; /* 버튼 패딩 조정 */
+    }
+
+    .empty, .error, .success {
+        font-size: 0.8rem; /* 메시지 폰트 크기 조정 */
+    }
+    .swal2-custom-width {
+        width: 80% !important; /* 모바일에서 너비 95%로 조정 */
+        max-width: 350px; /* 최대 너비 제한 */
+    }
+    
+    /* SweetAlert2 제목 폰트 크기 조정 */
+.swal2-title-custom {
+    font-size: 1.2rem; /* 제목 폰트 크기 조정 */
 }
 
-/* 마지막 행의 하단 경계선 제거 */
-tr:last-child td {
-    border-bottom: none; /* 마지막 행의 셀 하단 경계선 제거 */
+/* SweetAlert2 본문 폰트 크기 조정 */
+.swal2-html-custom {
+    font-size: 0.6rem; /* 본문 폰트 크기 조정 */
 }
 
-/* 입력 컨테이너 스타일 */
-.input-container {
-    display: flex; /* Flexbox 사용하여 요소를 가로 방향으로 정렬 */
-    flex-wrap: nowrap; /* 요소가 줄바꿈되지 않도록 설정 */
+/* SweetAlert2 확인 버튼 크기 조정 */
+.swal2-confirm-btn-custom {
+    font-size: 0.85rem; /* 버튼 폰트 크기 조정 */
+    padding: 0.4rem 0.8rem; /* 버튼 패딩 조정 */
 }
 
-/* 레이블 스타일 */
-.input-container label {
-    white-space: nowrap; /* 레이블 텍스트 줄바꿈 방지 */
-    font-weight: bold; /* 레이블 텍스트를 굵게 설정 */
+/* SweetAlert2 취소 버튼 크기 조정 */
+.swal2-cancel-btn-custom {
+    font-size: 0.85rem; /* 버튼 폰트 크기 조정 */
+    padding: 0.4rem 0.8rem; /* 버튼 패딩 조정 */
 }
 
-/* 선택 필드 스타일 */
-.input-container select {
-    width: auto; /* 선택 필드 너비를 자동 조정 */
-    padding: 0.5rem; /* 선택 필드 내부 여백 추가 */
-    border-radius: 0.25rem; /* 선택 필드 모서리를 둥글게 설정 */
-    border: 1px solid #ccc; /* 선택 필드 경계선 설정 */
-    margin-right: 1.5rem; /* 오른쪽에 여백 추가 (시작 시간과 종료 시간 간격 설정) */
-}
-
-/* 버튼 스타일 */
-button {
-    padding: 0.5rem 1rem; /* 버튼 내부 여백 추가 */
-    border: none; /* 버튼 경계선 제거 */
-    border-radius: 0.25rem; /* 버튼 모서리를 둥글게 설정 */
-    cursor: pointer; /* 버튼 클릭 시 커서 변경 */
-}
-
-/* 취소 버튼 스타일 */
-button.cancel {
-    background-color: #f44336; /* 취소 버튼 배경색 설정 (붉은색) */
-    color: white; /* 취소 버튼 텍스트 색상을 흰색으로 설정 */
-}
-
-/* 변경 버튼 스타일 */
-button.update {
-    background-color: #4CAF50; /* 변경 버튼 배경색 설정 (초록색) */
-    color: white; /* 변경 버튼 텍스트 색상을 흰색으로 설정 */
-}
-
-/* 취소 버튼 호버 스타일 */
-button.cancel:hover {
-    background-color: #d32f2f; /* 호버 시 배경색을 어두운 빨간색으로 변경 */
-}
-
-/* 변경 버튼 호버 스타일 */
-button.update:hover {
-    background-color: #388E3C; /* 호버 시 배경색을 어두운 초록색으로 변경 */
-}
-
-/* 폼 내용을 가운데 정렬하기 위한 클래스 */
-.centerContent {
-    text-align: center; /* 내용 가운데 정렬 */
-}
-
-/* 폼 내의 Flexbox 스타일 조정 */
-.centerContent .input-container {
-    display: inline-block; /* 인라인 블록으로 설정하여 가운데 정렬 가능 */
 }

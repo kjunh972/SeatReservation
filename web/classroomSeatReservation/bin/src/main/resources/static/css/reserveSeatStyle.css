@@ -1,42 +1,104 @@
-/* 메인 제목 스타일 설정 */
-h1 {
-    margin-top: 7rem; /* 위쪽에 여백 추가 */
-    text-align: center; /* 제목 가운데 정렬 */
-    font-size: 1.6rem; /* 폰트 크기를 설정 */
+/* 좌석 목록 모달 컨텐츠의 기본 스타일 */
+.seat-list-content {
+    background-color: #fefefe; /* 배경색 설정 */
+    margin: 15% auto; /* 상단 여백과 좌우 중앙 정렬 */
+    padding: 20px; /* 내부 여백 */
+    border: 1px solid #888; /* 테두리 설정 */
+    width: 80%; /* 너비 설정 */
+    max-width: 600px; /* 최대 너비 제한 */
+    border-radius: 10px; /* 모서리 둥글게 */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* 그림자 효과 */
 }
 
-/* 테이블 스타일 설정 */
-table {
-    width: 100%; /* 테이블 너비 설정 */
-    margin: 0 auto; /* 테이블을 중앙에 배치 */
-    margin-top: 1.3rem; /* 테이블 아래에 여백 추가 */
-    background-color: #fff; /* 테이블 배경색을 흰색으로 설정 */
-    border-radius: 0.5rem; /* 테이블 모서리를 둥글게 설정 */
-    box-shadow: 0 0.1rem 0.2rem rgba(0, 0, 0, 0.1); /* 테이블에 그림자 추가 */
+/* 모달 닫기 버튼 스타일 */
+.seat-list-close {
+    color: #aaa; /* 글자색 설정 */
+    float: right; /* 오른쪽 정렬 */
+    font-size: 28px; /* 글자 크기 */
+    font-weight: bold; /* 글자 두께 */
+    cursor: pointer; /* 마우스 커서 모양 변경 */
 }
 
-/* 테이블 셀 스타일 설정 */
-th, td {
-    padding: 0.8rem; /* 셀 내부에 여백 추가 */
-    text-align: center; /* 셀 내의 텍스트를 가운데 정렬 */
-    border-bottom: 0.1rem solid #ddd; /* 셀 하단에 회색 경계선 추가 */
-    font-size: 1rem; /* 폰트 크기를 설정 */
+/* 닫기 버튼 호버 및 포커스 효과 */
+.seat-list-close:hover,
+.seat-list-close:focus {
+    color: #000; /* 글자색 변경 */
+    text-decoration: none; /* 텍스트 장식 제거 */
+    cursor: pointer; /* 마우스 커서 모양 */
 }
 
-/* 테이블 헤더 스타일 설정 */
-th {
-    background-color: #4CAF50; /* 헤더 셀 배경색을 초록색으로 설정 */
-    color: white; /* 텍스트 색상을 흰색으로 설정 */
-    font-weight: bold; /* 텍스트를 굵게 설정 */
-    font-size: 1.2rem; /* 폰트 크기를 설정 */
+/* 좌석 목록 제목 스타일 */
+.seat-list-title {
+    margin-top: 7rem; /* 상단 여백 */
+    text-align: center; /* 중앙 정렬 */
+    font-size: 1.6rem; /* 글자 크기 */
+    color: #778da9; /* 글자색 */
 }
 
-/* 테이블 행 마우스 호버 시 스타일 */
-tr:hover {
-    background-color: #f1f1f1; /* 행에 마우스를 올릴 때 배경색을 연한 회색으로 변경 */
+/* 좌석 목록 테이블 스타일 */
+.seat-list-table {
+    width: 100%; /* 전체 너비 */
+    margin: 0 auto; /* 중앙 정렬 */
+    margin-top: 1.3rem; /* 상단 여백 */
+    background-color: #fff; /* 배경색 */
+    border-radius: 0.5rem; /* 모서리 둥글게 */
+    box-shadow: 0 0.1rem 0.2rem rgba(0, 0, 0, 0.1); /* 그림자 효과 */
 }
 
-/* 마지막 행의 하단 경계선 제거 */
-tr:last-child td {
-    border-bottom: none; /* 마지막 행의 셀 하단에 경계선 제거 */
+/* 테이블 셀 공통 스타일 */
+.seat-list-table th,
+.seat-list-table td {
+    padding: 0.8rem; /* 내부 여백 */
+    text-align: center; /* 텍스트 중앙 정렬 */
+    border-bottom: 0.1rem solid #ddd; /* 하단 테두리 */
+    font-size: 1rem; /* 글자 크기 */
+}
+
+/* 테이블 헤더 스타일 */
+.seat-list-table th {
+    background-color: #778da9; /* 배경색 */
+    color: white; /* 글자색 */
+    font-weight: bold; /* 글자 두께 */
+    font-size: 1.2rem; /* 글자 크기 */
+}
+
+/* 테이블 행 호버 효과 */
+.seat-list-table tr:hover {
+    background-color: #f1f1f1; /* 호버 시 배경색 변경 */
+}
+
+/* 테이블 마지막 행의 하단 테두리 제거 */
+.seat-list-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* 버튼 컨테이너 스타일 */
+.seat-list-button-container {
+    display: flex; /* Flexbox 사용 */
+    justify-content: center; /* 가로 중앙 정렬 */
+    margin-top: 20px; /* 상단 여백 */
+}
+
+/* 버튼 기본 스타일 */
+.seat-list-button {
+    width: 8.5rem; /* 너비 */
+    height: 3.2rem; /* 높이 */
+    font-size: 1rem; /* 글자 크기 */
+    margin-right: 0.6rem; /* 우측 여백 */
+    background-color: #778da9; /* 배경색 */
+    color: white; /* 글자색 */
+    border: none; /* 테두리 없음 */
+    border-radius: 5px; /* 모서리 둥글게 */
+    cursor: pointer; /* 마우스 커서 변경 */
+    transition: background-color 0.3s; /* 배경색 전환 효과 */
+}
+
+/* 버튼 호버 효과 */
+.seat-list-button:hover {
+    background-color: #5c7a9e; /* 호버 시 배경색 변경 */
+}
+
+/* 마지막 버튼의 우측 여백 제거 */
+.seat-list-button:last-child {
+    margin-right: 0;
 }
