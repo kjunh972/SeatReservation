@@ -71,7 +71,7 @@ namespace lockScreen
         private Button submitButton; // 확인 버튼
 
         // 데이터베이스 연결 설정
-        string connectionString = "server=localhost;database=YuhanDB;uid=root;pwd=root;";
+        string connectionString = "server=yuhan.clu0u0yy2ir8.ap-northeast-2.rds.amazonaws.com;database=YuhanDB;uid=root;pwd=rootroot;";
 
         // 컴퓨터 이름 및 좌석 번호를 추출합니다.
         private static string computerName = SystemInformation.ComputerName;
@@ -210,33 +210,20 @@ namespace lockScreen
         // 버튼 클릭 시 처리할 메서드
         private void SubmitForm()
         {
-            string errorMessage = "";
-
-            // 모든 필드가 입력되었는지 확인
             if (!AreAllFieldsFilled())
             {
-                errorMessage = "모든 필드를 올바르게 입력해야 합니다.";
+                MessageBox.Show("모든 필드를 올바르게 입력해야 합니다.");
+                return;
+            }
+
+            if (IsSeatNumCorrect())
+            {
+                this.Close(); // 폼 닫기
             }
             else
             {
-                // 좌석 번호가 올바른지 확인
-                bool isSeatNumCorrect = IsSeatNumCorrect();
-
-                if (!isSeatNumCorrect)
-                {
-                    errorMessage = "이름 혹은 학번, 좌석 예약 번호가 올바르지 않습니다.";
-                }
-                else
-                {
-                    // 예약 번호가 확인되었을 때 처리
-                    MessageBox.Show("좌석 예약 번호가 확인되었습니다.");
-                    this.Close(); // 폼 닫기
-                    return;
-                }
+                MessageBox.Show("이름 혹은 학번, 좌석 예약 번호가 올바르지 않습니다.");
             }
-
-            // 에러 메시지 표시
-            MessageBox.Show(errorMessage);
         }
 
         // 버튼 클릭 시 호출될 이벤트 핸들러
@@ -283,18 +270,11 @@ namespace lockScreen
                         if (reader.Read())
                         {
                             string reservNum = reader["reservNum"].ToString();
-
-                            // DataReader를 명시적으로 닫습니다.
                             reader.Close();
-
-                            // 락스크린 잠금 해제
-                            MessageBox.Show($"환영합니다, {nameTextBox.Text}님 (학번: {studentIdTextBox.Text})");
-
-                            // 연결을 닫고 UpdateAttendance 메서드를 호출합니다.
                             localConnection.Close();
-                            UpdateAttendance(reservNum);
 
-                            return true;
+                            // UpdateAttendance 메서드 호출 및 결과 반환
+                            return UpdateAttendance(reservNum);
                         }
                     }
                 }
@@ -314,7 +294,7 @@ namespace lockScreen
             return false;
         }
 
-        private void UpdateAttendance(string reservNum)
+        private bool UpdateAttendance(string reservNum)
         {
             MySqlConnection localConnection = null;
             try
@@ -324,9 +304,9 @@ namespace lockScreen
 
                 // 1. 예약 정보 가져오기
                 string reservationQuery = @"
-            SELECT user_id, day, subject, classroom_name
-            FROM Reservation
-            WHERE reservNum = @reservNum;";
+                SELECT user_id, day, subject, classroom_name
+                FROM Reservation
+                WHERE reservNum = @reservNum;";
 
                 string userId = "", day = "", subject = "", classroomName = "";
 
@@ -346,20 +326,20 @@ namespace lockScreen
                         else
                         {
                             MessageBox.Show("해당 예약 번호의 정보를 찾을 수 없습니다.");
-                            return;
+                            return false;
                         }
                     }
                 }
 
                 // 2. 학생 시간표 확인 및 출석 처리
                 string updateQuery = @"
-            UPDATE StuTimetable 
-            SET attendance = TRUE 
-            WHERE user_id = @userId 
-            AND day = @day 
-            AND subject = @subject 
-            AND classroomName = @classroomName
-            AND attendance = FALSE;";
+                UPDATE StuTimetable 
+                SET attendance = TRUE 
+                WHERE user_id = @userId 
+                AND day = @day 
+                AND subject = @subject 
+                AND classroomName = @classroomName
+                AND attendance = FALSE;";
 
                 using (MySqlCommand command = new MySqlCommand(updateQuery, localConnection))
                 {
@@ -371,17 +351,18 @@ namespace lockScreen
                     int rowsAffected = command.ExecuteNonQuery();
                     if (rowsAffected > 0)
                     {
-                        MessageBox.Show("출석이 처리되었습니다.");
+                        MessageBox.Show($"환영합니다, {nameTextBox.Text}님!\n출석이 정상적으로 처리되었습니다.");
+                        return true;
                     }
                     else
                     {
-                        // 시간표 확인을 위한 SELECT 쿼리
+                        // 이미 출석했는지 확인
                         string checkQuery = @"
-                    SELECT * FROM StuTimetable 
-                    WHERE user_id = @userId 
-                    AND day = @day 
-                    AND subject = @subject 
-                    AND classroomName = @classroomName;";
+                        SELECT * FROM StuTimetable 
+                        WHERE user_id = @userId 
+                        AND day = @day 
+                        AND subject = @subject 
+                        AND classroomName = @classroomName;";
 
                         using (MySqlCommand checkCommand = new MySqlCommand(checkQuery, localConnection))
                         {
@@ -394,11 +375,13 @@ namespace lockScreen
                             {
                                 if (reader.HasRows)
                                 {
-                                    MessageBox.Show("이미 출석 처리되었거나 시간표가 일치하지 않습니다.");
+                                    MessageBox.Show($"환영합니다, {nameTextBox.Text}님!\n이미 출석 처리되었습니다.");
+                                    return true;
                                 }
                                 else
                                 {
                                     MessageBox.Show("해당 시간표 정보를 찾을 수 없습니다.");
+                                    return false;
                                 }
                             }
                         }
@@ -407,9 +390,8 @@ namespace lockScreen
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"출석 처리 중 오류 발생: {ex.Message}");
-                Console.WriteLine($"Stack Trace: {ex.StackTrace}");
                 MessageBox.Show("출석 처리 중 오류가 발생했습니다: " + ex.Message);
+                return false;
             }
             finally
             {
