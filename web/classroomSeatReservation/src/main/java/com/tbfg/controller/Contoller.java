@@ -488,6 +488,20 @@ public class Contoller {
 
 		// 0부터 999 사이의 랜덤 번호를 생성
 		int randomNum = new Random().nextInt(1000);
+		// 모든 예약 번호 가져오기
+	    List<Integer> allReserveNum = classroomDAO.getAllReserveNum();
+		
+	    // 중복되지 않는 번호 생성 
+	    if (!allReserveNum.isEmpty()) {
+	        for (int i = 0; i < allReserveNum.size(); i++) {
+	            if (randomNum == allReserveNum.get(i)) {
+	                randomNum = new Random().nextInt(1000);
+	                i = -1;
+	                continue;
+	            }
+	        }
+	    }
+	    
 		// classroomDTO에 랜덤 번호 저장
 		classroomDTO.setRandomNum(randomNum);
 

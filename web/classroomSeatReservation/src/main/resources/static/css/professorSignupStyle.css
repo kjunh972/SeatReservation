@@ -56,6 +56,9 @@
 	
 	/* 모바일 최적화 */
 @media (max-width: 768px) {
+	body {
+		margin-top: -3rem; /* 상단 여백을 음수로 설정하여 위로 이동 */
+	}
     form {
         width: 90%;
         max-width: 100%;
