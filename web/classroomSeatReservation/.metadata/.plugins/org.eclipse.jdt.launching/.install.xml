@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<dirs>
-    <entry loc="/opt/homebrew/Cellar/openjdk@17/17.0.13/libexec/openjdk.jdk/Contents/Home" stamp="1728568919000"/>
-    <entry loc="/Applications/SpringToolSuite4.app/Contents/Eclipse/plugins/org.eclipse.justj.openjdk.hotspot.jre.full.macosx.aarch64_21.0.4.v20240802-1551" stamp="1725995520000"/>
-    <entry loc="/Library/Java/JavaVirtualMachines/jdk1.7.0_80.jdk/Contents/Home" stamp="1428691484000"/>
-    <entry loc="/Users/kjunh972/Library/Java/JavaVirtualMachines/corretto-21.0.4/Contents/Home" stamp="1729099913060"/>
-    <entry loc="/Applications/SpringToolSuite4.app/Contents/Eclipse/plugins/org.eclipse.justj.openjdk.hotspot.jre.full.macosx.aarch64_21.0.4.v20240802-1551/jre" stamp="1725995520000"/>
-    <entry loc="/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home" stamp="1428691460000"/>
-</dirs>

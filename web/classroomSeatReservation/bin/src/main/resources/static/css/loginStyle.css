@@ -1,0 +1,789 @@
+/* 기본 스타일 초기화 */
+body,
+ul,
+li {
+	margin: 0;
+	/* 모든 여백을 제거 */
+	padding: 0;
+	/* 모든 패딩을 제거 */
+	list-style: none;
+	/* 리스트 스타일을 제거 */
+}
+
+.selectPosition {
+	text-align: center;
+	/* 텍스트를 가운데 정렬 */
+	margin-top: 0.63rem;
+	/* 위쪽 여백 설정 */
+}
+
+.selectPosition a {
+	color: #6c757d;
+	/* 링크 글자 색상을 설정 */
+	font-weight: bold;
+	/* 링크를 굵게 설정 */
+	cursor: pointer;
+	/* 마우스를 올리면 커서를 포인터로 변경 */
+	text-decoration: none;
+	/* 밑줄 제거 */
+}
+
+.swal-confirm-button {
+	width: 6rem;
+	/* 버튼의 너비 설정 */
+	height: 4rem;
+	/* 버튼의 높이 설정 */
+	background-color: #778da9;
+	/* 버튼 배경색 설정 */
+	font-size: 1rem;
+	/* 글씨 크기 설정 */
+}
+
+.swal-confirm-button:hover {
+	background-color: #415a77;
+	/* 호버 시 배경색 어둡게 변경 */
+}
+
+.swal-cancel-button {
+	width: 6rem;
+	/* 버튼의 너비 설정 */
+	height: 4rem;
+	/* 버튼의 높이 설정 */
+	background-color: #415a77;
+	/* 버튼 배경색 설정 */
+	padding: 0.5rem 1.25rem;
+	/* 안쪽 여백 설정 */
+	font-size: 1rem;
+	/* 글씨 크기 설정 */
+}
+
+.swal-cancel-button:hover {
+	background-color: #1b263b;
+	/* 호버 시 배경색 어둡게 변경 */
+}
+
+/* 시간표 알람 스타일 */
+.timetable-popup {
+	font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif !important;
+	padding: 2rem !important;
+	width: 24em !important;
+}
+
+.timetable-confirm {
+	width: 6rem !important;
+	/* 버튼 너비 */
+	height: 2.5rem !important;
+	/* 버튼 높이 */
+	padding: 0.5rem 1rem !important;
+	font-size: 1rem !important;
+	font-weight: 500 !important;
+	display: flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	border-radius: 0.5rem !important;
+	background-color: #778da9 !important;
+	color: white !important;
+	transition: background-color 0.3s ease !important;
+}
+
+.timetable-confirm:hover {
+	background-color: #415a77 !important;
+}
+
+/* 모바일 대응 */
+@media (max-width: 48rem) {
+	.timetable-popup {
+		width: 20em !important;
+		padding: 1.5rem !important;
+	}
+
+	.timetable-confirm {
+		width: 5rem !important;
+		height: 2.3rem !important;
+		font-size: 0.9rem !important;
+		padding: 0.4rem 0.8rem !important;
+	}
+}
+
+/* 버튼 컨테이너 스타일 */
+.button-container {
+	display: flex;
+	/* Flexbox 레이아웃 사용 */
+	align-items: center;
+	/* 버튼과 텍스트를 아래쪽으로 정렬 */
+	flex-direction: row;
+	/* 버튼들을 가로로 정렬 */
+	margin-top: 1rem;
+	/* 위쪽 여백 설정 */
+	margin-left: 9rem;
+	/* 왼쪽으로 이동 */
+}
+
+/* 버튼 스타일 - 정사각형 */
+button {
+	width: 4rem;
+	/* 버튼의 너비 설정 */
+	height: 4rem;
+	/* 버튼의 높이 설정 */
+	font-size: 1.2rem;
+	/* 글씨 크기 설정 */
+	background-color: #778da9;
+	/* 배경색 설정 */
+	color: white;
+	/* 글씨 색상 설정 */
+	border: none;
+	/* 테두리 제거 */
+	border-radius: 1.25rem;
+	/* 둥근 테두리 설정 */
+	cursor: pointer;
+	/* 포인터 커서 설정 */
+	margin-right: 1.25rem;
+	/* 버튼 간격 설정 */
+	transition: background-color 0.3s ease, transform 0.2s ease;
+	/* 부드러운 전환 효과 */
+	text-align: center;
+	/* 텍스트 가운데 정렬 */
+	line-height: 4rem;
+	/* 버튼 높이와 동일하게 설정 */
+}
+
+button:hover {
+	background-color: #415a77;
+	/* 호버 시 배경색 변경 */
+	transform: scale(1.05);
+	/* 호버 시 크기 약간 확대 */
+}
+
+.button-wrapper {
+	display: flex;
+	/* Flexbox 레이아웃 사용 */
+	flex-direction: column;
+	/* 세로 정렬 */
+	align-items: center;
+	/* 가운데 정렬 */
+	position: relative;
+	/* 상대 위치 설정 */
+	width: 5.63rem;
+	/* 버튼과 텍스트 포함 너비 */
+}
+
+.button-text {
+	display: none;
+	/* 기본적으로 텍스트 숨김 */
+	font-size: 0.9rem;
+	/* 글씨 크기 설정 */
+	color: black;
+	/* 글씨 색상 설정 */
+	font-weight: 600;
+	/* 글씨 두께 설정 */
+	position: absolute;
+	/* 절대 위치 설정 */
+	top: 100%;
+	/* 수직 중앙 정렬 */
+	right: 20%;
+	left: -2%;
+	/* 왼쪽으로 이동 (조정 가능) */
+	transform: translateY(-50%);
+	/* 수직으로 가운데 정렬 */
+	text-align: center;
+	/* 가운데 정렬 */
+	white-space: nowrap;
+	/* 줄바꿈 방지 */
+	overflow: hidden;
+	/* 넘치는 부분 숨김 */
+	text-overflow: ellipsis;
+	/* 넘치는 텍스트 말줄임표 처리 */
+	margin-top: 0.5rem;
+	/* 간격 설정 */
+}
+
+.button-container a {
+	display: flex;
+	/* Flexbox 사용 */
+	flex-direction: column;
+	/* 세로 정렬 */
+	align-items: center;
+	/* 가운데 정렬 */
+
+	text-decoration: none;
+	/* 밑줄 제거 */
+	margin: 0 1rem;
+	/* 간격 설정 */
+}
+
+.button-container a:hover .button-text {
+	display: block;
+	/* 호버 시 텍스트 표시 */
+}
+
+.button-container a:hover button {
+	transform: translateY(-0.63rem);
+	/* 호버 시 버튼 위로 이동 */
+	transition: transform 0.2s ease;
+	/* 부드러운 이동 효과 */
+}
+
+.main-container {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 2rem;
+	padding: 2rem;
+	padding: 2rem;
+	margin-top: 1rem;
+	margin-left: -1.5rem;
+
+}
+
+.container {
+	margin-top: -3rem;
+	/* 위쪽 여백 설정 */
+	margin-bottom: 3.13rem;
+	/* 아래쪽 여백 설정 */
+}
+
+.timetable-section {
+	display: flex;
+	/* Flexbox 사용 */
+	flex-direction: column;
+	/* 수직 정렬 */
+	align-items: flex-start;
+	/* 왼쪽 정렬 */
+	margin-top: 2rem;
+	/* 위쪽 여백 */
+	margin-left: 9rem;
+	/* 왼쪽 여백 */
+	position: relative;
+	/* 상대 위치 설정 */
+	z-index: 1;
+	/* z-index 설정 */
+}
+
+table {
+	border-collapse: collapse;
+	/* 테두리 합치기 */
+	box-shadow: 0 0 1.25rem rgba(0, 0, 0, 0.1);
+	/* 그림자 추가 */
+}
+
+th,
+td {
+	padding: 0.63rem;
+	/* 안쪽 여백 */
+	text-align: center;
+	/* 텍스트 가운데 정렬 */
+	border: 0.06rem solid #ddd;
+	/* 테두리 설정 */
+	width: 8.13rem;
+	/* 셀 너비 설정 */
+}
+
+th {
+	background-color: #778da9;
+	/* 헤더 배경색 */
+	color: #fff;
+	/* 헤더 글씨 색상 */
+}
+
+tbody tr:nth-child(even) {
+	background-color: #f2f2f2;
+	/* 짝수 행 배경색 */
+}
+
+/* 공통 컨테이너 스타일 */
+.login-container {
+    position: fixed;
+    top: 13rem;
+    right: 7rem;
+    width: 300px;
+    z-index: 100;
+}
+
+.login-box {
+    width: 100%;
+    background-color: #fff;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* 로그인 폼 스타일 */
+.login-box h2 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #1b263b;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.input-group {
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid #e9ecef;
+    border-radius: 0.8rem;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+.input-group input::placeholder {
+    color: #adb5bd;
+}
+
+.input-group input:focus {
+    border-color: #778da9;
+    box-shadow: 0 0 0 2px rgba(119, 141, 169, 0.1);
+    outline: none;
+}
+
+/* 버튼 스타일 */
+.button-group {
+    width: 100%;
+    margin-top: 1.5rem;
+}
+
+/* 회원가입 링크 */
+.selectPosition {
+    margin-top: 1.2rem;
+    text-align: center;
+}
+
+.selectPosition a {
+    color: #778da9;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.selectPosition a:hover {
+    color: #415a77;
+}
+
+/* 프로필 스타일 */
+.profile-content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between; /* 요소들을 균등 분배 */
+    height: 100%;
+    padding: 0.5rem 0;
+}
+
+.profile-top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.profile-avatar {
+    width: 4.5rem;
+    height: 4.5rem;
+    background-color: #778da9;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 8px rgba(119, 141, 169, 0.2);
+}
+
+.profile-avatar span {
+    color: white;
+    font-size: 2rem;
+    font-weight: 500;
+}
+
+.profile-info {
+    text-align: center;
+    width: 100%;
+}
+
+.user-name {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #1b263b;
+    margin-bottom: 0.3rem;
+}
+
+.user-number {
+    font-size: 1rem;
+    color: #6c757d;
+}
+
+.user-id {
+    font-size: 1.1rem;
+    color: #778da9;
+    margin-top: 0.3rem;
+}
+
+.profile-divider {
+    width: calc(100% - 1.38rem);
+    height: 1px;
+    background-color: #e9ecef;
+    margin: 1rem auto;
+}
+
+/* 로그아웃 버튼 */
+.logout-btn {
+    min-width: 10rem;
+    font-size: 1rem;
+    font-weight: 500;
+	width: 100%;
+	margin-top: 1.5rem;
+    text-align: center; /* 텍스트 중앙 정렬 */
+}
+
+.logout-btn:hover {
+    background-color: #415a77;
+}
+
+
+/* 확인 버튼 (confirmButton) 스타일 */
+.swal-button {
+    background-color: #778da9 !important;  /* 확인 버튼 배경색 */
+    color: white !important;  /* 확인 버튼 글씨색 */
+    border: none !important;  /* 테두리 제거 */
+    border-radius: 0.94rem !important;  /* 둥근 모서리 */
+    padding: 0.1rem 0.5rem !important;  /* 버튼 크기 줄이기 (상하 여유 공간 줄임) */
+    font-size: 0.9rem !important;  /* 글씨 크기 살짝 줄이기 */
+    min-width: 5rem !important;  /* 버튼 최소 너비 */
+    height: auto !important;  /* 높이 자동 조정 */
+}
+
+.swal-button:hover {
+    background-color: #415a77 !important;  /* 확인 버튼 hover 색상 */
+}
+
+/* 취소 버튼 (cancelButton) 스타일 */
+.swal-cancel-button {
+    background-color: #a9afb4 !important;  /* 취소 버튼 배경색 */
+    color: white !important;  /* 취소 버튼 글씨색 */
+    border: none !important;  /* 테두리 제거 */
+    border-radius: 0.94rem !important;  /* 둥근 모서리 */
+    padding: 0.1rem 0.5rem !important;  /* 버튼 크기 줄이기 (상하 여유 공간 줄임) */
+    font-size: 0.9rem !important;  /* 글씨 크기 살짝 줄이기 */
+}
+
+.swal-cancel-button:hover {
+    background-color: #c4c9cd !important;  /* 취소 버튼 hover 색상 */
+}
+
+/* 확인 버튼 스타일 */
+.login-error-confirm {
+	background-color: #778da9 !important;  /* 확인 버튼 배경색 */
+   color: white !important;  /* 확인 버튼 글씨색 */
+   border: none !important;  /* 테두리 제거 */
+   border-radius: 0.94rem !important;  /* 둥근 모서리 */
+   padding: 0.1rem 0.5rem !important;  /* 버튼 크기 줄이기 (상하 여유 공간 줄임) */
+   font-size: 0.9rem !important;  /* 글씨 크기 살짝 줄이기 */
+   min-width: 5rem !important;  /* 버튼 최소 너비 */
+   height: auto !important;  /* 높이 자동 조정 */
+}
+
+/* 버튼 hover 시 색상 변경 */
+.login-error-confirm:hover {
+    background-color: #415a77 !important;  /* 확인 버튼 hover 색상 */
+}
+
+
+/* 기본적으로 모바일 컨텐츠는 숨김 */
+.mobile-only {
+	display: none;
+}
+
+/* 모바일 스타일 */
+@media screen and (max-width: 768px) {
+	.desktop-only {
+		display: none;
+	}
+
+	.mobile-only {
+		display: block;
+	}
+
+	/* 모바일 로그인 컨테이너 */
+	.login-container {
+		width: 100%;
+		padding: 20px;
+		margin-top: 60px;
+	}
+
+	/* 앱 소개 섹션 */
+	.app-introduction {
+		padding: 20px;
+		margin-top: -3.5rem;
+	}
+
+	.app-introduction h2 {
+		color: #1a374d;
+		margin-bottom: 30px;
+		font-size: 1.5rem;
+		text-align: center;
+	}
+
+	.feature-list {
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
+	}
+
+	.feature-item {
+		background: #f8f9fa;
+		padding: 20px;
+		border-radius: 10px;
+		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+		text-align: center;
+	}
+
+	.feature-item i {
+		font-size: 2rem;
+		color: #406882;
+		margin-bottom: 15px;
+	}
+
+	.feature-item h3 {
+		color: #1a374d;
+		margin-bottom: 10px;
+		font-size: 1.2rem;
+	}
+
+	.feature-item p {
+		color: #6c757d;
+		font-size: 0.9rem;
+		line-height: 1.5;
+	}
+}
+
+/* 모바일 화면을 위한 통합 스타일 */
+@media (max-width: 768px) {
+
+	/* 로그인 컨테이너 처리 */
+	.login-container {
+		display: none !important;
+	}
+
+	/* 메인 컨테이너 설정 */
+	.main-container {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: flex-start;
+		padding: 1rem;
+		padding-top: 6rem;
+		margin: 5%;
+	}
+
+	/* 시간표 섹션 스타일 */
+	.timetable-section {
+		margin: 0;
+		width: 100%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		margin-top: 12rem;
+	}
+
+	/* 테이블 스타일 */
+	table {
+		font-size: 0.625rem;
+		width: 100%;
+		border-collapse: collapse;
+	}
+
+	th,
+	td {
+		padding: 0.313rem;
+		text-align: center;
+		width: auto;
+	}
+
+	/* 입력 필드 스타일 */
+	input[type="text"],
+	input[type="password"],
+	input[type="submit"] {
+		padding: 0.8rem;
+		margin: 0.5rem;
+		font-size: 1rem;
+		width: 100%;
+		border-radius: 0.5rem;
+	}
+
+	/* 제목 스타일 */
+	h2 {
+		font-size: 1.2rem;
+	}
+
+	/* 체크박스 스타일 */
+	input[type="checkbox"]+span {
+		width: 1rem;
+		height: 1rem;
+		transform: scale(0.9);
+		margin: 0.5rem;
+		font-size: 0.9rem;
+	}
+
+	/* 링크 스타일 */
+	a {
+		margin: 0.5rem;
+		font-size: 0.9rem;
+	}
+
+	/* 헤더와 메뉴 정렬 */
+	header,
+	nav,
+	.app-name {
+		text-align: center;
+		line-height: 5rem;
+	}
+
+	/* 사이드바 스타일 */
+	.sidebar {
+		position: fixed;
+		top: 3.5rem;
+		left: 0;
+		width: 80%;
+		max-width: 300px;
+		background-color: #1b263b;
+		height: 100vh;
+		z-index: 101;
+		transition: transform 0.3s ease;
+	}
+
+	/* 토글 버튼 스타일 */
+	.toggle-btn {
+		position: fixed;
+		top: 1rem;
+		left: 1rem;
+		font-size: 1.5rem;
+		background-color: transparent;
+		border: none;
+		color: #000;
+		cursor: pointer;
+		z-index: 102;
+	}
+}
+
+input[type="text"],
+input[type="password"] {
+	width: calc(100% - 1.38rem);
+	/* 너비 설정 */
+	padding: 0.63rem;
+	/* 안쪽 여백 */
+	margin: 0.63rem 0;
+	/* 상하 여백 */
+	border-radius: 0.94rem;
+	/* 둥근 테두리 */
+	border: 1px solid #ccc;
+	/* 테두리 설정 */
+}
+
+input[type="submit"] {
+	background-color: #778da9;
+	/* 배경색 설정 */
+	color: white;
+	/* 글씨 색상 흰색 */
+	border: none;
+	/* 테두리 제거 */
+	border-radius: 0.94rem;
+	/* 둥근 테두리 */
+	padding: 0.63rem;
+	/* 안쪽 여백 */
+	width: 100%;
+	/* 전체 너비 */
+	cursor: pointer;
+	/* 포인터 커서 */
+	transition: background-color 0.3s ease;
+	/* 부드러운 배경색 전환 */
+}
+
+input[type="submit"]:hover {
+	background-color: #415a77;
+	/* 호버 시 배경색 변경 */
+}
+
+/* 팝업 배경 스타일 */
+.modal {
+	display: none;
+	/* 기본적으로 팝업을 숨김 */
+	position: fixed;
+	/* 화면 고정 위치 설정 */
+	z-index: 1;
+	/* 팝업을 최상위로 위치 */
+	left: 0;
+	top: 0;
+	width: 100%;
+	/* 전체 화면 너비 */
+	height: 100%;
+	/* 전체 화면 높이 */
+	background-color: rgba(0, 0, 0, 0.5);
+	/* 반투명 배경 */
+	justify-content: center;
+	/* 수평 중앙 정렬 */
+	align-items: center;
+	/* 수직 중앙 정렬 */
+	display: flex;
+	/* 중앙에 위치하도록 설정 */
+}
+
+/* 팝업 콘텐츠 스타일 */
+.modal-content {
+	background-color: #fefefe;
+	/* 배경색 설정 */
+	margin: 15% auto;
+	/* 화면 중앙 배치 */
+	padding: 20px;
+	/* 내부 여백 */
+	border: 1px solid #888;
+	/* 테두리 설정 */
+	width: 50%;
+	/* 콘텐츠 너비 설정 */
+	text-align: center;
+	/* 텍스트 중앙 정렬 */
+}
+
+/* 버튼 세로 정렬 */
+.modal-content .button-container {
+	display: flex;
+	/* 플렉스 컨테이너로 설정 */
+	flex-direction: column;
+	/* 세로 방향 정렬 */
+	align-items: center;
+	/* 가로 중앙 정렬 */
+	justify-content: center;
+	/* 세로 중앙 정렬 */
+	gap: 10px;
+	/* 버튼 사이 간격 */
+	margin-top: 20px;
+	/* 제목과 버튼 사이 여백 */
+}
+
+/* 닫기 버튼 */
+.close {
+	color: #aaa;
+	/* 닫기 버튼 색상 */
+	float: right;
+	/* 오른쪽 정렬 */
+	font-size: 28px;
+	/* 글자 크기 */
+	font-weight: bold;
+	/* 글자 굵기 */
+}
+
+.close:hover,
+.close:focus {
+	color: black;
+	/* 호버 또는 포커스 시 색상 변경 */
+	text-decoration: none;
+	/* 밑줄 제거 */
+	cursor: pointer;
+	/* 포인터 커서 표시 */
+}

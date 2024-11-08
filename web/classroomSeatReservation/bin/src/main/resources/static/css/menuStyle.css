@@ -1,0 +1,405 @@
+/* CSS 변수를 :root에 정의 */
+:root {
+    --menu-primary: #778da9;
+    --menu-primary-dark: #415a77;
+    --menu-primary-light: #e0e7ee;
+    --menu-text-dark: #1b263b;
+    --menu-text-light: #fff;
+    --menu-background: #f8f9fa;
+}
+
+/* .menu-root 클래스 제거하고 나머지 스타일은 그대로 유지 */
+.menu-component * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+}
+/* 데스크탑 네비게이션 */
+.menu-desktop-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4rem;
+    background: var(--menu-text-light);
+    box-shadow: 0 0.1rem 0.6rem rgba(0, 0, 0, 0.1);
+    z-index: 100;
+}
+
+.menu-nav-content {
+    max-width: 75rem;
+    margin: 0 auto;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+}
+
+.menu-nav-logo a {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    text-decoration: none;
+    color: var(--menu-primary);
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.menu-nav-logo i {
+    font-size: 1.5rem;
+    margin-left: -10rem;
+}
+
+.menu-nav-links {
+    display: flex;
+    gap: 1.5rem;
+    margin-right: -9rem;
+}
+
+.menu-nav-links a {
+    text-decoration: none;
+    color: var(--menu-text-dark);
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* 모바일 메뉴 컴포넌트 */
+.menu-mobile-toggle {
+    display: none;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.8rem;
+    color: black;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    z-index: 9999;
+    transition: all 0.3s ease;
+}
+
+.menu-mobile-sidebar {
+    position: fixed;
+    top: 0;
+    left: -18.8rem;
+    width: 18.8rem;
+    height: 100%;
+    background: var(--menu-text-light);
+    box-shadow: 0.1rem 0 0.6rem rgba(0, 0, 0, 0.1);
+    z-index: 10000;
+    transition: all 0.3s ease;
+    overflow-y: auto;
+}
+
+.menu-mobile-sidebar.active {
+    left: 0;
+}
+
+.menu-sidebar-header {
+    padding: 2rem;
+    background: var(--menu-primary-light);
+}
+
+.menu-user-profile {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+}
+
+.menu-profile-avatar {
+    width: 3.8rem;
+    height: 3.8rem;
+    background: var(--menu-primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--menu-text-light);
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.menu-profile-info {
+    flex: 1;
+}
+
+.menu-profile-info h3 {
+    color: var(--menu-text-dark);
+    font-size: 1.2rem;
+    margin-bottom: 0.3rem;
+}
+
+.menu-profile-info p {
+    color: var(--menu-primary-dark);
+    font-size: 0.9rem;
+}
+
+/* 로그인 섹션 */
+.menu-login-section {
+    padding: 2rem 2rem 2rem 1.3rem; /* 오른쪽 패딩 줄임 */
+    margin-left: -1.9rem;
+    width: 100%; /* 전체 너비를 95%로 제한 */
+}
+
+/* 입력 필드 그룹 */
+.menu-input-group {
+    position: relative;
+    margin-bottom: 1rem;
+    width: 90%; /* 입력 필드 너비를 95%로 제한 */
+    margin-right: 1rem; /* 오른쪽 여백 추가 */
+}
+
+.menu-input-group input {
+    width: 90%; /* 입력 필드 자체의 너비도 95%로 제한 */
+    padding: 1rem 1rem 1rem 3rem;
+    border: 1px solid var(--menu-primary-light);
+    border-radius: 0.8rem;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+.menu-login-section h2 {
+    color: var(--menu-text-dark);
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    margin-left: 0.5rem;
+	text-align: center; /* 제목 중앙 정렬 */
+}
+
+.menu-input-group i {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--menu-primary);
+}
+
+.menu-input-group input:focus {
+    outline: none;
+    border-color: var(--menu-primary);
+    box-shadow: 0 0 0 0.2rem rgba(119, 141, 169, 0.1);
+}
+
+/* 로그인 폼 버튼 */
+.menu-login-form button {
+    width: 45%;
+    padding: 0.5rem;
+    background: var(--menu-primary);
+    color: var(--menu-text-light);
+    border: none;
+    border-radius: 0.8rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 1.3rem;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    height: 2.5rem;
+    line-height: 1.2rem;
+}
+
+.menu-login-form button:hover {
+    background: var(--menu-primary-dark);
+}
+
+/* 회원가입 링크 */
+.menu-register-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    color: var(--menu-primary) !important;
+    text-decoration: none !important;
+    font-weight: 500;
+}
+
+.menu-register-link i {
+    font-size: 1.1rem;
+}
+
+.menu-register-link:hover {
+    color: var(--menu-primary-dark) !important;
+    background: none !important;
+}
+
+/* 사이드바 메뉴 */
+.menu-sidebar-menu {
+    padding: 1.5rem;
+}
+
+.menu-sidebar-menu a {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    color: var(--menu-text-dark);
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: 0.8rem;
+    transition: all 0.2s ease;
+    margin-bottom: 0.5rem;
+}
+
+.menu-sidebar-menu a:hover {
+    background: var(--menu-primary-light);
+    color: var(--menu-primary-dark);
+}
+
+/* 로그아웃 버튼 */
+.menu-logout-btn {
+    margin-top: 2rem;
+    color: #dc3545 !important;
+}
+
+.menu-logout-btn:hover {
+    background: #ffebee !important;
+}
+
+/* 로그아웃 팝업 */
+.menu-logout-popup {
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif !important;
+    padding: 2rem !important;
+    width: 24em !important;
+}
+
+.menu-logout-confirm {
+    width: 7rem !important;
+    height: 2.8rem !important;
+    padding: 0.5rem 1rem !important;
+    font-size: 1rem !important;
+    font-weight: 500 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 0.5rem !important;
+    background-color: var(--menu-primary) !important;
+    color: var(--menu-text-light) !important;
+    transition: background-color 0.3s ease !important;
+}
+
+.menu-logout-confirm:hover {
+    background-color: var(--menu-primary-dark) !important;
+}
+
+.menu-logout-cancel {
+    width: 7rem !important;
+    height: 2.8rem !important;
+    padding: 0.5rem 1rem !important;
+    font-size: 1rem !important;
+    font-weight: 500 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 0.5rem !important;
+    background-color: #888 !important;
+    color: var(--menu-text-light) !important;
+    transition: background-color 0.3s ease !important;
+}
+
+.menu-logout-cancel:hover {
+    background-color: #666 !important;
+}
+
+/* 오버레이 */
+.menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(0.3rem);
+    z-index: 9998;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+
+.menu-overlay.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+/* 메인 콘텐츠 */
+.menu-main-content {
+    position: relative;
+    z-index: 1;
+    margin-top: 4rem;
+    padding: 2rem;
+    max-width: 75rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 48rem) {
+    .menu-desktop-nav {
+        display: none;
+    }
+
+    .menu-mobile-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .menu-main-content {
+        padding: 1rem;
+    }
+
+    .menu-logout-popup {
+        width: 20em !important;
+        padding: 1.5rem !important;
+    }
+
+    .menu-logout-confirm,
+    .menu-logout-cancel {
+        width: 6rem !important;
+        height: 2.5rem !important;
+        font-size: 0.9rem !important;
+        padding: 0.4rem 0.8rem !important;
+    }
+}
+
+@media (min-width: 48.1rem) {
+    .menu-mobile-sidebar,
+    .menu-mobile-toggle,
+    .menu-overlay {
+        display: none;
+    }
+}
+
+/* 스크롤바 스타일링 */
+.menu-mobile-sidebar::-webkit-scrollbar {
+    width: 0.5rem;
+}
+
+.menu-mobile-sidebar::-webkit-scrollbar-track {
+    background: var(--menu-text-light);
+}
+
+.menu-mobile-sidebar::-webkit-scrollbar-thumb {
+    background: var(--menu-primary-light);
+    border-radius: 0.25rem;
+}
+
+.menu-mobile-sidebar::-webkit-scrollbar-thumb:hover {
+    background: var(--menu-primary);
+}

@@ -1,0 +1,157 @@
+/* 강의실 현황 제목 */
+h2 {
+    text-align: center;
+    color: #1b263b;
+    font-size: 2.2em;
+    margin: 40px 0 20px;
+    letter-spacing: 1px;
+}
+
+/* 사용자 이름과 안내 메시지 */
+h4 {
+    text-align: center;
+    color: #415a77;
+    font-size: 1.1em;
+    margin: 0 0 30px;
+    font-weight: 500;
+}
+
+/* 폼 컨테이너 스타일링 */
+form {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+/* 강의실 버튼 스타일링 */
+.classroom-button {
+    width: 220px;
+    height: 120px;
+    background-color: #fff;
+    border: 2px solid #778da9;
+    border-radius: 15px;
+    color: #1b263b;
+    font-size: 1.2em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    margin: 10px;
+}
+
+/* 버튼 호버 효과 */
+.classroom-button:hover {
+    transform: translateY(-5px);
+    background-color: #778da9;
+    color: #fff;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* 버튼 아이콘 스타일링 */
+.classroom-button::before {
+    content: '\f19d';
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 0.8em;
+    opacity: 0.5;
+}
+
+/* 모바일 반응형 스타일 */
+@media (max-width: 768px) {
+    /* 상단 패딩 제거 */
+    body {
+        padding-top: 0;
+    }
+
+    /* 제목 스타일 조정 */
+    h2 {
+        font-size: 1.8em;
+        margin-top: -0.7rem;
+        margin-bottom: 3rem;
+    }
+
+    /* 부제목 스타일 조정 */
+    h4 {
+        font-size: 1em;
+        margin: 0 20px 25px;
+        line-height: 1.4;
+		margin-bottom: 3rem;
+    }
+
+    /* 폼 모바일 스타일 */
+    form {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+        width: 100%;
+        padding: 10px 20px;
+        box-sizing: border-box;
+    }
+
+    /* 버튼 모바일 스타일 */
+    .classroom-button {
+        width: 80%;
+        height: 100px;
+        font-size: 1.1em;
+        margin: 5px auto;
+        max-width: 300px;
+    }
+
+    /* 모바일 호버 효과 */
+    .classroom-button:hover {
+        transform: translateY(-2px);
+    }
+
+    /* 모바일 터치 효과 */
+    .classroom-button:active {
+        background-color: #778da9;
+        color: #fff;
+        transform: translateY(1px);
+    }
+}
+
+/* 페이드인 애니메이션 정의 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 버튼 페이드인 애니메이션 적용 */
+.classroom-button {
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* 로딩 상태 스타일 */
+.classroom-button.loading {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+/* 로딩 애니메이션 정의 */
+@keyframes loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
