@@ -69,7 +69,7 @@
 	</div>
 
 	<!-- 좌석 예약 현황 모달 -->
-	<div id="seatModal" class="modal classroom-set" th:if="${classroom}">
+	<div id="seatModal2" class="modal classroom-set" th:if="${classroom}">
 		<div class="modal-content">
 			<span class="close" id="closeSeatModal">&times;</span>
 			<h1 th:if="${classroom}" th:text="${classroom.classroomName} + '호 좌석 예약 현황'">강의실 좌석 예약 현황</h1>
@@ -95,12 +95,12 @@
 
 			// 좌석 모달 열기 함수
 			function openSeatModal() {
-				document.getElementById('seatModal').style.display = 'block';
+				document.getElementById('seatModal2').style.display = 'block';
 			}
 
 			// 좌석 모달 닫기 함수
 			function closeSeatModal() {
-				document.getElementById('seatModal').style.display = 'none';
+				document.getElementById('seatModal2').style.display = 'none';
 				if (classrooNull == 1) {
 					window.location.href = "/classroomSet"; // timetable으로 이동
 				}
