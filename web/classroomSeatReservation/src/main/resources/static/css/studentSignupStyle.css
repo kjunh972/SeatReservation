@@ -54,6 +54,34 @@
 button[type="button"]:hover, button[type="submit"]:hover {
     background-color: #415a77;
 }
+
+.autocomplete-list {
+    background: white;
+    border: 1px solid #ddd;
+    max-height: 200px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch; /* iOS 스크롤 부드럽게 */
+    position: absolute;
+    width: 100%;
+    z-index: 1000;
+}
+
+.autocomplete-list option {
+    padding: 10px;
+    cursor: pointer;
+    display: block;
+}
+
+.autocomplete-list option:hover {
+    background-color: #f5f5f5;
+}
+
+/* iOS에서 select 요소 스타일 재정의 */
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
 	
 	/* 모바일 최적화 */
 @media (max-width: 768px) {
@@ -116,4 +144,28 @@ button[type="button"]:hover, button[type="submit"]:hover {
         width: 100%;
         max-height: 150px; /* 자동완성 리스트 최대 높이 설정 */
     }
+	.menu-mobile-sidebar {
+			width: 20rem;
+			max-width: 20rem ;
+		}
+
+	.menu-login-section {
+		padding: 2rem 1rem;
+		margin: 0 auto;
+		width: 19rem;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.menu-input-group {
+		width: 15rem !important;
+		margin: 1rem 0 1rem 1.5rem;
+		margin-top: 1rem;
+		padding-left: -2rem !important;;
+	}
+
+	.menu-input-group input {
+		width: 15rem !important;
+	}
 }

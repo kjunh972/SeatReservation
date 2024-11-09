@@ -39,16 +39,16 @@ public class UserController {
 	private Contoller ct = new Contoller();
 
 	public boolean isValidPassword(String password) {
-	    // 최소 8자, 하나 이상의 문자, 숫자, 특수문자를 포함하는 정규식
-	    String regex = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$";
-	    return Pattern.matches(regex, password);
+		// 최소 8자, 하나 이상의 문자, 숫자, 특수문자를 포함하는 정규식
+		String regex = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$";
+		return Pattern.matches(regex, password);
 	}
 
 	@GetMapping("/login")
 	public String showLoginPage(HttpSession session, Model model) {
 		String userPosition = ct.GetPosition(session);
 		String userId = ct.GetId(session);
-		
+
 		ct.getTimetablePage(model, session);
 
 		// 로그인 세션이 만료 된 경우
@@ -56,7 +56,7 @@ public class UserController {
 			model.addAttribute("userNull", true);
 			return "login";
 		}
-		
+
 		model.addAttribute("userPosition", userPosition);
 
 		return "login";
@@ -116,41 +116,43 @@ public class UserController {
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<?> login(@RequestParam("id") String id, @RequestParam("password") String password, HttpSession session) {
-	    // DAO에서 비밀번호를 가져옴
-	    String storedPassword = userDAO.getPasswordFromTables(id);
+	public ResponseEntity<?> login(@RequestParam("id") String id, @RequestParam("password") String password,
+			HttpSession session) {
+		// DAO에서 비밀번호를 가져옴
+		String storedPassword = userDAO.getPasswordFromTables(id);
 
-	    // 비밀번호 확인
-	    if (storedPassword != null && storedPassword.equals(password)) {
-	        // 사용자 정보를 DAO에서 가져옴
-	        if (userDAO.isUserExists(id)) {
-	            userDTO = userDAO.getUserById(id);
-	            // 세션에 사용자 정보 저장
-	            session.setAttribute("loggedInUser", userDTO);
+		// 비밀번호 확인
+		if (storedPassword != null && storedPassword.equals(password)) {
+			// 사용자 정보를 DAO에서 가져옴
+			if (userDAO.isUserExists(id)) {
+				userDTO = userDAO.getUserById(id);
+				// 세션에 사용자 정보 저장
+				session.setAttribute("loggedInUser", userDTO);
 
-	            // 학생 여부를 세션에 저장
-	            session.setAttribute("isStudent", true);
-	        } else if (proDAO.isProExists(id)) {
-	            proDTO = proDAO.getProById(id);
-	            // 세션에 교수 정보 저장
-	            session.setAttribute("loggedInUser", proDTO);
+				// 학생 여부를 세션에 저장
+				session.setAttribute("isStudent", true);
+			} else if (proDAO.isProExists(id)) {
+				proDTO = proDAO.getProById(id);
+				// 세션에 교수 정보 저장
+				session.setAttribute("loggedInUser", proDTO);
 
-	            // 교수이므로 학생 여부를 false로 설정
-	            session.setAttribute("isStudent", false);
-	        }
+				// 교수이므로 학생 여부를 false로 설정
+				session.setAttribute("isStudent", false);
+			}
 
-	        return ResponseEntity.ok().build();  // 로그인 성공
-	    }
+			return ResponseEntity.ok().build(); // 로그인 성공
+		}
 
-	    // 로그인 실패 시 JSON 형식으로 에러 메시지 반환
-	    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("error", "아이디 또는 비밀번호가 잘못되었습니다."));
+		// 로그인 실패 시 JSON 형식으로 에러 메시지 반환
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+				.body(Collections.singletonMap("error", "아이디 또는 비밀번호가 잘못되었습니다."));
 	}
 
-
-	// 학생 회원가입 폼을 보여주는 메서드
 	@GetMapping("/studentSignup")
-	public String showRegistrationForm(Model model) {
-		return "studentSignup";
+	public String showRegistrationForm(HttpSession session, Model model) {
+	    // 세션 정보를 모델에 직접 추가
+	    model.addAttribute("session", session);
+	    return "studentSignup";
 	}
 
 	// 아이디 중복 체크를 위한 메서드

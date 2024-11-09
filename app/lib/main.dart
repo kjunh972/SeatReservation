@@ -4,11 +4,9 @@ import 'dart:io';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-// 앱 시작점
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // iOS 권한 요청
   if (Platform.isIOS) {
     await Permission.camera.request();
     await Permission.microphone.request();
@@ -17,7 +15,6 @@ void main() async {
   runApp(const MyApp());
 }
 
-// 앱의 루트 위젯
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -34,7 +31,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// 홈페이지 StatefulWidget
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
 
@@ -42,18 +38,13 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-// 홈페이지 State 클래스
 class _MyHomePageState extends State<MyHomePage> {
-  // WebView 관련 변수
   final GlobalKey webViewKey = GlobalKey();
   InAppWebViewController? webViewController;
-  String url = 'http://192.168.45.134:8055/';
-
-  // 상태 관리 변수
+  final String url = 'http://192.168.45.134:8055/';
   bool isLoading = true;
   double _loadingOpacity = 1.0;
 
-  // 로딩 인디케이터 위젯
   Widget _buildLoadingIndicator() {
     return AnimatedOpacity(
       opacity: _loadingOpacity,
@@ -62,7 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
         width: double.infinity,
         height: double.infinity,
         color: Colors.white,
-        child: Center(
+        child: const Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -70,8 +61,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 color: Colors.blue,
                 size: 50.0,
               ),
-              const SizedBox(height: 20),
-              const Text(
+              SizedBox(height: 20),
+              Text(
                 '로딩중...',
                 style: TextStyle(
                   fontSize: 16,
@@ -92,12 +83,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return PopScope(
       canPop: false,
-      // 뒤로가기 처리
       onPopInvoked: (didPop) async {
         if (webViewController != null) {
           if (await webViewController!.canGoBack()) {
             if (!isLoading) {
-              // 사이드바 닫기
               await webViewController!.evaluateJavascript(source: """
                 (function() {
                   const mobileSidebar = document.getElementById('menu-mobile-sidebar');
@@ -118,11 +107,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 })();
               """);
 
-              // 뒤로가기 실행
               await Future.delayed(const Duration(milliseconds: 100));
               await webViewController!.goBack();
 
-              // 사이드바 상태 확인
               await Future.delayed(const Duration(milliseconds: 200));
               await webViewController!.evaluateJavascript(source: """
                 (function() {
@@ -137,19 +124,19 @@ class _MyHomePageState extends State<MyHomePage> {
                 })();
               """);
 
-              // 페이지 새로고침
               await Future.delayed(const Duration(milliseconds: 300));
               await webViewController!.reload();
             }
           } else {
-            Navigator.of(context).pop();
+            if (context.mounted) {
+              Navigator.of(context).pop();
+            }
           }
         }
       },
       child: Scaffold(
         body: Stack(
           children: [
-            // WebView
             Padding(
               padding: EdgeInsets.only(top: topPadding),
               child: InAppWebView(
@@ -157,34 +144,39 @@ class _MyHomePageState extends State<MyHomePage> {
                 initialUrlRequest: URLRequest(
                   url: WebUri(url),
                 ),
-                // WebView 초기 설정
                 initialSettings: InAppWebViewSettings(
                   javaScriptEnabled: true,
                   mediaPlaybackRequiresUserGesture: false,
                   allowsInlineMediaPlayback: true,
                   mixedContentMode: MixedContentMode.MIXED_CONTENT_ALWAYS_ALLOW,
                   useWideViewPort: false,
+                  supportZoom: true,
+                  builtInZoomControls: true,
+                  displayZoomControls: false,
+                  textZoom: 100,
+                  allowsLinkPreview: false,
+                  disableContextMenu: false,
+                  disableDefaultErrorPage: false,
+                  enableViewportScale: false,
+                  transparentBackground: true,
+                  disallowOverScroll: true,
                 ),
-                // WebView 생성 완료 시
                 onWebViewCreated: (controller) {
                   webViewController = controller;
                   setState(() => isLoading = true);
                 },
-                // 페이지 로드 시작 시
                 onLoadStart: (controller, url) {
                   setState(() {
                     isLoading = true;
                     _loadingOpacity = 1.0;
                   });
                 },
-                // 페이지 로드 완료 시
                 onLoadStop: (controller, url) async {
                   setState(() {
                     isLoading = false;
                     _loadingOpacity = 0.0;
                   });
 
-                  // 사이드바 상태 초기화
                   await controller.evaluateJavascript(source: """
                     (function() {
                       const mobileSidebar = document.getElementById('menu-mobile-sidebar');
@@ -195,33 +187,102 @@ class _MyHomePageState extends State<MyHomePage> {
                       if (overlay && overlay.classList.contains('active')) {
                         overlay.classList.remove('active');
                       }
+
+                      function enhanceSchoolSearch() {
+                        const schoolInput = document.getElementById('schoolInput');
+                        const schoolList = document.getElementById('schoolList');
+                        
+                        if (!schoolInput || !schoolList) return;
+                        
+                        const schoolListContainer = document.createElement('div');
+                        schoolListContainer.id = 'schoolListContainer';
+                        schoolListContainer.style.cssText = `
+                          position: absolute;
+                          width: calc(100% - 2rem);
+                          max-height: 200px;
+                          overflow-y: auto;
+                          background: white;
+                          border: 1px solid #ccc;
+                          border-radius: 8px;
+                          margin-top: 63px; 
+                          top: 0; 
+                          left: 0; 
+                          display: none;
+                          z-index: 9999;
+                          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                        `;
+                        
+                        const schools = ['가톨릭대학교', '고려대학교', '동양미래대학교', '서울대학교', 
+                                      '성공회대학교', '연세대학교', '유한대학교', '중앙대학교'];
+                        
+                        schools.forEach(school => {
+                          const item = document.createElement('div');
+                          item.textContent = school;
+                          item.style.cssText = `
+                            padding: 12px;
+                            cursor: pointer;
+                            border-bottom: 1px solid #eee;
+                          `;
+                          
+                          item.addEventListener('click', () => {
+                            schoolInput.value = school;
+                            schoolListContainer.style.display = 'none';
+                          });
+                          
+                          schoolListContainer.appendChild(item);
+                        });
+                        
+                        schoolList.style.display = 'none';
+                        schoolInput.parentNode.appendChild(schoolListContainer);
+                        
+                        schoolInput.addEventListener('click', (e) => {
+                          e.preventDefault();
+                          schoolListContainer.style.display = 'block';
+                        });
+                        
+                        schoolInput.addEventListener('input', () => {
+                          const filter = schoolInput.value.toUpperCase();
+                          Array.from(schoolListContainer.children).forEach(item => {
+                            const text = item.textContent || item.innerText;
+                            item.style.display = text.toUpperCase().includes(filter) ? 'block' : 'none';
+                          });
+                          schoolListContainer.style.display = 'block';
+                        });
+                        
+                        document.addEventListener('click', (e) => {
+                          if (e.target !== schoolInput && e.target !== schoolListContainer) {
+                            schoolListContainer.style.display = 'none';
+                          }
+                        });
+                      }
+                      
+                      enhanceSchoolSearch();
                     })();
                   """);
                 },
-                // 에러 발생 시
                 onReceivedError: (controller, request, error) {
                   if (error.type == WebResourceErrorType.CANCELLED) {
                     return;
                   }
                   setState(() => isLoading = false);
 
-                  // 에러 메시지 표시
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('오류: ${error.description}'),
-                      duration: const Duration(seconds: 3),
-                      action: SnackBarAction(
-                        label: '다시 시도',
-                        onPressed: () {
-                          webViewController?.reload();
-                        },
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('오류: ${error.description}'),
+                        duration: const Duration(seconds: 3),
+                        action: SnackBarAction(
+                          label: '다시 시도',
+                          onPressed: () {
+                            webViewController?.reload();
+                          },
+                        ),
                       ),
-                    ),
-                  );
+                    );
+                  }
                 },
               ),
             ),
-            // 로딩 인디케이터
             if (isLoading) _buildLoadingIndicator(),
           ],
         ),
