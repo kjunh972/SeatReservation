@@ -17,11 +17,11 @@
 	<div class="classroom-set">
 		<h1 class="page-title">강의실 생성</h1> <!-- 페이지 제목 -->
 
-		<form method="post" th:action="@{/saveClassroom}" onsubmit="return validateForm()"> <!-- 강의실 생성 폼 시작 -->
+		<form method="post" th:action="@{/saveClassroom}" onsubmit="return validateForm()"> <!-- 강의실 생성 폼 시작 -->	
 			<div class="container"> <!-- 컨테이너 전체 영역 -->
 				<div class="seat-selection"> <!-- 좌석 선택 영역 시작 -->
 					<div th:each="layout : ${predefinedLayouts}" class="seat-option"> <!-- 각 미리 정의된 레이아웃에 대한 반복 -->
-						<label> <!-- 레이아웃 선택을 위한 라벨 -->
+						<label onclick="scrollToBottom()"> <!-- 레이아웃 선택을 위한 라벨 -->
 							<input type="radio" name="seatTemplate" th:value="${layout}" class="predefined-seat">
 							<!-- 레이아웃 선택 라디오 버튼 -->
 							<span th:text="${layout}"></span> <!-- 레이아웃 이름 표시 -->
@@ -34,7 +34,7 @@
 						</div>
 					</div>
 					<div class="seat-option custom-option"> <!-- 커스텀 옵션 영역 -->
-						<label> <!-- 커스텀 옵션 선택을 위한 라벨 -->
+						<label onclick="scrollToBottom()"> <!-- 커스텀 옵션 선택을 위한 라벨 -->
 							<input type="radio" name="seatTemplate" value="커스텀" id="customSeatRadio"
 								onclick="toggleCustomInputs(true)"> <!-- 커스텀 옵션 라디오 버튼 -->
 							<span>커스텀</span> <!-- 커스텀 옵션 텍스트 -->
@@ -73,6 +73,47 @@
 	</div>
 
 	<script>
+		//모바일 화면에서 label선택 시 화면 제일 아래로 이동하는 함수
+		function scrollToBottom() {
+		    // 모바일 장치인지 확인
+		    if (window.innerWidth <= 768) {
+		        window.scrollTo({
+		            top: document.body.scrollHeight,
+		            behavior: 'smooth' // 스크롤 애니메이션을 부드럽게
+		        });
+		    }
+		}
+		
+		function updateSeatLimits() {
+		   const leftSeatRows = document.getElementById('leftSeatRows');
+		   const rightSeatRows = document.getElementById('rightSeatRows');
+		   const isMobile = window.innerWidth <= 768; // 모바일 화면 기준 (768px 이하)
+
+		   // 모바일 화면에서는 leftSeatRows와 rightSeatRows의 max를 5로 제한
+		   if (isMobile) {
+		     leftSeatRows.removeAttribute('disabled');
+		     rightSeatRows.removeAttribute('disabled');
+		     leftSeatRows.setAttribute('min', '1');
+		     leftSeatRows.setAttribute('max', '5');
+		     rightSeatRows.setAttribute('min', '1');
+		     rightSeatRows.setAttribute('max', '5');
+		   } else {
+		     // 데스크탑 화면에서는 max를 10으로 제한
+		     leftSeatRows.setAttribute('disabled', true);
+		     rightSeatRows.setAttribute('disabled', true);
+		     leftSeatRows.setAttribute('min', '1');
+		     leftSeatRows.setAttribute('max', '10');
+		     rightSeatRows.setAttribute('min', '1');
+		     rightSeatRows.setAttribute('max', '10');
+		   }
+		 }
+
+		 // 초기 실행
+		 updateSeatLimits();
+
+		 // 창 크기 변경 시마다 제한을 동적으로 변경
+		 window.addEventListener('resize', updateSeatLimits);
+		
 		// 커스텀 입력 필드의 활성화/비활성화를 토글하는 함수
 		function toggleCustomInputs(isCustom) {
 			// 각 입력 필드의 disabled 속성을 isCustom 값의 반대로 설정
