@@ -188,10 +188,68 @@ button[type="submit"]:hover {
 
 /* 모바일 화면 대응 */
 @media (max-width: 48rem) {
+    /* 각 좌석 옵션을 100% 너비로 확장 */
     .seat-option {
-        flex: 1 1 100%;
+        flex: 1 1 100%; /* flex-grow: 1, flex-shrink: 1, flex-basis: 100% */
+    }
+
+    /* 모바일 기본 바디 스타일 */
+    body {
+        padding-top: 20px; /* 바디의 상단 여백을 20px로 설정 */
+    }
+
+    /* 모바일 제목 스타일 */
+    h1 {
+        font-size: 1.3em; /* 제목 글씨 크기를 1.3em으로 설정 */
+        margin: 20px 0; /* 제목의 상하 여백을 20px로 설정 */
+        margin-top: -1.7rem; /* 제목의 상단 여백을 -1.7rem로 설정 */
+        margin-bottom: 4.5rem; /* 제목의 하단 여백을 4.5rem로 설정 */
+    }
+
+    /* 모바일 컨테이너 스타일 */
+	.container {
+	    flex-direction: column; /* 플렉스 방향을 열 방향으로 설정: 자식 요소들을 세로로 배치 */
+	    padding: 0; /* 패딩을 0으로 설정: 컨테이너 내부의 여백을 제거 */
+	    margin: 0; /* 마진을 0으로 설정: 컨테이너 외부의 여백을 제거 */
+	    width: 100%; /* 컨테이너의 너비를 화면에 맞게 100% 설정 */
+	    height: 109vh; /* 컨테이너의 높이를 화면 높이의 109%로 설정 */
+	}
+
+    
+    /* 좌석 레이아웃 미리보기 스타일 */
+    .seat-layout-preview {
+        margin: 0 auto; /* 좌우 마진을 자동으로 설정하여 중앙 정렬 */
+        padding: 0; /* 패딩을 0으로 설정 */
+        display: flex; /* 플렉스 박스로 설정 */
+        align-items: center; /* 수직 중앙 정렬 */
+        justify-content: center; /* 수평 중앙 정렬 */
+        box-sizing: border-box; /* padding과 border를 포함한 크기 계산 */
+        overflow: hidden; /* 오버플로우된 콘텐츠 숨김 */
+        max-width: 100%; /* 최대 너비를 100%로 설정 */
+    }
+
+    /* 이미지 스타일 */
+    .seat-layout-preview img {
+        max-width: 15rem; /* 이미지의 최대 너비를 15rem으로 설정 */
+        width: 100%; /* 너비를 100%로 설정하여 부모 요소에 맞게 조정 */
+        height: auto; /* 높이를 자동으로 설정하여 비율 유지 */
+        margin: 0; /* 마진을 0으로 설정 */
+        padding: 0; /* 패딩을 0으로 설정 */
+        display: block; /* 블록 요소로 설정 */
+        box-sizing: border-box; /* padding과 border를 포함한 크기 계산 */
+    }
+
+    /* 강의실 이름 입력 필드의 플레이스홀더 스타일 */
+    .classroom-name input::placeholder {
+        font-size: 0.9rem; /* 플레이스홀더 글씨 크기를 0.9rem으로 설정 */
+    }
+
+    /* 좌석 선택 옵션의 레이블 스타일 */
+    .seat-selection .seat-option span {
+        font-size: 1rem; /* 레이블 글씨 크기를 1rem으로 설정 */
     }
 }
+
 
 /* 라디오 버튼 스타일 */
 input[type="radio"] {
