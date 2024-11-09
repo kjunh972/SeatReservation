@@ -88,6 +88,9 @@ tr:last-child td { /* 마지막 행 셀 스타일 */
 .subject-7 { background-color: #e6ffcc; } /* 과목 7 배경색 */
 .subject-8 { background-color: #ffe6d1; } /* 과목 8 배경색 */
 .subject-9 { background-color: #d1f0ff; } /* 과목 9 배경색 */
+.subject-10 { background-color: #e6f7ff; } /* 과목 10 배경색 */
+.subject-11 { background-color: #f0e6ff; } /* 과목 11 배경색 */
+.subject-12 { background-color: #e6fff7; } /* 과목 12 배경색 */
 
 /* 버튼 컨테이너 기본 스타일 */
 .button-container {
@@ -249,13 +252,159 @@ tr:last-child td { /* 마지막 행 셀 스타일 */
   color: #f44336; /* 글자색 빨간색 */
 }
 
+
+
+
+/* 폼 내 입력 필드 스타일 */
+#inputModal .modal-content .input-group select,
+#inputModal .modal-content .input-container input[type="text"] {
+    font-size: 0.8rem; /* 입력 필드 폰트 크기 */
+    padding: 6px; /* 패딩 */
+    border: 1px solid #778da9; /* 테두리 색상 */
+    border-radius: 4px; /* 모서리 둥글게 */
+    width: 100%; /* 전체 너비 사용 */
+}
+
+/* 제출 버튼 스타일 */
+#inputModal .modal-content button {
+    font-size: 0.9rem; /* 폰트 크기 */
+    padding: 8px; /* 패딩 */
+    background-color: #778da9; /* 버튼 배경색 */
+    color: white; /* 글자색 */
+    border: none; /* 테두리 제거 */
+    border-radius: 4px; /* 모서리 둥글게 */
+    cursor: pointer; /* 포인터 커서 */
+    margin-top: 10px; /* 상단 여백 */
+}
+
+#inputModal .modal-content button:hover {
+    background-color: #5a6f89; /* 호버 시 배경색 변경 */
+}
+
+
+
 /* 모바일 환경에서의 버튼 스타일 */
 @media (max-width: 768px) {
     /* 기본 레이아웃 설정 */
-    body {
-        margin-top: 0;
-        padding-top: 0;
+    body, html {
+		position: relative;
+        margin-top: 0; /* 전체 페이지 상단 여백 제거 */
+        padding-top: 0; /* 패딩 제거 */
+        width: 100%; /* 화면 전체 너비 사용 */
+
     }
+    
+
+    /* 시간표 섹션 */
+    .timetable-section {
+
+		position: relative;
+        padding: 10px;
+        gap: 8px;
+        width: 95%; /* 너비를 줄여서 화면에 더 여유 공간이 생기도록 */
+        margin: 0 auto; /* 가운데 정렬 */
+        transform: translateZ(0);
+        display: flex;
+        
+       
+        width: 100%; /* 전체 너비 사용 */
+        margin-top: -10rem; /* 테이블 위의 여백을 줄이기 위해 설정 */
+		padding: 0; /* 패딩 제거 */
+        padding-top: 0; /* 테이블 섹션 상단 패딩 제거 */
+        margin-bottom: 10px; /* 테이블 아래에 여백 추가 */
+
+        isolation: isolate;
+        overflow-x: auto;
+    }
+    
+    .timetable-wrapper {
+		position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        width: 90%;
+        padding: 0 15px; /* 좌우에 15px 여백 추가 */
+        box-sizing: border-box; /* 여백이 전체 너비에 포함되도록 설정 */
+        
+    }
+
+    table {
+
+        width: 90%; /* 테이블이 화면을 가득 채우도록 설정 */
+        border-collapse: collapse;
+        font-size: 0.8rem; /* 모바일 폰트 크기 */
+        position: relative;
+  		box-shadow: 0 0 1.25rem rgba(0, 0, 0, 0.1); /* 그림자 설정 */
+  		border-radius: 20px; /* 테두리를 둥글게 */
+  		overflow: hidden; /* 테두리 둥근 모서리가 잘리도록 설정 */
+  		margin: 10 auto; /* 좌우 여백을 자동으로 균등하게 */
+    	padding: 0 20px; /* 테이블 내부에 좌우 여백 추가 */
+        
+    }
+    
+    th {
+        background-color: #778da9;
+        color: white;
+
+        text-align: center;
+        border: 1px solid #ddd;
+    }
+
+    td {
+
+        text-align: center;
+        border: 1px solid #ddd;
+        background-color: white;
+        border-radius: 4px;
+        padding: 0.2rem;
+    }
+    
+    /* 첫 번째 열 (시간 표시) 스타일 */
+    td:first-child {
+
+        border-right: 1px solid #c0c0c0;
+        color: #333;
+        background-color: #f9f9f9;
+        border-radius: 4px;
+        width: 1rem !important; /* 원하는 너비로 조정 */
+    	padding: 0; /* 패딩 줄여서 셀 높이 조정 */
+    }
+
+	/* 맨 위 요일 부분 크기 줄이기 */
+	th {
+    	width: 0.8rem; /* 원하는 너비로 조정 */
+    	padding: 0.2rem; /* 패딩 줄여서 셀 높이 조정 */
+	}
+
+	/* 모든 테이블 셀 높이 통일 */
+	table, th, td {
+    	height: 3rem; /* 원하는 높이로 조정 */
+    	vertical-align: middle; /* 내용물 가운데 정렬 */
+	}
+    
+    /* 요일 헤더 부분 높이 조절 */
+	thead th {
+		min-width: 1.2rem;
+    	height: 1.5rem !important; /* 원하는 높이로 조정 */
+    	padding: 0.2rem; /* 패딩을 줄여서 높이 감소 */
+   
+	}
+
+	/* 과목 텍스트 스타일 */
+    td span {
+        display: block;
+  
+        color: #333;
+        
+
+    }
+
+    /* 강의실 정보 텍스트 스타일 */
+    td div[data-classroom] {
+        font-size: 0.7rem;
+        color: #555;
+    }
+    
 
     .main-container {
         display: flex;
@@ -266,23 +415,15 @@ tr:last-child td { /* 마지막 행 셀 스타일 */
         margin: 0;
     }
 
-    /* 테이블 스타일 */
-    table {
-        font-size: 0.6rem;
-        min-width: 100%;
-        margin: 40 auto;
-		
-    }
+	
+    
 
-    th, td {
-        padding: 0.2rem;
-        min-width: 3rem;
-    }
+    
 
     /* 버튼 컨테이너 스타일 */
     .timetable-button-container {
         position: fixed;
-        top: 11rem;
+        top: 6rem;
         right: 2rem;
         display: flex;
         flex-direction: row;
@@ -290,6 +431,7 @@ tr:last-child td { /* 마지막 행 셀 스타일 */
         gap: 0.6rem;
         width: auto;
         z-index: 100;
+
     }
 
 	.admin-action-container {
@@ -393,20 +535,14 @@ tr:last-child td { /* 마지막 행 셀 스타일 */
         background-color: #5a6f89;
     }
 
-    /* 시간표 섹션 */
-    .timetable-section {
-        position: relative;
-        width: 100%;
-        overflow-x: auto;
-		margin-top: -6rem; /*시간표 위아래로 수정 */
-    }
+    
 
     /* 모달 스타일 */
     .modal-content {
         width: 90%;
         max-width: 400px;
         padding: 0.9rem;
-        top: 10%;
+        top: 15%;
         margin: auto;
     }
 
@@ -434,4 +570,34 @@ tr:last-child td { /* 마지막 행 셀 스타일 */
     .modal-content form .input-container:last-child {
         margin-top: 0.6rem;
     }
+    
+    .custom-confirm-button {
+    background-color: #778da9 !important; /* 원하는 색상으로 설정 */
+    color: white !important; /* 텍스트 색상 */
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.custom-confirm-button:hover {
+    background-color: #5a6f89 !important; /* 호버 색상 */
+}
+    
+    
+    .custom-confirm-button {
+    background-color: #778da9 !important; /* 원하는 색상으로 설정 */
+    color: white !important; /* 텍스트 색상 */
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.custom-confirm-button:hover {
+    background-color: #5a6f89 !important; /* 호버 색상 */
+}
+
 }

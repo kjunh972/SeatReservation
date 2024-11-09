@@ -141,48 +141,110 @@ h1 {
 
 
 /* 모바일 버전 미디어 쿼리 수정 */
-@media (max-width: 768px) {
+@media (max-width: 48rem) {
+		/* 시간표 섹션 중앙 정렬 및 여백 조정 */
+    .timetable-section {
+		margin-top: 3rem;
+        display: flex;
+        justify-content: center; /* 수평 중앙 정렬 */
+        padding: 1rem; /* 여백 추가 */
+        margin-left: -1rem;
+        
+    }
+
+    /* 컨테이너 크기 및 중앙 정렬 */
+    .container {
+        width: 95%; /* 너비를 95%로 설정 */
+        max-width: 600px; /* 최대 너비 제한 */
+        margin: 0 auto; /* 중앙 정렬 */
+        
+        
+    }
+
+
 	
 	/* 예약된 좌석 모달 창의 너비 조정 */
     .modal-content.seat-list-content {
         width: 90%; /* 너비 조정 */
-        max-width: 320px; /* 최대 너비 줄이기 */
-        padding: 10px; /* 내부 여백 줄이기 */
+        max-width: 400px; /* 최대 너비 줄이기 */
+        padding: 15px; /* 내부 여백 */
     }
 
     /* 테이블 스타일 조정 */
     .seat-list-table {
         width: 100%; /* 테이블의 너비를 100%로 설정 */
-        font-size: 0.4rem; /* 폰트 크기 줄이기 */
+        
         border-collapse: collapse; /* 테두리 간격 제거 */
     }
+    
+    /* 좌석 레이아웃을 위한 컨테이너 스타일 */
+.seat-layout {
+    display: flex; /* Flexbox 레이아웃 사용 */
+    flex-direction: row; /* 자식 요소들을 가로로 배치 */
+    justify-content: space-evenly; /* 균등한 간격으로 배치 */
+    gap: 2rem; /* 좌석 그룹 사이의 간격을 2rem으로 줄임 */
+}
+
 
     .seat-list-table th, 
     .seat-list-table td {
-        padding: 1px; /* 셀 내부 여백 줄이기 */
+		font-size: 0.8rem !important; /* 헤더 폰트 크기 줄이기 */
+        padding: 3px 3px !important; /* 셀 내부 여백 줄이기 */
         text-align: center; /* 텍스트 가운데 정렬 */
     }
 
-    /* 테이블 헤더 스타일 조정 */
-    .seat-list-table th {
-        font-size: 0.35rem; /* 헤더 폰트 크기 줄이기 */
+
+
+    .seat-list-title {
+    font-size: 1.8rem !important; /* 제목 폰트 크기 조정 */
+    margin-top: 2.5rem !important;
+}
+    
+    
+    /* 과목 열 너비 조정 */
+.seat-list-table th:first-child,
+.seat-list-table td:first-child {
+    width: 60px !important; /* 필요한 너비에 맞게 조정 */
+    min-width: 60px !important; /* 최소 너비 설정 */
+    max-width: 120px !important; /* 최대 너비 설정 */
+    white-space: normal !important; /* 텍스트 줄바꿈 허용 */
+}
+
+    .seat-list-button-container {
+        display: flex;
+        justify-content: space-between; /* 버튼 사이 간격 조정 */
+        margin-top: 10px; /* 테이블과 버튼 간 간격 */
     }
 
     /* 버튼 스타일 조정 */
     .seat-list-button {
-        width: 40px; /* 너비 줄이기 */
-        height: 20px; /* 높이 줄이기 */
-        font-size: 0.5rem; /* 글자 크기 줄이기 */
-        margin: 3px; /* 외부 여백 줄이기 */
+        flex: 1; /* 버튼이 가능한 공간을 차지 */
+        margin: 0 4px; /* 버튼 사이의 간격 */
+        padding: 4px 0; /* 버튼 내부 여백 */
+        font-size: 0.8rem; /* 글자 크기 조정 */
     }
 
     /* 모달 제목 폰트 크기 조정 */
     .seat-list-title {
-        font-size: 0.7rem; /* 제목 폰트 크기 줄이기 */
+        font-size: 2rem !important; /* 제목 폰트 크기 줄이기 */
         margin-bottom: 4px; /* 아래 여백 줄이기 */
+    }
+    
+    /* 좌석 버튼 크기 조정 */
+    .seat-button {
+        width: 35px; /* 너비 확대 */
+        height: 35px; /* 높이 확대 */
+        font-size: 0.8rem; /* 텍스트 크기 확대 */
     }
 	
 	
+	/* 좌석 행의 스타일 조정 */
+    .seat-row {
+        gap: 0.3rem; /* 좌석 간 간격 조정 */
+        margin-bottom: 0.3rem; /* 행 사이의 여백 조정 */
+    }
+
+
 	/* 예약 확인 모달 창의 너비 조정 */
     #myModal .modal-content {
         width: 80%; /* 너비를 80%로 조정 */
@@ -206,44 +268,54 @@ h1 {
     /* 모달 창의 위치 조정 */
     .modal-content {
         width: 85%; /* 너비 조정 */
-        max-width: 350px; /* 최대 너비 조정 */
-        margin-top: 20%; /* 상단 여백을 늘려서 토글 버튼과 겹치지 않게 */
-        padding: 15px; /* 내부 여백 줄이기 */
+        max-width: 400px; /* 최대 너비 조정 */
+        margin-top: 7%; /* 상단 여백을 늘려서 토글 버튼과 겹치지 않게 */
+        padding: 10px; /* 내부 여백 줄이기 */
+        
+        
+		overflow: hidden;
     }
 
     /* 제목 폰트 크기 조정 */
     h1 {
-        font-size: 1.2rem; /* 제목의 폰트 크기 줄이기 */
+        font-size: 1.5rem !important; /* 제목의 폰트 크기 줄이기 */
         margin-top: 3vh; /* 여백 조정 */
     }
-
-    /* 좌석 버튼 크기 조정 */
-    .seat-button {
-        width: 30px; /* 너비 줄이기 */
-        height: 30px; /* 높이 줄이기 */
-        font-size: 0.7rem; /* 텍스트 크기 줄이기 */
+    
+    .modal-content h1 {
+        font-size: 1.5rem;
+		margin-top: 5rem;
     }
+    
+    #seatModal2 .modal-content {
+     width: 85%;
+        padding: 1rem;
+        left: -3.3rem; 
+}
 
-    /* 좌석 행의 스타일 조정 */
-    .seat-row {
-        gap: 0.3rem; /* 좌석 간 간격을 줄임 */
-        margin-bottom: 0.3rem; /* 행 사이 여백 줄이기 */
-    }
-
+    
     /* 버튼 스타일 조정 */
     #confirmButton,
     #cancelButton {
-        width: 60px; /* 너비 줄이기 */
+        width: 70px; /* 너비 줄이기 */
         height: 30px; /* 높이 줄이기 */
         font-size: 0.8rem; /* 글자 크기 줄이기 */
         margin: 8px; /* 외부 여백 줄이기 */
     }
+    
+    /* 버튼 컨테이너를 조정하여 버튼이 한 줄에 정렬되도록 설정 */
+    .swal2-popup .swal2-actions {
+        display: flex;
+        justify-content: space-around; /* 버튼 사이를 균등하게 배치 */
+        gap: 10px; /* 버튼 간 여백 추가 */
+        }
 
     /* SweetAlert2 팝업 버튼 스타일 조정 */
     .swal2-popup .swal2-actions .swal2-confirm,
     .swal2-popup .swal2-actions .swal2-cancel {
-        width: 4rem !important; /* 너비 조정 */
-        height: 2rem !important; /* 높이 조정 */
-        font-size: 0.8rem !important; /* 글자 크기 조정 */
+
+        height: 3rem !important; /* 높이 조정 */
+        font-size: 0.9rem !important; /* 글꼴 크기 조정 */
+        padding: 0.6rem !important; /* 패딩 조정 */
     }
 }
