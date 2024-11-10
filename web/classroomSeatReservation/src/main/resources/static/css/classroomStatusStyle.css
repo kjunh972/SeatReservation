@@ -51,7 +51,7 @@ h1 {
 
 /* 사용 금지된 좌석 버튼 스타일 */
 .seat-button.banned {
-    background-color: #dc3545 !important; 
+    background-color: #cc444b !important; 
     cursor: not-allowed; /* 마우스 커서를 사용 불가 모양으로 변경 */
 }
 
