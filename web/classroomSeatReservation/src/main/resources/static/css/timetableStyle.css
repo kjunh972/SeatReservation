@@ -481,6 +481,11 @@ td div[data-subject]:not(:first-of-type) {
 	background-color: #5a6f89;
 }
 
+#inputModal .modal-content label {
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
 
 
 /* 모바일 환경에서의 버튼 스타일 */
@@ -771,6 +776,10 @@ td div[data-subject]:not(:first-of-type) {
 
 	.custom-confirm-button:hover {
 		background-color: #5a6f89 !important;
+	}
+	
+	.swal2-custom-title {
+    	font-size: 1.5rem; 
 	}
 
 }
