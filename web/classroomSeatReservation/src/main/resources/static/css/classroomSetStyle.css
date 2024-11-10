@@ -264,5 +264,5 @@ input[type="radio"] + span {
 
 /* 선택된 라디오 버튼 라벨 스타일 */
 input[type="radio"]:checked + span {
-    color: #3498db;
+    color: #5a6f89;
 }
