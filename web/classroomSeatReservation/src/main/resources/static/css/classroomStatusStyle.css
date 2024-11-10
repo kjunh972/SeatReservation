@@ -5,7 +5,7 @@ h1 {
 
 /* 테이블 셀 스타일 */
 td {
-	height: 2.68rem !important;
+    height: 2.68rem !important;
 }
 
 /* 강의실명 스타일 */
@@ -62,14 +62,14 @@ td div[data-subject] .classroom-name {
 
 /* 사용 금지된 좌석 버튼 스타일 */
 .seat-button.banned {
-    background-color: #dc3545 !important; 
+    background-color: #dc3545 !important;
     cursor: not-allowed; /* 마우스 커서를 사용 불가 모양으로 변경 */
 }
 
 /* 좌석 버튼의 기본 스타일 */
 .seat-button {
-    width: 50px; /* 버튼의 너비를 50px로 설정 */
-    height: 50px; /* 버튼의 높이를 50px로 설정 */
+    width: 3.13rem; /* 버튼의 너비를 50px에서 3.13rem으로 변환 */
+    height: 3.13rem; /* 버튼의 높이를 50px에서 3.13rem으로 변환 */
     color: black; /* 텍스트 색상을 검은색으로 설정 */
     display: flex; /* Flexbox 레이아웃 사용 */
     justify-content: center; /* 내용을 수평 중앙에 배치 */
@@ -79,7 +79,27 @@ td div[data-subject] .classroom-name {
     user-select: none; /* 텍스트 선택 방지 */
 }
 
-/* 모달 창의 기본 스타일 */
+/* 좌석 예약 현황 모달 중앙 정렬 */
+#seatModal .modal-content {
+    display: flex; /* Flexbox 레이아웃 사용 */
+    flex-direction: column; /* 세로 방향 정렬 */
+    align-items: center; /* 수평 중앙 정렬 */
+    justify-content: center; /* 수직 중앙 정렬 */
+    position: absolute; /* 절대 위치 지정 */
+    top: 50%; /* 화면 중앙 */
+    left: 50%; /* 화면 중앙 */
+    transform: translate(-50%, -50%); /* 중앙 정렬 */
+    width: 90%; /* 너비 조정 */
+    max-width: 43.75rem; /* 최대 너비 제한 (700px -> 43.75rem) */
+    max-height: 90vh; /* 최대 높이 제한 */
+    overflow-y: auto; /* 세로 방향 스크롤 허용 */
+}
+
+#seatModalTitle {
+    margin-top: 1rem; /* 상단 여백을 줄여서 위치를 올림 */
+}
+
+/* 모달 스타일 */
 .modal {
     display: none; /* 초기에는 숨김 상태 */
     position: fixed; /* 화면에 고정 */
@@ -95,45 +115,87 @@ td div[data-subject] .classroom-name {
 /* 모달 내용의 스타일 */
 .modal-content {
     background-color: #f8f9fa; /* 배경색을 연한 회색으로 설정 */
-    margin: 9% auto; /* 상단에서 5% 여백, 좌우 중앙 정렬 */
-    padding: 20px; /* 내부 여백 */
-    border-radius: 10px; /* 모서리를 둥글게 */
+    padding: 1.25rem; /* 내부 여백 (20px -> 1.25rem) */
+    border-radius: 0.63rem; /* 모서리를 둥글게 (10px -> 0.63rem) */
     width: 100%; /* 전체 너비 */
-    max-width: 1500px; /* 최대 너비 제한 */
-    max-height: 80vh; /* 최대 높이를 뷰포트 높이의 80%로 제한 */
-    overflow-y: auto; /* 세로 방향 스크롤 허용 */
-    position: relative; /* 상대적 위치 지정 */
 }
 
+/* 모달 닫기 버튼 */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 1.75rem; /* 글자 크기 설정 (28px -> 1.75rem) */
+    font-weight: bold;
+    cursor: pointer;
+}
 
-/* 좌석 예약 확인 모달 창의 스타일 */
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+}
+
+/* myModal 중앙 정렬 */
 #myModal .modal-content {
-    background-color: #f8f9fa; /* 배경색 */
-    position: fixed; /* 화면에 고정 */
-    top: 20%; /* 화면 높이의 60% 위치 */
-    left: 50%; /* 화면 너비의 50% 위치 */
-    transform: translate(-50%, -50%); /* 중앙 정렬 */
-    padding: 20px; /* 내부 여백 */
-    border-radius: 10px; /* 모서리를 둥글게 */
-    width: 100%; /* 전체 너비 */
-    max-width: 700px; /* 최대 너비 제한 */
-    max-height: 80vh; /* 최대 높이 */
-    overflow-y: auto; /* 세로 방향 스크롤 허용 */
     display: flex; /* Flexbox 레이아웃 사용 */
     flex-direction: column; /* 세로 방향 정렬 */
     align-items: center; /* 수평 중앙 정렬 */
     justify-content: center; /* 수직 중앙 정렬 */
-    text-align: center; /* 텍스트 중앙 정렬 */
+    position: absolute; /* 절대 위치 지정 */
+    top: 50%; /* 화면 중앙 */
+    left: 50%; /* 화면 중앙 */
+    transform: translate(-50%, -50%); /* 중앙 정렬 */
+    width: 90%; /* 너비 조정 */
+    max-width: 43.75rem; /* 최대 너비 제한 (700px -> 43.75rem) */
+    max-height: 90vh; /* 최대 높이 제한 */
+    overflow-y: auto; /* 세로 방향 스크롤 허용 */
+}
+
+#myModal h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    width: 100%;
+}
+
+#myModal #studentInfo {
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 1rem; /* 여백 증가 */
+    width: 100%;
+    text-align: center;
+}
+
+#myModal button {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    font-size: 1.1rem;
+    margin: 0.8rem 0;
+    border: 0.13rem solid #4a5568; /* 테두리 두께 (2px -> 0.13rem) */
+    background-color: white;
+    color: black;
+    border-radius: 0.38rem; /* 모서리 둥글기 (6px -> 0.38rem) */
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#myModal button:hover {
+    background-color: #4a5568;
+    color: white;
 }
 
 /* 확인 및 취소 버튼의 공통 스타일 */
 #confirmButton,
 #cancelButton {
     display: inline-block; /* 인라인 블록으로 표시 */
-    width: 85px; /* 너비 설정 */
-    height: 40px; /* 높이 설정 */
-    margin: 20px; /* 외부 여백 */
-    border-radius: 4px; /* 모서리를 둥글게 */
+    width: 5.31rem; /* 너비 설정 (85px -> 5.31rem) */
+    height: 2.5rem; /* 높이 설정 (40px -> 2.5rem) */
+    margin: 1.25rem; /* 외부 여백 (20px -> 1.25rem) */
+    border-radius: 0.25rem; /* 모서리를 둥글게 (4px -> 0.25rem) */
     background-color: #415a77; /* 버튼의 배경색 설정 */
     color: white; /* 텍스트 색상을 흰색으로 설정 */
     cursor: pointer; /* 마우스 커서를 포인터로 변경 */
@@ -143,17 +205,15 @@ td div[data-subject] .classroom-name {
 /* SweetAlert2 팝업의 확인 및 취소 버튼 스타일 */
 .swal2-popup .swal2-actions .swal2-confirm,
 .swal2-popup .swal2-actions .swal2-cancel {
-    width: 5.5rem !important; /* 너비를 5.5rem으로 설정 (우선순위 높임) */
+    width
+: 5.5rem !important; /* 너비를 5.5rem으로 설정 (우선순위 높임) */
     height: 3.2rem !important; /* 높이를 3.2rem으로 설정 (우선순위 높임) */
     font-size: 1rem !important; /* 글자 크기를 1rem으로 설정 (우선순위 높임) */
 }
 
-
-
-
 /* 모바일 버전 미디어 쿼리 수정 */
 @media (max-width: 48rem) {
-	/* 예약된 좌석 모달 창의 너비 조정 */
+    /* 예약된 좌석 모달 창의 너비 조정 */
     .modal-content.seat-list-content {
         width: 90%; /* 너비 조정 */
         max-width: 400px; /* 최대 너비 줄이기 */
@@ -163,51 +223,49 @@ td div[data-subject] .classroom-name {
     /* 테이블 스타일 조정 */
     .seat-list-table {
         width: 100%; /* 테이블의 너비를 100%로 설정 */
-        
         border-collapse: collapse; /* 테두리 간격 제거 */
     }
     
     /* 좌석 레이아웃을 위한 컨테이너 스타일 */
-	.seat-layout {
-		transform: scale(0.8);
-	    display: flex; /* Flexbox 레이아웃 사용 */
-	    flex-direction: row; /* 자식 요소들을 가로로 배치 */
-	    justify-content: space-evenly; /* 균등한 간격으로 배치 */
-	    gap: 2rem; /* 좌석 그룹 사이의 간격을 2rem으로 줄임 */
-	}
+    .seat-layout {
+        transform: scale(0.8); /* 좌석 레이아웃 축소 */
+        display: flex; /* Flexbox 레이아웃 사용 */
+        flex-direction: row; /* 자식 요소들을 가로로 배치 */
+        justify-content: space-evenly; /* 균등한 간격으로 배치 */
+        gap: 2rem; /* 좌석 그룹 사이의 간격을 2rem으로 줄임 */
+    }
 
-
+    /* 테이블 셀 스타일 */
     .seat-list-table th, 
     .seat-list-table td {
-		font-size: 0.8rem !important; /* 헤더 폰트 크기 줄이기 */
+        font-size: 0.8rem !important; /* 헤더 폰트 크기 줄이기 */
         padding: 3px 3px !important; /* 셀 내부 여백 줄이기 */
         text-align: center; /* 텍스트 가운데 정렬 */
     }
 
-
-
+    /* 테이블 제목 스타일 */
     .seat-list-title {
-    font-size: 1.8rem !important; /* 제목 폰트 크기 조정 */
-    margin-top: 2.5rem !important;
-}
-    
-    
-    /* 과목 열 너비 조정 */
-	.seat-list-table th:first-child,
-	.seat-list-table td:first-child {
-    width: 60px !important; /* 필요한 너비에 맞게 조정 */
-    min-width: 60px !important; /* 최소 너비 설정 */
-    max-width: 120px !important; /* 최대 너비 설정 */
-    white-space: normal !important; /* 텍스트 줄바꿈 허용 */
-}
+        font-size: 1.8rem !important; /* 제목 폰트 크기 조정 */
+        margin-top: 2.5rem !important;
+    }
 
+    /* 과목 열 너비 조정 */
+    .seat-list-table th:first-child,
+    .seat-list-table td:first-child {
+        width: 60px !important; /* 필요한 너비에 맞게 조정 */
+        min-width: 60px !important; /* 최소 너비 설정 */
+        max-width: 120px !important; /* 최대 너비 설정 */
+        white-space: normal !important; /* 텍스트 줄바꿈 허용 */
+    }
+
+    /* 버튼 컨테이너 스타일 */
     .seat-list-button-container {
         display: flex;
         justify-content: space-between; /* 버튼 사이 간격 조정 */
         margin-top: 10px; /* 테이블과 버튼 간 간격 */
     }
 
-    /* 버튼 스타일 조정 */
+    /* 버튼 스타일 */
     .seat-list-button {
         flex: 1; /* 버튼이 가능한 공간을 차지 */
         margin: 0 4px; /* 버튼 사이의 간격 */
@@ -227,25 +285,34 @@ td div[data-subject] .classroom-name {
         height: 35px; /* 높이 확대 */
         font-size: 0.8rem; /* 텍스트 크기 확대 */
     }
-	
-	
-	/* 좌석 행의 스타일 조정 */
+
+    /* 좌석 행 스타일 조정 */
     .seat-row {
         gap: 0.3rem; /* 좌석 간 간격 조정 */
         margin-bottom: 0.3rem; /* 행 사이의 여백 조정 */
     }
 
-
-	/* 예약 확인 모달 창의 너비 조정 */
-    #myModal .modal-content {
-        width: 80%; /* 너비를 80%로 조정 */
-        max-width: 300px; /* 최대 너비를 300px로 제한 */
-        padding: 10px; /* 내부 여백 줄이기 */
+    /* 모달 내용 스타일 */
+    .modal-content {
+        width: 95%; /* 모바일에서 너비 조정 */
+        padding: 1rem; /* 내부 여백 줄이기 */
     }
 
-    /* 모달 메시지 텍스트 크기 조정 */
-    #modalMessage {
-        font-size: 0.9rem; /* 텍스트 크기 조정 */
+    /* 버튼 기본 스타일 */
+    #myModal button {
+        width: 100%;
+        padding: 1rem 1.5rem;
+        font-size: 1.1rem;
+        margin: 0.5rem 0;
+        border: 2px solid #4a5568;
+        background-color: white;
+        color: black;
+        border-radius: 0.375rem;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     /* 확인 및 취소 버튼의 크기 조정 */
@@ -256,15 +323,6 @@ td div[data-subject] .classroom-name {
         font-size: 0.8rem; /* 글자 크기 줄이기 */
         margin: 5px; /* 외부 여백 줄이기 */
     }
-	
-    /* 모달 창의 위치 조정 */
-    .modal-content {
-        width: 85%; /* 너비 조정 */
-        max-width: 400px; /* 최대 너비 조정 */
-        margin-top: 7%; /* 상단 여백을 늘려서 토글 버튼과 겹치지 않게 */
-        padding: 10px; /* 내부 여백 줄이기 */
-		overflow: hidden;
-    }
 
     /* 제목 폰트 크기 조정 */
     h1 {
@@ -274,17 +332,17 @@ td div[data-subject] .classroom-name {
     
     .modal-content h1 {
         font-size: 1.5rem;
-		margin-top: 7rem;
+        margin-top: 7rem;
     }
-    
-    #seatModal2 .modal-content {
-     	width: 85%;
-        padding: 1rem;
-        margin-left: -1.5rem; 
-		overflow: hidden;
-}
 
-    
+    /* 특별한 스타일을 위한 모달 */
+    #seatModal2 .modal-content {
+        width: 85%;
+        padding: 1rem;
+        margin-left: -1.5rem;
+        overflow: hidden;
+    }
+
     /* 버튼 스타일 조정 */
     #confirmButton,
     #cancelButton {
@@ -293,30 +351,29 @@ td div[data-subject] .classroom-name {
         font-size: 0.8rem; /* 글자 크기 줄이기 */
         margin: 8px; /* 외부 여백 줄이기 */
     }
-    
+
     /* 버튼 컨테이너를 조정하여 버튼이 한 줄에 정렬되도록 설정 */
     .swal2-popup .swal2-actions {
         display: flex;
         justify-content: space-around; /* 버튼 사이를 균등하게 배치 */
         gap: 10px; /* 버튼 간 여백 추가 */
-        }
+    }
 
     /* SweetAlert2 팝업 버튼 스타일 조정 */
     .swal2-popup .swal2-actions .swal2-confirm,
     .swal2-popup .swal2-actions .swal2-cancel {
-
         height: 3rem !important; /* 높이 조정 */
         font-size: 0.9rem !important; /* 글꼴 크기 조정 */
         padding: 0.6rem !important; /* 패딩 조정 */
     }
-	
-	/* 셀 크기 조정 */
-	td {
-		height: 3.8rem !important;
-	}
-				
-	/* 요일 헤더 스타일 */
-	thead th {
-		height: 1.38rem !important;
-	}
+
+    /* 셀 크기 조정 */
+    td {
+        height: 3.8rem !important;
+    }
+
+    /* 요일 헤더 스타일 */
+    thead th {
+        height: 1.38rem !important;
+    }
 }
