@@ -348,6 +348,66 @@
     margin-right: auto;
 }
 
+/* 웹 네비게이션 드롭다운 스타일 */
+.nav-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.nav-dropdown-trigger {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    color: var(--menu-text-dark);
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.nav-dropdown-trigger i:last-child {
+    font-size: 0.8rem;
+    transition: transform 0.3s ease;
+    margin-left: 0.3rem;
+}
+
+.nav-dropdown:hover .nav-dropdown-trigger i:last-child {
+    transform: rotate(180deg);
+}
+
+.nav-dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    min-width: 200px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    border-radius: 0.5rem;
+    z-index: 1000;
+}
+
+.nav-dropdown:hover .nav-dropdown-content {
+    display: block;
+}
+
+.nav-dropdown-content a {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1rem;
+    color: var(--menu-text-dark);
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.nav-dropdown-content a:hover {
+    background: var(--menu-primary-light);
+    color: var(--menu-primary-dark);
+}
+
 /* 반응형 스타일 */
 @media (max-width: 48rem) {
     .menu-desktop-nav {
@@ -376,6 +436,83 @@
         font-size: 0.9rem !important;
         padding: 0.4rem 0.8rem !important;
     }
+	
+	/* 드롭다운 메뉴 스타일 */
+	.menu-dropdown {
+	    position: relative;
+	    width: 100%;
+	    margin-bottom: 0.5rem;
+	}
+
+	.menu-dropdown-trigger {
+	    display: flex;
+	    align-items: center;
+	    justify-content: space-between; /* 내용물 양쪽 정렬 */
+	    width: 95%;
+	    padding: 1rem 1.5rem;
+	    color: var(--menu-text-dark);
+	    text-decoration: none;
+	    font-size: 1rem;
+	    font-weight: 500;
+	    border-radius: 0.8rem;
+	    transition: all 0.2s ease;
+	    cursor: pointer;
+	    white-space: nowrap;
+	}
+
+	/* 왼쪽 아이콘과 텍스트를 감싸는 컨테이너 */
+	.menu-dropdown-trigger .trigger-content {
+	    display: flex;
+	    align-items: center;
+	}
+
+	.menu-dropdown-trigger i:first-child {
+	    margin-right: 1rem;
+	    width: 1.2rem;
+	    text-align: center;
+	    flex-shrink: 0;
+	}
+
+	.menu-dropdown-trigger .fa-chevron-down {
+	    font-size: 0.8rem;
+	    transition: transform 0.3s ease;
+	    flex-shrink: 0;
+	    margin-right: 1rem; /* 오른쪽 여백 추가 */
+	}
+
+	.menu-dropdown.active .fa-chevron-down {
+	    transform: rotate(180deg);
+	}
+
+	.menu-dropdown-content {
+	    display: none;
+	    width: 100%;
+	    padding-left: 1.5rem; /* 하위 메뉴 들여쓰기 조정 */
+	}
+
+	.menu-dropdown.active .menu-dropdown-content {
+	    display: block;
+	}
+
+	.menu-dropdown-content a {
+	    display: flex;
+	    align-items: center;
+	    padding: 1rem 1.5rem;
+	    color: var(--menu-text-dark);
+	    text-decoration: none;
+	    font-size: 1rem;
+	    font-weight: 500;
+	    border-radius: 0.8rem;
+	    transition: all 0.2s ease;
+	    white-space: nowrap;
+	}
+
+	.menu-dropdown-content a i {
+	    margin-right: 1rem;
+	    width: 1.2rem;
+	    text-align: center;
+	    flex-shrink: 0;
+	}
 }
 
 @media (min-width: 48.1rem) {

@@ -1,0 +1,30 @@
+.menu-dropdown-trigger {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+	padding: 0.5rem 0;
+	color: var(--menu-text-dark);
+	text-decoration: none;
+	font-size: 1rem;
+	font-weight: 500;
+	border-radius: 0.8rem;
+	transition: all 0.2s ease;
+	cursor: pointer;
+	white-space: nowrap;
+}
+
+.menu-dropdown-trigger .trigger-content {
+	display: flex;
+	align-items: center;
+	padding: 0;
+	margin-left: -0.6rem;
+	width: 100%;
+}
+
+.menu-dropdown-trigger i:first-child {
+	margin-right: 0.5rem;
+	width: 1.2rem;
+	text-align: center;
+	flex-shrink: 0;
+}

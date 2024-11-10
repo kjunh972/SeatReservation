@@ -8,6 +8,19 @@
     font-weight: normal;
     text-align: center; /* 중앙 정렬 */
 }
+
+/* 테이블 셀 스타일 */
+td {
+	height: 2.68rem !important;
+}
+
+/* 강의실명 스타일 */
+td div[data-subject] .classroom-name {
+    position: relative !important;
+    transform: translateY(-0.03rem) !important; /* 음수로 가면 위로, 양수로 가면 아래 */
+}
+
+
 .info-row i {
     color: #778da9; /* 아이콘 기본 색상 */
     margin-right: 0.31rem; /* 아이콘과 텍스트 사이의 간격 추가 */
@@ -258,10 +271,14 @@
         font-size: 1rem; /* 버튼 폰트 크기 조정 */
         padding: 0.25rem 0.5rem; /* 버튼 패딩 조정 */
     }
-    
-    table {
-    position: relative;
-    margin-top: 15rem;
-    margin-left: 1.5rem;
-}
+	
+	/* 셀 크기 조정 */
+	td {
+		height: 3.8rem !important;
+	}
+					
+	/* 요일 헤더 스타일 */
+	thead th {
+		height: 1.38rem !important;
+	}
 }

@@ -28,10 +28,31 @@
 			</div>
 			<!-- 관리자용 네비게이션 링크 -->
 			<div class="menu-nav-links">
-				<a href="timetable"><i class="fas fa-calendar-check"></i> 시간표 및 관리</a>
-				<a href="admin"><i class="fas fa-university"></i> 강의실 목록</a>
-				<a href="classroomSet"><i class="fas fa-chalkboard-teacher"></i> 강의실 생성</a>
-				<a href="myPage"><i class="fas fa-user-cog"></i> 마이페이지</a>
+			    <!-- 로그인된 사용자에게만 보이는 메뉴 -->
+			    <th:block th:if="${session.loggedInUser != null}">
+			        <div class="nav-dropdown">
+			            <div class="nav-dropdown-trigger">
+			                <i class="fas fa-calendar-check"></i> 시간표 및 관리
+			                <i class="fas fa-chevron-down"></i>
+			            </div>
+			            <div class="nav-dropdown-content">
+			                <a href="timetable"><i class="fas fa-calendar-check"></i> 시간표</a>
+			                <a href="reserveList"><i class="fas fa-list"></i> 예약 목록</a>
+			                <a href="banList"><i class="fas fa-ban"></i> 좌석예약금지 확인</a>
+			            </div>
+			        </div>
+			        <div class="nav-dropdown">
+			            <div class="nav-dropdown-trigger">
+			                <i class="fas fa-university"></i> 강의실 관리
+			                <i class="fas fa-chevron-down"></i>
+			            </div>
+			            <div class="nav-dropdown-content">
+			                <a href="admin"><i class="fas fa-university"></i> 강의실 목록</a>
+			                <a href="classroomSet"><i class="fas fa-chalkboard-teacher"></i> 강의실 생성</a>
+			            </div>
+			        </div>
+			        <a href="myPage"><i class="fas fa-user-cog"></i> 마이페이지</a>
+			    </th:block>
 			</div>
 		</div>
 	</nav>
@@ -61,16 +82,40 @@
 			</div>
 		</div>
 
-		<!-- 사이드바 메뉴 영역 -->
+		<!-- 사이드바 메뉴 영역 수정 -->
 		<div class="menu-sidebar-menu">
-			<a href="login"><i class="fas fa-home"></i> Home</a>
-			<a href="timetable"><i class="fas fa-calendar-check"></i> 시간표 및 관리</a>
-			<a href="admin"><i class="fas fa-university"></i> 강의실 목록</a>
-			<a href="classroomSet"><i class="fas fa-chalkboard-teacher"></i> 강의실 생성</a>
-			<a href="myPage"><i class="fas fa-user-cog"></i> 마이페이지</a>
-			<a href="javascript:void(0)" class="menu-logout-btn">
-				<i class="fas fa-sign-out-alt"></i> 로그아웃
-			</a>
+		    <a href="login"><i class="fas fa-home"></i> Home</a>
+		    <div class="menu-dropdown">
+		        <div class="menu-dropdown-trigger">
+		            <div class="trigger-content">
+		                <i class="fas fa-calendar-check"></i>
+		                <span>시간표 및 관리</span>
+		            </div>
+		            <i class="fas fa-chevron-down"></i>
+		        </div>
+		        <div class="menu-dropdown-content">
+		            <a href="timetable"><i class="fas fa-calendar-check"></i> 시간표</a>
+		            <a href="reserveList"><i class="fas fa-list"></i> 예약 목록</a>
+		            <a href="banList"><i class="fas fa-ban"></i> 좌석예약금지 확인</a>
+		        </div>
+		    </div>
+		    <div class="menu-dropdown">
+		        <div class="menu-dropdown-trigger">
+		            <div class="trigger-content">
+		                <i class="fas fa-university"></i>
+		                <span>강의실 관리</span>
+		            </div>
+		            <i class="fas fa-chevron-down"></i>
+		        </div>
+		        <div class="menu-dropdown-content">
+		            <a href="admin"><i class="fas fa-university"></i> 강의실 목록</a>
+		            <a href="classroomSet"><i class="fas fa-chalkboard-teacher"></i> 강의실 생성</a>
+		        </div>
+		    </div>
+		    <a href="myPage"><i class="fas fa-user-cog"></i> 마이페이지</a>
+		    <a href="javascript:void(0)" class="menu-logout-btn">
+		        <i class="fas fa-sign-out-alt"></i> 로그아웃
+		    </a>
 		</div>
 	</div>
 
@@ -89,7 +134,9 @@
 			const mobileSidebar = document.getElementById('menu-mobile-sidebar');
 			const overlay = document.getElementById('menu-overlay');
 			const logoutBtn = document.querySelector('.menu-logout-btn');
+			const dropdownTriggers = document.querySelectorAll('.menu-dropdown-trigger');
 
+			// 사이드바 토글 함수
 			function toggleSidebar() {
 				mobileSidebar.classList.toggle('active');
 				overlay.classList.toggle('active');
@@ -97,7 +144,20 @@
 					'rotate(90deg)' : 'rotate(0deg)';
 			}
 
+			// 드롭다운 토글 함수 
+			function toggleDropdown(e) {
+				e.preventDefault();
+				const dropdown = this.closest('.menu-dropdown');
+				dropdown.classList.toggle('active');
+			}
+
+			// 이벤트 리스너 등록
 			mobileToggle.addEventListener('click', toggleSidebar);
+
+			// 모든 드롭다운 트리거에 이벤트 리스너 추가
+			dropdownTriggers.forEach(trigger => {
+				trigger.addEventListener('click', toggleDropdown);
+			});
 
 			overlay.addEventListener('click', function () {
 				mobileSidebar.classList.remove('active');
@@ -140,6 +200,15 @@
 					mobileSidebar.classList.remove('active');
 					overlay.classList.remove('active');
 					mobileToggle.style.transform = 'rotate(0deg)';
+				}
+			});
+
+			// 드롭다운 외부 클릭 시 닫기
+			document.addEventListener('click', function (e) {
+				if (!e.target.closest('.menu-dropdown')) {
+					dropdownTriggers.forEach(trigger => {
+						trigger.closest('.menu-dropdown').classList.remove('active');
+					});
 				}
 			});
 		});
