@@ -1,603 +1,776 @@
 /* 기본 스타일 초기화 */
-body, ul, li {
-    margin: 0;
-    padding: 0;
-    list-style: none;
+body,
+ul,
+li {
+	margin: 0;
+	padding: 0;
+	list-style: none;
 }
 
 /* 타이포그래피 설정 */
-h1 { /* 제목 스타일 */
-  color: #778da9; /* 제목 색상 설정 */
-  text-align: center; /* 텍스트 가운데 정렬 */
-  font-size: 2rem; /* 폰트 크기 설정 */
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.1); /* 텍스트 그림자 설정 */
-  margin: 10px 0 5px; /* 상단, 하단 여백 설정 */
+h1 {
+	/* 제목 스타일 */
+	color: #778da9;
+	/* 제목 색상 설정 */
+	text-align: center;
+	/* 텍스트 가운데 정렬 */
+	font-size: 2rem;
+	/* 폰트 크기 설정 */
+	text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+	/* 텍스트 그림자 설정 */
+	margin: 10px 0 5px;
+	/* 상단, 하단 여백 설정 */
 }
 
 /* 레이아웃 설정 */
 .main-container {
-    display: flex; /* 플렉스 레이아웃 사용 */
-    flex-direction: row; /* 수평 정렬 */
-    justify-content: flex-start; /* 왼쪽 정렬 */
-    align-items: flex-start; /* 상단 정렬 */
-    position: fixed; /* 화면에 고정 */
-    left: 0.5%; /* 왼쪽 정렬 */
-    top: 25.8%; /* 상단에서 29% 위치 */
-    padding-left: 9rem; /* 왼쪽 여백 설정 */
+	display: flex;
+	/* 플렉스 레이아웃 사용 */
+	flex-direction: row;
+	/* 수평 정렬 */
+	justify-content: flex-start;
+	/* 왼쪽 정렬 */
+	align-items: flex-start;
+	/* 상단 정렬 */
+	position: fixed;
+	/* 화면에 고정 */
+	left: 0.5%;
+	/* 왼쪽 정렬 */
+	top: 23%;
+	/* 상단에서 29% 위치 */
+	padding-left: 9rem;
+	/* 왼쪽 여백 설정 */
 }
 
 .timetable-section {
-    flex: 1; /* 시간표가 가능한 공간을 차지하도록 설정 */
-    margin-right: 20px; /* 버튼과의 간격 설정 */
+	flex: 1;
+	/* 시간표가 가능한 공간을 차지하도록 설정 */
+	margin-right: 20px;
+	/* 버튼과의 간격 설정 */
 }
-.timetable-wrapper { /* 시간표 래퍼 스타일 */
-  display: flex; /* 플렉스 레이아웃 */
-  justify-content: center; /* 수평 가운데 정렬 */
-  align-items: flex-start; /* 상단 정렬 */
-  gap: 50px; /* 요소 간 간격 설정 */
-  padding-left: 100px; /* 왼쪽 여백 설정 */
+
+.timetable-wrapper {
+	/* 시간표 래퍼 스타일 */
+	display: flex;
+	/* 플렉스 레이아웃 */
+	justify-content: center;
+	/* 수평 가운데 정렬 */
+	align-items: flex-start;
+	/* 상단 정렬 */
+	gap: 50px;
+	/* 요소 간 간격 설정 */
+	padding-left: 100px;
+	/* 왼쪽 여백 설정 */
 }
 
 /* 테이블 스타일 */
-table { /* 테이블 스타일 */
-  border-collapse: collapse; /* 테두리 중첩 */
-  box-shadow: 0 0 1.25rem rgba(0, 0, 0, 0.1); /* 그림자 설정 */
+table {
+	/* 테이블 스타일 */
+	border-collapse: collapse;
+	/* 테두리 중첩 */
+	box-shadow: 0 0 1.25rem rgba(0, 0, 0, 0.1);
+	/* 그림자 설정 */
 }
 
-th, td { /* 테이블 헤더와 데이터 셀 스타일 */
-  padding: 0.63rem; /* 안쪽 여백 설정 */
-  text-align: center; /* 텍스트 가운데 정렬 */
-  border: 0.06rem solid #ddd; /* 테두리 설정 */
-  width: 8.13rem; /* 셀 너비 설정 */
+th {
+	/* 테이블 헤더와 데이터 셀 스타일 */
+	padding: 0.63rem;
+	/* 안쪽 여백 설정 */
+	text-align: center;
+	/* 텍스트 가운데 정렬 */
+	border: 0.06rem solid #ddd;
+	/* 테두리 설정 */
+	width: 8.13rem;
+	/* 셀 너비 설정 */
 }
 
-th { /* 테이블 헤더 스타일 */
-  background-color: #778da9; /* 배경색 설정 */
-  color: #fff; /* 글자색 설정 */
+th {
+	/* 테이블 헤더 스타일 */
+	background-color: #778da9;
+	/* 배경색 설정 */
+	color: #fff;
+	/* 글자색 설정 */
 }
 
-tbody tr:nth-child(even) { /* 테이블 짝수 행 배경색 */
-  background-color: #f2f2f2; /* 짝수 행 배경색 설정 */
+tbody tr:nth-child(even) {
+	/* 테이블 짝수 행 배경색 */
+	background-color: #f2f2f2;
+	/* 짝수 행 배경색 설정 */
 }
 
-td:first-child { /* 첫 번째 열 스타일 */
-  border-right: 2px solid #e0e0e0; /* 오른쪽 테두리 두께 설정 */
+td:first-child {
+	/* 첫 번째 열 스타일 */
+	border-right: 2px solid #e0e0e0;
+	/* 오른쪽 테두리 두께 설정 */
 }
 
-tr:last-child td { /* 마지막 행 셀 스타일 */
-  border-bottom: none; /* 아래 테두리 제거 */
+tr:last-child td {
+	/* 마지막 행 셀 스타일 */
+	border-bottom: none;
+	/* 아래 테두리 제거 */
 }
 
-.clickable:hover { /* 클릭 가능한 셀 호버 스타일 */
-  background-color: rgba(119, 141, 169, 0.1); /* 배경색 변경 */
+.clickable:hover {
+	/* 클릭 가능한 셀 호버 스타일 */
+	background-color: rgba(119, 141, 169, 0.1);
+	/* 배경색 변경 */
 }
 
-.selected { /* 선택된 셀 스타일 */
-    outline: 2px solid #778da9; /* 외곽선 설정 */
-    background-color: rgba(119, 141, 169, 0.3); /* 선택된 셀 배경색 추가 */
+.selected {
+	/* 선택된 셀 스타일 */
+	outline: 2px solid #778da9;
+	/* 외곽선 설정 */
+	background-color: rgba(119, 141, 169, 0.3);
+	/* 선택된 셀 배경색 추가 */
 }
 
-/* 과목 색상 스타일 */
-.subject-0 { background-color: #ffe6e6; } /* 과목 0 배경색 */
-.subject-1 { background-color: #e6ffe6; } /* 과목 1 배경색 */
-.subject-2 { background-color: #e6e6ff; } /* 과목 2 배경색 */
-.subject-3 { background-color: #ffe6cc; } /* 과목 3 배경색 */
-.subject-4 { background-color: #ffffe6; } /* 과목 4 배경색 */
-.subject-5 { background-color: #cce6ff; } /* 과목 5 배경색 */
-.subject-6 { background-color: #ffe6ff; } /* 과목 6 배경색 */
-.subject-7 { background-color: #e6ffcc; } /* 과목 7 배경색 */
-.subject-8 { background-color: #ffe6d1; } /* 과목 8 배경색 */
-.subject-9 { background-color: #d1f0ff; } /* 과목 9 배경색 */
-.subject-10 { background-color: #e6f7ff; } /* 과목 10 배경색 */
-.subject-11 { background-color: #f0e6ff; } /* 과목 11 배경색 */
-.subject-12 { background-color: #e6fff7; } /* 과목 12 배경색 */
+/* 테이블 셀 스타일 수정 */
+td {
+	padding: 0.63rem;
+	text-align: center;
+	border: 0.06rem solid #ddd;
+	width: 9rem;
+	height: 4rem;
+	position: relative;
+	vertical-align: middle;
+}
+
+/* 과목 셀 스타일 */
+td div[data-subject] {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	padding: 0.3rem;
+	box-sizing: border-box;
+}
+
+/* 과목명과 강의실 텍스트 스타일 */
+td div[data-subject] span {
+	font-size: 0.85rem;
+	line-height: 1.3;
+	padding: 0.2rem;
+	white-space: normal;
+	word-break: keep-all;
+	width: 95%;
+	text-align: center;
+	display: -webkit-box;
+	margin: 0 auto;
+}
+
+
+/* 과목명과 강의실 텍스트 스타일 */
+td div[data-subject] span {
+	font-size: 0.9rem;
+	line-height: 1.2;
+	padding: 0.2rem;
+	word-break: keep-all;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	width: 90%;
+}
+
+/* 연속된 과목 셀 스타일 */
+td div[data-subject]:not(:first-of-type) {
+	border-top: none;
+}
+
+/* 과목 색상 스타일 - 투명도 추가 */
+.subject-0 {
+	background-color: rgba(255, 230, 230, 0.8);
+}
+
+.subject-1 {
+	background-color: rgba(230, 255, 230, 0.8);
+}
+
+.subject-2 {
+	background-color: rgba(230, 230, 255, 0.8);
+}
+
+.subject-3 {
+	background-color: rgba(255, 230, 204, 0.8);
+}
+
+.subject-4 {
+	background-color: rgba(255, 255, 230, 0.8);
+}
+
+.subject-5 {
+	background-color: rgba(204, 230, 255, 0.8);
+}
+
+.subject-6 {
+	background-color: rgba(255, 230, 255, 0.8);
+}
+
+.subject-7 {
+	background-color: rgba(230, 255, 204, 0.8);
+}
+
+.subject-8 {
+	background-color: rgba(255, 230, 209, 0.8);
+}
+
+.subject-9 {
+	background-color: rgba(209, 240, 255, 0.8);
+}
+
+.subject-10 {
+	background-color: rgba(230, 247, 255, 0.8);
+}
+
+.subject-11 {
+	background-color: rgba(240, 230, 255, 0.8);
+}
+
+.subject-12 {
+	background-color: rgba(230, 255, 247, 0.8);
+}
+
+/* 선택된 셀 스타일 수정 */
+.selected div[data-subject] {
+	outline: 2px solid #778da9;
+	background-color: rgba(119, 141, 169, 0.3);
+}
+
+/* 과목명과 강의실명 스타일 수정 */
+.subject-name {
+	display: block;
+	font-weight: bold;
+	margin-bottom: 0.2rem;
+	white-space: normal;
+	/* 줄바꿈 허용 */
+	word-break: keep-all;
+	/* 단어 단위로 줄바꿈 */
+	font-size: 0.9rem;
+	/* 글자 크기 약간 축소 */
+	line-height: 1.2;
+	/* 줄간격 조정 */
+	padding: 0 0.3rem;
+	/* 좌우 여백 추가 */
+}
+
+.classroom-name {
+	display: block;
+	font-size: 0.8rem;
+	color: #666;
+	margin-top: 0.1rem;
+}
 
 /* 버튼 컨테이너 기본 스타일 */
 .button-container {
-    display: flex; /* 플렉스 레이아웃 사용 */
-    flex-direction: column; /* 세로 방향 정렬 */
-    align-items: flex-start; /* 왼쪽 정렬 */
-    margin-left: 1.3rem; /* 좌측 여백 (20px) */
-    width: 9.4rem; /* 버튼 컨테이너 너비 (150px) */
+	display: flex;
+	/* 플렉스 레이아웃 사용 */
+	flex-direction: column;
+	/* 세로 방향 정렬 */
+	align-items: flex-start;
+	/* 왼쪽 정렬 */
+	margin-left: 1.3rem;
+	/* 좌측 여백 (20px) */
+	width: 9.4rem;
+	/* 버튼 컨테이너 너비 (150px) */
 }
 
 /* 시간표 버튼 컨테이너 */
 .timetable-button-container {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-/* 관리자 액션 컨테이너 스타일 */
-.admin-action-container {
-    display: flex; 
-    flex-direction: column; 
-    gap: 1.5rem; 
-	margin-left: 3.1rem;
-    margin-top: 0; 
-    width: 9.4rem; 
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
 }
 
 /* 버튼 스타일 */
 .timetable-button {
-    background-color: #778da9;
-    color: white;
-    border: none;
-    display: block;
-    padding: 10px;
-    margin: 15px;
-    font-size: 1rem;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    width: 100%;
-    text-align: center;
+	background-color: #778da9;
+	color: white;
+	border: none;
+	display: block;
+	padding: 10px;
+	margin: 15px;
+	font-size: 1rem;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: background-color 0.3s ease, transform 0.2s ease;
+	width: 100%;
+	text-align: center;
 }
 
-/* 관리자 버튼 스타일 */ 
+/* 관리자 버튼 스타일 */
 .admin-button {
-   background-color: #778da9;
-   color: white;
-   border: none;
-   display: block;
-   padding: 10px;
-   margin: 15px;
-   font-size: 1rem;
-   border-radius: 5px;
-   cursor: pointer;
-   transition: background-color 0.3s ease, transform 0.2s ease;
-   width: 100%;
-   text-align: center;
-   text-decoration: none;
+	background-color: #778da9;
+	color: white;
+	border: none;
+	display: block;
+	padding: 10px;
+	margin: 15px;
+	font-size: 1rem;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: background-color 0.3s ease, transform 0.2s ease;
+	width: 100%;
+	text-align: center;
+	text-decoration: none;
 }
 
 .timetable-button:hover,
 .admin-button:hover {
-    background-color: #5a6f89;
-    transform: scale(1.05);
+	background-color: #5a6f89;
+	transform: scale(1.05);
 }
 
 /* 좌석 예약 및 좌석 관리 버튼 크기 조정 */
 #reserve-seat-button,
 #manage-seat-button {
-    width: 115%; /* 기본 너비로 설정 */
-    flex: 1; /* 버튼이 가능한 공간을 차지하도록 설정 */
+	width: 115%;
+	/* 기본 너비로 설정 */
+	flex: 1;
+	/* 버튼이 가능한 공간을 차지하도록 설정 */
 }
+
 /* 모달 스타일 */
-.modal { /* 모달 창 */
-  display: none; /* 기본으로 숨김 */
-  position: fixed; /* 화면 고정 */
-  z-index: 1000; /* z-인덱스 */
-  left: 0; /* 왼쪽 정렬 */
-  top: 0; /* 상단 정렬 */
-  width: 100%; /* 전체 너비 */
-  height: 100%; /* 전체 높이 */
-  overflow: auto; /* 스크롤 */
-  background-color: rgba(0,0,0,0.4); /* 반투명 배경 */
+.modal {
+	/* 모달 창 */
+	display: none;
+	/* 기본으로 숨김 */
+	position: fixed;
+	/* 화면 고정 */
+	z-index: 1000;
+	/* z-인덱스 */
+	left: 0;
+	/* 왼쪽 정렬 */
+	top: 0;
+	/* 상단 정렬 */
+	width: 100%;
+	/* 전체 너비 */
+	height: 100%;
+	/* 전체 높이 */
+	overflow: auto;
+	/* 스크롤 */
+	background-color: rgba(0, 0, 0, 0.4);
+	/* 반투명 배경 */
 }
 
-.modal-content { /* 모달 내용 */
-  background-color: #f8f9fa; /* 배경색 */
-  margin: 5% auto; /* 중앙 정렬 */
-  padding: 30px 40px; /* 안쪽 여백 */
-  border-radius: 10px; /* 테두리 둥글게 */
-  width: 100%; /* 전체 너비 */
-  max-width: 700px; /* 최대 너비 */
-  max-height: 80vh; /* 최대 높이 */
-  overflow-y: auto; /* 세로 스크롤 */
-  position: relative; /* 상대 위치 */
+.modal-content {
+	/* 모달 내용 */
+	background-color: #f8f9fa;
+	/* 배경색 */
+	margin: 5% auto;
+	/* 중앙 정렬 */
+	padding: 30px 40px;
+	/* 안쪽 여백 */
+	border-radius: 10px;
+	/* 테두리 둥글게 */
+	width: 100%;
+	/* 전체 너비 */
+	max-width: 700px;
+	/* 최대 너비 */
+	max-height: 80vh;
+	/* 최대 높이 */
+	overflow-y: auto;
+	/* 세로 스크롤 */
+	position: relative;
+	/* 상대 위치 */
 }
 
-.modal-content h2 { /* 모달 제목 */
-  color: #778da9; /* 색상 */
-  border-bottom: 2px solid #778da9; /* 하단 테두리 */
-  padding-bottom: 10px; /* 하단 여백 */
+.modal-content h2 {
+	/* 모달 제목 */
+	color: #778da9;
+	/* 색상 */
+	border-bottom: 2px solid #778da9;
+	/* 하단 테두리 */
+	padding-bottom: 10px;
+	/* 하단 여백 */
 }
 
-.modal-content form { /* 모달 폼 레이아웃 */
-  display: grid; /* 그리드 레이아웃 */
-  gap: 0.63rem; /* 그리드 간격 */
+.modal-content form {
+	/* 모달 폼 레이아웃 */
+	display: grid;
+	/* 그리드 레이아웃 */
+	gap: 0.63rem;
+	/* 그리드 간격 */
 }
 
-.modal-content form .input-container { /* 입력 컨테이너 */
-  display: flex; /* 플렉스 */
-  align-items: center; /* 가운데 정렬 */
+.modal-content form .input-container {
+	/* 입력 컨테이너 */
+	display: flex;
+	/* 플렉스 */
+	align-items: center;
+	/* 가운데 정렬 */
 }
 
-.modal-content form label { /* 입력 라벨 */
-  font-weight: bold; /* 폰트 굵게 */
-  width: 30%; /* 라벨 너비 */
-  margin-right: 0.63rem; /* 오른쪽 여백 */
+.modal-content form label {
+	font-weight: bold;
+	width: 30%;
+	margin-right: 0.63rem;
 }
 
+/* 텍스트 입력, 선택, 제출 버튼 */
 .modal-content form input[type="text"],
 .modal-content form select,
-.modal-content form input[type="submit"] { /* 텍스트 입력, 선택, 제출 버튼 */
-  padding: 0.5rem; /* 안쪽 여백 */
-  border: 1px solid #778da9; /* 테두리 색상 */
-  border-radius: 4px; /* 요소 모서리를 둥글게 만듭니다. */
+.modal-content form input[type="submit"] {
+	padding: 0.5rem;
+	border: 1px solid #778da9;
+	border-radius: 4px;
 }
 
-.modal-content input[type="submit"] { /* 제출 버튼 */
-  background-color: #778da9; /* 배경색 */
-  color: white; /* 글자색 */
-  cursor: pointer; /* 포인터 커서 */
+/* 제출 버튼 */
+.modal-content input[type="submit"] {
+	background-color: #778da9;
+	color: white;
+	cursor: pointer;
 }
 
-.modal-content input[type="submit"]:hover { /* 제출 버튼 호버 */
-  background-color: #5a6f89; /* 배경색 변경 */
+.modal-content input[type="submit"]:hover {
+	background-color: #5a6f89;
 }
 
 /* 닫기 버튼 스타일 */
-.close { /* 닫기 버튼 */
-  color: #aaa; /* 색상 */
-  font-size: 28px; /* 폰트 크기 */
-  font-weight: bold; /* 폰트 굵게 */
-  position: absolute; /* 절대 위치 */
-  right: 10px; /* 오른쪽 위치 */
-  top: 5px; /* 상단 위치 */
-  cursor: pointer; /* 포인터 커서 */
+.close {
+	color: #aaa;
+	font-size: 28px;
+	font-weight: bold;
+	position: absolute;
+	right: 10px;
+	top: 5px;
+	cursor: pointer;
 }
 
-.close:hover, .close:focus { /* 닫기 버튼 호버 및 포커스 */
-  color: black; /* 색상 변경 */
+.close:hover,
+.close:focus {
+	color: black;
 }
 
 /* 오류 메시지 스타일 */
 .error {
-  background-color: #ffdddd; /* 배경색 빨간색 계열 */
-  border-left: 6px solid #f44336; /* 왼쪽 테두리 빨간색 */
-  margin-bottom: 15px; /* 하단 여백 */
-  padding: 10px; /* 내부 여백 */
-  color: #f44336; /* 글자색 빨간색 */
+	background-color: #ffdddd;
+	border-left: 6px solid #f44336;
+	margin-bottom: 15px;
+	padding: 10px;
+	color: #f44336;
 }
-
-
-
 
 /* 폼 내 입력 필드 스타일 */
 #inputModal .modal-content .input-group select,
 #inputModal .modal-content .input-container input[type="text"] {
-    font-size: 0.8rem; /* 입력 필드 폰트 크기 */
-    padding: 6px; /* 패딩 */
-    border: 1px solid #778da9; /* 테두리 색상 */
-    border-radius: 4px; /* 모서리 둥글게 */
-    width: 100%; /* 전체 너비 사용 */
+	font-size: 0.8rem;
+	padding: 6px;
+	border: 1px solid #778da9;
+	border-radius: 4px;
+	width: 100%;
 }
 
 /* 제출 버튼 스타일 */
 #inputModal .modal-content button {
-    font-size: 0.9rem; /* 폰트 크기 */
-    padding: 8px; /* 패딩 */
-    background-color: #778da9; /* 버튼 배경색 */
-    color: white; /* 글자색 */
-    border: none; /* 테두리 제거 */
-    border-radius: 4px; /* 모서리 둥글게 */
-    cursor: pointer; /* 포인터 커서 */
-    margin-top: 10px; /* 상단 여백 */
+	font-size: 0.9rem;
+	padding: 8px;
+	background-color: #778da9;
+	color: white;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+	margin-top: 10px;
 }
 
 #inputModal .modal-content button:hover {
-    background-color: #5a6f89; /* 호버 시 배경색 변경 */
+	background-color: #5a6f89;
 }
 
 
 
 /* 모바일 환경에서의 버튼 스타일 */
 @media (max-width: 768px) {
-    /* 기본 레이아웃 설정 */
-    body, html {
+
+	/* 기본 레이아웃 설정 */
+	body,
+	html {
 		position: relative;
-        margin-top: 0; /* 전체 페이지 상단 여백 제거 */
-        padding-top: 0; /* 패딩 제거 */
-        width: 100%; /* 화면 전체 너비 사용 */
-
-    }
-    
-
-    /* 시간표 섹션 */
-    .timetable-section {
-
-		position: relative;
-        padding: 10px;
-        gap: 8px;
-        width: 95%; /* 너비를 줄여서 화면에 더 여유 공간이 생기도록 */
-        margin: 0 auto; /* 가운데 정렬 */
-        transform: translateZ(0);
-        display: flex;
-        
-       
-        width: 100%; /* 전체 너비 사용 */
-        margin-top: -10rem; /* 테이블 위의 여백을 줄이기 위해 설정 */
-		padding: 0; /* 패딩 제거 */
-        padding-top: 0; /* 테이블 섹션 상단 패딩 제거 */
-        margin-bottom: 10px; /* 테이블 아래에 여백 추가 */
-
-        isolation: isolate;
-        overflow-x: auto;
-    }
-    
-    .timetable-wrapper {
-		position: relative;
-        display: flex;
-        justify-content: center;
-        align-items: flex-start;
-        width: 90%;
-        padding: 0 15px; /* 좌우에 15px 여백 추가 */
-        box-sizing: border-box; /* 여백이 전체 너비에 포함되도록 설정 */
-        
-    }
-
-    table {
-
-        width: 90%; /* 테이블이 화면을 가득 채우도록 설정 */
-        border-collapse: collapse;
-        font-size: 0.8rem; /* 모바일 폰트 크기 */
-        position: relative;
-  		box-shadow: 0 0 1.25rem rgba(0, 0, 0, 0.1); /* 그림자 설정 */
-  		border-radius: 20px; /* 테두리를 둥글게 */
-  		overflow: hidden; /* 테두리 둥근 모서리가 잘리도록 설정 */
-  		margin: 10 auto; /* 좌우 여백을 자동으로 균등하게 */
-    	padding: 0 20px; /* 테이블 내부에 좌우 여백 추가 */
-        
-    }
-    
-    th {
-        background-color: #778da9;
-        color: white;
-
-        text-align: center;
-        border: 1px solid #ddd;
-    }
-
-    td {
-
-        text-align: center;
-        border: 1px solid #ddd;
-        background-color: white;
-        border-radius: 4px;
-        padding: 0.2rem;
-    }
-    
-    /* 첫 번째 열 (시간 표시) 스타일 */
-    td:first-child {
-
-        border-right: 1px solid #c0c0c0;
-        color: #333;
-        background-color: #f9f9f9;
-        border-radius: 4px;
-        width: 1rem !important; /* 원하는 너비로 조정 */
-    	padding: 0; /* 패딩 줄여서 셀 높이 조정 */
-    }
-
-	/* 맨 위 요일 부분 크기 줄이기 */
-	th {
-    	width: 0.8rem; /* 원하는 너비로 조정 */
-    	padding: 0.2rem; /* 패딩 줄여서 셀 높이 조정 */
+		margin-top: 0;
+		padding-top: 0;
+		width: 100%;
 	}
 
-	/* 모든 테이블 셀 높이 통일 */
-	table, th, td {
-    	height: 3rem; /* 원하는 높이로 조정 */
-    	vertical-align: middle; /* 내용물 가운데 정렬 */
+	/* 메인 컨테이너 수정 */
+	.main-container {
+		width: 100%;
+		padding: 0;
+		margin: 0;
+		display: flex;
+		justify-content: center;
+		margin-top: -2.3rem;
 	}
-    
-    /* 요일 헤더 부분 높이 조절 */
-	thead th {
+
+	/* 시간표 섹션 수정 */
+	.timetable-section {
+		width: 90%;
+		max-width: 250px;
+		margin: 0 auto;
+		padding: 0;
+	}
+
+	.container {
+		width: 100%;
+		max-width: 250px;
+		margin: 0 auto;
+		padding: 0;
+	}
+
+	/* 테이블 크기 수정 */
+	table {
+		width: 100%;
+		min-width: 200px;
+		max-width: 250px;
+		margin: 0 auto;
+		font-size: 0.7rem;
+	}
+
+	/* 셀 크기 조정 */
+	td {
+		height: 4.3rem;
+		padding: 0.2rem;
+		min-width: 2.2rem;
+	}
+
+	/* 시간 열 너비 조정 */
+	td:first-child {
+		width: 1.2rem !important;
 		min-width: 1.2rem;
-    	height: 1.5rem !important; /* 원하는 높이로 조정 */
-    	padding: 0.2rem; /* 패딩을 줄여서 높이 감소 */
-   
+		font-size: 0.65rem;
+		padding: 0.1rem;
+	}
+
+	/* 요일 헤더 조정 */
+	th {
+		padding: 0.15rem;
+		font-size: 0.7rem;
+		min-width: 2.2rem;
+	}
+
+
+	/* 과목명과 강의실 정보 스타일 */
+	td div[data-subject] {
+		height: 100%;
+		padding: 0.3rem;
+	}
+
+	/* 과목명 스타일 */
+	td div[data-subject] span.subject-name {
+		font-size: 0.7rem;
+		line-height: 1.2;
+		word-break: keep-all;
+		white-space: normal;
+		width: 100%;
+		text-align: center;
+		margin-bottom: 0.2rem;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	/* 강의실 정보 스타일 */
+	td div[data-subject] span.classroom-name {
+		font-size: 0.65rem;
+		color: #666;
+		display: block;
+		text-align: center;
+		width: 100%;
+	}
+
+	/* 요일 헤더 스타일 */
+	thead th {
+		height: 2rem;
+		padding: 0.3rem;
+		font-size: 0.8rem;
+		min-width: 3.5rem;
 	}
 
 	/* 과목 텍스트 스타일 */
-    td span {
-        display: block;
-  
-        color: #333;
-        
+	td span {
+		display: block;
+		color: #333;
+	}
 
-    }
+	/* 강의실 정보 텍스트 스타일 */
+	td div[data-classroom] {
+		font-size: 0.7rem;
+		color: #555;
+	}
 
-    /* 강의실 정보 텍스트 스타일 */
-    td div[data-classroom] {
-        font-size: 0.7rem;
-        color: #555;
-    }
-    
-
-    .main-container {
-        display: flex;
-        flex-direction: column;
-        position: relative;
-        width: 100%;
-        padding: 0.6rem;
-        margin: 0;
-    }
-
-	
-    
-
-    
-
-    /* 버튼 컨테이너 스타일 */
-    .timetable-button-container {
-        position: fixed;
-        top: 6rem;
-        right: 2rem;
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-end;
-        gap: 0.6rem;
-        width: auto;
-        z-index: 100;
-
-    }
-
-	.admin-action-container {
-	    display: flex;
-	    flex-direction: row;
-	    justify-content: center; /* 가로 중앙 정렬 */
-	    align-items: center; /* 세로 중앙 정렬 */
-	    gap: 1rem;
-	    width: 100%; /* 전체 너비 사용 */
-	    margin: 1rem auto; /* 상하 여백 추가하고 좌우 자동 마진으로 중앙 정렬 */
-	    position: relative;
-	    z-index: 100;
+	/* 버튼 컨테이너 스타일 */
+	.timetable-button-container {
+		position: fixed;
+		top: 6rem;
+		right: 2rem;
+		display: flex;
+		flex-direction: row;
+		justify-content: flex-end;
+		gap: 0.6rem;
+		width: auto;
+		z-index: 100;
+		margin-top: -1.3rem;
 
 	}
 
-    /* 공통 버튼 스타일 */
-    #reserve-seat-button,
-    #manage-seat-button,
-    .timetable-button,
-    .admin-button {
-        flex: none;
-        font-size: 0;
-        padding: 0;
-        background-color: #778da9;
-        color: transparent;
-        border-radius: 0.4rem;
-        transition: background-color 0.3s;
-        position: relative;
-        margin: 0;
-    }
+	/* 공통 버튼 스타일 */
+	#reserve-seat-button,
+	#manage-seat-button,
+	.timetable-button,
+	.admin-button {
+		flex: none;
+		font-size: 0;
+		padding: 0;
+		background-color: #778da9;
+		color: transparent;
+		border-radius: 0.4rem;
+		transition: background-color 0.3s;
+		position: relative;
+		margin: 0;
+	}
 
-	
-    /* 상단 버튼 크기 */
-    #reserve-seat-button,
-    #manage-seat-button,
-    .timetable-button {
-        width: 2.5rem;
-        height: 2.5rem;
-    }
 
-    /* 하단 버튼 크기 */
-    .admin-button {
-        width: 7rem;
-        height: 2.5rem;
-		text-align: center; /* 텍스트를 가운데 정렬 */
-	    display: flex; /* 플렉스를 사용하여 정렬 */
-	    justify-content: center;
-	    align-items: center;
+	/* 상단 버튼 크기 */
+	#reserve-seat-button,
+	#manage-seat-button,
+	.timetable-button {
+		width: 2.5rem;
+		height: 2.5rem;
+	}
+
+	/* 하단 버튼 크기 */
+	.admin-button {
+		width: 7rem;
+		height: 2.5rem;
+		text-align: center;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 		font-weight: 700;
 		color: white;
 		font-size: 0.75rem;
-    }
+	}
 
-    /* 아이콘 스타일 */
-    #reserve-seat-button::before,
-    #manage-seat-button::before,
-    .timetable-button::before,
-    .admin-button::before {
-        font-family: "Font Awesome 5 Free";
-        font-weight: 900;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        color: white;
-        font-size: 1.2rem;
-    }
+	/* 아이콘 스타일 */
+	#reserve-seat-button::before,
+	#manage-seat-button::before,
+	.timetable-button::before,
+	.admin-button::before {
+		font-family: "Font Awesome 5 Free";
+		font-weight: 900;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		color: white;
+		font-size: 1.2rem;
+	}
 
-    /* 버튼별 아이콘 */
-    #reserve-seat-button::before, 
-    #manage-seat-button::before {
-        content: "\f6c0";
-    }
-    #timetable-plus-button::before {
-        content: "\f067";
-    }
-    #timetable-adjustment-button::before {
-        content: "\f044";
-    }
-    #timetable-delete-button::before {
-        content: "\f1f8";
-    }
+	/* 버튼별 아이콘 */
+	#reserve-seat-button::before,
+	#manage-seat-button::before {
+		content: "\f6c0";
+	}
 
-    /* 버튼 라벨 */
-    .button-label {
-        font-size: 0.5rem;
-        color: black;
-        text-align: center;
-        display: inline-block;
-        margin-top: 3.1rem;
-        position: relative;
-        width: 100%;
-        white-space: nowrap;
-    }
+	#timetable-plus-button::before {
+		content: "\f067";
+	}
 
-    /* 호버 효과 */
-    #reserve-seat-button:hover,
-    #manage-seat-button:hover,
-    .timetable-button:hover,
-    .admin-button:hover {
-        background-color: #5a6f89;
-    }
+	#timetable-adjustment-button::before {
+		content: "\f044";
+	}
 
-    
+	#timetable-delete-button::before {
+		content: "\f1f8";
+	}
 
-    /* 모달 스타일 */
-    .modal-content {
-        width: 90%;
-        max-width: 400px;
-        padding: 0.9rem;
-        top: 15%;
-        margin: auto;
-    }
+	/* 버튼 라벨 */
+	.button-label {
+		font-size: 0.5rem;
+		color: black;
+		text-align: center;
+		display: inline-block;
+		margin-top: 3.1rem;
+		position: relative;
+		width: 100%;
+		white-space: nowrap;
+	}
 
-    .modal-content h2 {
-        font-size: 1rem;
-        margin-bottom: 0.6rem;
-    }
+	/* 호버 효과 */
+	#reserve-seat-button:hover,
+	#manage-seat-button:hover,
+	.timetable-button:hover,
+	.admin-button:hover {
+		background-color: #5a6f89;
+	}
 
-    .modal-content form label {
-        font-size: 0.8rem;
-        margin-bottom: 0.3rem;
-    }
+	/* 모달 스타일 */
+	.modal-content {
+		width: 90%;
+		max-width: 400px;
+		padding: 0.9rem;
+		top: 15%;
+		margin: auto;
+	}
 
-    .modal-content form input[type="text"],
-    .modal-content form select {
-        font-size: 0.8rem;
-        padding: 0.4rem;
-    }
+	.modal-content h2 {
+		font-size: 1rem;
+		margin-bottom: 0.6rem;
+	}
 
-    .modal-content form input[type="submit"] {
-        font-size: 0.9rem;
-        padding: 0.5rem;
-    }
+	.modal-content form label {
+		font-size: 0.8rem;
+		margin-bottom: 0.3rem;
+	}
 
-    .modal-content form .input-container:last-child {
-        margin-top: 0.6rem;
-    }
-    
-    .custom-confirm-button {
-    background-color: #778da9 !important; /* 원하는 색상으로 설정 */
-    color: white !important; /* 텍스트 색상 */
-    border: none;
-    border-radius: 4px;
-    padding: 10px 20px;
-    font-size: 1rem;
-    cursor: pointer;
-}
+	.modal-content form input[type="text"],
+	.modal-content form select {
+		font-size: 0.8rem;
+		padding: 0.4rem;
+	}
 
-.custom-confirm-button:hover {
-    background-color: #5a6f89 !important; /* 호버 색상 */
-}
-    
-    
-    .custom-confirm-button {
-    background-color: #778da9 !important; /* 원하는 색상으로 설정 */
-    color: white !important; /* 텍스트 색상 */
-    border: none;
-    border-radius: 4px;
-    padding: 10px 20px;
-    font-size: 1rem;
-    cursor: pointer;
-}
+	.modal-content form input[type="submit"] {
+		font-size: 0.9rem;
+		padding: 0.5rem;
+	}
 
-.custom-confirm-button:hover {
-    background-color: #5a6f89 !important; /* 호버 색상 */
-}
+	.modal-content form .input-container:last-child {
+		margin-top: 0.6rem;
+	}
+
+	.custom-confirm-button {
+		background-color: #778da9 !important;
+		/* 원하는 색상으로 설정 */
+		color: white !important;
+		/* 텍스트 색상 */
+		border: none;
+		border-radius: 4px;
+		padding: 10px 20px;
+		font-size: 1rem;
+		cursor: pointer;
+	}
+
+	.custom-confirm-button:hover {
+		background-color: #5a6f89 !important;
+	}
+
+
+	.custom-confirm-button {
+		background-color: #778da9 !important;
+		color: white !important;
+		border: none;
+		border-radius: 4px;
+		padding: 10px 20px;
+		font-size: 1rem;
+		cursor: pointer;
+	}
+
+	.custom-confirm-button:hover {
+		background-color: #5a6f89 !important;
+	}
 
 }

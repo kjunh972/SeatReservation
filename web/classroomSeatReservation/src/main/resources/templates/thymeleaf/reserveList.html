@@ -7,6 +7,7 @@
 	<link rel="stylesheet" href="/css/timetableStyle.css" />
 	<link rel="stylesheet" href="/css/classroomStyle.css" />
 	<link rel="stylesheet" href="/css/reserveListStyle.css" />
+	<link rel="stylesheet" href="/css/dropdownMenuStyle.css" />
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<script th:inline="javascript">
@@ -203,7 +204,6 @@
 			<button class="add-reservation-btn" onclick="window.location.href='/timetable'">예약 추가하기</button>
 		</div>
 	</div>
-	<!-- 메인 컨텐츠 영역 -->
 	<div class="main-container">
 		<!-- 시간표 섹션 시작 -->
 		<div class="timetable-section">
@@ -219,12 +219,18 @@
 						<tr th:each="hour : ${hours}">
 							<td th:text="${hour}"></td>
 							<td th:each="day : ${days}" class="clickable" data-day="${day}" data-hour="${hour}">
-								<div th:each="timeTable : ${userTimeTable}" th:if="${timeTable.day == day 
-	                                            and timeTable.startHour le hour
-	                                            and timeTable.endHour gt hour}" th:attr="data-subject=${timeTable.subject}, data-classroom=${timeTable.classroomName}, 
-	                                            data-day=${timeTable.day}, data-hour=${hour}">
-									<span
-										th:text="${timeTable.subject + ' (' + timeTable.classroomName + ')'}"></span><br>
+								<div th:each="timeTable, stat : ${userTimeTable}" th:if="${timeTable.day == day 
+						                         and timeTable.startHour le hour
+						                         and timeTable.endHour gt hour}" th:classappend="'subject-' + ${stat.index % 10}"
+									th:attr="data-subject=${timeTable.subject}, 
+						                         data-classroom=${timeTable.classroomName}, 
+						                         data-day=${timeTable.day}, 
+						                         data-hour=${hour}">
+									<!-- 첫 시간에만 과목명과 강의실 표시 -->
+									<span th:if="${hour == timeTable.startHour}" class="subject-name"
+										th:text="${timeTable.subject}"></span>
+									<span th:if="${hour == timeTable.startHour}" class="classroom-name"
+										th:text="${timeTable.classroomName}"></span>
 								</div>
 								<div th:attr="data-hour=${hour}, data-day=${day}" style="display: none;"></div>
 							</td>
@@ -257,12 +263,6 @@
 					<span class="button-label">시간표 삭제</span>
 				</label>
 			</div>
-		</div>
-		<!-- 관리자 액션 버튼 그룹 -->
-		<div th:if="${userPosition == 'admin' or userPosition == 'professor'}" class="admin-action-container">
-			<a href="reserveList" class="admin-button">예약 목록</a>
-			<a href="attendanceCheck" class="admin-button">출석 확인</a>
-			<a href="banList" class="admin-button">예약금지좌석 확인</a>
 		</div>
 	</div>
 </body>

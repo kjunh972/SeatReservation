@@ -3,6 +3,17 @@ h1 {
     margin-top: 6.7vh;
 }
 
+/* 테이블 셀 스타일 */
+td {
+	height: 2.68rem !important;
+}
+
+/* 강의실명 스타일 */
+td div[data-subject] .classroom-name {
+    position: relative !important;
+    transform: translateY(-0.03rem) !important; /* 음수로 가면 위로, 양수로 가면 아래 */
+}
+
 /* 좌석 레이아웃을 위한 컨테이너 스타일 */
 .seat-layout {
     display: flex; /* Flexbox 레이아웃 사용 */
@@ -51,7 +62,7 @@ h1 {
 
 /* 사용 금지된 좌석 버튼 스타일 */
 .seat-button.banned {
-    background-color: #cc444b !important; 
+    background-color: #dc3545 !important; 
     cursor: not-allowed; /* 마우스 커서를 사용 불가 모양으로 변경 */
 }
 
@@ -73,6 +84,8 @@ h1 {
     display: none; /* 초기에는 숨김 상태 */
     position: fixed; /* 화면에 고정 */
     z-index: 1000; /* 다른 요소들 위에 표시 */
+    left: 0;
+    top: 0;
     width: 100%; /* 전체 너비 */
     height: 100%; /* 전체 높이 */
     overflow: auto; /* 내용이 넘칠 경우 스크롤 허용 */
@@ -82,85 +95,37 @@ h1 {
 /* 모달 내용의 스타일 */
 .modal-content {
     background-color: #f8f9fa; /* 배경색을 연한 회색으로 설정 */
-    margin: 5% auto; /* 상단에서 5% 여백, 좌우 중앙 정렬 */
+    margin: 9% auto; /* 상단에서 5% 여백, 좌우 중앙 정렬 */
     padding: 20px; /* 내부 여백 */
     border-radius: 10px; /* 모서리를 둥글게 */
     width: 100%; /* 전체 너비 */
-    max-width: 700px; /* 최대 너비 제한 */
+    max-width: 1500px; /* 최대 너비 제한 */
     max-height: 80vh; /* 최대 높이를 뷰포트 높이의 80%로 제한 */
     overflow-y: auto; /* 세로 방향 스크롤 허용 */
     position: relative; /* 상대적 위치 지정 */
 }
 
-/* 좌석 예약 변경 모달 창의 스타일 */
+
+/* 좌석 예약 확인 모달 창의 스타일 */
 #myModal .modal-content {
-    background-color: #ffffff;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 5rem 2.5rem; /* 상하 패딩 증가로 세로 길이 증가 */
-    border-radius: 0.5rem;
-    width: 95%;
-    max-width: 700px;
-    height: auto;
-    max-height: 95vh; /* 최대 높이 증가 */
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    text-align: center;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    background-color: #f8f9fa; /* 배경색 */
+    position: fixed; /* 화면에 고정 */
+    top: 20%; /* 화면 높이의 60% 위치 */
+    left: 50%; /* 화면 너비의 50% 위치 */
+    transform: translate(-50%, -50%); /* 중앙 정렬 */
+    padding: 20px; /* 내부 여백 */
+    border-radius: 10px; /* 모서리를 둥글게 */
+    width: 100%; /* 전체 너비 */
+    max-width: 700px; /* 최대 너비 제한 */
+    max-height: 80vh; /* 최대 높이 */
+    overflow-y: auto; /* 세로 방향 스크롤 허용 */
+    display: flex; /* Flexbox 레이아웃 사용 */
+    flex-direction: column; /* 세로 방향 정렬 */
+    align-items: center; /* 수평 중앙 정렬 */
+    justify-content: center; /* 수직 중앙 정렬 */
+    text-align: center; /* 텍스트 중앙 정렬 */
 }
 
-/* 모달 제목 스타일 */
-#myModal .modal-content h1 {
-    font-size: 2rem;
-    font-weight: 700;
-    margin-top: 0;
-    margin-bottom: 2rem; /* 여백 증가 */
-    width: 100%;
-}
-
-/* 학생 정보 스타일 */
-#myModal .modal-content #studentInfo {
-    font-size: 1.2rem;
-    color: #333;
-    margin-bottom: 2.5rem; /* 여백 증가 */
-    width: 100%;
-}
-
-/* 버튼 컨테이너 스타일 */
-#myModal .modal-content .button-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    margin-top: 0.5rem; /* 여백 증가 */
-}
-
-/* 버튼 스타일 */
-#myModal .modal-content button {
-    width: 90%; /* 버튼 너비 증가 */
-    padding: 1.5rem 0.5rem; /* 버튼 높이 증가 */
-    font-size: 1.1rem;
-    margin: 0.8rem 0; /* 버튼 사이 간격 증가 */
-    border: 2px solid #4a5568;
-    background-color: white;
-    color: black;
-    border-radius: 0.375rem;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-    display: flex; /* Flexbox 사용 */
-    justify-content: center; /* 가로 중앙 정렬 */
-    align-items: center; /* 세로 중앙 정렬 */
-}
-
-#myModal .modal-content button:hover {
-    background-color: #4a5568;
-    color: white;
-}
 /* 확인 및 취소 버튼의 공통 스타일 */
 #confirmButton,
 #cancelButton {
@@ -188,27 +153,6 @@ h1 {
 
 /* 모바일 버전 미디어 쿼리 수정 */
 @media (max-width: 48rem) {
-		/* 시간표 섹션 중앙 정렬 및 여백 조정 */
-    .timetable-section {
-		margin-top: 3rem;
-        display: flex;
-        justify-content: center; /* 수평 중앙 정렬 */
-        padding: 1rem; /* 여백 추가 */
-        margin-left: -1rem;
-        
-    }
-
-    /* 컨테이너 크기 및 중앙 정렬 */
-    .container {
-        width: 95%; /* 너비를 95%로 설정 */
-        max-width: 600px; /* 최대 너비 제한 */
-        margin: 0 auto; /* 중앙 정렬 */
-        
-        
-    }
-
-
-	
 	/* 예약된 좌석 모달 창의 너비 조정 */
     .modal-content.seat-list-content {
         width: 90%; /* 너비 조정 */
@@ -225,6 +169,7 @@ h1 {
     
     /* 좌석 레이아웃을 위한 컨테이너 스타일 */
 	.seat-layout {
+		transform: scale(0.8);
 	    display: flex; /* Flexbox 레이아웃 사용 */
 	    flex-direction: row; /* 자식 요소들을 가로로 배치 */
 	    justify-content: space-evenly; /* 균등한 간격으로 배치 */
@@ -242,19 +187,19 @@ h1 {
 
 
     .seat-list-title {
-    	font-size: 1.8rem !important; /* 제목 폰트 크기 조정 */
-   		margin-top: 2.5rem !important;
-	}
+    font-size: 1.8rem !important; /* 제목 폰트 크기 조정 */
+    margin-top: 2.5rem !important;
+}
     
     
     /* 과목 열 너비 조정 */
-   .seat-list-table th:first-child,
-   .seat-list-table td:first-child {
-		width: 60px !important; /* 필요한 너비에 맞게 조정 */
-		min-width: 60px !important; /* 최소 너비 설정 */
-		max-width: 120px !important; /* 최대 너비 설정 */
-		white-space: normal !important; /* 텍스트 줄바꿈 허용 */
-    }
+	.seat-list-table th:first-child,
+	.seat-list-table td:first-child {
+    width: 60px !important; /* 필요한 너비에 맞게 조정 */
+    min-width: 60px !important; /* 최소 너비 설정 */
+    max-width: 120px !important; /* 최대 너비 설정 */
+    white-space: normal !important; /* 텍스트 줄바꿈 허용 */
+}
 
     .seat-list-button-container {
         display: flex;
@@ -311,14 +256,13 @@ h1 {
         font-size: 0.8rem; /* 글자 크기 줄이기 */
         margin: 5px; /* 외부 여백 줄이기 */
     }
+	
     /* 모달 창의 위치 조정 */
     .modal-content {
         width: 85%; /* 너비 조정 */
         max-width: 400px; /* 최대 너비 조정 */
         margin-top: 7%; /* 상단 여백을 늘려서 토글 버튼과 겹치지 않게 */
         padding: 10px; /* 내부 여백 줄이기 */
-        
-        
 		overflow: hidden;
     }
 
@@ -330,13 +274,14 @@ h1 {
     
     .modal-content h1 {
         font-size: 1.5rem;
-		margin-top: 5rem;
+		margin-top: 7rem;
     }
     
     #seatModal2 .modal-content {
-     width: 85%;
+     	width: 85%;
         padding: 1rem;
-        left: -3.3rem; 
+        margin-left: -1.5rem; 
+		overflow: hidden;
 }
 
     
@@ -364,23 +309,14 @@ h1 {
         font-size: 0.9rem !important; /* 글꼴 크기 조정 */
         padding: 0.6rem !important; /* 패딩 조정 */
     }
-
-	 #myModal .modal-content {
-	      padding: 6rem 2rem;
-	      width: 95%;
-	  }
-
-	  #myModal .modal-content h1 {
-	      font-size: 1.75rem;
-	  }
-
-	  #myModal .modal-content #studentInfo {
-	      font-size: 1rem;
-	  }
-
-	  #myModal .modal-content button {
-	      width: 95%; /* 모바일에서 버튼 너비 조정 */
-	      padding: 1.2rem 0.8rem;
-	      font-size: 0.8rem;
-	  }
+	
+	/* 셀 크기 조정 */
+	td {
+		height: 3.8rem !important;
+	}
+				
+	/* 요일 헤더 스타일 */
+	thead th {
+		height: 1.38rem !important;
+	}
 }

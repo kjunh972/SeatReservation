@@ -5,7 +5,6 @@
 	<meta charset="UTF-8">
 	<title>학생 회원가입</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<header th:replace="/menu.html"></header>
 
 	<link rel="stylesheet" href="/css/classroomStyle.css" />
 	<link rel="stylesheet" href="/css/studentSignupStyle.css" />
@@ -172,6 +171,9 @@
 </head>
 
 <body>
+	<header th:replace="~{${session.loggedInUser != null && (userPosition == 'admin' || userPosition == 'professor')} ? '/menu_admin' : '/menu'}">
+	</header>
+
 	<h2>강의실 자리 예약 프로그램 학생 회원가입</h2>
 
 	<!-- 기존에 없는 학교를 선택하면 오류 발생 -->
@@ -200,7 +202,7 @@
 	<form id="studentSignupForm" action="/signupCheck" method="post" onsubmit="handleFormSubmit(event)">
 		<div class="form-group">
 			<label for="id">ID</label>
-			<input type="text" id="id" name="id" placeholder="사용자 아이디"required>
+			<input type="text" id="id" name="id" placeholder="사용자 아이디" required>
 			<button type="button" onclick="checkId()">아이디 중복확인</button>
 			<span class="error-message" id="idError" th:text="${idError}"></span>
 		</div>

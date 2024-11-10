@@ -8,6 +8,7 @@
 	<!-- CSS 파일 링크 -->
 	<link rel="stylesheet" href="/css/classroomStyle.css" />
 	<link rel="stylesheet" href="/css/timeTableStyle.css" />
+	<link rel="stylesheet" href="/css/dropdownMenuStyle.css" />
 	<!-- SweetAlert2 라이브러리 추가 (알림창 표시용) -->
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -16,19 +17,19 @@
 		// 추가 예약 정보 입력 모달 닫기
 		function closeInputModal() {
 			document.getElementById('inputModal').style.display = 'none';
-			
-			// 선택된 시간 초기화
-    const modalInfoElements = document.querySelectorAll('#inputModal .modal-content p');
-    modalInfoElements.forEach(element => {
-        if (element.textContent.includes('선택된 날짜')) {
-            element.remove();
-        }
-    });
 
-    // 폼 필드 초기화
-    document.getElementById("modalSubject").value = '';
-    document.getElementById("modalClassroom").value = '';
-        }
+			// 선택된 시간 초기화
+			const modalInfoElements = document.querySelectorAll('#inputModal .modal-content p');
+			modalInfoElements.forEach(element => {
+				if (element.textContent.includes('선택된 날짜')) {
+					element.remove();
+				}
+			});
+
+			// 폼 필드 초기화
+			document.getElementById("modalSubject").value = '';
+			document.getElementById("modalClassroom").value = '';
+		}
 
 		document.addEventListener("DOMContentLoaded", function () {
 			const cells = document.querySelectorAll(".clickable"); // 클릭 가능한 셀들
@@ -241,8 +242,8 @@
 							icon: 'success',
 							confirmButtonText: '확인',
 							customClass: {
-        confirmButton: 'custom-confirm-button'
-    }
+								confirmButton: 'custom-confirm-button'
+							}
 						}).then((result) => {
 							// 확인 버튼 클릭 시 페이지 새로고침
 							if (result.isConfirmed) {
@@ -336,8 +337,8 @@
 							icon: 'success',
 							confirmButtonText: '확인',
 							customClass: {
-        confirmButton: 'custom-confirm-button'
-    }
+								confirmButton: 'custom-confirm-button'
+							}
 						}).then((result) => {
 							// 확인 버튼 클릭 시 페이지 새로고침
 							if (result.isConfirmed) {
@@ -542,8 +543,8 @@
 					confirmButtonText: "네, 삭제합니다!",
 					cancelButtonText: "아니요, 취소합니다.",
 					customClass: {
-        confirmButton: 'custom-confirm-button'
-    }
+						confirmButton: 'custom-confirm-button'
+					}
 				}).then((result) => {
 					if (result.isConfirmed) {
 						// AJAX를 사용하여 삭제 요청 보내기
@@ -568,8 +569,8 @@
 									icon: 'success',
 									confirmButtonText: '확인',
 									customClass: {
-        								confirmButton: 'custom-confirm-button'  // 커스텀 클래스 추가
-    								}
+										confirmButton: 'custom-confirm-button'  // 커스텀 클래스 추가
+									}
 								}).then((result) => {
 									if (result.isConfirmed) {
 										window.location.reload(); // 페이지 새로고침
@@ -637,13 +638,16 @@
 							<td th:text="${hour}"></td>
 							<td th:each="day : ${days}" class="clickable" data-day="${day}" data-hour="${hour}">
 								<div th:each="timeTable, stat : ${userTimeTable}" th:if="${timeTable.day == day 
-                                            and timeTable.startHour le hour
-                                            and timeTable.endHour gt hour}"
-                                            th:classappend="'subject-' + ${stat.index % 10}" 
-                                            th:attr="data-subject=${timeTable.subject}, data-classroom=${timeTable.classroomName}, 
-                                            data-day=${timeTable.day}, data-hour=${hour}">
-									<span
-										th:text="${timeTable.subject + ' (' + timeTable.classroomName + ')'}"></span><br>
+					                         and timeTable.startHour le hour
+					                         and timeTable.endHour gt hour}" th:classappend="'subject-' + ${stat.index % 10}" th:attr="data-subject=${timeTable.subject}, 
+					                         data-classroom=${timeTable.classroomName}, 
+					                         data-day=${timeTable.day}, 
+					                         data-hour=${hour}">
+									<!-- 첫 시간에만 과목명과 강의실 표시 -->
+									<span th:if="${hour == timeTable.startHour}" class="subject-name"
+										th:text="${timeTable.subject}"></span>
+									<span th:if="${hour == timeTable.startHour}" class="classroom-name"
+										th:text="${timeTable.classroomName}"></span>
 								</div>
 								<div th:attr="data-hour=${hour}, data-day=${day}" style="display: none;"></div>
 							</td>
@@ -677,13 +681,6 @@
 				</label>
 			</div>
 		</div>
-		<!-- 관리자 액션 버튼 그룹 -->
-		<div th:if="${userPosition == 'admin' or userPosition == 'professor'}" class="admin-action-container">
-		    <a href="reserveList" class="admin-button">예약 목록</a>
-		    <a href="attendanceCheck" class="admin-button">출석 확인</a>
-		    <a href="banList" class="admin-button">좌석예약금지 확인</a>
-		</div>
-	</div>
 	</div>
 	<!-- 좌석 예약 폼 -->
 	<form id="reserve-seat-form" action="/classroomStatus" method="POST" style="display: none;">

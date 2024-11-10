@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'dart:io';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,8 +41,40 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final GlobalKey webViewKey = GlobalKey();
   InAppWebViewController? webViewController;
-  String url = 'http://192.168.45.134:8055/';
+  final String url = 'http://192.168.45.134:8055/';
   bool isLoading = true;
+  double _loadingOpacity = 1.0;
+
+  Widget _buildLoadingIndicator() {
+    return AnimatedOpacity(
+      opacity: _loadingOpacity,
+      duration: const Duration(milliseconds: 300),
+      child: Container(
+        width: double.infinity,
+        height: double.infinity,
+        color: Colors.white,
+        child: const Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SpinKitFadingCircle(
+                color: Colors.blue,
+                size: 50.0,
+              ),
+              SizedBox(height: 20),
+              Text(
+                '로딩중...',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.black54,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +87,6 @@ class _MyHomePageState extends State<MyHomePage> {
         if (webViewController != null) {
           if (await webViewController!.canGoBack()) {
             if (!isLoading) {
-              // 사이드바 닫기
               await webViewController!.evaluateJavascript(source: """
                 (function() {
                   const mobileSidebar = document.getElementById('menu-mobile-sidebar');
@@ -71,16 +103,13 @@ class _MyHomePageState extends State<MyHomePage> {
                     mobileToggle.style.transform = 'rotate(0deg)';
                   }
                   
-                  // localStorage에서 사이드바 상태 제거
                   localStorage.removeItem('openSidebar');
                 })();
               """);
 
-              // 잠시 대기 후 뒤로가기
               await Future.delayed(const Duration(milliseconds: 100));
               await webViewController!.goBack();
 
-              // 페이지 로드 후 사이드바 상태 다시 확인
               await Future.delayed(const Duration(milliseconds: 200));
               await webViewController!.evaluateJavascript(source: """
                 (function() {
@@ -95,21 +124,22 @@ class _MyHomePageState extends State<MyHomePage> {
                 })();
               """);
 
-              // 페이지 새로고침
               await Future.delayed(const Duration(milliseconds: 300));
               await webViewController!.reload();
             }
           } else {
-            Navigator.of(context).pop();
+            if (context.mounted) {
+              Navigator.of(context).pop();
+            }
           }
         }
       },
       child: Scaffold(
-        body: Padding(
-          padding: EdgeInsets.only(top: topPadding),
-          child: Stack(
-            children: [
-              InAppWebView(
+        body: Stack(
+          children: [
+            Padding(
+              padding: EdgeInsets.only(top: topPadding),
+              child: InAppWebView(
                 key: webViewKey,
                 initialUrlRequest: URLRequest(
                   url: WebUri(url),
@@ -120,20 +150,33 @@ class _MyHomePageState extends State<MyHomePage> {
                   allowsInlineMediaPlayback: true,
                   mixedContentMode: MixedContentMode.MIXED_CONTENT_ALWAYS_ALLOW,
                   useWideViewPort: false,
+                  supportZoom: true,
+                  builtInZoomControls: true,
+                  displayZoomControls: false,
+                  textZoom: 100,
+                  allowsLinkPreview: false,
+                  disableContextMenu: false,
+                  disableDefaultErrorPage: false,
+                  enableViewportScale: false,
+                  transparentBackground: true,
+                  disallowOverScroll: true,
                 ),
                 onWebViewCreated: (controller) {
                   webViewController = controller;
-                  debugPrint('WebView created');
+                  setState(() => isLoading = true);
                 },
                 onLoadStart: (controller, url) {
-                  setState(() => isLoading = true);
-                  debugPrint('Page load started: $url');
+                  setState(() {
+                    isLoading = true;
+                    _loadingOpacity = 1.0;
+                  });
                 },
                 onLoadStop: (controller, url) async {
-                  setState(() => isLoading = false);
-                  debugPrint('Page load finished: $url');
+                  setState(() {
+                    isLoading = false;
+                    _loadingOpacity = 0.0;
+                  });
 
-                  // 페이지 로드 완료 후 사이드바 상태 확인
                   await controller.evaluateJavascript(source: """
                     (function() {
                       const mobileSidebar = document.getElementById('menu-mobile-sidebar');
@@ -144,6 +187,76 @@ class _MyHomePageState extends State<MyHomePage> {
                       if (overlay && overlay.classList.contains('active')) {
                         overlay.classList.remove('active');
                       }
+
+                      function enhanceSchoolSearch() {
+                        const schoolInput = document.getElementById('schoolInput');
+                        const schoolList = document.getElementById('schoolList');
+                        
+                        if (!schoolInput || !schoolList) return;
+                        
+                        const schoolListContainer = document.createElement('div');
+                        schoolListContainer.id = 'schoolListContainer';
+                        schoolListContainer.style.cssText = `
+                          position: absolute;
+                          width: calc(100% - 2rem);
+                          max-height: 200px;
+                          overflow-y: auto;
+                          background: white;
+                          border: 1px solid #ccc;
+                          border-radius: 8px;
+                          margin-top: 63px; 
+                          top: 0; 
+                          left: 0; 
+                          display: none;
+                          z-index: 9999;
+                          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                        `;
+                        
+                        const schools = ['가톨릭대학교', '고려대학교', '동양미래대학교', '서울대학교', 
+                                      '성공회대학교', '연세대학교', '유한대학교', '중앙대학교'];
+                        
+                        schools.forEach(school => {
+                          const item = document.createElement('div');
+                          item.textContent = school;
+                          item.style.cssText = `
+                            padding: 12px;
+                            cursor: pointer;
+                            border-bottom: 1px solid #eee;
+                          `;
+                          
+                          item.addEventListener('click', () => {
+                            schoolInput.value = school;
+                            schoolListContainer.style.display = 'none';
+                          });
+                          
+                          schoolListContainer.appendChild(item);
+                        });
+                        
+                        schoolList.style.display = 'none';
+                        schoolInput.parentNode.appendChild(schoolListContainer);
+                        
+                        schoolInput.addEventListener('click', (e) => {
+                          e.preventDefault();
+                          schoolListContainer.style.display = 'block';
+                        });
+                        
+                        schoolInput.addEventListener('input', () => {
+                          const filter = schoolInput.value.toUpperCase();
+                          Array.from(schoolListContainer.children).forEach(item => {
+                            const text = item.textContent || item.innerText;
+                            item.style.display = text.toUpperCase().includes(filter) ? 'block' : 'none';
+                          });
+                          schoolListContainer.style.display = 'block';
+                        });
+                        
+                        document.addEventListener('click', (e) => {
+                          if (e.target !== schoolInput && e.target !== schoolListContainer) {
+                            schoolListContainer.style.display = 'none';
+                          }
+                        });
+                      }
+                      
+                      enhanceSchoolSearch();
                     })();
                   """);
                 },
@@ -153,23 +266,25 @@ class _MyHomePageState extends State<MyHomePage> {
                   }
                   setState(() => isLoading = false);
 
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('오류: ${error.description}'),
-                      duration: const Duration(seconds: 3),
-                    ),
-                  );
-                },
-                onConsoleMessage: (controller, consoleMessage) {
-                  debugPrint('Console: ${consoleMessage.message}');
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('오류: ${error.description}'),
+                        duration: const Duration(seconds: 3),
+                        action: SnackBarAction(
+                          label: '다시 시도',
+                          onPressed: () {
+                            webViewController?.reload();
+                          },
+                        ),
+                      ),
+                    );
+                  }
                 },
               ),
-              if (isLoading)
-                const Center(
-                  child: CircularProgressIndicator(),
-                ),
-            ],
-          ),
+            ),
+            if (isLoading) _buildLoadingIndicator(),
+          ],
         ),
       ),
     );

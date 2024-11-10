@@ -372,6 +372,16 @@ public class ClassroomDAO {
 
 		return count > 0; // 중복 예약이 있으면 true 반환, 없으면 false 반환
 	}
+	
+	public List<Integer> getAllReserveNum() {
+	    // Reservation과 BanSeat의 모든 번호를 가져오는 쿼리
+	    String sql = "SELECT reservNum as num FROM Reservation " +
+	                 "UNION " +
+	                 "SELECT banNum as num FROM BanSeat " +
+	                 "ORDER BY num";
+	                 
+	    return jdbcTemplate.queryForList(sql, Integer.class);
+	}
 
 	// 주어진 강의실 이름이 Classrooms 테이블에 존재하는지 확인하는 메서드
 	public boolean existByClassroomName(String classroomName) {
