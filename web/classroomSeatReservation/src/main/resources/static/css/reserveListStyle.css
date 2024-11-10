@@ -147,6 +147,7 @@
 @media (max-width: 48rem) {
     #listModal h1 {
         font-size: 1.5rem; /* 폰트 크기 조정 */
+        text-align: center; /* 중앙 정렬 */
     }
 
     #listModal h3 {
@@ -156,10 +157,12 @@
     .info-row {
         display: flex;
         justify-content: space-between;
-        align-items: flex-start; /* 아이콘과 텍스트의 상단을 맞추기 */
+        align-items: center;
         margin-bottom: 0.5rem; /* 아래 여백 */
         font-size: 0.85rem; /* 전체 내용의 폰트 크기 줄이기 */
         align-items: baseline; /* 라벨과 내용의 기준선을 맞추기 */
+        gap: 0.5rem; /* 요소 간 간격을 더 줄이기 */
+        margin-left: -4.5rem; /* 왼쪽 여백 제거 */
     }
 
     .info-row p {
@@ -179,7 +182,7 @@
     }
 
     .info-row i {
-        font-size: 0.5rem; /* 아이콘 크기 조정 */
+        font-size: 0.8rem; /* 아이콘 크기 조정 */
     }
 
     .listModal-content {
@@ -187,30 +190,45 @@
         width: 90% !important; /* 모바일에서 90% 너비를 강제 적용 */
         max-width: 25rem; /* 최대 너비 제한 */
         max-height: 80vh; /* 화면 높이에 맞게 제한 */
-        transform: translateY(2.63rem); /* 토글 버튼 위치 피하기 위해 아래로 이동 */
-        margin: 0 auto;
+
+        margin: 5rem auto; /* 상단에 여백 추가하여 토글 버튼과 겹치지 않도록 */
         box-sizing: border-box !important; /* 패딩과 너비를 포함하여 계산 */
         overflow-x: hidden !important; /* 수평 스크롤 방지 */
+        overflow-y: auto;
         font-size: 0.9rem; /* 모달 전체 폰트 크기 조정 */
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* 중앙 정렬 */
+
     }
 
     .close {
-        right: 0.63rem; /* 오른쪽 여백 */
-        top: 0.31rem; /* 위쪽 여백 */
-        font-size: 1.25rem; /* 닫기 버튼 크기 조정 */
+        position: absolute;
+    right: 1rem; /* 오른쪽 여백 */
+    top: 0; /* 위쪽 여백 */
+    font-size: 2.5rem; /* 글자 크기 */
+    font-weight: bold;
     }
 
     .reservation-form {
         font-size: 0.9rem; /* 폰트 크기 조정 */
+         width: 100%; /* 너비 100%로 설정하여 중앙으로 정렬 */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-sizing: border-box; /* 내부 패딩 포함하여 너비 계산 */
+        padding-left: 0; /* 왼쪽 패딩 제거 */
+        margin-left: 0rem; /* 왼쪽 여백 제거 */
     }
 
     .cancel-btn, .add-reservation-btn {
-        font-size: 0.5rem; /* 버튼 폰트 크기 조정 */
+        font-size: 1rem; /* 버튼 폰트 크기 조정 */
         padding: 0.25rem 0.63rem; /* 버튼 패딩 조정 */
+        margin-left: 1rem; /* 왼쪽 여백 제거 */
     }
 
     .empty, .error, .success {
-        font-size: 0.5rem; /* 메시지 폰트 크기 조정 */
+        font-size: 1rem; /* 메시지 폰트 크기 조정 */
     }
 
     .swal2-custom-width {
@@ -225,18 +243,25 @@
 
     /* SweetAlert2 본문 폰트 크기 조정 */
     .swal2-html-custom {
-        font-size: 0.38rem; /* 본문 폰트 크기 조정 */
+        font-size: 0.8rem; /* 본문 폰트 크기 조정 */
     }
 
     /* SweetAlert2 확인 버튼 크기 조정 */
     .swal2-confirm-btn-custom {
-        font-size: 0.53rem; /* 버튼 폰트 크기 조정 */
+        font-size: 1rem; /* 버튼 폰트 크기 조정 */
         padding: 0.25rem 0.5rem; /* 버튼 패딩 조정 */
+
     }
 
     /* SweetAlert2 취소 버튼 크기 조정 */
     .swal2-cancel-btn-custom {
-        font-size: 0.53rem; /* 버튼 폰트 크기 조정 */
+        font-size: 1rem; /* 버튼 폰트 크기 조정 */
         padding: 0.25rem 0.5rem; /* 버튼 패딩 조정 */
     }
+    
+    table {
+    position: relative;
+    margin-top: 15rem;
+    margin-left: 1.5rem;
+}
 }
