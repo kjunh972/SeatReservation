@@ -271,7 +271,10 @@
 						title: '선택 오류',
 						text: '수정할 시간표를 선택하세요.',
 						icon: 'warning',
-						confirmButtonText: '확인'
+						confirmButtonText: '확인',
+						customClass: {
+        					confirmButton: 'custom-confirm-button'
+    					}
 					});
 					return;
 				}
@@ -500,7 +503,10 @@
 						const modalInfo = document.createElement('p');
 						modalInfo.textContent = `선택된 날짜: ${day}, 시간: ${selectHours.join(', ')}시`;
 						const modalContent = modal.querySelector('.modal-content');
-						modalContent.insertBefore(modalInfo, modalContent.firstChild);
+						const titleElement = modalContent.querySelector('h2');
+
+						// h2 다음에 바로 modalInfo가 오도록 설정
+						titleElement.insertAdjacentElement('afterend', modalInfo);
 
 						// 모달의 강의실 선택 필드 설정 (이미 선택된 강의실이 있다면)
 						if (classroomName) {
@@ -528,7 +534,10 @@
 						title: '선택 오류',
 						text: '삭제할 시간표를 선택하세요.',
 						icon: 'warning',
-						confirmButtonText: '확인'
+						confirmButtonText: '확인',
+						customClass: {
+        					confirmButton: 'custom-confirm-button'
+    					}
 					});
 					return;
 				}
@@ -543,7 +552,8 @@
 					confirmButtonText: "네, 삭제합니다!",
 					cancelButtonText: "아니요, 취소합니다.",
 					customClass: {
-						confirmButton: 'custom-confirm-button'
+						confirmButton: 'custom-confirm-button',
+						title: 'swal2-custom-title'
 					}
 				}).then((result) => {
 					if (result.isConfirmed) {
