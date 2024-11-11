@@ -1,8 +1,10 @@
+// lib/main.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'dart:io';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'javascript/webview_scripts.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,6 +26,7 @@ class MyApp extends StatelessWidget {
       title: '강의실 예약 시스템',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
+        scaffoldBackgroundColor: Colors.white,
         useMaterial3: true,
       ),
       home: const MyHomePage(),
@@ -38,12 +41,69 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   final GlobalKey webViewKey = GlobalKey();
   InAppWebViewController? webViewController;
-  final String url = 'http://192.168.45.134:8055/';
+  final String url = 'http://10.107.0.37:8055/';
   bool isLoading = true;
   double _loadingOpacity = 1.0;
+
+  final InAppWebViewSettings _webViewSettings = InAppWebViewSettings(
+    javaScriptEnabled: true,
+    mediaPlaybackRequiresUserGesture: false,
+    allowsInlineMediaPlayback: true,
+    mixedContentMode: MixedContentMode.MIXED_CONTENT_ALWAYS_ALLOW,
+    useWideViewPort: true,
+    loadWithOverviewMode: true,
+    useShouldOverrideUrlLoading: true,
+    useOnLoadResource: true,
+    useShouldInterceptAjaxRequest: true,
+    useShouldInterceptFetchRequest: true,
+    cacheEnabled: false,
+    clearCache: true,
+    hardwareAcceleration: true,
+    supportZoom: false,
+    builtInZoomControls: false,
+    displayZoomControls: false,
+    initialScale: 1,
+    minimumFontSize: 8,
+    verticalScrollBarEnabled: false,
+    horizontalScrollBarEnabled: false,
+    overScrollMode: OverScrollMode.NEVER,
+    disableContextMenu: true,
+    disableDefaultErrorPage: true,
+    transparentBackground: true,
+    applicationNameForUserAgent: 'MyApp/2.0',
+    incognito: true,
+    preferredContentMode: UserPreferredContentMode.MOBILE,
+    allowFileAccessFromFileURLs: false,
+    allowUniversalAccessFromFileURLs: false,
+  );
+
+  final Map<String, String> _headers = {
+    'Cache-Control': 'no-cache, no-store, must-revalidate',
+    'Pragma': 'no-cache',
+    'Expires': '0',
+  };
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      webViewController?.reload();
+    }
+  }
 
   Widget _buildLoadingIndicator() {
     return AnimatedOpacity(
@@ -74,6 +134,12 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
     );
+  }
+
+  Future<void> _handleBackNavigation() async {
+    if (!isLoading) {
+      await webViewController?.goBack();
+    }
   }
 
   @override
@@ -138,29 +204,16 @@ class _MyHomePageState extends State<MyHomePage> {
         body: Stack(
           children: [
             Padding(
-              padding: EdgeInsets.only(top: topPadding),
+              padding: EdgeInsets.only(
+                top: MediaQuery.of(context).padding.top,
+              ),
               child: InAppWebView(
                 key: webViewKey,
                 initialUrlRequest: URLRequest(
                   url: WebUri(url),
+                  headers: _headers,
                 ),
-                initialSettings: InAppWebViewSettings(
-                  javaScriptEnabled: true,
-                  mediaPlaybackRequiresUserGesture: false,
-                  allowsInlineMediaPlayback: true,
-                  mixedContentMode: MixedContentMode.MIXED_CONTENT_ALWAYS_ALLOW,
-                  useWideViewPort: false,
-                  supportZoom: true,
-                  builtInZoomControls: true,
-                  displayZoomControls: false,
-                  textZoom: 100,
-                  allowsLinkPreview: false,
-                  disableContextMenu: false,
-                  disableDefaultErrorPage: false,
-                  enableViewportScale: false,
-                  transparentBackground: true,
-                  disallowOverScroll: true,
-                ),
+                initialSettings: _webViewSettings,
                 onWebViewCreated: (controller) {
                   webViewController = controller;
                   setState(() => isLoading = true);
@@ -177,104 +230,47 @@ class _MyHomePageState extends State<MyHomePage> {
                     _loadingOpacity = 0.0;
                   });
 
-                  await controller.evaluateJavascript(source: """
-                    (function() {
-                      const mobileSidebar = document.getElementById('menu-mobile-sidebar');
-                      const overlay = document.getElementById('menu-overlay');
-                      if (mobileSidebar && mobileSidebar.classList.contains('active')) {
-                        mobileSidebar.classList.remove('active');
-                      }
-                      if (overlay && overlay.classList.contains('active')) {
-                        overlay.classList.remove('active');
-                      }
-
-                      function enhanceSchoolSearch() {
-                        const schoolInput = document.getElementById('schoolInput');
-                        const schoolList = document.getElementById('schoolList');
-                        
-                        if (!schoolInput || !schoolList) return;
-                        
-                        const schoolListContainer = document.createElement('div');
-                        schoolListContainer.id = 'schoolListContainer';
-                        schoolListContainer.style.cssText = `
-                          position: absolute;
-                          width: calc(100% - 2rem);
-                          max-height: 200px;
-                          overflow-y: auto;
-                          background: white;
-                          border: 1px solid #ccc;
-                          border-radius: 8px;
-                          margin-top: 63px; 
-                          top: 0; 
-                          left: 0; 
-                          display: none;
-                          z-index: 9999;
-                          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-                        `;
-                        
-                        const schools = ['가톨릭대학교', '고려대학교', '동양미래대학교', '서울대학교', 
-                                      '성공회대학교', '연세대학교', '유한대학교', '중앙대학교'];
-                        
-                        schools.forEach(school => {
-                          const item = document.createElement('div');
-                          item.textContent = school;
-                          item.style.cssText = `
-                            padding: 12px;
-                            cursor: pointer;
-                            border-bottom: 1px solid #eee;
-                          `;
-                          
-                          item.addEventListener('click', () => {
-                            schoolInput.value = school;
-                            schoolListContainer.style.display = 'none';
-                          });
-                          
-                          schoolListContainer.appendChild(item);
-                        });
-                        
-                        schoolList.style.display = 'none';
-                        schoolInput.parentNode.appendChild(schoolListContainer);
-                        
-                        schoolInput.addEventListener('click', (e) => {
-                          e.preventDefault();
-                          schoolListContainer.style.display = 'block';
-                        });
-                        
-                        schoolInput.addEventListener('input', () => {
-                          const filter = schoolInput.value.toUpperCase();
-                          Array.from(schoolListContainer.children).forEach(item => {
-                            const text = item.textContent || item.innerText;
-                            item.style.display = text.toUpperCase().includes(filter) ? 'block' : 'none';
-                          });
-                          schoolListContainer.style.display = 'block';
-                        });
-                        
-                        document.addEventListener('click', (e) => {
-                          if (e.target !== schoolInput && e.target !== schoolListContainer) {
-                            schoolListContainer.style.display = 'none';
-                          }
-                        });
-                      }
-                      
-                      enhanceSchoolSearch();
-                    })();
-                  """);
+                  await controller.evaluateJavascript(
+                    source: WebViewScripts.sessionCheckScript,
+                  );
+                  await controller.evaluateJavascript(
+                    source: WebViewScripts.schoolSearchScript,
+                  );
+                  await controller.evaluateJavascript(
+                    source: WebViewScripts.navigationScript,
+                  );
                 },
-                onReceivedError: (controller, request, error) {
-                  if (error.type == WebResourceErrorType.CANCELLED) {
-                    return;
+                onProgressChanged: (controller, progress) {
+                  if (progress == 100) {
+                    setState(() {
+                      isLoading = false;
+                      _loadingOpacity = 0.0;
+                    });
                   }
+                },
+                shouldOverrideUrlLoading: (controller, navigationAction) async {
+                  return NavigationActionPolicy.ALLOW;
+                },
+                onReceivedError: (controller, request, error) async {
+                  if (error.type == WebResourceErrorType.CANCELLED) return;
+
                   setState(() => isLoading = false);
 
-                  if (context.mounted) {
+                  if (!context.mounted) return;
+
+                  if (error.type == WebResourceErrorType.TIMEOUT ||
+                      error.type == WebResourceErrorType.HOST_LOOKUP) {
+                    await Future.delayed(const Duration(seconds: 2));
+                    await webViewController?.reload();
+                  } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text('오류: ${error.description}'),
+                        content: const Text('연결 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'),
                         duration: const Duration(seconds: 3),
                         action: SnackBarAction(
                           label: '다시 시도',
-                          onPressed: () {
-                            webViewController?.reload();
+                          onPressed: () async {
+                            await webViewController?.reload();
                           },
                         ),
                       ),
