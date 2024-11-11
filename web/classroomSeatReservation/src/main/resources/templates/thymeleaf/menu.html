@@ -16,169 +16,193 @@
 </head>
 
 <body>
-    <!-- 데스크탑용 상단 네비게이션 바 -->
-    <nav class="menu-desktop-nav">
-        <div class="menu-nav-content">
-            <!-- 로고 영역 -->
-            <div class="menu-nav-logo">
-                <a href="index.html">
-                    <i class="fas fa-graduation-cap"></i>
-                    <span>Home</span>
-                </a>
-            </div>
-            <!-- 네비게이션 링크 -->
-            <div class="menu-nav-links">
-                <!-- 로그인된 사용자에게만 보이는 메뉴 -->
-                <th:block th:if="${session.loggedInUser != null}">
-                    <a href="timetable"><i class="fas fa-calendar-check"></i> 시간표</a>
-                    <a href="classroomLike"><i class="fas fa-chalkboard-teacher"></i> 강의실</a>
-                    <a href="reserveList"><i class="fas fa-bell"></i> 예약확인</a>
-                    <a href="myPage"><i class="fas fa-user-cog"></i> 마이페이지</a>
-                </th:block>
-            </div>
-        </div>
-    </nav>
+	<!-- 데스크탑용 상단 네비게이션 바 -->
+	<nav class="menu-desktop-nav">
+		<div class="menu-nav-content">
+			<!-- 로고 영역 -->
+			<div class="menu-nav-logo">
+				<a href="index.html">
+					<i class="fas fa-graduation-cap"></i>
+					<span>Home</span>
+				</a>
+			</div>
+			<!-- 네비게이션 링크 -->
+			<div class="menu-nav-links">
+				<!-- 로그인된 사용자에게만 보이는 메뉴 -->
+				<th:block th:if="${session.loggedInUser != null}">
+					<a href="timetable"><i class="fas fa-calendar-check"></i> 시간표</a>
+					<a href="classroomLike"><i class="fas fa-chalkboard-teacher"></i> 강의실</a>
+					<a href="reserveList"><i class="fas fa-bell"></i> 예약확인</a>
+					<a href="myPage"><i class="fas fa-user-cog"></i> 마이페이지</a>
+				</th:block>
+			</div>
+		</div>
+	</nav>
 
-    <!-- 모바일용 메뉴 토글 버튼 -->
-    <button class="menu-mobile-toggle" id="menu-mobile-toggle">
-        <i class="fas fa-bars"></i>
-    </button>
+	<!-- 모바일용 메뉴 토글 버튼 -->
+	<button class="menu-mobile-toggle" id="menu-mobile-toggle">
+		<i class="fas fa-bars"></i>
+	</button>
 
-    <!-- 모바일용 사이드바 -->
-    <div class="menu-mobile-sidebar" id="menu-mobile-sidebar">
-        <div class="menu-sidebar-header">
-            <!-- 로그인된 사용자 프로필 표시 -->
-            <th:block th:if="${session.loggedInUser != null}">
-                <div class="menu-user-profile" onclick="location.href='login'" style="cursor: pointer;">
-                    <div class="menu-profile-avatar">
-                        <span th:text="${#strings.substring(session.loggedInUser.name, 0, 1)}"></span>
-                    </div>
-                    <div class="menu-profile-info">
-                        <h3 th:text="${session.loggedInUser.name}"></h3>
-                        <p th:text="${session.loggedInUser.id}"></p>
-                    </div>
-                </div>
-            </th:block>
+	<!-- 모바일용 사이드바 -->
+	<div class="menu-mobile-sidebar" id="menu-mobile-sidebar">
+		<div class="menu-sidebar-header">
+			<!-- 로그인된 사용자 프로필 표시 -->
+			<th:block th:if="${session.loggedInUser != null}">
+				<div class="menu-user-profile" onclick="location.href='login'" style="cursor: pointer;">
+					<div class="menu-profile-avatar">
+						<span th:text="${#strings.substring(session.loggedInUser.name, 0, 1)}"></span>
+					</div>
+					<div class="menu-profile-info">
+						<h3 th:text="${session.loggedInUser.name}"></h3>
+						<p th:text="${session.loggedInUser.id}"></p>
+					</div>
+				</div>
+			</th:block>
 
-            <!-- 비로그인 상태일 때 로그인 폼 표시 -->
-            <th:block th:if="${session.loggedInUser == null}">
-                <div class="menu-login-section">
-                    <h2>로그인</h2>
-                    <form action="/login" method="post" class="menu-login-form">
-                        <div class="menu-input-group">
-                            <i class="far fa-user"></i>
-                            <input type="text" name="id" placeholder="아이디" required>
-                        </div>
-                        <div class="menu-input-group">
-                            <i class="fas fa-lock"></i>
-                            <input type="password" name="password" placeholder="비밀번호" required>
-                        </div>
-                        <button type="submit">로그인</button>
-                        <a href="selectPosition" class="menu-register-link">
-                            <i class="fas fa-user-plus"></i> 회원가입
-                        </a>
-                    </form>
-                </div>
-            </th:block>
-        </div>
+			<!-- 비로그인 상태일 때 로그인 폼 표시 -->
+			<th:block th:if="${session.loggedInUser == null}">
+				<div class="menu-login-section">
+					<h2>로그인</h2>
+					<form action="/login" method="post" class="menu-login-form">
+						<div class="menu-input-group">
+							<i class="far fa-user"></i>
+							<input type="text" name="id" placeholder="아이디" required>
+						</div>
+						<div class="menu-input-group">
+							<div class="input-container">
+								<i class="fas fa-lock"></i>
+								<input type="password" name="password" placeholder="비밀번호" required>
+							</div>
+							<div class="password-icon-container">
+								<i class="far fa-eye-slash toggle-password"></i>
+							</div>
+						</div>
+						<button type="submit">로그인</button>
+						<a href="selectPosition" class="menu-register-link">
+							<i class="fas fa-user-plus"></i> 회원가입
+						</a>
+					</form>
+				</div>
+			</th:block>
+		</div>
 
-        <!-- 사이드바 메뉴 영역 -->
-        <div class="menu-sidebar-menu">
-            <!-- 로그인된 사용자용 메뉴 -->
-            <th:block th:if="${session.loggedInUser != null}">
-                <a href="timetable"><i class="fas fa-calendar-check"></i> 시간표</a>
-                <a href="classroomLike"><i class="fas fa-chalkboard-teacher"></i> 강의실</a>
-                <a href="reserveList"><i class="fas fa-bell"></i> 예약확인</a>
-                <a href="myPage"><i class="fas fa-user-cog"></i> 마이페이지</a>
-                <a href="/logout" class="menu-logout-btn">
-                    <i class="fas fa-sign-out-alt"></i> 로그아웃
-                </a>
-            </th:block>
-            <!-- 비로그인 사용자용 메뉴 -->
-            <th:block th:if="${session.loggedInUser == null}">
-                <a href="index.html"><i class="fas fa-home"></i> 홈</a>
-                <a href="selectPosition"><i class="fas fa-user-plus"></i> 회원가입</a>
-            </th:block>
-        </div>
-    </div>
+		<!-- 사이드바 메뉴 영역 -->
+		<div class="menu-sidebar-menu">
+			<!-- 로그인된 사용자용 메뉴 -->
+			<th:block th:if="${session.loggedInUser != null}">
+				<a href="timetable"><i class="fas fa-calendar-check"></i> 시간표</a>
+				<a href="classroomLike"><i class="fas fa-chalkboard-teacher"></i> 강의실</a>
+				<a href="reserveList"><i class="fas fa-bell"></i> 예약확인</a>
+				<a href="myPage"><i class="fas fa-user-cog"></i> 마이페이지</a>
+				<a href="/logout" class="menu-logout-btn">
+					<i class="fas fa-sign-out-alt"></i> 로그아웃
+				</a>
+			</th:block>
+			<!-- 비로그인 사용자용 메뉴 -->
+			<th:block th:if="${session.loggedInUser == null}">
+				<a href="index.html"><i class="fas fa-home"></i> 홈</a>
+				<a href="selectPosition"><i class="fas fa-user-plus"></i> 회원가입</a>
+			</th:block>
+		</div>
+	</div>
 
-    <!-- 사이드바 활성화시 배경 오버레이 -->
-    <div class="menu-overlay" id="menu-overlay"></div>
+	<!-- 사이드바 활성화시 배경 오버레이 -->
+	<div class="menu-overlay" id="menu-overlay"></div>
 
-    <!-- 메인 콘텐츠 영역 -->
-    <main class="menu-main-content">
-        <!-- 페이지별 콘텐츠가 들어갈 영역 -->
-    </main>
+	<!-- 메인 콘텐츠 영역 -->
+	<main class="menu-main-content">
+		<!-- 페이지별 콘텐츠가 들어갈 영역 -->
+	</main>
 
-    <!-- JavaScript 코드 -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const mobileToggle = document.getElementById('menu-mobile-toggle');
-            const mobileSidebar = document.getElementById('menu-mobile-sidebar');
-            const overlay = document.getElementById('menu-overlay');
-            const logoutBtn = document.querySelector('.menu-logout-btn');
+	<!-- JavaScript 코드 -->
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			const mobileToggle = document.getElementById('menu-mobile-toggle');
+			const mobileSidebar = document.getElementById('menu-mobile-sidebar');
+			const overlay = document.getElementById('menu-overlay');
+			const logoutBtn = document.querySelector('.menu-logout-btn');
 
-            const shouldOpenSidebar = localStorage.getItem('openSidebar');
-            if (shouldOpenSidebar === 'true' && window.innerWidth <= 768) {
-                mobileSidebar.classList.add('active');
-                overlay.classList.add('active');
-                mobileToggle.style.transform = 'rotate(90deg)';
-                localStorage.removeItem('openSidebar');
-            }
+			// 비밀번호 보이기 토글 관련
+			const togglePassword = document.querySelector('.toggle-password');
+			const passwordInput = document.querySelector('input[type="password"]');
 
-            function toggleSidebar() {
-                mobileSidebar.classList.toggle('active');
-                overlay.classList.toggle('active');
-                mobileToggle.style.transform = mobileSidebar.classList.contains('active') ? 
-                    'rotate(90deg)' : 'rotate(0deg)';
-            }
+			// null 체크 추가
+			if (togglePassword && passwordInput) {
+				togglePassword.addEventListener('click', function () {
+					// 비밀번호 보이기 필드 타입 토글
+					const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+					passwordInput.setAttribute('type', type);
 
-            mobileToggle.addEventListener('click', toggleSidebar);
+					// 아이콘 변경
+					this.classList.toggle('fa-eye');
+					this.classList.toggle('fa-eye-slash');
+				});
+			}
 
-            overlay.addEventListener('click', function () {
-                mobileSidebar.classList.remove('active');
-                overlay.classList.remove('active');
-                mobileToggle.style.transform = 'rotate(0deg)';
-            });
 
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    mobileSidebar.classList.remove('active');
-                    overlay.classList.remove('active');
-                    mobileToggle.style.transform = 'rotate(0deg)';
+			const shouldOpenSidebar = localStorage.getItem('openSidebar');
+			if (shouldOpenSidebar === 'true' && window.innerWidth <= 768) {
+				mobileSidebar.classList.add('active');
+				overlay.classList.add('active');
+				mobileToggle.style.transform = 'rotate(90deg)';
+				localStorage.removeItem('openSidebar');
+			}
 
-                    Swal.fire({
-                        title: '로그아웃',
-                        text: '정말 로그아웃 하시겠습니까?',
-                        icon: 'question',
-                        showCancelButton: true,
-                        confirmButtonColor: '#778da9',
-                        cancelButtonColor: '#888',
-                        confirmButtonText: '로그아웃',
-                        cancelButtonText: '취소',
-                        reverseButtons: false,
-                        customClass: {
-                            popup: 'menu-logout-popup',
-                            confirmButton: 'menu-logout-confirm',
-                            cancelButton: 'menu-logout-cancel'
-                        }
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.location.href = '/logout';
-                        }
-                    });
-                });
-            }
+			function toggleSidebar() {
+				mobileSidebar.classList.toggle('active');
+				overlay.classList.toggle('active');
+				mobileToggle.style.transform = mobileSidebar.classList.contains('active') ?
+					'rotate(90deg)' : 'rotate(0deg)';
+			}
 
-            window.addEventListener('resize', function () {
-                if (window.innerWidth > 768) {
-                    mobileSidebar.classList.remove('active');
-                    overlay.classList.remove('active');
-                    mobileToggle.style.transform = 'rotate(0deg)';
-                }
-            });
-        });
-    </script>
+			mobileToggle.addEventListener('click', toggleSidebar);
+
+			overlay.addEventListener('click', function () {
+				mobileSidebar.classList.remove('active');
+				overlay.classList.remove('active');
+				mobileToggle.style.transform = 'rotate(0deg)';
+			});
+
+			if (logoutBtn) {
+				logoutBtn.addEventListener('click', function (e) {
+					e.preventDefault();
+					mobileSidebar.classList.remove('active');
+					overlay.classList.remove('active');
+					mobileToggle.style.transform = 'rotate(0deg)';
+
+					Swal.fire({
+						title: '로그아웃',
+						text: '정말 로그아웃 하시겠습니까?',
+						icon: 'question',
+						showCancelButton: true,
+						confirmButtonColor: '#778da9',
+						cancelButtonColor: '#888',
+						confirmButtonText: '로그아웃',
+						cancelButtonText: '취소',
+						reverseButtons: false,
+						customClass: {
+							popup: 'menu-logout-popup',
+							confirmButton: 'menu-logout-confirm',
+							cancelButton: 'menu-logout-cancel'
+						}
+					}).then((result) => {
+						if (result.isConfirmed) {
+							window.location.href = '/logout';
+						}
+					});
+				});
+			}
+
+			window.addEventListener('resize', function () {
+				if (window.innerWidth > 768) {
+					mobileSidebar.classList.remove('active');
+					overlay.classList.remove('active');
+					mobileToggle.style.transform = 'rotate(0deg)';
+				}
+			});
+		});
+	</script>
 </body>
+
 </html>
