@@ -22,13 +22,11 @@
     <span>
         <!-- 강의실 정보 제출 폼 -->
         <form th:action="@{/classroomInfo}" method="post">
-            <!-- 강의실 버튼 목록을 동적으로 생성 -->
-            <div th:each="classroom : ${classroomButtons}">
-                <!-- 각 강의실별 버튼 생성 -->
-                <!-- 클릭 시 해당 강의실의 상세 정보 페이지로 이동 -->
-                <button type="submit" name="classroomName" th:value="${classroom}" 
-                th:text="${classroom} + '호'" class="classroom-button"></button>
-            </div>
+			<!-- 강의실 버튼 목록 -->
+			<div th:each="classroom : ${classroomButtons}">
+			    <button type="submit" name="classroomName" th:value="${classroom}" 
+			        th:text="|${classroom}호|" class="classroom-button"></button>
+			</div>
         </form>
     </span>
 </body>

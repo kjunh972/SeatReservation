@@ -46,6 +46,7 @@ form {
     position: relative;
     overflow: hidden;
     margin: 10px;
+	white-space: nowrap; /* 텍스트 줄바꿈 방지 */
 }
 
 /* 버튼 호버 효과 */

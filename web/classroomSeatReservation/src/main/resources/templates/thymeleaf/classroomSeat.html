@@ -66,12 +66,18 @@
 						<tr th:each="hour : ${hours}">
 							<td th:text="${hour}"></td>
 							<td th:each="day : ${days}" class="clickable" data-day="${day}" data-hour="${hour}">
-								<div th:each="timeTable : ${userTimeTable}" th:if="${timeTable.day == day 
-	                                            and timeTable.startHour le hour
-	                                            and timeTable.endHour gt hour}" th:attr="data-subject=${timeTable.subject}, data-classroom=${timeTable.classroomName}, 
-	                                            data-day=${timeTable.day}, data-hour=${hour}">
-									<span
-										th:text="${timeTable.subject + ' (' + timeTable.classroomName + ')'}"></span><br>
+								<div th:each="timeTable, stat : ${userTimeTable}" th:if="${timeTable.day == day 
+						                         and timeTable.startHour le hour
+						                         and timeTable.endHour gt hour}" th:classappend="'subject-' + ${stat.index % 10}"
+									th:attr="data-subject=${timeTable.subject}, 
+						                         data-classroom=${timeTable.classroomName}, 
+						                         data-day=${timeTable.day}, 
+						                         data-hour=${hour}">
+									<!-- 첫 시간에만 과목명과 강의실 표시 -->
+									<span th:if="${hour == timeTable.startHour}" class="subject-name"
+										th:text="${timeTable.subject}"></span>
+									<span th:if="${hour == timeTable.startHour}" class="classroom-name"
+										th:text="${timeTable.classroomName}"></span>
 								</div>
 								<div th:attr="data-hour=${hour}, data-day=${day}" style="display: none;"></div>
 							</td>
@@ -104,12 +110,6 @@
 					<span class="button-label">시간표 삭제</span>
 				</label>
 			</div>
-		</div>
-		<!-- 관리자 액션 버튼 그룹 -->
-		<div th:if="${userPosition == 'admin' or userPosition == 'professor'}" class="admin-action-container">
-			<a href="reserveList" class="admin-button">예약 목록</a>
-			<a href="attendanceCheck" class="admin-button">출석 확인</a>
-			<a href="banList" class="admin-button">예약금지좌석 확인</a>
 		</div>
 	</div>
 
@@ -392,8 +392,9 @@
 			function closeSeatModal() {
 				document.getElementById('seatModal').style.display = 'none';
 				updateSeatModalTitle();
-				if (classrooNull == 1 && changeSeatOn == 0) { // 강의실이 null이고 좌석 변경이 꺼져있는 경우
-					window.location.href = "/timetable"; // 시간표 페이지로 이동
+				// 자리 이동 모드이거나 강의실이 null일 때 시간표 페이지로 이동
+				if (changeSeatOn === 1 || classrooNull === 1) {
+					window.location.href = "/timetable";
 				}
 				if (changeSeatOn == 1) {
 					changeSeatOn = 0; // changeSeatOn가 1이면 changeSeatOn을 초기화
@@ -481,7 +482,7 @@
 				});
 			});
 
-			// 자리 이동 함수
+			// 자리 이동 함수 수정
 			function moveSeat(reservNum, newSeat) {
 				fetch('/moveSeat', {
 					method: 'POST',
@@ -501,6 +502,22 @@
 					})
 					.then(data => {
 						if (data.success) {
+							// 이전 좌석의 상태 업데이트
+							const oldSeatButton = document.querySelector(`button[data-seat="${data.oldSeat}"]`);
+							if (oldSeatButton) {
+								oldSeatButton.classList.remove('reserved');
+								oldSeatButton.classList.add('empty');
+								delete oldSeatButton.dataset.reservNum;
+							}
+
+							// 새로운 좌석의 상태 업데이트
+							const newSeatButton = document.querySelector(`button[data-seat="${data.newSeat}"]`);
+							if (newSeatButton) {
+								newSeatButton.classList.remove('empty');
+								newSeatButton.classList.add('reserved');
+								newSeatButton.dataset.reservNum = reservNum;
+							}
+
 							Swal.fire({
 								title: '이동 완료',
 								text: `${data.classroomName}호 ${data.oldSeat}번 좌석에서 ${data.newSeat}번 좌석으로 이동하였습니다.`,
@@ -508,7 +525,7 @@
 								confirmButtonText: '확인'
 							}).then((result) => {
 								if (result.isConfirmed) {
-									window.location.href = '/timetable';
+									window.location.reload(); // 페이지 새로고침
 								}
 							});
 						} else {

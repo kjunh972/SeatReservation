@@ -156,7 +156,10 @@
 							title: '강의 추가 불가',
 							text: '이미 강의가 존재하는 시간대입니다.',
 							icon: 'warning',
-							confirmButtonText: '확인'
+							confirmButtonText: '확인',
+							customClass: {
+								confirmButton: 'custom-confirm-button'
+							}
 						});
 						return; // 함수 실행 중단
 					}
@@ -214,7 +217,10 @@
 						title: '추가 실패',
 						text: '이미 존재하는 강의입니다.',
 						icon: 'error',
-						confirmButtonText: '확인'
+						confirmButtonText: '확인',
+						customClass: {
+							confirmButton: 'custom-confirm-button'
+						}
 					});
 					return;
 				}
@@ -273,8 +279,8 @@
 						icon: 'warning',
 						confirmButtonText: '확인',
 						customClass: {
-        					confirmButton: 'custom-confirm-button'
-    					}
+							confirmButton: 'custom-confirm-button'
+						}
 					});
 					return;
 				}
@@ -289,7 +295,10 @@
 						title: '수정 불가',
 						text: '시간표를 먼저 추가하세요.',
 						icon: 'warning',
-						confirmButtonText: '확인'
+						confirmButtonText: '확인',
+						customClass: {
+							confirmButton: 'custom-confirm-button'
+						}
 					});
 					return;
 				}
@@ -432,11 +441,19 @@
 
 			// 예약 버튼 클릭 시 
 			if (reserveButton) { // 좌석 예약 버튼이 있을 때 
-				reserveButton.addEventListener("click", function () {
-					if (selectedCells.length === 0) {
-						alert("예약할 과목을 선택하세요."); // 선택된 셀이 없을 경우 경고
-						return;
-					}
+			    reserveButton.addEventListener("click", function () {
+			        if (selectedCells.length === 0) { // 강의가 선택이 안되어있을 
+			            Swal.fire({
+			                title: '선택 오류',
+			                text: '예약할 과목을 선택하세요.',
+			                icon: 'warning',
+			                confirmButtonText: '확인',
+			                customClass: {
+			                    confirmButton: 'custom-confirm-button'
+			                }
+			            });
+			            return;
+			        }
 
 					// 첫 번째 선택된 셀의 정보를 가져오기
 					const firstCell = selectedCells[0]; // 첫 번째 셀 선택
@@ -536,8 +553,25 @@
 						icon: 'warning',
 						confirmButtonText: '확인',
 						customClass: {
-        					confirmButton: 'custom-confirm-button'
-    					}
+							confirmButton: 'custom-confirm-button'
+						}
+					});
+					return;
+				}
+
+				// 선택된 셀에 강의가 있는지 확인
+				const firstCell = selectedCells[0];
+				const subjectDiv = firstCell.querySelector('div[data-subject]');
+
+				if (!subjectDiv || !subjectDiv.getAttribute('data-subject')) {
+					Swal.fire({
+						title: '선택 오류',
+						text: '선택하신 시간표에는 강의가 없습니다.',
+						icon: 'warning',
+						confirmButtonText: '확인',
+						customClass: {
+							confirmButton: 'custom-confirm-button'
+						}
 					});
 					return;
 				}

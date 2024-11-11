@@ -371,6 +371,8 @@ td div[data-subject]:not(:first-of-type) {
 	max-width: 700px;
 	/* 최대 너비 */
 	max-height: 80vh;
+	/* 화면 중앙 */
+	top: 10%; 
 	/* 최대 높이 */
 	overflow-y: auto;
 	/* 세로 스크롤 */
@@ -486,7 +488,21 @@ td div[data-subject]:not(:first-of-type) {
     font-weight: bold;
 }
 
+.custom-confirm-button {
+	background-color: #778da9 !important;
+	color: white !important;
+	outline: none !important; /* 외곽선 제거 */
+	box-shadow: none !important; /* 그림자 제거 */   
+	border-style: hidden !important; /* 테두리 스타일을 숨김 */
+	border-radius: 4px !important;
+	padding: 10px 20px !important;
+	font-size: 1rem !important;
+	cursor: pointer !important;
+}
 
+	.custom-confirm-button:hover {
+		background-color: #5a6f89 !important;
+	}
 
 /* 모바일 환경에서의 버튼 스타일 */
 @media (max-width: 768px) {
@@ -507,7 +523,7 @@ td div[data-subject]:not(:first-of-type) {
 		margin: 0;
 		display: flex;
 		justify-content: center;
-		margin-top: -2.3rem;
+		margin-top: -5.3rem;
 	}
 
 	/* 시간표 섹션 수정 */
@@ -618,7 +634,7 @@ td div[data-subject]:not(:first-of-type) {
 		gap: 0.6rem;
 		width: auto;
 		z-index: 100;
-		margin-top: -1.3rem;
+		margin-top: -4.7rem;
 
 	}
 
@@ -718,7 +734,7 @@ td div[data-subject]:not(:first-of-type) {
 		width: 90%;
 		max-width: 400px;
 		padding: 0.9rem;
-		top: 15%;
+		top: 30%;
 		margin: auto;
 	}
 
@@ -745,37 +761,6 @@ td div[data-subject]:not(:first-of-type) {
 
 	.modal-content form .input-container:last-child {
 		margin-top: 0.6rem;
-	}
-
-	.custom-confirm-button {
-		background-color: #778da9 !important;
-		/* 원하는 색상으로 설정 */
-		color: white !important;
-		/* 텍스트 색상 */
-		border: none;
-		border-radius: 4px;
-		padding: 10px 20px;
-		font-size: 1rem;
-		cursor: pointer;
-	}
-
-	.custom-confirm-button:hover {
-		background-color: #5a6f89 !important;
-	}
-
-
-	.custom-confirm-button {
-		background-color: #778da9 !important;
-		color: white !important;
-		border: none;
-		border-radius: 4px;
-		padding: 10px 20px;
-		font-size: 1rem;
-		cursor: pointer;
-	}
-
-	.custom-confirm-button:hover {
-		background-color: #5a6f89 !important;
 	}
 	
 	.swal2-custom-title {

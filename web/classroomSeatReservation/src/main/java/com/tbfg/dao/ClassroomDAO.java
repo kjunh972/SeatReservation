@@ -251,15 +251,22 @@ public class ClassroomDAO {
 		return jdbcTemplate.queryForList(sql, String.class, userId);
 	}
 
-	// 사용자 아이디를 받아 timetable의 강의실 정보를 favoriteClassrooms에 추가하는 메서드
+	// 사용자의 시간표 강의실을 즐겨찾기에 갱신하는 메서드
 	public void getTimetableClassrooms(String userId) {
-		// MySQL에서 즐겨찾기할 강의실 목록을 가져와 favoriteClassrooms에 추가하는 쿼리문
-		String sql = "INSERT INTO FavoriteClassrooms (user_id, classroom_num) " + "SELECT DISTINCT ?, classroomName "
-				+ "FROM StuTimetable WHERE user_id = ? AND (user_id, classroomName) "
-				+ "NOT IN (SELECT user_id, classroom_num FROM FavoriteClassrooms)";
+	    try {
+	        // 1. 해당 사용자의 기존 즐겨찾기 목록을 모두 삭제
+	        String deleteSql = "DELETE FROM FavoriteClassrooms WHERE user_id = ?";
+	        jdbcTemplate.update(deleteSql, userId);
 
-		// jdbcTemplate을 사용하여 SQL 쿼리를 실행
-		jdbcTemplate.update(sql, userId, userId);
+	        // 2. 현재 시간표의 강의실들을 즐겨찾기에 새로 추가
+	        String insertSql = "INSERT INTO FavoriteClassrooms (user_id, classroom_num) "
+	            + "SELECT DISTINCT ?, classroomName "
+	            + "FROM StuTimetable WHERE user_id = ?";
+	        jdbcTemplate.update(insertSql, userId, userId);
+	        
+	    } catch (Exception e) {
+	        throw e;
+	    }
 	}
 
 	// 모든 강의 번호 목록을 가져오는 메서드
