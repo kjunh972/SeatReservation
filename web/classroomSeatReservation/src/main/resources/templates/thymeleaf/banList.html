@@ -131,23 +131,23 @@
 							<form class="reservation-form" action="/cancelReservation" method="post">
 								<div class="reservation-info">
 									<div class="info-row">
-										<p><i class="fas fa-book-open"></i> 강의명 : <span
+										<p><i class="fas fa-book-open"></i> <span class="label">강의명 : </span><span
 												th:text="${banSeat.subject}"></span></p>
-										<p><i class="fas fa-school"></i> 강의실 : <span
+										<p><i class="fas fa-school"></i> <span class="label">강의실 : </span><span
 												th:text="${banSeat.classroomName + '호'}"></span></p>
 									</div>
 									<div class="info-row">
-										<p><i class="fas fa-calendar-alt"></i> 요일 : <span
+										<p><i class="fas fa-calendar-alt"></i> <span class="label">요일 : </span><span
 												th:text="${banSeat.day}"></span></p>
-										<p><i class="fas fa-clock"></i> 사용시간 : <span
+										<p><i class="fas fa-clock"></i> <span class="label">사용시간 : </span><span
 												th:text="${banSeat.banHourString + '시'}"></span></p>
 									</div>
 									<div class="info-row">
-										<p><i class="fas fa-chair"></i> 좌석 : <span
+										<p><i class="fas fa-chair"></i> <span class="label">좌석 : </span><span
 												th:text="${banSeat.banSeat + '번'}"></span></p>
 									</div>
 									<div class="info-row">
-										<p><i class="fas fa-user"></i> 교수 : <span
+										<p><i class="fas fa-user"></i> <span class="label">교수 : </span><span
 												th:text="${banSeat.userId ?: '미지정'}"></span></p>
 									</div>
 								</div>
