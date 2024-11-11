@@ -50,27 +50,6 @@ class WebViewScripts {
     })();
   ''';
 
-  // 사이드바 닫기 스크립트 추가
-  static String get closeSidebarScript => '''
-    (function() {
-      const mobileSidebar = document.getElementById('menu-mobile-sidebar');
-      const overlay = document.getElementById('menu-overlay');
-      const mobileToggle = document.getElementById('menu-mobile-toggle');
-      
-      if (mobileSidebar) {
-        mobileSidebar.classList.remove('active');
-      }
-      if (overlay) {
-        overlay.classList.remove('active');
-      }
-      if (mobileToggle) {
-        mobileToggle.style.transform = 'rotate(0deg)';
-      }
-      
-      localStorage.removeItem('openSidebar');
-    })();
-  ''';
-
   static String get schoolSearchScript => '''
     (function() {
       function enhanceSchoolSearch() {
