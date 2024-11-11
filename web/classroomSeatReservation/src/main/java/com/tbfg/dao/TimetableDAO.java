@@ -69,13 +69,13 @@ public class TimetableDAO {
     // 강의 목록을 가져오는 메서드 정의
     @SuppressWarnings("deprecation")
 	public List<String> getSubjectsByClassroom(String classroomName, String userId) {
-        String sql = "SELECT subject FROM stutimetable WHERE classroomName = ? AND user_id = ?";
+        String sql = "SELECT subject FROM StuTimetable WHERE classroomName = ? AND user_id = ?";
         return jdbcTemplate.queryForList(sql, new Object[]{classroomName, userId}, String.class);
     }
     
     // 과목명과 요일을 가져오는 메소드
     public List<Map<String, Object>> getSubjectsDay(String classroomName, String userId) {
-        String sql = "SELECT subject, day FROM stutimetable WHERE classroomName = ? AND user_id = ?";
+        String sql = "SELECT subject, day FROM StuTimetable WHERE classroomName = ? AND user_id = ?";
         return jdbcTemplate.queryForList(sql, new Object[]{classroomName, userId});
     }
     

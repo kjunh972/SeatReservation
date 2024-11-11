@@ -87,8 +87,9 @@
 					<div class="input-group">
 						<input type="text" id="id" name="id" placeholder="ID" required>
 					</div>
-					<div class="input-group">
+					<div class="input-group password-group">
 						<input type="password" id="password" name="password" placeholder="Password" required>
+						<i class="fas fa-eye-slash toggle-password" onclick="togglePasswordVisibility()"></i>
 					</div>
 					<div class="button-group">
 						<input type="submit" value="로그인" class="btn">
@@ -96,7 +97,6 @@
 					<div class="selectPosition">
 						<a href="selectPosition">회원가입</a>
 					</div>
-
 				</form>
 
 				<!-- 로그인 후 프로필 -->
@@ -533,6 +533,20 @@
 					});
 				});
 			});
+			
+			function togglePasswordVisibility() {
+				const passwordInput = document.getElementById("password");
+				const icon = document.querySelector(".toggle-password");
+				
+				// 비밀번호 타입 전환
+				const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+				passwordInput.setAttribute("type", type);
+
+				// 아이콘 클래스 전환 (fa-eye-slash <-> fa-eye)
+				icon.classList.toggle("fa-eye-slash");
+				icon.classList.toggle("fa-eye");
+			}
+
 		</script>
 </body>
 
