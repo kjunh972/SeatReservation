@@ -119,8 +119,10 @@ tr:last-of-type td {
     width: 40%;
     max-width: 31.25rem;
     border-radius: 0.5rem;
+    /* 모달의 높이를 고정하여 경고 메시지로 인해 크기가 변하지 않도록 설정 */
+    min-height: 300px; /* 원하는 최소 높이로 설정 */
+    box-sizing: border-box; /* 패딩을 포함한 크기 계산 */
 }
-
 /* 모달 제목 스타일링 */
 .modal-content h2 {
     margin-top: 1rem;
@@ -258,6 +260,19 @@ div[style*="margin-top: 20px"] {
 .swal2-html-container {
     font-size: 1.1rem !important;
     margin: 1rem 0 !important;
+}
+.password-input-group {
+    position: relative; /* 아이콘 위치 조정 */
+}
+
+.toggle-password {
+    position: absolute; /* 아이콘 절대 위치 */
+    right: 0.5rem; /* 오른쪽 위치 */
+    top: 50%; /* 수직 중앙 */
+    transform: translateY(-50%); /* 수직 중앙 조정 */
+    cursor: pointer; /* 클릭 커서 */
+    color: #666; /* 아이콘 색상 */
+    font-size: 1.2rem; /* 아이콘 크기 */
 }
 
 /* 모바일 반응형 스타일링 */

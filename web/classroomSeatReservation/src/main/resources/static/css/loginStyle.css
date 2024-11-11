@@ -103,21 +103,24 @@ td div[data-subject] .classroom-name {
 .timetable-confirm:hover {
 	background-color: #415a77 !important;
 }
-
-/* 모바일 대응 */
-@media (max-width: 48rem) {
-	.timetable-popup {
-		width: 20em !important;
-		padding: 1.5rem !important;
-	}
-
-	.timetable-confirm {
-		width: 5rem !important;
-		height: 2.3rem !important;
-		font-size: 0.9rem !important;
-		padding: 0.4rem 0.8rem !important;
-	}
+.input-group {
+	position: relative; /* 아이콘 위치 조정 */
 }
+
+.password-group {
+    position: relative; /* 아이콘 위치 조정 */
+}
+
+.toggle-password {
+    position: absolute; /* 아이콘 절대 위치 */
+    right: 1rem; /* 오른쪽 위치 조정 */
+    top: 50%; /* 수직 중앙 */
+    transform: translateY(-50%); /* 수직 중앙 조정 */
+    cursor: pointer; /* 클릭 커서 */
+    color: #666; /* 아이콘 색상 */
+    font-size: 1.2rem; /* 아이콘 크기 */
+}
+
 
 /* 버튼 컨테이너 스타일 */
 .button-container {
@@ -420,6 +423,21 @@ button:hover {
 	display: none;
 }
 
+/* 모바일 대응 */
+@media (max-width: 48rem) {
+	.timetable-popup {
+		width: 20em !important;
+		padding: 1.5rem !important;
+	}
+
+	.timetable-confirm {
+		width: 5rem !important;
+		height: 2.3rem !important;
+		font-size: 0.9rem !important;
+		padding: 0.4rem 0.8rem !important;
+	}
+}
+
 /* 모바일 스타일 */
 @media screen and (max-width: 768px) {
 	.desktop-only {
@@ -485,7 +503,7 @@ button:hover {
 
 /* 모바일 화면을 위한 통합 스타일 */
 @media (max-width: 768px) {
-
+	
 	/* 로그인 컨테이너 처리 */
 	.login-container {
 		display: none !important;
@@ -555,6 +573,19 @@ button:hover {
 		cursor: pointer;
 		z-index: 102;
 	}
+	.password-group {
+        position: relative; /* 아이콘 위치 조정 */
+    }
+
+    .toggle-password {
+        position: absolute; /* 아이콘 절대 위치 */
+        right: 0.5rem; /* 오른쪽 위치 */
+        top: 50%; /* 수직 중앙 */
+        transform: translateY(-50%); /* 수직 중앙 조정 */
+        cursor: pointer; /* 클릭 커서 */
+        color: #666; /* 아이콘 색상 */
+        font-size: 1.2rem; /* 아이콘 크기 */
+    }
 }
 
 input[type="text"],
