@@ -98,38 +98,36 @@
 			</form>
 		</div>
 	</div>
-
 	<!-- 비밀번호 수정 모달 -->
 	<div id="passwordModal" class="modal">
-		<div class="modal-content">
-			<span class="close" id="closePasswordModal">&times;</span>
-			<h2>비밀번호 수정</h2>
-			<form id="updatePasswordForm" action="/updateUser" method="post"
-				onsubmit="return handlePasswordUpdate(event)">
-				<input type="hidden" id="userId" name="id" th:value="${user.id}">
-				<!-- 사용자 타입(교수 또는 학생) 구분을 위한 hidden 필드 -->
-				<input type="hidden" id="userType" name="userType"
-					th:value="${user instanceof T(com.tbfg.dto.ProfessorDTO) ? 'professor' : 'student'}">
-				<div>
-					<input type="password" id="oldPassword" name="oldPassword" placeholder="기본 비밀번호" required>
-					<span id="oldPasswordError" class="error-message" style="display: none;"></span>
-				</div>
-				<div>
-					<input type="password" id="newPassword" name="newPassword" placeholder="새 비밀번호" required>
-					<span id="newPasswordError" class="error-message" style="display: none;"></span>
-				</div>
-				<div class="password-input-group">
-					<input type="password" id="confirmPassword" name="confirmPassword" placeholder="새 비밀번호 확인" required>
-					<span id="confirmPasswordError" class="error-message" style="display: none;"></span>
-				</div>
-				<div>
-					<button type="submit" class="edit-btn">수정</button>
-				</div>
-			</form>
-		</div>
+	    <div class="modal-content">
+	        <span class="close" id="closePasswordModal">&times;</span>
+	        <h2>비밀번호 수정</h2>
+	        <form id="updatePasswordForm" action="/updateUser" method="post" onsubmit="return handlePasswordUpdate(event)">
+	            <input type="hidden" id="userId" name="id" th:value="${user.id}">
+	            <input type="hidden" id="userType" name="userType" th:value="${user instanceof T(com.tbfg.dto.ProfessorDTO) ? 'professor' : 'student'}">
+	            <div class="password-input-group">
+	                <input type="password" id="oldPassword" name="oldPassword" placeholder="기본 비밀번호" required>
+	                <i class="fas fa-eye-slash toggle-password" onclick="togglePasswordVisibility('oldPassword', this)"></i>
+	                <span id="oldPasswordError" class="error-message" style="display: none;"></span>
+	            </div>
+	            <div class="password-input-group">
+	                <input type="password" id="newPassword" name="newPassword" placeholder="새 비밀번호" required>
+	                <i class="fas fa-eye-slash toggle-password" onclick="togglePasswordVisibility('newPassword', this)"></i>
+	                <span id="newPasswordError" class="error-message" style="display: none;"></span>
+	            </div>
+	            <div class="password-input-group">
+	                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="새 비밀번호 확인" required>
+	                <i class="fas fa-eye-slash toggle-password" onclick="togglePasswordVisibility('confirmPassword', this)"></i>
+	                <span id="confirmPasswordError" class="error-message" style="display: none;"></span>
+	            </div>
+	            <div>
+	                <button type="submit" class="edit-btn">수정</button>
+	            </div>
+	        </form>
+	    </div>
 	</div>
-
-
+	
 	<script th:inline="javascript">
 		// 공통 SweetAlert2 스타일 설정
 		const swalCustomStyle = Swal.mixin({
@@ -174,12 +172,20 @@
 			});
 		}
 
-		// 비밀번호 수정 버튼 클릭 시 모달 열기
+		// 비밀번호 수정 모달 열기
 		editPasswordBtn.onclick = function (event) {
-			event.preventDefault();
-			passwordModal.style.display = "block";
+		    event.preventDefault();
+		    passwordModal.style.display = "block";
+		    
+		    // 모달 열릴 때 비밀번호 입력 필드의 타입을 'password'로 설정
+		    const passwordInputs = [document.getElementById('oldPassword'), document.getElementById('newPassword'), document.getElementById('confirmPassword')];
+		    passwordInputs.forEach(input => {
+		        input.setAttribute("type", "password"); // 비밀번호 입력 필드 타입을 'password'로 설정
+		        const icon = input.nextElementSibling; // 아이콘 요소 선택
+		        icon.classList.remove("fa-eye"); // 아이콘을 'fa-eye'로 설정
+		        icon.classList.add("fa-eye-slash"); // 아이콘을 'fa-eye-slash'로 설정
+		    });
 		}
-
 		// 학년/반 모달 닫기 버튼 클릭 시 모달 닫기
 		if (closeGradeClassModal) {
 			closeGradeClassModal.onclick = function () {
@@ -189,9 +195,8 @@
 
 		// 비밀번호 모달 닫기 버튼 클릭 시 모달 닫기
 		closePasswordModal.onclick = function () {
-			passwordModal.style.display = "none";
+		    passwordModal.style.display = "none";
 		}
-
 		// 화면 외부 클릭 시 모달 닫기
 		window.onclick = function (event) {
 			if (event.target == gradeClassModal || event.target == passwordModal) {
@@ -410,6 +415,15 @@
 						});
 				}
 			});
+		}
+		function togglePasswordVisibility(inputId, icon) {
+		    const passwordInput = document.getElementById(inputId);
+		    const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+		    passwordInput.setAttribute("type", type);
+
+		    // 아이콘 클래스 전환 (fa-eye-slash <-> fa-eye)
+		    icon.classList.toggle("fa-eye-slash");
+		    icon.classList.toggle("fa-eye");
 		}
 	</script>
 </body>
