@@ -130,30 +130,23 @@
 			// null 체크 추가
 			if (togglePassword && passwordInput) {
 				togglePassword.addEventListener('click', function () {
-					// 비밀번호 보이기 필드 타입 토글
 					const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
 					passwordInput.setAttribute('type', type);
-
-					// 아이콘 변경
 					this.classList.toggle('fa-eye');
 					this.classList.toggle('fa-eye-slash');
 				});
 			}
 
-
 			const shouldOpenSidebar = localStorage.getItem('openSidebar');
 			if (shouldOpenSidebar === 'true' && window.innerWidth <= 768) {
 				mobileSidebar.classList.add('active');
 				overlay.classList.add('active');
-				mobileToggle.style.transform = 'rotate(90deg)';
 				localStorage.removeItem('openSidebar');
 			}
 
 			function toggleSidebar() {
 				mobileSidebar.classList.toggle('active');
 				overlay.classList.toggle('active');
-				mobileToggle.style.transform = mobileSidebar.classList.contains('active') ?
-					'rotate(90deg)' : 'rotate(0deg)';
 			}
 
 			mobileToggle.addEventListener('click', toggleSidebar);
@@ -161,7 +154,6 @@
 			overlay.addEventListener('click', function () {
 				mobileSidebar.classList.remove('active');
 				overlay.classList.remove('active');
-				mobileToggle.style.transform = 'rotate(0deg)';
 			});
 
 			if (logoutBtn) {
@@ -169,7 +161,6 @@
 					e.preventDefault();
 					mobileSidebar.classList.remove('active');
 					overlay.classList.remove('active');
-					mobileToggle.style.transform = 'rotate(0deg)';
 
 					Swal.fire({
 						title: '로그아웃',
@@ -198,7 +189,6 @@
 				if (window.innerWidth > 768) {
 					mobileSidebar.classList.remove('active');
 					overlay.classList.remove('active');
-					mobileToggle.style.transform = 'rotate(0deg)';
 				}
 			});
 		});

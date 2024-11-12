@@ -489,19 +489,19 @@ public class Contoller {
 		// 0부터 999 사이의 랜덤 번호를 생성
 		int randomNum = new Random().nextInt(1000);
 		// 모든 예약 번호 가져오기
-	    List<Integer> allReserveNum = classroomDAO.getAllReserveNum();
-		
-	    // 중복되지 않는 번호 생성 
-	    if (!allReserveNum.isEmpty()) {
-	        for (int i = 0; i < allReserveNum.size(); i++) {
-	            if (randomNum == allReserveNum.get(i)) {
-	                randomNum = new Random().nextInt(1000);
-	                i = -1;
-	                continue;
-	            }
-	        }
-	    }
-	    
+		List<Integer> allReserveNum = classroomDAO.getAllReserveNum();
+
+		// 중복되지 않는 번호 생성
+		if (!allReserveNum.isEmpty()) {
+			for (int i = 0; i < allReserveNum.size(); i++) {
+				if (randomNum == allReserveNum.get(i)) {
+					randomNum = new Random().nextInt(1000);
+					i = -1;
+					continue;
+				}
+			}
+		}
+
 		// classroomDTO에 랜덤 번호 저장
 		classroomDTO.setRandomNum(randomNum);
 
@@ -779,6 +779,20 @@ public class Contoller {
 		return "redirect:/timetable";
 	}
 
+	@GetMapping("/classroomInfo")
+	public String getClassroomInfo(Model model, HttpSession session) {
+		// 세션 및 사용자 ID 확인
+		String userId = GetId(session);
+		// 세션이 만료되었거나 사용자 ID가 없는 경우 로그인 페이지로 리다이렉트
+		if (userId == null) {
+			getTimetablePage(model, session);
+			model.addAttribute("error", "세션이 만료되었습니다. 다시 로그인 해주세요.");
+			return "login";
+		}
+
+		return "redirect:/login";
+	}
+
 	// 강의실 정보 조회하는 메서드
 	@PostMapping("/classroomInfo")
 	public String showClassroomInfo(@RequestParam String classroomName,
@@ -809,10 +823,7 @@ public class Contoller {
 			model.addAttribute("selectedSubject", selectedSubject);
 		}
 
-		System.out.println("userPosition : " + userPosition);
-
 		model.addAttribute("userPosition", userPosition);
-
 		model.addAttribute("title", classroomName + " 강의실 정보");
 		return "classroomInfo";
 	}

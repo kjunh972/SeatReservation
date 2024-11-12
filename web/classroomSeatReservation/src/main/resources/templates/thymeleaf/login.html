@@ -191,12 +191,35 @@
 				const modal = document.getElementById("myModal");
 				const modalContainer = modal ? modal.parentElement : null;
 
+				const timetableSection = document.querySelector('.timetable-section');
+
+				timetableSection.addEventListener('click', function () {
+					// SweetAlert2를 사용한 토스트 메시지
+					Swal.fire({
+						toast: true,
+						position: 'top',
+						icon: 'info',
+						title: '시간표 페이지로 이동합니다',
+						showConfirmButton: false,
+						timer: 1000,
+						timerProgressBar: true,
+						didOpen: (toast) => {
+							toast.addEventListener('mouseenter', Swal.stopTimer)
+							toast.addEventListener('mouseleave', Swal.resumeTimer)
+						}
+					}).then(() => {
+						// 토스트 메시지가 사라진 후 페이지 이동
+						window.location.href = '/timetable';
+					});
+				});
+
 				if (errorMessage && errorMessage.textContent.trim()) {
 					localStorage.setItem('sessionExpired', 'true');
 
 					if (modalContainer) {
 						modalContainer.remove();
 					}
+
 					if (modal) {
 						modal.remove();
 					}
@@ -536,7 +559,7 @@
 			function togglePasswordVisibility() {
 				const passwordInput = document.getElementById("password");
 				const icon = document.querySelector(".toggle-password");
-				
+
 				// 비밀번호 타입 전환
 				const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
 				passwordInput.setAttribute("type", type);

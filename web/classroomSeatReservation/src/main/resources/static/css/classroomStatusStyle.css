@@ -5,13 +5,13 @@ h1 {
 
 /* 테이블 셀 스타일 */
 td {
-    height: 2.68rem !important;
+	height: 2.68rem !important;
 }
 
 /* 강의실명 스타일 */
 td div[data-subject] .classroom-name {
     position: relative !important;
-    transform: translateY(-0.03rem) !important; /* 음수로 가면 위로, 양수로 가면 아래 */
+    transform: translateY(-0.01rem) !important; /* 음수로 가면 위로, 양수로 가면 아래 */
 }
 
 /* 좌석 레이아웃을 위한 컨테이너 스타일 */
@@ -86,7 +86,7 @@ td div[data-subject] .classroom-name {
     align-items: center; /* 수평 중앙 정렬 */
     justify-content: center; /* 수직 중앙 정렬 */
     position: absolute; /* 절대 위치 지정 */
-    top: 50%; /* 화면 중앙 */
+    top: 40%; /* 화면 중앙 */
     left: 50%; /* 화면 중앙 */
     transform: translate(-50%, -50%); /* 중앙 정렬 */
     width: 90%; /* 너비 조정 */
@@ -118,6 +118,11 @@ td div[data-subject] .classroom-name {
     padding: 1.25rem; /* 내부 여백 (20px -> 1.25rem) */
     border-radius: 0.63rem; /* 모서리를 둥글게 (10px -> 0.63rem) */
     width: 100%; /* 전체 너비 */
+	max-width:93.75rem; /*최대 너비 제한*/
+	max-height: 80vh; /*최대 높이 뷰포트 높이의 80%로 제한*/
+	overflow-y: auto; /*세로 방향 스크롤 허용*/
+	position: relative; /*상대적 위치 지정*/
+	
 }
 
 /* 모달 닫기 버튼 */

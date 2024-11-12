@@ -17,7 +17,7 @@ td {
 /* 강의실명 스타일 */
 td div[data-subject] .classroom-name {
     position: relative !important;
-    transform: translateY(-0.03rem) !important; /* 음수로 가면 위로, 양수로 가면 아래 */
+    transform: translateY(-0.01rem) !important; /* 음수로 가면 위로, 양수로 가면 아래 */
 }
 
 
@@ -153,7 +153,19 @@ td div[data-subject] .classroom-name {
 }
 
 .swal2-confirm-btn-custom {
-    background-color: #778da9;
+	background-color: #778da9 !important;
+	color: white !important;
+	outline: none !important; /* 외곽선 제거 */
+	box-shadow: none !important; /* 그림자 제거 */   
+	border-style: hidden !important; /* 테두리 스타일을 숨김 */
+	border-radius: 4px !important;
+	padding: 10px 20px !important;
+	font-size: 1rem !important;
+	cursor: pointer !important;
+}
+
+.swal2-confirm-btn-custom {
+	background-color: #5a6f89 !important;
 }
 
 /* 모바일 전용 스타일 (768px 이하 화면 크기에서만 적용) */

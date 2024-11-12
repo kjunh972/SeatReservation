@@ -48,7 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
   // WebView 컨트롤러 및 URL 설정
   final GlobalKey webViewKey = GlobalKey();
   InAppWebViewController? webViewController;
-  String url = 'http://192.168.45.134:8055/';
+  String url = 'http://10.107.0.37:8055/';
 
   // 로딩 상태 관리 변수
   bool isLoading = true;
@@ -159,13 +159,18 @@ class _MyHomePageState extends State<MyHomePage> {
                 initialUrlRequest: URLRequest(
                   url: WebUri(url),
                 ),
-                // WebView 기본 설정
+                // WebView 기본 설정 부분 수정
                 initialSettings: InAppWebViewSettings(
                   javaScriptEnabled: true,
                   mediaPlaybackRequiresUserGesture: false,
                   allowsInlineMediaPlayback: true,
                   mixedContentMode: MixedContentMode.MIXED_CONTENT_ALWAYS_ALLOW,
                   useWideViewPort: false,
+                  // 텍스트 선택 시 자동 확대 방지 설정 추가
+                  disableContextMenu: false,
+                  supportZoom: false,
+                  builtInZoomControls: false,
+                  displayZoomControls: false,
                 ),
                 // WebView 생성 완료 콜백
                 onWebViewCreated: (controller) {
