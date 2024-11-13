@@ -248,7 +248,10 @@
 					icon: 'warning',
 					showCancelButton: true,
 					confirmButtonText: '예',
-					cancelButtonText: '아니오'
+					cancelButtonText: '아니오',
+					customClass: {
+						confirmButton: 'custom-confirm-button'
+					}
 				}).then((result) => {
 					if (result.isConfirmed) {
 						banSeat(classroom, seat); // 사용자가 확인을 누르면 좌석 금지 처리
@@ -310,7 +313,10 @@
 							icon: 'question',
 							showCancelButton: true,
 							confirmButtonText: '예',
-							cancelButtonText: '아니오'
+							cancelButtonText: '아니오',
+							customClass: {
+								confirmButton: 'custom-confirm-button'
+							}
 						}).then((result) => {
 							if (result.isConfirmed) {
 								moveSeat(selectedSeatInfo.reservNum, seat.dataset.seat);
@@ -444,7 +450,10 @@
 						icon: 'warning',
 						showCancelButton: true,
 						confirmButtonText: '예',
-						cancelButtonText: '아니오'
+						cancelButtonText: '아니오',
+						customClass: {
+							confirmButton: 'custom-confirm-button'
+						}
 					}).then((result) => {
 						if (result.isConfirmed) {
 							cancelReservation(selectedSeatInfo.reservNum);

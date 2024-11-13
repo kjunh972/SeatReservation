@@ -262,7 +262,10 @@
 						icon: 'warning',
 						showCancelButton: true,
 						confirmButtonText: '예, 생성하겠습니다',
-						cancelButtonText: '취소'
+						cancelButtonText: '취소',
+						customClass: {
+							confirmButton: 'custom-confirm-button'
+							}
 					}).then((result) => {
 						if (result.isConfirmed) {
 							document.querySelector('form').submit(); // 확인 시 폼 제출

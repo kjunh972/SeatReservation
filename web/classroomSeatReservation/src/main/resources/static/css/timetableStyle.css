@@ -417,7 +417,7 @@ td div[data-subject]:not(:first-of-type) {
 
 /* 닫기 버튼 스타일 */
 .close {
-	color: #aaa;
+	color: black;
 	font-size: 28px;
 	font-weight: bold;
 	position: absolute;
@@ -428,7 +428,7 @@ td div[data-subject]:not(:first-of-type) {
 
 .close:hover,
 .close:focus {
-	color: black;
+	color: aaa;
 }
 
 /* 오류 메시지 스타일 */

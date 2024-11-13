@@ -142,12 +142,13 @@ td div[data-subject] .classroom-name {
 
 /* myModal 중앙 정렬 */
 #myModal .modal-content {
+	
     display: flex; /* Flexbox 레이아웃 사용 */
     flex-direction: column; /* 세로 방향 정렬 */
     align-items: center; /* 수평 중앙 정렬 */
     justify-content: center; /* 수직 중앙 정렬 */
     position: absolute; /* 절대 위치 지정 */
-    top: 50%; /* 화면 중앙 */
+    top: 40%; /* 화면 중앙 */
     left: 50%; /* 화면 중앙 */
     transform: translate(-50%, -50%); /* 중앙 정렬 */
     width: 90%; /* 너비 조정 */
@@ -156,6 +157,21 @@ td div[data-subject] .classroom-name {
     overflow-y: auto; /* 세로 방향 스크롤 허용 */
 }
 
+.modal-content.seat-list-content {
+    margin-top: 10rem;
+	max-width: 60rem;
+	height: 25rem;
+}
+
+.seat-list-title {
+    font-size: 1.8rem !important; /* 제목 폰트 크기 조정 */
+	margin-top: 3rem !important;
+	margin-bottom: 3.5rem !important;
+    }
+
+.seat-list-button-container {
+    margin-top: 3.2rem !important; /* 테이블과 버튼 간 간격 */
+    }
 #myModal h1 {
     font-size: 2rem;
     font-weight: 700;
@@ -208,10 +224,24 @@ td div[data-subject] .classroom-name {
 }
 
 /* SweetAlert2 팝업의 확인 및 취소 버튼 스타일 */
-.swal2-popup .swal2-actions .swal2-confirm,
+.swal2-popup .swal2-actions .swal2-confirm{
+	width: 5.5rem !important;
+    height: 3.2rem !important;
+    font-size: 1rem !important;
+	background-color: #778da9 !important;
+	color: white !important;
+	outline: none !important; /* 외곽선 제거 */
+	box-shadow: none !important; /* 그림자 제거 */   
+	border-style: hidden !important; /* 테두리 스타일을 숨김 */
+	border-radius: 4px !important;
+	padding: 10px 20px !important;
+	font-size: 1rem !important;
+	cursor: pointer !important;
+
+}
+
 .swal2-popup .swal2-actions .swal2-cancel {
-    width
-: 5.5rem !important; /* 너비를 5.5rem으로 설정 (우선순위 높임) */
+    width: 5.5rem !important; /* 너비를 5.5rem으로 설정 (우선순위 높임) */
     height: 3.2rem !important; /* 높이를 3.2rem으로 설정 (우선순위 높임) */
     font-size: 1rem !important; /* 글자 크기를 1rem으로 설정 (우선순위 높임) */
 }
@@ -220,15 +250,19 @@ td div[data-subject] .classroom-name {
 @media (max-width: 48rem) {
     /* 예약된 좌석 모달 창의 너비 조정 */
     .modal-content.seat-list-content {
+		margin-top: -2rem;
         width: 90%; /* 너비 조정 */
-        max-width: 400px; /* 최대 너비 줄이기 */
-        padding: 15px; /* 내부 여백 */
+        max-width: 25rem; /* 최대 너비 줄이기 */
+        padding: 1rem; /* 내부 여백 */
+		overflow-x: hidden;
     }
 
     /* 테이블 스타일 조정 */
     .seat-list-table {
         width: 100%; /* 테이블의 너비를 100%로 설정 */
         border-collapse: collapse; /* 테두리 간격 제거 */
+		transform: scale(0.9);
+		margin-left: -1rem !important;
     }
     
     /* 좌석 레이아웃을 위한 컨테이너 스타일 */
@@ -267,7 +301,7 @@ td div[data-subject] .classroom-name {
     .seat-list-button-container {
         display: flex;
         justify-content: space-between; /* 버튼 사이 간격 조정 */
-        margin-top: 10px; /* 테이블과 버튼 간 간격 */
+        margin-top: 0.625rem; /* 테이블과 버튼 간 간격 */
     }
 
     /* 버튼 스타일 */

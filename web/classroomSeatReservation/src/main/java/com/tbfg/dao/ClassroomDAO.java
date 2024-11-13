@@ -253,20 +253,19 @@ public class ClassroomDAO {
 
 	// 사용자의 시간표 강의실을 즐겨찾기에 갱신하는 메서드
 	public void getTimetableClassrooms(String userId) {
-	    try {
-	        // 1. 해당 사용자의 기존 즐겨찾기 목록을 모두 삭제
-	        String deleteSql = "DELETE FROM FavoriteClassrooms WHERE user_id = ?";
-	        jdbcTemplate.update(deleteSql, userId);
+		try {
+			// 1. 해당 사용자의 기존 즐겨찾기 목록을 모두 삭제
+			String deleteSql = "DELETE FROM FavoriteClassrooms WHERE user_id = ?";
+			jdbcTemplate.update(deleteSql, userId);
 
-	        // 2. 현재 시간표의 강의실들을 즐겨찾기에 새로 추가
-	        String insertSql = "INSERT INTO FavoriteClassrooms (user_id, classroom_num) "
-	            + "SELECT DISTINCT ?, classroomName "
-	            + "FROM StuTimetable WHERE user_id = ?";
-	        jdbcTemplate.update(insertSql, userId, userId);
-	        
-	    } catch (Exception e) {
-	        throw e;
-	    }
+			// 2. 현재 시간표의 강의실들을 즐겨찾기에 새로 추가
+			String insertSql = "INSERT INTO FavoriteClassrooms (user_id, classroom_num) "
+					+ "SELECT DISTINCT ?, classroomName " + "FROM StuTimetable WHERE user_id = ?";
+			jdbcTemplate.update(insertSql, userId, userId);
+
+		} catch (Exception e) {
+			throw e;
+		}
 	}
 
 	// 모든 강의 번호 목록을 가져오는 메서드
@@ -379,15 +378,13 @@ public class ClassroomDAO {
 
 		return count > 0; // 중복 예약이 있으면 true 반환, 없으면 false 반환
 	}
-	
+
 	public List<Integer> getAllReserveNum() {
-	    // Reservation과 BanSeat의 모든 번호를 가져오는 쿼리
-	    String sql = "SELECT reservNum as num FROM Reservation " +
-	                 "UNION " +
-	                 "SELECT banNum as num FROM BanSeat " +
-	                 "ORDER BY num";
-	                 
-	    return jdbcTemplate.queryForList(sql, Integer.class);
+		// Reservation과 BanSeat의 모든 번호를 가져오는 쿼리
+		String sql = "SELECT reservNum as num FROM Reservation " + "UNION " + "SELECT banNum as num FROM BanSeat "
+				+ "ORDER BY num";
+
+		return jdbcTemplate.queryForList(sql, Integer.class);
 	}
 
 	// 주어진 강의실 이름이 Classrooms 테이블에 존재하는지 확인하는 메서드
@@ -456,67 +453,41 @@ public class ClassroomDAO {
 		});
 	}
 
-	public List<AttendanceDTO> getTodayAttendance(String professorId, String currentDay, int currentHour) {
-	    String sql = "SELECT DISTINCT " +
-	                 "s.id as userId, " +
-	                 "s.name as userName, " +
-	                 "s.studentId, " +
-	                 "st1.subject, " +
-	                 "st1.classroomName, " +
-	                 "st1.start_hour as startHour, " +
-	                 "st1.end_hour as endHour, " +
-	                 "CASE " +
-	                 "    WHEN r.reservNum IS NOT NULL THEN '출석' " +
-	                 "    ELSE '결석' " +
-	                 "END as status " +
-	                 "FROM StuTimetable st1 " +
-	                 "JOIN StuTimetable st2 ON st1.subject = st2.subject " +
-	                 "JOIN Yuhan s ON st1.user_id = s.id " +
-	                 "JOIN proYuhan p ON st2.user_id = p.id " +
-	                 "LEFT JOIN Reservation r ON s.id = r.user_id " +
-	                 "    AND st1.subject = r.subject " +
-	                 "    AND st1.day = r.day " +
-	                 "    AND r.classroom_name = st1.classroomName " +
-	                 "LEFT JOIN ReservationHour rh ON r.reservNum = rh.reservNum " +
-	                 "    AND rh.reservHour = st1.start_hour " +
-	                 "WHERE p.id = ? " +
-	                 "AND st1.day = ? " +
-	                 "AND st1.start_hour <= ? " +
-	                 "AND st1.end_hour > ? " +
-	                 "AND s.position = 'student' " +
-	                 "AND st2.user_id = ? " +  
-	                 "ORDER BY st1.start_hour, s.name";
+	public List<AttendanceDTO> getTodayAttendance(String userId, String day, int currentHour) {
+		String sql = "SELECT st.user_id, y.name AS user_name, y.studentId, st.subject, "
+				+ "st.classroomName, st.start_hour, st.end_hour, st.attendance, "
+				+ "CASE WHEN st.attendance = true THEN true ELSE false END AS isAttended " + "FROM StuTimetable st "
+				+ "JOIN Yuhan y ON st.user_id = y.id " + "WHERE st.day = ? AND st.start_hour <= ? AND st.end_hour > ? "
+				+ "AND (st.user_id = ? OR ? IN "
+				+ "(SELECT id FROM proYuhan WHERE position IN ('professor', 'admin')))";
 
-	    return jdbcTemplate.query(
-	        sql, 
-	        (rs, rowNum) -> {
-	            AttendanceDTO dto = new AttendanceDTO();
-	            dto.setUserId(rs.getString("userId"));
-	            dto.setUserName(rs.getString("userName"));
-	            dto.setStudentId(rs.getInt("studentId"));
-	            dto.setSubject(rs.getString("subject"));
-	            dto.setClassroomName(rs.getString("classroomName"));
-	            dto.setStartHour(rs.getInt("startHour"));
-	            dto.setEndHour(rs.getInt("endHour"));
-	            dto.setStatus(rs.getString("status"));
-	            return dto;
-	        },
-	        professorId, currentDay, currentHour, currentHour, professorId  // professorId 파라미터 추가
-	    );
+		return jdbcTemplate.query(sql, (rs, rowNum) -> {
+			AttendanceDTO dto = new AttendanceDTO();
+			dto.setUserId(rs.getString("user_id"));
+			dto.setUserName(rs.getString("user_name"));
+			dto.setStudentId(rs.getInt("studentId"));
+			dto.setSubject(rs.getString("subject"));
+			dto.setClassroomName(rs.getString("classroomName"));
+			dto.setStartHour(rs.getInt("start_hour"));
+			dto.setEndHour(rs.getInt("end_hour"));
+			// boolean 값으로 직접 설정
+			dto.setAttended(rs.getBoolean("attendance"));
+			return dto;
+		}, day, currentHour, currentHour, userId, userId);
 	}
 
 	// 출석 상태를 업데이트하는 메서드
-		public void updateAttendance(String userId, String day, int startHour, String subject, boolean isAttended) {
-		    // SQL 업데이트 쿼리 문자열 정의
-		    String sql = "UPDATE StuTimetable SET attendance = ? " +
-		                 "WHERE user_id = ? AND day = ? AND start_hour = ? AND subject = ?";
-		    
-		    // 출석 여부를 정수값으로 변환 (출석: 1, 결석: 0)
-		    int attendanceValue = isAttended ? 1 : 0;
-		    
-		    // 쿼리 실행
-		    jdbcTemplate.update(sql, attendanceValue, userId, day, startHour, subject);
-		}
+	public void updateAttendance(String userId, String day, int startHour, String subject, boolean isAttended) {
+		// SQL 업데이트 쿼리 문자열 정의
+		String sql = "UPDATE StuTimetable SET attendance = ? "
+				+ "WHERE user_id = ? AND day = ? AND start_hour = ? AND subject = ?";
+
+		// 출석 여부를 정수값으로 변환 (출석: 1, 결석: 0)
+		int attendanceValue = isAttended ? 1 : 0;
+
+		// 쿼리 실행
+		jdbcTemplate.update(sql, attendanceValue, userId, day, startHour, subject);
+	}
 
 	// 사용자가 교수 또는 관리자인지 확인하는 메서드
 	public boolean isProfessorOrAdmin(String userId) {
