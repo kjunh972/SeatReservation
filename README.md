@@ -4,6 +4,7 @@
 
 ## 목차
 - [개요](#개요)
+- [화면구성](#화면구성)
 
 
 ## 개요
@@ -22,4 +23,27 @@
     - 김진주 : 락스크린 이미지 디자인
 
 
-## 화면 구성
+## 화면구성
+이미지가 너무 많은 관계로 가장 많이 사용할만한 화면 구성들만 이미지로 보여드리겠습니다.
+
+모바일이랑 웹이랑 사용하는 기능들은 동일합니다.
+
+1. 웹
+
+- 메인페이지 로그인전
+![메인페이지-로그인전](https://github.com/kjunh972/SeatReservation/blob/main/web/images/%EB%A9%94%EC%9D%B8%ED%8E%98%EC%9D%B4%EC%A7%80_%EB%A1%9C%EA%B7%B8%EC%9D%B8%20%EC%A0%84.png)
+- 메인페이지 로그인후
+![메인페이지-로그인후](https://github.com/kjunh972/SeatReservation/blob/main/web/images/%EB%A9%94%EC%9D%B8%ED%8E%98%EC%9D%B4%EC%A7%80_%EB%A1%9C%EA%B7%B8%EC%9D%B8%20%ED%9B%84.png)
+- 시간표
+![시간표](https://github.com/kjunh972/SeatReservation/blob/main/web/images/%EC%8B%9C%EA%B0%84%ED%91%9C.png)
+![시간표 추가](https://github.com/kjunh972/SeatReservation/blob/main/web/images/%EC%8B%9C%EA%B0%84%ED%91%9C%20%EC%B6%94%EA%B0%80.png)
+![시간표 수정](https://github.com/kjunh972/SeatReservation/blob/main/web/images/%EC%8B%9C%EA%B0%84%ED%91%9C%20%EC%88%98%EC%A0%95.png)
+
+   ![시간표 삭제](https://github.com/kjunh972/SeatReservation/blob/main/web/images/%EC%8B%9C%EA%B0%84%ED%91%9C%20%EC%82%AD%EC%A0%9C.png)
+
+- 강의실 현황
+![강의실 현황](https://github.com/kjunh972/SeatReservation/blob/main/web/images/%EA%B0%95%EC%9D%98%EC%8B%A4%20%ED%98%84%ED%99%A9.png)
+- 강의실 정보
+![강의실 정보](https://github.com/kjunh972/SeatReservation/blob/main/web/images/%EA%B0%95%EC%9D%98%EC%8B%A4%20%EC%A0%95%EB%B3%B4.png)
+- 예약확인
+![예약확인](https://github.com/kjunh972/SeatReservation/blob/main/web/images/%EC%98%88%EC%95%BD%ED%99%95%EC%9D%B8.png)
