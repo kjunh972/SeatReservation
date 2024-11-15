@@ -158,31 +158,70 @@ public class ClassroomDAO {
 		// 예약 번호별로 그룹화된 예약 정보를 강의실 이름별로 다시 그룹화하여 반환
 		return groupedByReservNum.values().stream().collect(Collectors.groupingBy(ReserveList::getClassroomName));
 	}
+	
+	// 사용자가 해당 요일에 이미 예약했는지 확인
+	public boolean checkUserReservation(String userId, String classroomName, String day) {
+	    String sql = "SELECT COUNT(*) FROM Reservation WHERE user_id = ? AND day = ?";
+	    try {
+	        int count = jdbcTemplate.queryForObject(sql, Integer.class, userId, day);
+	        return count > 0;
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+	}
 
-	// 예약 취소 메서드
 	public boolean cancelReservation(int reservNum, String userId) {
-		// 예약이 존재하는지 확인
-		String checkSql = "SELECT COUNT(*) FROM Reservation WHERE reservNum = ? AND user_id = ?";
-		Integer count = jdbcTemplate.queryForObject(checkSql, Integer.class, reservNum, userId);
+		try {
+			// 먼저 사용자가 proYuhan 테이블에 있는지 확인
+			String proUserCheckSql = "SELECT COUNT(*) FROM proYuhan WHERE id = ?";
+			Integer proUserExists = jdbcTemplate.queryForObject(proUserCheckSql, Integer.class, userId);
 
-		if (count != null && count > 0) {
-			// 예약이 존재하면 삭제
-			String deleteSql = "DELETE FROM Reservation WHERE reservNum = ? AND user_id = ?";
-			jdbcTemplate.update(deleteSql, reservNum, userId);
-			return true;
+			// proYuhan에 있으면 관리자/교수 권한으로 처리
+			if (proUserExists != null && proUserExists > 0) {
+				String roleCheckSql = "SELECT position FROM proYuhan WHERE id = ?";
+				String position = jdbcTemplate.queryForObject(roleCheckSql, String.class, userId);
+
+				if ("admin".equals(position) || "professor".equals(position)) {
+					String checkSql = "SELECT COUNT(*) FROM Reservation WHERE reservNum = ?";
+					Integer reservationExists = jdbcTemplate.queryForObject(checkSql, Integer.class, reservNum);
+
+					if (reservationExists > 0) {
+						String deleteSql = "DELETE FROM Reservation WHERE reservNum = ?";
+						int deleteResult = jdbcTemplate.update(deleteSql, reservNum);
+						System.out.println(
+								"Admin/Professor delete result: " + deleteResult + " for reservNum: " + reservNum);
+						return deleteResult > 0;
+					}
+				}
+			} else {
+				// 일반 학생인 경우 Yuhan 테이블에서 확인
+				String userCheckSql = "SELECT COUNT(*) FROM Yuhan WHERE id = ?";
+				Integer userExists = jdbcTemplate.queryForObject(userCheckSql, Integer.class, userId);
+
+				if (userExists != null && userExists > 0) {
+					String checkSql = "SELECT COUNT(*) FROM Reservation WHERE reservNum = ? AND user_id = ?";
+					Integer reservationExists = jdbcTemplate.queryForObject(checkSql, Integer.class, reservNum, userId);
+
+					if (reservationExists > 0) {
+						String deleteSql = "DELETE FROM Reservation WHERE reservNum = ? AND user_id = ?";
+						int deleteResult = jdbcTemplate.update(deleteSql, reservNum, userId);
+						System.out.println("Student delete result: " + deleteResult + " for reservNum: " + reservNum);
+						return deleteResult > 0;
+					}
+				}
+			}
+
+			return false;
+
+		} catch (EmptyResultDataAccessException e) {
+			System.out.println("No data found for user: " + userId);
+			return false;
+		} catch (Exception e) {
+			System.err.println("Error in cancelReservation: " + e.getMessage());
+			e.printStackTrace();
+			return false;
 		}
-
-		// 관리자나 교수인 경우 예약 번호만으로 삭제 가능
-		String roleCheckSql = "SELECT position FROM Yuhan WHERE id = ?";
-		String position = jdbcTemplate.queryForObject(roleCheckSql, String.class, userId);
-
-		if ("admin".equals(position) || "professor".equals(position)) {
-			String deleteSql = "DELETE FROM Reservation WHERE reservNum = ?";
-			jdbcTemplate.update(deleteSql, reservNum);
-			return true;
-		}
-
-		return false;
 	}
 
 	// 사용자 역할 확인 메소드
@@ -337,7 +376,7 @@ public class ClassroomDAO {
 
 	// 금지된 좌석 해제 기능
 	public boolean unbanSeat(String classroomName, String banSeat, String day) {
-		String sql = "DELETE FROM BanSEAT WHERE classroom_name = ? AND banSeat = ? AND day = ?";
+		String sql = "DELETE FROM BanSeat WHERE classroom_name = ? AND banSeat = ? AND day = ?";
 
 		try {
 			int rowsAffected = jdbcTemplate.update(sql, classroomName, banSeat, day);

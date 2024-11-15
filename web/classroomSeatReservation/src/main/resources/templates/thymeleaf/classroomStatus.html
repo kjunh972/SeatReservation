@@ -44,7 +44,7 @@
 
 	<!-- GET 방식일 때만 예약된 좌석 정보 표시 -->
 	<div th:if="${requestMethod == 'GET'}">
-		<div th:if="${userPosition == 'student'}">
+		<div th:if="${userPosition == 'student'}" class="student-modal">
 			<div id="seatListModal" class="modal">
 				<div class="modal-content seat-list-content">
 					<h1 class="seat-list-title">예약된 좌석</h1>
@@ -279,44 +279,46 @@
 			});
 
 			function createSeatButton(number, classroomName) {
-				const seatStatus = seatArray[number - 1]; // 좌석 상태 확인
-				let seat = document.createElement('button');
-				seat.classList.add('seat-button'); // seat-button 클래스 추가
+			    let adjustedNumber = number;
+			    let displayNumber = number;
+			    
+			    // 7202호에 대한 특별 처리
+			    if (classroomName === '7202') {
+			        if (number === 19 || number === 20) {
+			            // 19번과 20번 좌석은 빈 공간으로 처리
+			            let seat = document.createElement('button');
+			            seat.classList.add('seat-button');
+			            seat.style.visibility = 'hidden';
+			            seat.style.pointerEvents = 'none';
+			            return seat;
+			        } else if (number >= 19) {  // 19번 이상의 좌석만 번호 조정
+			            // 19번 이상의 좌석은 번호를 2 줄여서 표시 및 저장
+			            adjustedNumber = number - 2;
+			            displayNumber = adjustedNumber;
+			        }
+			    }
 
-				// 7202호에 대한 특별 처리
-				if (classroomName === '7202') {
-					if (number === 19 || number === 20) {
-						// 19번과 20번 좌석은 빈 공간으로 처리
-						seat.style.visibility = 'hidden';
-						seat.style.pointerEvents = 'none';
-					} else if (number > 20) {
-						// 21번 이상의 좌석은 번호를 2 줄여서 표시
-						let adjustedNumber = number - 2;
-						seat.textContent = adjustedNumber;
-						seat.dataset.seat = adjustedNumber;
-					} else {
-						// 나머지 좌석은 기존 번호 사용
-						seat.textContent = number;
-						seat.dataset.seat = number;
-					}
-				} else {
-					// 7202호가 아닌 경우 기존 번호 사용
-					seat.textContent = number;
-					seat.dataset.seat = number;
-				}
+			    const seat = document.createElement('button');
+			    seat.classList.add('seat-button');
+			    
+			    // 좌석 상태 확인 시 조정된 번호 사용
+			    const seatStatus = seatArray[adjustedNumber - 1];
+			    
+			    seat.textContent = displayNumber;
+			    seat.dataset.seat = adjustedNumber;
+			    seat.dataset.classroom = classroomName;
 
-				if (seatStatus === true) {
-					seat.classList.add('reserved'); // 예약된 좌석 스타일
-				} else if (seatStatus === 'banned') {
-					seat.classList.add('banned'); // 금지된 좌석 스타일
-					seat.disabled = true; // 클릭 불가능하게 설정
-				} else {
-					seat.classList.add('empty'); // 빈 좌석 스타일
-				}
+			    if (seatStatus === true) {
+			        seat.classList.add('reserved');
+			    } else if (seatStatus === 'banned') {
+			        seat.classList.add('banned');
+			        seat.disabled = true;
+			    } else {
+			        seat.classList.add('empty');
+			    }
 
-				seat.dataset.classroom = classroomName; // 강의실 이름 데이터 추가
-				seat.onclick = () => openModal(seat); // 클릭 이벤트 핸들러 추가
-				return seat;
+			    seat.onclick = () => openModal(seat);
+			    return seat;
 			}
 
 			// 좌석 배치를 생성하는 함수
@@ -391,41 +393,52 @@
 
 			// 좌석 클릭 시 모달 열기 함수
 			function openModal(button) {
-				if (button.classList.contains('reserved')) {
-					Swal.fire('예약된 좌석입니다.', '', 'warning');
-					return;
-				}
-				if (button.classList.contains('banned')) {
-					Swal.fire('금지된 좌석입니다.', '', 'warning');
-					return;
-				}
-				if (userPosition === "student") {
-					if (seatStatusList.length > 0) {
-						Swal.fire({
-							title: '이미 다른 좌석을 예약하셨습니다.',
-							icon: 'warning',
-							confirmButtonText: '확인',
-							customClass: {
-								confirmButton: 'custom-confirm-button'
-							}
-						}).then((result) => {
-							if (result.isConfirmed) {
-								window.location.href = '/reserveList'; // 예약 리스트 페이지로 이동
-							}
-						});
-						return;
-					}
-				}
+			    if (button.classList.contains('reserved')) {
+			        Swal.fire('예약된 좌석입니다.', '', 'warning');
+			        return;
+			    }
+			    if (button.classList.contains('banned')) {
+			        Swal.fire('금지된 좌석입니다.', '', 'warning');
+			        return;
+			    }
 
-				selectedSeat = button.dataset.seat;
-				selectedClassroom = button.dataset.classroom;
+			    if (userPosition === "student") {
+			        // 이미 예약된 좌석이 있는지 확인
+			        const isAlreadyReserved = /*[[${alreadyReserved}]]*/ false;
+			        
+			        if (isAlreadyReserved) {
+			            Swal.fire({
+			                title: '예약 불가',
+			                text: '이미 다른 좌석을 예약하셨습니다.',
+			                icon: 'warning',
+			                confirmButtonText: '확인',
+			                customClass: {
+			                    confirmButton: 'custom-confirm-button'
+			                }
+			            }).then((result) => {
+			                if (result.isConfirmed) {
+			                    window.location.href = '/reserveList';
+			                }
+			            });
+			            return;
+			        }
 
-				let message = userPosition === "student"
-					? `${selectedClassroom}호 ${selectedSeat}번 좌석을 예약하시겠습니까?`
-					: `${selectedClassroom}호 ${selectedSeat}번 좌석을 금지하시겠습니까?`;
-
-				document.getElementById('modalMessage').textContent = message;
-				document.getElementById('myModal').style.display = 'block';
+			        // 예약 가능한 경우 예약 모달 표시
+			        selectedSeat = button.dataset.seat;
+			        selectedClassroom = button.dataset.classroom;
+			        
+			        let message = `${selectedClassroom}호 ${selectedSeat}번 좌석을 예약하시겠습니까?`;
+			        document.getElementById('modalMessage').textContent = message;
+			        document.getElementById('myModal').style.display = 'block';
+			    } else {
+			        // 관리자의 경우 기존 로직 유지
+			        selectedSeat = button.dataset.seat;
+			        selectedClassroom = button.dataset.classroom;
+			        
+			        let message = `${selectedClassroom}호 ${selectedSeat}번 좌석을 금지하시겠습니까?`;
+			        document.getElementById('modalMessage').textContent = message;
+			        document.getElementById('myModal').style.display = 'block';
+			    }
 			}
 
 			// 예약 또는 금지 처리 함수

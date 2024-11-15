@@ -86,7 +86,7 @@ td div[data-subject] .classroom-name {
     align-items: center; /* 수평 중앙 정렬 */
     justify-content: center; /* 수직 중앙 정렬 */
     position: absolute; /* 절대 위치 지정 */
-    top: 40%; /* 화면 중앙 */
+    top: 50%; /* 화면 중앙 */
     left: 50%; /* 화면 중앙 */
     transform: translate(-50%, -50%); /* 중앙 정렬 */
     width: 90%; /* 너비 조정 */
@@ -142,7 +142,6 @@ td div[data-subject] .classroom-name {
 
 /* myModal 중앙 정렬 */
 #myModal .modal-content {
-	
     display: flex; /* Flexbox 레이아웃 사용 */
     flex-direction: column; /* 세로 방향 정렬 */
     align-items: center; /* 수평 중앙 정렬 */
@@ -167,11 +166,12 @@ td div[data-subject] .classroom-name {
     font-size: 1.8rem !important; /* 제목 폰트 크기 조정 */
 	margin-top: 3rem !important;
 	margin-bottom: 3.5rem !important;
-    }
+}
 
 .seat-list-button-container {
     margin-top: 3.2rem !important; /* 테이블과 버튼 간 간격 */
-    }
+}
+	
 #myModal h1 {
     font-size: 2rem;
     font-weight: 700;
@@ -248,23 +248,41 @@ td div[data-subject] .classroom-name {
 
 /* 모바일 버전 미디어 쿼리 수정 */
 @media (max-width: 48rem) {
-    /* 예약된 좌석 모달 창의 너비 조정 */
-    .modal-content.seat-list-content {
-		margin-top: -2rem;
-        width: 90%; /* 너비 조정 */
-        max-width: 25rem; /* 최대 너비 줄이기 */
-        padding: 1rem; /* 내부 여백 */
-		overflow-x: hidden;
-    }
+	/* 예약된 좌석 모달 창의 너비 조정 */
+	.modal-content.seat-list-content {
+	       margin: 0;
+	       width: 90%;
+	       max-width: 25rem;
+	       padding: 1rem;
+	       overflow-x: hidden;
+	       position: fixed;
+	       top: 50%;
+	       left: 50%;
+	       transform: translate(-50%, -50%);
+	}
 
-    /* 테이블 스타일 조정 */
+	/* 테이블 스타일 조정 */
     .seat-list-table {
-        width: 100%; /* 테이블의 너비를 100%로 설정 */
-        border-collapse: collapse; /* 테두리 간격 제거 */
-		transform: scale(0.9);
-		margin-left: -1rem !important;
-    }
-    
+	       width: 100%;
+	       border-collapse: collapse;
+	       margin: 0 auto; /* 가운데 정렬 */
+	       transform: none; /* transform 제거 */
+		  
+	}
+
+	/* 테이블 컨테이너 추가 */
+	.table-container {
+	       width: 100%;
+	       display: flex;
+	       justify-content: center;
+	       align-items: center;
+	}
+	
+	/* 학생용 테이블만 왼쪽으로 이동 */
+	    .student-modal .seat-list-table {
+	        margin-left: -0.85rem !important;
+	    }
+		  
     /* 좌석 레이아웃을 위한 컨테이너 스타일 */
     .seat-layout {
         transform: scale(0.8); /* 좌석 레이아웃 축소 */
@@ -406,13 +424,13 @@ td div[data-subject] .classroom-name {
         padding: 0.6rem !important; /* 패딩 조정 */
     }
 
-    /* 셀 크기 조정 */
-    td {
-        height: 3.8rem !important;
-    }
+	/* 셀 크기 조정 */
+	td {
+       height: 3.87rem !important;
+	}
 
-    /* 요일 헤더 스타일 */
-    thead th {
-        height: 1.38rem !important;
-    }
+	/* 요일 헤더 스타일 */
+   thead th {	
+	   height: 1.38rem !important;
+	}
 }

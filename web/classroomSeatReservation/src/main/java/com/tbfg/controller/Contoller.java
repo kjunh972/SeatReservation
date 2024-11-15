@@ -278,6 +278,8 @@ public class Contoller {
 
 		return "classroomStatus"; // classroomStatus 뷰 반환
 	}
+	
+	
 
 	// 관리자나 교수 좌석 관리하는 메서드
 	@GetMapping("/classroomSeat")
