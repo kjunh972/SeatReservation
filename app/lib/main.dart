@@ -48,7 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
   // WebView 컨트롤러 및 URL 설정
   final GlobalKey webViewKey = GlobalKey();
   InAppWebViewController? webViewController;
-  String url = 'http://10.107.0.37:8055/';
+  String url = 'http://192.168.45.134:8055/';
 
   // 로딩 상태 관리 변수
   bool isLoading = true;
