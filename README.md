@@ -144,9 +144,9 @@
 ## 참고자료
 
 [FLutter로 아이폰 앱 만들 때 기본세팅](https://kjunh972.tistory.com/135)
+
 [MySQL 접속 오류](https://kjunh972.tistory.com/134)
 
 ## 지원
 
-![Tistory](https://img.shields.io/badge/Tistory-black?style=flat-square&logo=Tistory&logoColor=white)(https://kjunh972.tistory.com/)
 [![Gmail Badge](https://img.shields.io/badge/Gmail-d14836?style=flat-square&logo=Gmail&logoColor=white&link=mailto:kjunh972@gmail.com)](mailto:kjunh972@gmail.com)
