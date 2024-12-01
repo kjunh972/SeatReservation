@@ -74,21 +74,22 @@
 
 모바일이랑 웹이랑 사용하는 기능들은 동일합니다.
 
-1. 웹
+### 1. 웹
 <div align="center">
-:star: 메인페이지 로그인전 :star:
+    
+### 1-1. 메인페이지 로그인전 
   
 ![메인페이지-로그인전](https://github.com/kjunh972/SeatReservation/blob/main/web/images/%EB%A9%94%EC%9D%B8%ED%8E%98%EC%9D%B4%EC%A7%80_%EB%A1%9C%EA%B7%B8%EC%9D%B8%20%EC%A0%84.png)
 
 로그인 하지 않고 다른 페이지로 이동할려고 하면 무조건 다시 메인페이지로 돌아온다.
 
-:star: 메인페이지 로그인후 :star:
+### 1-2. 메인페이지 로그인후 
 
 ![메인페이지-로그인후](https://github.com/kjunh972/SeatReservation/blob/main/web/images/%EB%A9%94%EC%9D%B8%ED%8E%98%EC%9D%B4%EC%A7%80_%EB%A1%9C%EA%B7%B8%EC%9D%B8%20%ED%9B%84.png)
 
 로그인후 바로 다른 페이지로 손쉽게 이동할 수도 있고 시간표를 클릭하면 자동으로 시간표 페이지로 이동한다.
 
-:star: 시간표 :star:
+### 1-3. 시간표
   
 ![시간표](https://github.com/kjunh972/SeatReservation/blob/main/web/images/%EC%8B%9C%EA%B0%84%ED%91%9C.png)
 
@@ -102,18 +103,18 @@
 
 ![시간표 삭제](https://github.com/kjunh972/SeatReservation/blob/main/web/images/%EC%8B%9C%EA%B0%84%ED%91%9C%20%EC%82%AD%EC%A0%9C.png)
 
-:star: 강의실 현황 :star:
+### 1-4. 강의실 현황 
 
 ![강의실 현황](https://github.com/kjunh972/SeatReservation/blob/main/web/images/%EA%B0%95%EC%9D%98%EC%8B%A4%20%ED%98%84%ED%99%A9.png)
 
 시간표에 추가한 강의실들을 볼 수 있다.
 
-:star: 강의실 정보 :star:
+### 1-5. 강의실 정보 
 ![강의실 정보](https://github.com/kjunh972/SeatReservation/blob/main/web/images/%EA%B0%95%EC%9D%98%EC%8B%A4%20%EC%A0%95%EB%B3%B4.png)
 
 해당 강의실의 모든 정보를 볼 수 있다.(Ex. 강의실에 추가한 강의들이나 예약내역등)
 
-:star: 좌석 예약 및 좌석 예약 금지 :star:
+### 1-6. 좌석 예약 및 좌석 예약 금지
   
 ![좌석 예약 및 좌석 예약 금지](https://github.com/kjunh972/SeatReservation/blob/main/web/images/%EC%A2%8C%EC%84%9D%20%EC%98%88%EC%95%BD%20%EB%B0%8F%20%EC%A2%8C%EC%84%9D%20%EC%98%88%EC%95%BD%20%EA%B8%88%EC%A7%80.png)
 
@@ -121,25 +122,25 @@
 
 또한 학생이 예약한 좌석을 클릭하면 예약한 좌석 자리이동, 예약번호 변경, 예약취소 (예약취소는 따로 예약 목록 페이지로 가서 관리 할수도 있다.) 기능들이 있다.
 
-:star: 예약확인 :star:
+### 1-7. 예약확인 
 
 ![예약확인](https://github.com/kjunh972/SeatReservation/blob/main/web/images/%EC%98%88%EC%95%BD%ED%99%95%EC%9D%B8.png)
 
 학생은 자기가 예약한 예약 목록들을 볼 수 있고, 교수는 자기 수업을 듣는 학생들의 예약목록을 볼 수 있고, 관리자는 전체 학생들의 예약 목록을 볼 수 있다.
 
-:star: 좌석 예약 금지 확인 :star:
+### 1-8. 좌석 예약 금지 확인 
 
 ![좌석 예약 금지 확인](https://github.com/kjunh972/SeatReservation/blob/main/web/images/%EC%A2%8C%EC%84%9D%20%EC%98%88%EC%95%BD%20%EA%B8%88%EC%A7%80%20%ED%99%95%EC%9D%B8.png)
 
 교수는 자기가 좌석 예약 금지한 정보들을 확인 및 관리 할 수 있고, 관리자는 전체 좌석 예약 금지한 정보들을 확인 및 관리 할 수 있다.
 
-:star: 출석부 :star:
+### 1-9. 출석부 
 
 ![출석부](https://github.com/kjunh972/SeatReservation/blob/main/web/images/%EC%B6%9C%EC%84%9D%EB%B6%80.png)
 
 교수는 자기 수업을 듣는 학생 (교수가 등록한 시간표에 학생이 그대로 시간표에 등록했을 때.)의 출석 정보들을 확인 할 수 있고 관리 할 수 있다.(학생이 좌석 예약 후 락스크린을 해제했을때 출석 아니면 결석 처리)
 
-:star: 강의가 없는 시간 선택 후 좌석 예약 할떄 :star:
+### 1-10. 강의가 없는 시간 선택 후 좌석 예약 할떄 
 
 ![강의가 없는 시간 선택 후 좌석 예약 할떄](https://github.com/kjunh972/SeatReservation/blob/main/web/images/%EA%B0%95%EC%9D%98%EA%B0%80%20%EC%97%86%EB%8A%94%20%EC%8B%9C%EA%B0%84%20%EC%84%A0%ED%83%9D%20%ED%9B%84%20%EC%A2%8C%EC%84%9D%20%EC%98%88%EC%95%BD%20%ED%95%A0%EB%96%84.png)
 
@@ -149,7 +150,7 @@
 
 추후 교수나 관리자가 확인 후 예약 취소를 해서 학생에게 사용하면 안되는 이유를 통보를 제한 할 수 있다.
 
-:star: 강의실 생성 :star:
+### 1-11. 강의실 생성 
 
 ![강의실 생성](https://github.com/kjunh972/SeatReservation/blob/main/web/images/%EA%B0%95%EC%9D%98%EC%8B%A4%20%EC%83%9D%EC%84%B1.png)
 
@@ -157,24 +158,35 @@
 
 미리 만들어놓은 템플릿으로 생성 하거나 커스텀으로 직접 좌석 수, 위치를 등록해서 사용 할 수도 있다.
 
-:star: 마이페이지 :star:
+### 1-12. 마이페이지 
 
 ![마이페이지](https://github.com/kjunh972/SeatReservation/blob/main/web/images/%EB%A7%88%EC%9D%B4%ED%8E%98%EC%9D%B4%EC%A7%80.png)
 
 마이페이지에서 자기 정보를 관리하거나 수정할 수 있습니다.
+
 </div>
 
-2. 모바일
+## 2. 모바일
 
-다음은 모바일을 소개하겠습니다. 웹이랑 사용 할 수 있는 기능과 페이지는 동일하며 전부 다 이미지를 보여주면 너무 길어지는 관계로 간단하게 몇개만 소개해드리도록 하겠습니다.
+다음은 모바일을 소개하겠습니다. 웹과 사용 가능한 기능과 페이지는 동일하며, 전부 다 이미지를 보여주면 너무 길어지므로 몇 개만 소개하겠습니다.
 
-| 모바일 메인페이지 | 모바일 메뉴 | 모바일 시간표 | 모바일 좌석표 |
-| :-: | :-: | :-: | :-: |
-| <img src="https://github.com/kjunh972/SeatReservation/blob/main/web/images/%EB%AA%A8%EB%B0%94%EC%9D%BC%20%EB%A9%94%EC%9D%B8%ED%8E%98%EC%9D%B4%EC%A7%80.jpg" width="200" height="420"/> | <img src="https://github.com/kjunh972/SeatReservation/blob/main/web/images/%EB%AA%A8%EB%B0%94%EC%9D%BC%20%EB%A9%94%EB%89%B4.jpg" width="200" height="420"/> | <img src="https://github.com/kjunh972/SeatReservation/blob/main/web/images/%EB%AA%A8%EB%B0%94%EC%9D%BC%20%EC%8B%9C%EA%B0%84%ED%91%9C.jpg" width="200" height="420"/> | <img src="https://github.com/kjunh972/SeatReservation/blob/main/web/images/%EB%AA%A8%EB%B0%94%EC%9D%BC%20%EC%A2%8C%EC%84%9D%ED%91%9C.jpg" width="200" height="420"/>  |
-| 모바일 강의실 현황 | 모바일 진행되는 강의 | 모바일 강의실 정보 | 모바일 마이페이지 |
-| <img src="https://github.com/kjunh972/SeatReservation/blob/main/web/images/%EB%AA%A8%EB%B0%94%EC%9D%BC%20%EA%B0%95%EC%9D%98%EC%8B%A4%20%ED%98%84%ED%99%A9.jpg" width="200" height="420"/> | <img src="https://github.com/kjunh972/SeatReservation/blob/main/web/images/%EB%AA%A8%EB%B0%94%EC%9D%BC%20%EC%A7%84%ED%96%89%EB%90%98%EB%8A%94%20%EA%B0%95%EC%9D%98.jpg" width="200" height="420"/> | <img src="https://github.com/kjunh972/SeatReservation/blob/main/web/images/%EB%AA%A8%EB%B0%94%EC%9D%BC%20%EA%B0%95%EC%9D%98%EC%8B%A4%20%EC%A0%95%EB%B3%B4.jpg" width="200" height="420"/> | <img src="https://github.com/kjunh972/SeatReservation/blob/main/web/images/%EB%AA%A8%EB%B0%94%EC%9D%BC%20%EB%A7%88%EC%9D%B4%ED%8E%98%EC%9D%B4%EC%A7%80.jpg" width="200" height="420"/>  |
+| 모바일 메인 페이지 | 모바일 메뉴 |
+| :-: | :-: |
+| <img src="https://github.com/kjunh972/SeatReservation/blob/main/web/images/%EB%AA%A8%EB%B0%94%EC%9D%BC%20%EB%A9%94%EC%9D%B8%ED%8E%98%EC%9D%B4%EC%A7%80.jpg" width="200" height="390" /> | <img src="https://github.com/kjunh972/SeatReservation/blob/main/web/images/%EB%AA%A8%EB%B0%94%EC%9D%BC%20%EB%A9%94%EB%89%B4.jpg" width="200" height="390" /> |
 
-3. 락스크린 (윈도우)
+| 모바일 시간표 | 모바일 좌석표 |
+| :-: | :-: |
+| <img src="https://github.com/kjunh972/SeatReservation/blob/main/web/images/%EB%AA%A8%EB%B0%94%EC%9D%BC%20%EC%8B%9C%EA%B0%84%ED%91%9C.jpg" width="200" height="390" /> | <img src="https://github.com/kjunh972/SeatReservation/blob/main/web/images/%EB%AA%A8%EB%B0%94%EC%9D%BC%20%EC%A2%8C%EC%84%9D%ED%91%9C.jpg" width="200" height="390" /> |
+
+| 모바일 강의실 현황 | 모바일 진행되는 강의 |
+| :-: | :-: |
+| <img src="https://github.com/kjunh972/SeatReservation/blob/main/web/images/%EB%AA%A8%EB%B0%94%EC%9D%BC%20%EA%B0%95%EC%9D%98%EC%8B%A4%20%ED%98%84%ED%99%A9.jpg" width="200" height="390" /> | <img src="https://github.com/kjunh972/SeatReservation/blob/main/web/images/%EB%AA%A8%EB%B0%94%EC%9D%BC%20%EC%A7%84%ED%96%89%EB%90%98%EB%8A%94%20%EA%B0%95%EC%9D%98.jpg" width="200" height="390" /> |
+
+| 모바일 강의실 정보 | 모바일 마이페이지 |
+| :-: | :-: |
+| <img src="https://github.com/kjunh972/SeatReservation/blob/main/web/images/%EB%AA%A8%EB%B0%94%EC%9D%BC%20%EA%B0%95%EC%9D%98%EC%8B%A4%20%EC%A0%95%EB%B3%B4.jpg" width="200" height="390" /> | <img src="https://github.com/kjunh972/SeatReservation/blob/main/web/images/%EB%AA%A8%EB%B0%94%EC%9D%BC%20%EB%A7%88%EC%9D%B4%ED%8E%98%EC%9D%B4%EC%A7%80.jpg" width="200" height="390" /> |
+
+### 3. 락스크린 (윈도우)
 
 원하는 요일, 원하는 시간, 원하는 강의실, 원하는 좌석을 예약하면 예약번호가 랜덤으로 나오는데 해당 좌석으로 가서 예약한 학생 이름, 학번, 그리고 예약번호를 입력했을때 3개 정보가 일치하면 락스크린이 해제가 되고 틀리면 해제가 되지 않는다.
 
@@ -184,11 +196,11 @@
 
 ![락스크린](https://github.com/kjunh972/SeatReservation/blob/main/web/images/%EC%A1%B8%EC%9E%91%20%EB%8F%99%EC%98%81%EC%83%81.gif)
 
-4. 좌석 예약 미리 보기
+### 4. 좌석 예약 미리 보기
 
 <img src="https://github.com/kjunh972/SeatReservation/blob/main/web/images/%EC%A2%8C%EC%84%9D%20%EC%98%88%EC%95%BD.gif" width="200" height="420"/>
 
-5. 좌석 예약 금지 미리보기
+### 5. 좌석 예약 금지 미리보기
 
 <img src="https://github.com/kjunh972/SeatReservation/blob/main/web/images/%EC%A2%8C%EC%84%9D%20%EC%98%88%EC%95%BD%20%EA%B8%88%EC%A7%80.gif" width="200" height="420"/>
 
