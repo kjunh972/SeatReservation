@@ -4,12 +4,12 @@
 
 ## 목차
 - [개요](#개요)
-- [개발언어](#개발언어)
-- [화면구성](#화면구성)
+- [기술 스택](#기술-스택)
+- [화면 구성](#화면-구성)
 - [시작하기](#시작하기)
 - [주요 기능](#주요-기능)
-- [주요 API](#주요-API)
-- [참고자료](#참고자료)
+- [주요 API](#주요-api)
+- [참고 자료](#참고-자료)
 - [지원](#지원)
 
 
@@ -27,11 +27,49 @@
     - **박영혜** : 웹 백엔드 개발
     - **김진주** : 락스크린 이미지 디자인
 
-## 개발언어
+## 기술 스택
 
-![Spring](https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white) ![C#](https://img.shields.io/badge/c%23-%23239120.svg?style=for-the-badge&logo=csharp&logoColor=white) ![Flutter](https://img.shields.io/badge/Flutter-%2302569B.svg?style=for-the-badge&logo=Flutter&logoColor=white) ![MySQL](https://img.shields.io/badge/mysql-4479A1.svg?style=for-the-badge&logo=mysql&logoColor=white) ![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white) ![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white) ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
+### Backend
 
-## 화면구성
+![Java](https://img.shields.io/badge/Java-%23ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-%236DB33F?style=for-the-badge&logo=springboot&logoColor=white)
+![Spring Data JPA](https://img.shields.io/badge/Spring%20Data%20JPA-%236DB33F?style=for-the-badge&logo=spring&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+
+### Frontend
+
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white) 
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white) 
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![Thymeleaf](https://img.shields.io/badge/Thymeleaf-%2330c58e?style=for-the-badge&logo=thymeleaf&logoColor=white)
+![SweetAlert2](https://img.shields.io/badge/SweetAlert2-%236f42c1?style=for-the-badge&logo=javascript&logoColor=white)
+
+### Mobile
+
+![Flutter](https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white)
+![Dart](https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white)
+
+### Windows
+
+![C#](https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=c-sharp&logoColor=white)
+![.NET](https://img.shields.io/badge/.NET-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
+
+### DevOps
+
+![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white) 
+![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)
+![AWS RDS](https://img.shields.io/badge/AWS_RDS-232F3E?style=for-the-badge&logo=amazonaws&logoColor=white)
+
+### Development Tools
+
+![Eclipse STS](https://img.shields.io/badge/Eclipse_STS-2C2255?style=for-the-badge&logo=eclipse&logoColor=white)
+![Visual Studio](https://img.shields.io/badge/Visual_Studio-5C2D91?style=for-the-badge&logo=visualstudio&logoColor=white)
+![Android Studio](https://img.shields.io/badge/Android_Studio-3DDC84?style=for-the-badge&logo=androidstudio&logoColor=white)
+![Xcode](https://img.shields.io/badge/Xcode-147EFB?style=for-the-badge&logo=xcode&logoColor=white)
+![MySQL Workbench](https://img.shields.io/badge/MySQL_Workbench-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+![MySQL CLI](https://img.shields.io/badge/MySQL_CLI-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+
+## 화면 구성
 이미지가 너무 많은 관계로 가장 많이 사용할만한 화면 구성들만 이미지로 보여드리겠습니다.
 
 모바일이랑 웹이랑 사용하는 기능들은 동일합니다.
@@ -250,15 +288,19 @@ git clone https://github.com/kjunh972/SeatReservation.git
 cd SeatReservation/windows/lockScreen/lockScreen/bin/Debug
 ```
 
-3-2. 락스크린 실행
+2-3. 락스크린 실행
 
+- 명령어 실행: 아래 명령어를 입력하여 실행합니다.
 ```bash
 lockScreen.exe 또는 ./lockScreen.exe
 ```
 
-```gui
-lockScreen.exe 더블클릭
-```
+- GUI 실행:
+  - 파일 탐색기를 엽니다.
+  - `lockScreen.exe` 파일이 위치한 경로로 이동합니다.  
+     (`SeatReservation/windows/lockScreen/lockScreen/bin/Debug`)
+  - `lockScreen.exe` 파일을 더블 클릭합니다.
+  - 프로그램이 실행되며 락스크린 화면이 표시됩니다.
 
 ## 주요 기능
 
@@ -378,17 +420,17 @@ server.servlet.session.timeout=30m
 
 ```properties
 # 로컬 환경
-spring.datasource.url=jdbc:mysql://localhost:3306/classroom_db
+spring.datasource.url=jdbc:mysql://localhost:3306/user_database_name
 spring.datasource.username=username
 spring.datasource.password=userpassword
 
 # 원격 환경
-spring.datasource.url=jdbc:mysql://db.example.com:3306/classroom_db
+spring.datasource.url=jdbc:mysql://db.example.com:3306/user_database_name
 spring.datasource.username=username
 spring.datasource.password=userpassword
 ```
 
-## 참고자료
+## 참고 자료
 
 [FLutter로 아이폰 앱 만들 때 기본세팅](https://kjunh972.tistory.com/135)
 
