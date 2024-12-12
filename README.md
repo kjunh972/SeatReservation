@@ -33,7 +33,6 @@
 
 ![Java](https://img.shields.io/badge/Java-%23ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-%236DB33F?style=for-the-badge&logo=springboot&logoColor=white)
-![Spring Data JPA](https://img.shields.io/badge/Spring%20Data%20JPA-%236DB33F?style=for-the-badge&logo=spring&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
 
 ### Frontend
@@ -445,6 +444,8 @@ spring.datasource.password=userpassword
 ## 참고 자료
 
 [FLutter로 아이폰 앱 만들 때 기본세팅](https://kjunh972.tistory.com/135)
+
+[flutter로 Spring Boot 서버화면을 웹뷰로 띄우기](https://kjunh972.tistory.com/136)
 
 [MySQL 접속 오류](https://kjunh972.tistory.com/134)
 
