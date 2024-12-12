@@ -445,7 +445,7 @@ spring.datasource.password=userpassword
 
 [FLutter로 아이폰 앱 만들 때 기본세팅](https://kjunh972.tistory.com/135)
 
-[flutter로 Spring Boot 서버화면을 웹뷰로 띄우기](https://kjunh972.tistory.com/136)
+[Flutter로 Spring Boot 서버 화면을 웹뷰로 띄우기](https://kjunh972.tistory.com/136)
 
 [MySQL 접속 오류](https://kjunh972.tistory.com/134)
 
